@@ -275,11 +275,7 @@
         <!-- 1. IDENTIFICAÇÃO -->
         <div class="section-mini-title">🧑 Identificação</div>
         <div class="form-grid">
-          <div class="field" style="position:relative">
-            <label>Nome Completo <span>*</span></label>
-            <input type="text" id="pr-nome" placeholder="Nome completo do paciente" autocomplete="off" oninput="mostrarSugestoesNome(this.value)" onblur="setTimeout(()=>document.getElementById('sugestoes-nome').style.display='none',200)">
-            <div id="sugestoes-nome" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--verde);border-top:none;border-radius:0 0 4px 4px;z-index:100;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)"></div>
-          </div>
+          <div class="field"><label>Nome Completo <span>*</span></label><input type="text" id="pr-nome" placeholder="Nome completo do paciente"></div>
           <div class="field"><label>Data de Nascimento <span>*</span></label><input type="date" id="pr-nasc"></div>
           <div class="field"><label>Sexo <span>*</span></label>
             <select id="pr-sexo"><option value="">Selecione</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select>
@@ -446,7 +442,8 @@
         <!-- ID oculto para edição -->
         <input type="hidden" id="pr-id" value="">
 
-        <div style="margin-top:32px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+        <div class="msg" id="msg-pront-bottom" style="margin-top:24px"></div>
+        <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
           <button class="btn-save" onclick="salvarProntuario()">💾 Salvar Prontuário</button>
           <button class="btn-add" onclick="exportarProntuarioPDF()">📄 Exportar PDF</button>
           <button class="btn-add" onclick="exportarProntuarioWord()">📝 Exportar Word</button>
@@ -598,35 +595,6 @@ let recordatorioItems = [];
 let prontuarioData = {};
 let prontuariosSalvos = []; // ✅ Array de prontuários
 let editandoProntuarioId = null; // ✅ ID em edição
-
-// ── AUTOCOMPLETE NOME ──
-function mostrarSugestoesNome(valor) {
-  const box = document.getElementById('sugestoes-nome');
-  if (!valor || valor.length < 2) { box.style.display = 'none'; return; }
-  const matches = prontuariosSalvos.filter(p =>
-    p.nome && p.nome.toLowerCase().includes(valor.toLowerCase())
-  );
-  if (!matches.length) { box.style.display = 'none'; return; }
-  box.innerHTML = matches.slice(0, 6).map(p => `
-    <div class="sugestao-item" onmousedown="preencherDoAutocomplete('${p.id}')">
-      <strong>${p.nome}</strong>
-      <span>${p.nascimento ? new Date(p.nascimento).toLocaleDateString('pt-BR') : ''} ${p.peso ? '• '+p.peso+'kg' : ''} ${p.objetivo ? '• '+p.objetivo : ''}</span>
-    </div>`).join('');
-  box.style.display = 'block';
-}
-
-function preencherDoAutocomplete(id) {
-  const pront = prontuariosSalvos.find(p => p.id === id);
-  if (!pront) return;
-  // Preenche como edição do prontuário existente
-  editandoProntuarioId = id;
-  limparFormProntuario();
-  preencherProntuario(pront);
-  document.getElementById('sugestoes-nome').style.display = 'none';
-  const msg = document.getElementById('msg-pront');
-  msg.className = 'msg success';
-  msg.textContent = '✏️ Dados de "' + pront.nome + '" carregados. Edite e salve.';
-}
 
 // ── INIT ──
 async function init() {
@@ -913,6 +881,12 @@ function preencherProntuario(d) {
 
 async function salvarProntuario() {
   const msg = document.getElementById('msg-pront');
+  const msgBot = document.getElementById('msg-pront-bottom');
+  const setMsg = (cls, txt) => {
+    msg.className = cls; msg.textContent = txt;
+    msgBot.className = cls; msgBot.textContent = txt;
+    msgBot.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
   const obrigatorios = {
     'pr-nome': 'Nome Completo',
     'pr-nasc': 'Data de Nascimento',
@@ -943,8 +917,7 @@ async function salvarProntuario() {
     el.style.borderColor = '#dc2626';
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.focus();
-    msg.className = 'msg error';
-    msg.textContent = '⚠️ Campo obrigatório vazio: "' + campoVazio.nome + '"';
+    setMsg('msg error', '⚠️ Campo obrigatório vazio: "' + campoVazio.nome + '"');
     return;
   }
 
@@ -983,7 +956,7 @@ async function salvarProntuario() {
     observacoes: gTxt('pr-obs'), sintomas: JSON.stringify(coletarSintomas())
   };
 
-  msg.className = 'msg success'; msg.textContent = '⏳ Salvando...';
+  setMsg('msg success', '⏳ Salvando...');
 
   // Debug: mostrar campos com valor inválido
   const camposInvalidos = Object.entries(dados).filter(([k, v]) => v === '');
@@ -1020,7 +993,7 @@ async function salvarProntuario() {
       if (error) {
         // Constraint UNIQUE ainda ativa: tentar via upsert por user_id
         if (error.code === '23505') {
-          msg.textContent = '⚠️ Ajustando banco... Execute o migracao.sql no Supabase para suportar múltiplos prontuários. Salvando com upsert por enquanto...';
+          setMsg('msg success', '⚠️ Ajustando banco...');
           const { data: data2, error: err2 } = await window._sb
             .from('prontuarios')
             .upsert({ ...dados, user_id: currentUser.id }, { onConflict: 'user_id' })
@@ -1049,12 +1022,10 @@ async function salvarProntuario() {
     document.getElementById('st-salvos').textContent = prontuariosSalvos.length;
     document.getElementById('st-prontuario').textContent = '✓';
     renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-    msg.className = 'msg success';
-    msg.textContent = '✅ Prontuário de ' + (resultado.nome || 'paciente') + ' salvo com sucesso!';
+    setMsg('msg success', '✅ Prontuário de ' + (resultado.nome || 'paciente') + ' salvo com sucesso!');
     calcularMetas();
   } catch(e) {
-    msg.className = 'msg error';
-    msg.textContent = '❌ Erro ao salvar: ' + (e.message || e.details || JSON.stringify(e));
+    setMsg('msg error', '❌ Erro ao salvar: ' + (e.message || e.details || JSON.stringify(e)));
     console.error('Erro salvar prontuário:', e);
   }
 }
