@@ -875,8 +875,40 @@ function preencherProntuario(d) {
 
 async function salvarProntuario() {
   const msg = document.getElementById('msg-pront');
-  const obr = ['pr-nome','pr-nasc','pr-sexo','pr-peso','pr-altura','pr-atividade','pr-refeicoes','pr-objetivo'];
-  for (const id of obr) { if (!document.getElementById(id).value) { msg.className='msg error'; msg.textContent='Campo obrigatório não preenchido.'; return; } }
+  const obrigatorios = {
+    'pr-nome': 'Nome Completo',
+    'pr-nasc': 'Data de Nascimento',
+    'pr-sexo': 'Sexo',
+    'pr-peso': 'Peso Atual',
+    'pr-altura': 'Estatura',
+    'pr-atividade': 'Nível de Atividade',
+    'pr-refeicoes': 'Nº de Refeições por Dia',
+    'pr-objetivo': 'Objetivo Principal'
+  };
+
+  // Limpar destaques anteriores
+  Object.keys(obrigatorios).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.borderColor = '';
+  });
+
+  let campoVazio = null;
+  for (const [id, nome] of Object.entries(obrigatorios)) {
+    if (!document.getElementById(id).value) {
+      campoVazio = { id, nome };
+      break;
+    }
+  }
+
+  if (campoVazio) {
+    const el = document.getElementById(campoVazio.id);
+    el.style.borderColor = '#dc2626';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.focus();
+    msg.className = 'msg error';
+    msg.textContent = '⚠️ Campo obrigatório vazio: "' + campoVazio.nome + '"';
+    return;
+  }
 
   const g = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const dados = {
