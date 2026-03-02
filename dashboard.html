@@ -911,33 +911,37 @@ async function salvarProntuario() {
   }
 
   const g = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const gNum = (id) => { const v = g(id); return v === '' ? null : parseFloat(v); };
+  const gInt = (id) => { const v = g(id); return v === '' ? null : parseInt(v); };
+  const gTxt = (id) => { const v = g(id); return v === '' ? null : v; };
+
   const dados = {
     user_id: currentUser.id,
     nome: g('pr-nome'), nascimento: g('pr-nasc'), sexo: g('pr-sexo'),
-    estado_civil: g('pr-estado-civil'), profissao: g('pr-profissao'), telefone: g('pr-tel'),
-    email_paciente: g('pr-email'), // ✅ campo e-mail
-    endereco: g('pr-endereco'), bairro: g('pr-bairro'), familia: g('pr-familia'),
-    motivo: g('pr-motivo'), obs_inicial: g('pr-obs-inicial'),
-    compra_quem: g('pr-compra-quem'), compra_freq: g('pr-compra-freq'),
-    prepara: g('pr-prepara'), come_com: g('pr-come-com'), cigarros: g('pr-cigarros'),
-    peso: parseFloat(g('pr-peso')), altura: parseFloat(g('pr-altura')),
-    imc: g('pr-imc'), peso_desejado: g('pr-peso-des'),
-    c_braco: g('pr-c-braco'), c_peitoral: g('pr-c-peitoral'), c_cintura: g('pr-c-cintura'),
-    circ_abdominal: g('pr-circ-abd'), c_quadril: g('pr-c-quadril'), c_coxa: g('pr-c-coxa'),
-    c_panturrilha: g('pr-c-panturrilha'), c_pescoco: g('pr-c-pescoco'), relacao_cq: g('pr-cq'),
-    dc_triceps: g('pr-dc-triceps'), dc_biceps: g('pr-dc-biceps'), dc_escapula: g('pr-dc-escapula'),
-    dc_suprailiaca: g('pr-dc-suprailiaca'), dc_axmedia: g('pr-dc-axmedia'), dc_peitoral: g('pr-dc-peitoral'),
-    dc_abdominal: g('pr-dc-abdominal'), dc_coxa: g('pr-dc-coxa'), dc_panturrilha: g('pr-dc-panturrilha'),
-    perc_gordura: g('pr-gordura'), nivel_atividade: g('pr-atividade'), tipo_exercicio: g('pr-exercicio'),
-    freq_exercicio: g('pr-freq'), pele: g('pr-pele'), cirurgias: g('pr-cirurgias'),
-    intestino: g('pr-intestino'), fezes: g('pr-fezes'), diurese: g('pr-diurese'),
-    patologias: g('pr-patologia'), medicamentos: g('pr-medicamentos'), alergias: g('pr-alergias'),
-    num_refeicoes: g('pr-refeicoes'), apetite: g('pr-apetite'), alimentos_gosta: g('pr-gosta'),
-    alimentos_nao_gosta: g('pr-nao-gosta'), ingesta_agua: g('pr-agua'), alcool: g('pr-alcool'),
-    tabagismo: g('pr-tabagismo'), sono: g('pr-sono'), objetivo: g('pr-objetivo'),
-    meta_peso: g('pr-meta-peso'), diag_problema: g('pr-diag-problema'),
-    diag_etiologia: g('pr-diag-etiologia'), diag_sinais: g('pr-diag-sinais'),
-    observacoes: g('pr-obs'), sintomas: JSON.stringify(coletarSintomas())
+    estado_civil: gTxt('pr-estado-civil'), profissao: gTxt('pr-profissao'), telefone: gTxt('pr-tel'),
+    email_paciente: gTxt('pr-email'),
+    endereco: gTxt('pr-endereco'), bairro: gTxt('pr-bairro'), familia: gTxt('pr-familia'),
+    motivo: gTxt('pr-motivo'), obs_inicial: gTxt('pr-obs-inicial'),
+    compra_quem: gTxt('pr-compra-quem'), compra_freq: gTxt('pr-compra-freq'),
+    prepara: gTxt('pr-prepara'), come_com: gTxt('pr-come-com'), cigarros: gInt('pr-cigarros'),
+    peso: gNum('pr-peso'), altura: gNum('pr-altura'),
+    imc: gNum('pr-imc'), peso_desejado: gNum('pr-peso-des'),
+    c_braco: gNum('pr-c-braco'), c_peitoral: gNum('pr-c-peitoral'), c_cintura: gNum('pr-c-cintura'),
+    circ_abdominal: gNum('pr-circ-abd'), c_quadril: gNum('pr-c-quadril'), c_coxa: gNum('pr-c-coxa'),
+    c_panturrilha: gNum('pr-c-panturrilha'), c_pescoco: gNum('pr-c-pescoco'), relacao_cq: gNum('pr-cq'),
+    dc_triceps: gNum('pr-dc-triceps'), dc_biceps: gNum('pr-dc-biceps'), dc_escapula: gNum('pr-dc-escapula'),
+    dc_suprailiaca: gNum('pr-dc-suprailiaca'), dc_axmedia: gNum('pr-dc-axmedia'), dc_peitoral: gNum('pr-dc-peitoral'),
+    dc_abdominal: gNum('pr-dc-abdominal'), dc_coxa: gNum('pr-dc-coxa'), dc_panturrilha: gNum('pr-dc-panturrilha'),
+    perc_gordura: gNum('pr-gordura'), nivel_atividade: g('pr-atividade'), tipo_exercicio: gTxt('pr-exercicio'),
+    freq_exercicio: gInt('pr-freq'), pele: gTxt('pr-pele'), cirurgias: gTxt('pr-cirurgias'),
+    intestino: gTxt('pr-intestino'), fezes: gTxt('pr-fezes'), diurese: gTxt('pr-diurese'),
+    patologias: gTxt('pr-patologia'), medicamentos: gTxt('pr-medicamentos'), alergias: gTxt('pr-alergias'),
+    num_refeicoes: gInt('pr-refeicoes'), apetite: gTxt('pr-apetite'), alimentos_gosta: gTxt('pr-gosta'),
+    alimentos_nao_gosta: gTxt('pr-nao-gosta'), ingesta_agua: gNum('pr-agua'), alcool: gTxt('pr-alcool'),
+    tabagismo: gTxt('pr-tabagismo'), sono: gTxt('pr-sono'), objetivo: g('pr-objetivo'),
+    meta_peso: gNum('pr-meta-peso'), diag_problema: gTxt('pr-diag-problema'),
+    diag_etiologia: gTxt('pr-diag-etiologia'), diag_sinais: gTxt('pr-diag-sinais'),
+    observacoes: gTxt('pr-obs'), sintomas: JSON.stringify(coletarSintomas())
   };
 
   msg.className = 'msg success'; msg.textContent = '⏳ Salvando...';
