@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assistente Virtual — Nutri Amorim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --verde: #2d6a4f; --verde-neon: #74c69d; --creme: #f8f4ef; --escuro: #1a2e1f; --texto: #2c3e2d; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* HEADER */
+    .header { background: var(--escuro); padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+    .header-logo { font-family: 'Playfair Display', serif; color: var(--verde-neon); font-size: 20px; }
+    .header-logo span { color: rgba(255,255,255,0.5); font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 300; display: block; margin-top: 2px; }
+    .header-status { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.5); }
+    .status-dot { width: 8px; height: 8px; background: var(--verde-neon); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* CHAT */
+    .chat-container { flex: 1; max-width: 700px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; padding: 24px 16px 0; }
+    .chat-intro { text-align: center; padding: 24px 0 20px; }
+    .chat-intro .avatar { width: 72px; height: 72px; background: var(--verde); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 12px; }
+    .chat-intro h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--escuro); }
+    .chat-intro p { font-size: 13px; color: #7a8a7c; margin-top: 6px; }
+    .chat-box { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding-bottom: 16px; min-height: 300px; }
+    .chat-msg { display: flex; }
+    .chat-msg.chat-bot { justify-content: flex-start; }
+    .chat-msg.chat-user { justify-content: flex-end; }
+    .chat-bubble { max-width: 80%; padding: 12px 16px; font-size: 14px; line-height: 1.6; }
+    .chat-bubble-bot { background: #fff; border: 1px solid #e8efe8; color: var(--texto); border-radius: 4px 14px 14px 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .chat-bubble-user { background: var(--verde); color: #fff; border-radius: 14px 4px 14px 14px; }
+    .chat-typing span { width: 8px; height: 8px; background: #c8dcc8; border-radius: 50%; display: inline-block; margin: 0 2px; animation: bounce 1.2s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
+
+    /* INPUT */
+    .input-area { background: #fff; border-top: 1px solid #e8efe8; padding: 16px; position: sticky; bottom: 0; }
+    .input-wrap { max-width: 700px; margin: 0 auto; display: flex; gap: 10px; }
+    .input-wrap input { flex: 1; padding: 13px 16px; border: 1.5px solid #dde8de; border-radius: 24px; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .input-wrap input:focus { border-color: var(--verde); }
+    .btn-send { background: var(--verde); color: #fff; border: none; width: 46px; height: 46px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
+    .btn-send:hover { background: var(--escuro); }
+    .btn-send:disabled { background: #c8dcc8; cursor: not-allowed; }
+
+    /* SUGESTÕES */
+    .sugestoes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .sugestao { background: #fff; border: 1px solid #dde8de; border-radius: 20px; padding: 7px 14px; font-size: 12px; color: var(--verde); cursor: pointer; transition: all 0.2s; }
+    .sugestao:hover { background: var(--verde); color: #fff; border-color: var(--verde); }
+
+    /* CONTATO */
+    .contato-bar { background: var(--escuro); padding: 12px 24px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.4); }
+    .contato-bar a { color: var(--verde-neon); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-logo">🌿 Nutri Amorim<span>Assistente Virtual</span></div>
+  </div>
+  <div class="header-status">
+    <div class="status-dot"></div> Online
+  </div>
+</div>
+
+<div class="chat-container">
+  <div class="chat-intro">
+    <div class="avatar">🌿</div>
+    <h2>Olá! Como posso te ajudar?</h2>
+    <p>Tire dúvidas sobre nutrição ou agende sua consulta</p>
+  </div>
+
+  <div class="sugestoes" id="sugestoes">
+    <div class="sugestao" onclick="perguntaRapida(this)">Como emagrecer com saúde?</div>
+    <div class="sugestao" onclick="perguntaRapida(this)">Como agendar uma consulta?</div>
+    <div class="sugestao" onclick="perguntaRapida(this)">O que é uma dieta equilibrada?</div>
+    <div class="sugestao" onclick="perguntaRapida(this)">Qual o horário de atendimento?</div>
+  </div>
+
+  <div class="chat-box" id="chat-box"></div>
+</div>
+
+<div class="input-area">
+  <div class="input-wrap">
+    <input type="text" id="chat-input" placeholder="Digite sua mensagem..." onkeydown="if(event.key==='Enter')enviarMensagem()">
+    <button class="btn-send" onclick="enviarMensagem()" id="btn-enviar">➤</button>
+  </div>
+</div>
+
+<div class="contato-bar">
+  📞 <a href="tel:62998540552">(62) 99854-0552</a> &nbsp;|&nbsp;
+  📧 <a href="mailto:nutriamorim69@gmail.com">nutriamorim69@gmail.com</a> &nbsp;|&nbsp;
+  📍 Goiânia - GO
+</div>
+
+<script>
+const chatHistorico = [];
+
+function adicionarMensagem(texto, tipo) {
+  const box = document.getElementById('chat-box');
+  const div = document.createElement('div');
+  div.className = 'chat-msg chat-' + tipo;
+  div.innerHTML = `<div class="chat-bubble chat-bubble-${tipo}">${texto}</div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function mostrarTyping() {
+  const box = document.getElementById('chat-box');
+  const div = document.createElement('div');
+  div.className = 'chat-msg chat-bot';
+  div.id = 'chat-typing';
+  div.innerHTML = `<div class="chat-bubble chat-bubble-bot" style="padding:14px 18px"><span class="chat-typing"><span></span><span></span><span></span></span></div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function removerTyping() {
+  const t = document.getElementById('chat-typing');
+  if (t) t.remove();
+}
+
+function perguntaRapida(el) {
+  document.getElementById('chat-input').value = el.textContent;
+  document.getElementById('sugestoes').style.display = 'none';
+  enviarMensagem();
+}
+
+async function enviarMensagem() {
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if (!texto) return;
+
+  document.getElementById('sugestoes').style.display = 'none';
+  input.value = '';
+  document.getElementById('btn-enviar').disabled = true;
+  adicionarMensagem(texto, 'user');
+  chatHistorico.push({ role: 'user', content: texto });
+  mostrarTyping();
+
+  try {
+    const resposta = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Você é o assistente virtual da Nutri Amorim, clínica de nutrição personalizada em Goiânia-GO.
+Seu papel é:
+- Responder dúvidas sobre nutrição, alimentação saudável, dietas e bem-estar
+- Informar sobre os serviços da clínica e como agendar consultas
+- Ser simpático, acolhedor e profissional
+- Responder sempre em português brasileiro
+- Para agendamentos, orientar o cliente a entrar em contato via WhatsApp: (62) 99854-0552 ou email: nutriamorim69@gmail.com
+- Horário de atendimento: Segunda a Sexta das 8h às 18h
+- Nunca fazer diagnósticos médicos, apenas orientações gerais de nutrição
+- Manter respostas objetivas e claras, usando formatação simples`,
+        messages: chatHistorico
+      })
+    });
+
+    const data = await resposta.json();
+    removerTyping();
+    const msg = data.content?.[0]?.text || 'Desculpe, não consegui processar sua mensagem. Entre em contato pelo WhatsApp: (62) 99854-0552';
+    chatHistorico.push({ role: 'assistant', content: msg });
+    adicionarMensagem(msg.replace(/\n/g, '<br>'), 'bot');
+  } catch(e) {
+    removerTyping();
+    adicionarMensagem('Desculpe, ocorreu um erro. Entre em contato pelo WhatsApp: <a href="https://wa.me/5562998540552" style="color:var(--verde)">(62) 99854-0552</a>', 'bot');
+  }
+
+  document.getElementById('btn-enviar').disabled = false;
+  input.focus();
+}
+</script>
+</body>
+</html>
