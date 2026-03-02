@@ -911,13 +911,14 @@ async function salvarProntuario() {
   }
 
   const g = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-  const gNum = (id) => { const v = g(id); return v === '' ? null : parseFloat(v); };
-  const gInt = (id) => { const v = g(id); return v === '' ? null : parseInt(v); };
-  const gTxt = (id) => { const v = g(id); return v === '' ? null : v; };
+  const gNum = (id) => { const v = g(id); return (v === '' || v === null) ? null : parseFloat(v) || null; };
+  const gInt = (id) => { const v = g(id); return (v === '' || v === null) ? null : parseInt(v) || null; };
+  const gTxt = (id) => { const v = g(id); return (v === '' || v === null) ? null : v; };
+  const gDate = (id) => { const v = g(id); return (v === '' || v === null) ? null : v; };
 
   const dados = {
     user_id: currentUser.id,
-    nome: g('pr-nome'), nascimento: g('pr-nasc'), sexo: g('pr-sexo'),
+    nome: g('pr-nome'), nascimento: gDate('pr-nasc'), sexo: g('pr-sexo'),
     estado_civil: gTxt('pr-estado-civil'), profissao: gTxt('pr-profissao'), telefone: gTxt('pr-tel'),
     email_paciente: gTxt('pr-email'),
     endereco: gTxt('pr-endereco'), bairro: gTxt('pr-bairro'), familia: gTxt('pr-familia'),
@@ -945,6 +946,13 @@ async function salvarProntuario() {
   };
 
   msg.className = 'msg success'; msg.textContent = '⏳ Salvando...';
+
+  // Debug: mostrar campos com valor inválido
+  const camposInvalidos = Object.entries(dados).filter(([k, v]) => v === '');
+  if (camposInvalidos.length > 0) {
+    console.warn('Campos com string vazia:', camposInvalidos.map(([k]) => k));
+    camposInvalidos.forEach(([k]) => dados[k] = null);
+  }
 
   try {
     let resultado;
