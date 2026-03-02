@@ -908,32 +908,73 @@ async function salvarProntuario() {
     observacoes: g('pr-obs'), sintomas: JSON.stringify(coletarSintomas())
   };
 
+  msg.className = 'msg success'; msg.textContent = '⏳ Salvando...';
+
   try {
     let resultado;
     if (editandoProntuarioId) {
-      // ✅ UPDATE (editar existente)
-      dados.id = editandoProntuarioId;
-      const { data } = await window._sb.from('prontuarios').update(dados).eq('id', editandoProntuarioId).eq('user_id', currentUser.id).select().single();
+      // UPDATE (editar existente)
+      const { data, error } = await window._sb
+        .from('prontuarios')
+        .update(dados)
+        .eq('id', editandoProntuarioId)
+        .eq('user_id', currentUser.id)
+        .select()
+        .single();
+      if (error) throw error;
       resultado = data;
-      // Atualizar na lista local
       const idx = prontuariosSalvos.findIndex(p => p.id === editandoProntuarioId);
       if (idx >= 0) prontuariosSalvos[idx] = resultado;
     } else {
-      // ✅ INSERT (novo prontuário)
-      const { data } = await window._sb.from('prontuarios').insert(dados).select().single();
-      resultado = data;
-      editandoProntuarioId = resultado.id;
-      document.getElementById('pr-id').value = resultado.id;
-      prontuariosSalvos.unshift(resultado);
+      // INSERT (novo prontuário)
+      // Remove o campo id se vier vazio (não mandar para o banco)
+      delete dados.id;
+      const { data, error } = await window._sb
+        .from('prontuarios')
+        .insert(dados)
+        .select()
+        .single();
+
+      if (error) {
+        // Constraint UNIQUE ainda ativa: tentar via upsert por user_id
+        if (error.code === '23505') {
+          msg.textContent = '⚠️ Ajustando banco... Execute o migracao.sql no Supabase para suportar múltiplos prontuários. Salvando com upsert por enquanto...';
+          const { data: data2, error: err2 } = await window._sb
+            .from('prontuarios')
+            .upsert({ ...dados, user_id: currentUser.id }, { onConflict: 'user_id' })
+            .select()
+            .single();
+          if (err2) throw err2;
+          resultado = data2;
+          editandoProntuarioId = resultado.id;
+          document.getElementById('pr-id').value = resultado.id;
+          const existeIdx = prontuariosSalvos.findIndex(p => p.id === resultado.id);
+          if (existeIdx >= 0) prontuariosSalvos[existeIdx] = resultado;
+          else prontuariosSalvos.unshift(resultado);
+        } else {
+          throw error;
+        }
+      } else {
+        resultado = data;
+        editandoProntuarioId = resultado.id;
+        document.getElementById('pr-id').value = resultado.id;
+        prontuariosSalvos.unshift(resultado);
+      }
     }
+
     prontuarioData = resultado || dados;
     document.getElementById('badge-salvos').textContent = prontuariosSalvos.length;
     document.getElementById('st-salvos').textContent = prontuariosSalvos.length;
     document.getElementById('st-prontuario').textContent = '✓';
     renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-    msg.className = 'msg success'; msg.textContent = '✅ Prontuário salvo com sucesso!';
+    msg.className = 'msg success';
+    msg.textContent = '✅ Prontuário de ' + (resultado.nome || 'paciente') + ' salvo com sucesso!';
     calcularMetas();
-  } catch(e) { msg.className = 'msg error'; msg.textContent = e.message; }
+  } catch(e) {
+    msg.className = 'msg error';
+    msg.textContent = '❌ Erro ao salvar: ' + (e.message || e.details || JSON.stringify(e));
+    console.error('Erro salvar prontuário:', e);
+  }
 }
 
 function calcularIdade(dataNasc) {
@@ -988,7 +1029,7 @@ function exportarProntuarioPDF() {
     diag_etiologia: pr("pr-diag-etiologia")||"A preencher",
     diag_sinais: pr("pr-diag-sinais")||"A preencher",
     peso: pr("pr-peso") ? pr("pr-peso")+" kg" : "—",
-    altura: pr("pr-altura") ? (parseFloat(pr("pr-altura"))/100).toFixed(2)+" m" : "—",
+    altura: pr("pr-altura") ? pr("pr-altura")+" cm" : "—",
     imc: pr("pr-imc")||"—", cimc: classificarIMC(pr("pr-imc")),
     peso_des: pr("pr-peso-des") ? pr("pr-peso-des")+" kg" : "—",
     c_abd: pr("pr-circ-abd") ? pr("pr-circ-abd")+" cm" : "—",
@@ -1009,39 +1050,90 @@ function exportarProntuarioPDF() {
     doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(...BR);
     doc.text(txt.toUpperCase(), ML+9, y+7); doc.setTextColor(...TX); y += 14;
   };
+  // fld: label em cima (cinza pequeno), valor embaixo (texto normal) — sem sobreposicao
   const fld = (label, val, x, w) => {
-    const lines = doc.splitTextToSize(String(val), w - 36); const h = Math.max(lines.length * 5, 6) + 3; ck(h);
-    doc.setFillColor(...CL); doc.rect(x, y - 4, w, h, "F"); doc.setDrawColor(...CB); doc.rect(x, y - 4, w, h);
-    doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(...VM); doc.text(label + ":", x + 2, y);
-    doc.setFont("helvetica","normal"); doc.setTextColor(...TX); doc.text(lines, x + 35, y); y += h;
+    const valLines = doc.splitTextToSize(String(val || "—"), w - 6);
+    const PAD_TOP = 4, LBL_H = 5, GAP = 2, LINE_H = 5, PAD_BOT = 3;
+    const h = PAD_TOP + LBL_H + GAP + (valLines.length * LINE_H) + PAD_BOT;
+    ck(h);
+    const top = y;
+    doc.setFillColor(...CL); doc.rect(x, top, w, h, "F");
+    doc.setDrawColor(...CB); doc.rect(x, top, w, h);
+    // Label
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VM);
+    doc.text(label.toUpperCase(), x + 3, top + PAD_TOP + LBL_H - 1);
+    // Valor
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(...TX);
+    doc.text(valLines, x + 3, top + PAD_TOP + LBL_H + GAP + LINE_H - 1);
+    y = top + h + 2;
   };
+
+  // f2: dois campos lado a lado, cada um com label em cima e valor embaixo
   const f2 = (l1, v1, l2, v2) => {
-    const hw = PW / 2; const a = doc.splitTextToSize(String(v1), hw - 36); const b = doc.splitTextToSize(String(v2), hw - 36);
-    const h = Math.max(a.length, b.length) * 5 + 3; ck(h);
-    doc.setFillColor(...CL); doc.rect(ML, y-4, PW, h, "F"); doc.setFillColor(235,245,237); doc.rect(ML+hw, y-4, hw, h, "F");
-    doc.setDrawColor(...CB); doc.rect(ML, y-4, PW, h); doc.line(ML+hw, y-4, ML+hw, y-4+h);
-    doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(...VM); doc.text(l1+":", ML+2, y);
-    doc.setFont("helvetica","normal"); doc.setTextColor(...TX); doc.text(a, ML+32, y);
-    doc.setFont("helvetica","bold"); doc.setTextColor(...VM); doc.text(l2+":", ML+hw+2, y);
-    doc.setFont("helvetica","normal"); doc.setTextColor(...TX); doc.text(b, ML+hw+32, y); y += h;
+    const hw = PW / 2;
+    const a = doc.splitTextToSize(String(v1 || "—"), hw - 6);
+    const b = doc.splitTextToSize(String(v2 || "—"), hw - 6);
+    const PAD_TOP = 4, LBL_H = 5, GAP = 2, LINE_H = 5, PAD_BOT = 3;
+    const h = PAD_TOP + LBL_H + GAP + (Math.max(a.length, b.length) * LINE_H) + PAD_BOT;
+    ck(h);
+    const top = y;
+    // Fundo esquerdo
+    doc.setFillColor(...CL); doc.rect(ML, top, hw, h, "F");
+    // Fundo direito
+    doc.setFillColor(235,245,237); doc.rect(ML+hw, top, hw, h, "F");
+    // Bordas
+    doc.setDrawColor(...CB);
+    doc.rect(ML, top, PW, h);
+    doc.line(ML+hw, top, ML+hw, top+h);
+    // Label esquerdo
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VM);
+    doc.text(l1.toUpperCase(), ML+3, top + PAD_TOP + LBL_H - 1);
+    // Valor esquerdo
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(...TX);
+    doc.text(a, ML+3, top + PAD_TOP + LBL_H + GAP + LINE_H - 1);
+    // Label direito
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VM);
+    doc.text(l2.toUpperCase(), ML+hw+3, top + PAD_TOP + LBL_H - 1);
+    // Valor direito
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(...TX);
+    doc.text(b, ML+hw+3, top + PAD_TOP + LBL_H + GAP + LINE_H - 1);
+    y = top + h + 2;
   };
   const destaque = (label, val) => {
-    ck(14); doc.setFillColor(...VE); doc.roundedRect(ML, y, PW, 12, 2, 2, "F");
-    doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(...VC); doc.text(label+":", ML+4, y+7.5);
-    doc.setFont("helvetica","normal"); doc.setTextColor(...BR); doc.text(String(val), ML+32, y+7.5); y += 15;
+    const h = 16; ck(h);
+    const top = y;
+    doc.setFillColor(...VE); doc.roundedRect(ML, top, PW, h, 2, 2, "F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VC);
+    doc.text(label.toUpperCase()+":", ML+4, top+6);
+    doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(...BR);
+    doc.text(String(val || "—"), ML+4, top+13);
+    y = top + h + 2;
   };
   const tblHead = (cols, ws) => {
-    ck(10); let x = ML; doc.setFillColor(...VE); doc.rect(ML, y-5, PW, 9, "F");
+    const h = 10; ck(h);
+    const top = y;
+    let x = ML;
+    doc.setFillColor(...VE); doc.rect(ML, top, PW, h, "F");
     doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(...VC);
-    cols.forEach((c,i) => { doc.text(c, x+2, y); x += ws[i]; }); doc.setTextColor(...TX); y += 5;
+    cols.forEach((c,i) => { doc.text(c, x+2, top+7); x += ws[i]; });
+    doc.setTextColor(...TX); y = top + h;
   };
   const tblRow = (cells, ws, alt) => {
-    const mx = Math.max(...cells.map((c,i) => doc.splitTextToSize(String(c||""), ws[i]-4).length));
-    const h = Math.max(mx*5, 6)+2; ck(h); let x = ML;
-    if (alt) { doc.setFillColor(...CL); doc.rect(ML, y-4, PW, h, "F"); }
-    doc.setDrawColor(...CB); doc.rect(ML, y-4, PW, h);
+    const PAD = 3, LINE_H = 5;
+    const mx = Math.max(...cells.map((c,i) => doc.splitTextToSize(String(c||"—"), ws[i]-4).length));
+    const h = PAD + (mx * LINE_H) + PAD;
+    ck(h);
+    const top = y;
+    let x = ML;
+    if (alt) { doc.setFillColor(...CL); doc.rect(ML, top, PW, h, "F"); }
+    doc.setDrawColor(...CB); doc.rect(ML, top, PW, h);
     doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(...TX);
-    cells.forEach((c,i) => { doc.line(x, y-4, x, y-4+h); doc.text(doc.splitTextToSize(String(c||"—"), ws[i]-4), x+2, y); x += ws[i]; }); y += h;
+    cells.forEach((c,i) => {
+      doc.line(x, top, x, top+h);
+      doc.text(doc.splitTextToSize(String(c||"—"), ws[i]-4), x+2, top+PAD+LINE_H-1);
+      x += ws[i];
+    });
+    y = top + h;
   };
   const sp = (n=5) => { y += n; };
 
@@ -1057,53 +1149,59 @@ function exportarProntuarioPDF() {
   doc.text("Data: "+d.consulta, 162, 19, {align:"center"}); doc.text("nutriamorim69@gmail.com", 162, 25, {align:"center"});
   y = 44;
 
-  sec("Identificação do Paciente");
+  sec("Identificacao do Paciente");
   destaque("Paciente", d.nome);
   f2("Data de Nascimento", d.nasc, "Idade / Sexo", d.idade+" anos  |  "+d.sexo);
-  f2("Profissão", d.profissao, "Celular", d.telefone);
+  f2("Profissao", d.profissao, "Celular", d.telefone);
   f2("Estado Civil", d.civil, "E-mail do Paciente", d.email); // ✅ E-mail no PDF
   f2("Motivo da Consulta", d.motivo, "Apetite", d.apetite);
-  fld("Observações Gerais", d.obs, ML, PW); sp();
+  fld("Observacoes Gerais", d.obs, ML, PW); sp();
 
-  sec("Avaliação Antropométrica");
-  const metricas = [["⚖ Peso Atual", d.peso], ["↕ Altura", d.altura], ["📊 IMC", d.imc+" ("+d.cimc+")"], ["🎯 Peso Desejado", d.peso_des]];
+  sec("Avaliacao Antropometrica");
+  const metricas = [["Peso Atual", d.peso], ["Altura", d.altura], ["IMC", d.imc+" ("+d.cimc+")"], ["Peso Desejado", d.peso_des]];
   const cw = PW / 4;
+  ck(24);
+  const mTop = y;
   metricas.forEach((m, i) => {
     const cx = ML + i * cw;
-    doc.setFillColor(...VE); doc.roundedRect(cx, y, cw-2, 18, 2, 2, "F");
-    doc.setFillColor(...VM); doc.roundedRect(cx, y+13, cw-2, 5, 1, 1, "F");
-    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VC); doc.text(m[0], cx+(cw-2)/2, y+6, {align:"center"});
-    doc.setFontSize(9); doc.setTextColor(...BR); const vl = doc.splitTextToSize(m[1], cw-6); doc.text(vl, cx+(cw-2)/2, y+11, {align:"center"});
+    doc.setFillColor(...VE); doc.roundedRect(cx, mTop, cw-2, 22, 2, 2, "F");
+    // Label no topo
+    doc.setFont("helvetica","bold"); doc.setFontSize(7); doc.setTextColor(...VC);
+    doc.text(m[0].toUpperCase(), cx+(cw-2)/2, mTop+6, {align:"center"});
+    // Valor no meio
+    doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.setTextColor(...BR);
+    const vl = doc.splitTextToSize(String(m[1]||"—"), cw-6);
+    doc.text(vl, cx+(cw-2)/2, mTop+14, {align:"center"});
   });
-  y += 22; sp(2);
+  y = mTop + 26;
   f2("Circ. Abdominal", d.c_abd, "% Gordura Corporal", d.gordura);
-  f2("Nível de Atividade", d.atividade, "Frequência", d.freq);
-  fld("Tipo de Exercício", d.exercicio, ML, PW); sp();
+  f2("Nivel de Atividade", d.atividade, "Frequencia", d.freq);
+  fld("Tipo de Exercicio", d.exercicio, ML, PW); sp();
 
-  sec("Histórico Social Familiar");
-  f2("Quem compra", d.compra_quem, "Frequência compra", d.compra_freq);
-  f2("Quem prepara refeições", d.prepara, "Com quem realiza refeições", d.come_com);
-  f2("Álcool", d.alcool, "Tabagismo / Nº cigarros", d.tabaco+" / "+d.cigarros+"/dia");
+  sec("Historico Social Familiar");
+  f2("Quem compra", d.compra_quem, "Frequencia compra", d.compra_freq);
+  f2("Quem prepara refeicoes", d.prepara, "Com quem realiza refeicoes", d.come_com);
+  f2("Alcool", d.alcool, "Tabagismo / No cigarros", d.tabaco+" / "+d.cigarros+"/dia");
   f2("Qualidade do Sono", d.sono, "Consumo de Água", d.agua); sp();
 
-  sec("Dados Clínicos Gerais");
-  fld("Patologias / Doenças", d.patologia, ML, PW);
+  sec("Dados Clinicos Gerais");
+  fld("Patologias / Doencas", d.patologia, ML, PW);
   fld("Medicamentos em Uso", d.medicam, ML, PW);
-  fld("Alergias / Intolerâncias", d.alergias, ML, PW);
+  fld("Alergias / Intolerancias", d.alergias, ML, PW);
   fld("Cirurgias Anteriores", d.cirurgias, ML, PW);
-  fld("Lesões / Pele / Cabelo / Unhas", d.pele, ML, PW);
-  f2("Hábito Intestinal", d.intestino, "Consistência das Fezes", d.fezes);
+  fld("Lesoes / Pele / Cabelo / Unhas", d.pele, ML, PW);
+  f2("Habito Intestinal", d.intestino, "Consistencia das Fezes", d.fezes);
   fld("Diurese", d.diurese, ML, PW); sp();
 
-  sec("Tabela de Dados Clínicos — Sintomas");
+  sec("Tabela de Dados Clinicos - Sintomas");
   const sintomasPDF = coletarSintomas();
   tblHead(["Sintoma / Condição","Resposta","Observação"], [55,25,100]);
   sintomasPDF.forEach((s,i) => tblRow([s.sintoma, s.resposta, s.obs||"—"], [55,25,100], i%2===0)); sp();
 
-  sec("Ficha Antropométrica Detalhada");
+  sec("Ficha Antropometrica Detalhada");
   doc.setFontSize(8); doc.setFont("helvetica","italic"); doc.setTextColor(...TX2); doc.text("Equação: Jackson & Pollock (7 dobras) + Siri (1961)", ML, y); y += 6;
   tblHead(["Data","Item","Medição","Und."], [25,65,60,32]);
-  [["PESO",d.peso,"kg"],["ESTATURA",d.altura,"m"],["IMC",d.imc+" ("+d.cimc+")",""],
+  [["PESO",d.peso,"kg"],["ESTATURA",d.altura,""],["IMC",d.imc+" ("+d.cimc+")",""],
    ["C. BRAÇO",d.c_braco,"cm"],["C. PEITORAL",d.c_peitoral,"cm"],["C. CINTURA",d.c_cintura,"cm"],
    ["C. ABDOMINAL",d.c_abd,"cm"],["C. QUADRIL",d.c_quadril,"cm"],["C. COXA",d.c_coxa,"cm"],
    ["C. PANTURRILHA",d.c_panturrilha,"cm"],["C. PESCOÇO",d.c_pescoco,"cm"],["RELAÇÃO C/Q",d.cq,""],
@@ -1114,11 +1212,11 @@ function exportarProntuarioPDF() {
    ["% GORDURA",d.gordura,"%"]
   ].forEach((m,i) => tblRow([d.consulta,m[0],m[1]||"",m[2]], [25,65,60,32], i%2===0)); sp();
 
-  sec("Hábitos Alimentares");
-  fld("Alimentos que Gosta / Consome com Frequência", d.gosta, ML, PW);
-  fld("Alimentos que Evita / Não Gosta", d.nao_gosta, ML, PW); sp();
+  sec("Habitos Alimentares");
+  fld("Alimentos que Gosta / Consome com Frequencia", d.gosta, ML, PW);
+  fld("Alimentos que Evita / Nao Gosta", d.nao_gosta, ML, PW); sp();
 
-  sec("Diagnóstico Nutricional");
+  sec("Diagnostico Nutricional");
   fld("Problema", d.diag_problema, ML, PW);
   fld("Etiologia", d.diag_etiologia, ML, PW);
   fld("Sinais / Sintomas", d.diag_sinais, ML, PW); sp();
@@ -1189,7 +1287,7 @@ function exportarProntuarioWord() {
   <div class="field"><div class="lbl">Data de Nascimento</div><div class="val">${g('pr-nasc') ? new Date(g('pr-nasc')).toLocaleDateString('pt-BR') : '—'}</div></div>
   <div class="field"><div class="lbl">Sexo</div><div class="val">${g('pr-sexo')}</div></div>
   <div class="field"><div class="lbl">Estado Civil</div><div class="val">${g('pr-estado-civil')}</div></div>
-  <div class="field"><div class="lbl">Profissão</div><div class="val">${g('pr-profissao')}</div></div>
+  <div class="field"><div class="lbl">Profissao</div><div class="val">${g('pr-profissao')}</div></div>
   <div class="field"><div class="lbl">Telefone</div><div class="val">${g('pr-tel')}</div></div>
   <div class="field"><div class="lbl">E-mail do Paciente</div><div class="val">${g('pr-email')}</div></div>
   <div class="field"><div class="lbl">Endereço</div><div class="val">${g('pr-endereco')} ${g('pr-bairro') !== '—' ? '— '+g('pr-bairro') : ''}</div></div>
@@ -1201,15 +1299,15 @@ function exportarProntuarioWord() {
 <h2>📏 AVALIAÇÃO ANTROPOMÉTRICA</h2>
 <div class="grid">
   <div class="field"><div class="lbl">Peso Atual</div><div class="val">${g('pr-peso')} kg</div></div>
-  <div class="field"><div class="lbl">Estatura</div><div class="val">${parseFloat(g('pr-altura'))/100||'—'} m</div></div>
+  <div class="field"><div class="lbl">Estatura</div><div class="val">${g('pr-altura')} cm</div></div>
   <div class="field"><div class="lbl">IMC</div><div class="val">${g('pr-imc')} — ${classificarIMC(g('pr-imc'))}</div></div>
   <div class="field"><div class="lbl">Peso Desejado</div><div class="val">${g('pr-peso-des')} kg</div></div>
   <div class="field"><div class="lbl">Circ. Abdominal</div><div class="val">${g('pr-circ-abd')} cm</div></div>
   <div class="field"><div class="lbl">% Gordura Corporal</div><div class="val">${g('pr-gordura')}%</div></div>
   <div class="field"><div class="lbl">Circ. Cintura</div><div class="val">${g('pr-c-cintura')} cm</div></div>
   <div class="field"><div class="lbl">Circ. Quadril</div><div class="val">${g('pr-c-quadril')} cm</div></div>
-  <div class="field"><div class="lbl">Nível de Atividade</div><div class="val">${g('pr-atividade')}</div></div>
-  <div class="field"><div class="lbl">Tipo de Exercício</div><div class="val">${g('pr-exercicio')}</div></div>
+  <div class="field"><div class="lbl">Nivel de Atividade</div><div class="val">${g('pr-atividade')}</div></div>
+  <div class="field"><div class="lbl">Tipo de Exercicio</div><div class="val">${g('pr-exercicio')}</div></div>
 </div>
 
 <h2>🩺 DADOS CLÍNICOS — SINTOMAS</h2>
@@ -1223,9 +1321,9 @@ function exportarProntuarioWord() {
   <div class="field"><div class="lbl">Patologias</div><div class="val">${g('pr-patologia')}</div></div>
   <div class="field"><div class="lbl">Cirurgias Anteriores</div><div class="val">${g('pr-cirurgias')}</div></div>
   <div class="field"><div class="lbl">Medicamentos em Uso</div><div class="val">${g('pr-medicamentos')}</div></div>
-  <div class="field"><div class="lbl">Alergias / Intolerâncias</div><div class="val">${g('pr-alergias')}</div></div>
-  <div class="field"><div class="lbl">Hábito Intestinal</div><div class="val">${g('pr-intestino')}</div></div>
-  <div class="field"><div class="lbl">Consistência das Fezes</div><div class="val">${g('pr-fezes')}</div></div>
+  <div class="field"><div class="lbl">Alergias / Intolerancias</div><div class="val">${g('pr-alergias')}</div></div>
+  <div class="field"><div class="lbl">Habito Intestinal</div><div class="val">${g('pr-intestino')}</div></div>
+  <div class="field"><div class="lbl">Consistencia das Fezes</div><div class="val">${g('pr-fezes')}</div></div>
   <div class="field"><div class="lbl">Diurese</div><div class="val">${g('pr-diurese')}</div></div>
   <div class="field"><div class="lbl">Pele / Cabelo / Unhas</div><div class="val">${g('pr-pele')}</div></div>
 </div>
@@ -1234,7 +1332,7 @@ function exportarProntuarioWord() {
 <div class="grid">
   <div class="field"><div class="lbl">Nº de Refeições/dia</div><div class="val">${g('pr-refeicoes')}</div></div>
   <div class="field"><div class="lbl">Ingestão de Água</div><div class="val">${g('pr-agua')} L/dia</div></div>
-  <div class="field"><div class="lbl">Álcool</div><div class="val">${g('pr-alcool')}</div></div>
+  <div class="field"><div class="lbl">Alcool</div><div class="val">${g('pr-alcool')}</div></div>
   <div class="field"><div class="lbl">Tabagismo</div><div class="val">${g('pr-tabagismo')}</div></div>
   <div class="field"><div class="lbl">Alimentos que Gosta</div><div class="val">${g('pr-gosta')}</div></div>
   <div class="field"><div class="lbl">Alimentos que Evita</div><div class="val">${g('pr-nao-gosta')}</div></div>
