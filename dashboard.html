@@ -140,6 +140,11 @@
     .perfil-info h3 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--escuro); }
     .perfil-info p { font-size: 14px; color: #7a8a7c; margin-top: 4px; }
 
+    .sugestao-item { padding: 10px 14px; cursor: pointer; font-size: 13px; border-bottom: 1px solid #f0f5f0; display: flex; flex-direction: column; gap: 2px; }
+    .sugestao-item:hover { background: var(--creme); }
+    .sugestao-item strong { color: var(--escuro); font-size: 14px; }
+    .sugestao-item span { color: #7a8a7c; font-size: 11px; }
+
     @media (max-width: 1024px) { body { grid-template-columns: 1fr; } .sidebar { display: none; } .stats-grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 600px) { .content { padding: 20px; } .stats-grid { grid-template-columns: 1fr; } .form-grid, .form-grid-3, .totals-box, .plano-meta { grid-template-columns: 1fr; } }
   </style>
@@ -270,7 +275,11 @@
         <!-- 1. IDENTIFICAÇÃO -->
         <div class="section-mini-title">🧑 Identificação</div>
         <div class="form-grid">
-          <div class="field"><label>Nome Completo <span>*</span></label><input type="text" id="pr-nome" placeholder="Nome completo do paciente"></div>
+          <div class="field" style="position:relative">
+            <label>Nome Completo <span>*</span></label>
+            <input type="text" id="pr-nome" placeholder="Nome completo do paciente" autocomplete="off" oninput="mostrarSugestoesNome(this.value)" onblur="setTimeout(()=>document.getElementById('sugestoes-nome').style.display='none',200)">
+            <div id="sugestoes-nome" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--verde);border-top:none;border-radius:0 0 4px 4px;z-index:100;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)"></div>
+          </div>
           <div class="field"><label>Data de Nascimento <span>*</span></label><input type="date" id="pr-nasc"></div>
           <div class="field"><label>Sexo <span>*</span></label>
             <select id="pr-sexo"><option value="">Selecione</option><option>Masculino</option><option>Feminino</option><option>Outro</option></select>
@@ -589,6 +598,35 @@ let recordatorioItems = [];
 let prontuarioData = {};
 let prontuariosSalvos = []; // ✅ Array de prontuários
 let editandoProntuarioId = null; // ✅ ID em edição
+
+// ── AUTOCOMPLETE NOME ──
+function mostrarSugestoesNome(valor) {
+  const box = document.getElementById('sugestoes-nome');
+  if (!valor || valor.length < 2) { box.style.display = 'none'; return; }
+  const matches = prontuariosSalvos.filter(p =>
+    p.nome && p.nome.toLowerCase().includes(valor.toLowerCase())
+  );
+  if (!matches.length) { box.style.display = 'none'; return; }
+  box.innerHTML = matches.slice(0, 6).map(p => `
+    <div class="sugestao-item" onmousedown="preencherDoAutocomplete('${p.id}')">
+      <strong>${p.nome}</strong>
+      <span>${p.nascimento ? new Date(p.nascimento).toLocaleDateString('pt-BR') : ''} ${p.peso ? '• '+p.peso+'kg' : ''} ${p.objetivo ? '• '+p.objetivo : ''}</span>
+    </div>`).join('');
+  box.style.display = 'block';
+}
+
+function preencherDoAutocomplete(id) {
+  const pront = prontuariosSalvos.find(p => p.id === id);
+  if (!pront) return;
+  // Preenche como edição do prontuário existente
+  editandoProntuarioId = id;
+  limparFormProntuario();
+  preencherProntuario(pront);
+  document.getElementById('sugestoes-nome').style.display = 'none';
+  const msg = document.getElementById('msg-pront');
+  msg.className = 'msg success';
+  msg.textContent = '✏️ Dados de "' + pront.nome + '" carregados. Edite e salve.';
+}
 
 // ── INIT ──
 async function init() {
