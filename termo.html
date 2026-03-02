@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termo de Consentimento — Nutri Amorim</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- jsPDF para geração de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --verde: #2d6a4f; --verde-neon: #74c69d; --creme: #f8f4ef; --escuro: #1a2e1f; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); min-height: 100vh; }
+    .topbar { background: var(--escuro); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar-brand { color: #fff; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; }
+    .topbar-brand span { color: var(--verde-neon); }
+    .page-wrap { max-width: 800px; margin: 0 auto; padding: 60px 24px; }
+    .page-header { margin-bottom: 40px; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900; color: var(--escuro); margin-bottom: 8px; }
+    .page-header p { font-size: 15px; color: #7a8a7c; }
+    .termo-doc { background: #fff; border: 1px solid #e0e8e1; border-radius: 8px; padding: 48px; margin-bottom: 32px; }
+    .termo-doc h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--escuro); margin-bottom: 24px; text-align: center; border-bottom: 2px solid var(--creme); padding-bottom: 16px; }
+    .termo-section { margin-bottom: 24px; }
+    .termo-section h3 { font-size: 14px; font-weight: 600; color: var(--verde); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .termo-section p { font-size: 14px; color: #4a5e4c; line-height: 1.75; }
+    .data-usuario { background: var(--creme); border-radius: 6px; padding: 16px 20px; margin: 24px 0; font-size: 14px; color: var(--escuro); }
+    .data-usuario strong { color: var(--verde); }
+    .assinatura-box { border: 2px dashed #c8d9ca; border-radius: 8px; padding: 32px; text-align: center; margin-top: 32px; }
+    .assinatura-box p { font-size: 13px; color: #7a8a7c; margin-bottom: 12px; }
+    .assinado-tag { display: inline-flex; align-items: center; gap: 8px; background: #f0fdf4; color: var(--verde); border: 1px solid #bbf7d0; border-radius: 4px; padding: 8px 16px; font-size: 13px; font-weight: 500; }
+    .actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-download { background: var(--verde); color: #fff; border: none; padding: 16px 40px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; border-radius: 4px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; }
+    .btn-download:hover { background: var(--escuro); }
+    .btn-next { background: var(--verde-neon); color: var(--escuro); border: none; padding: 16px 40px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; border-radius: 4px; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(116,198,157,0.3); }
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-brand">🌿 <span>Nutri</span> Amorim</div>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Termo de Consentimento</h1>
+    <p>Leia com atenção e baixe seu documento assinado.</p>
+  </div>
+
+  <div class="termo-doc" id="termo-doc">
+    <h2>TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO</h2>
+
+    <div class="data-usuario" id="dados-usuario">
+      <strong>Paciente:</strong> <span id="td-nome">Carregando...</span> &nbsp;|&nbsp;
+      <strong>E-mail:</strong> <span id="td-email">—</span> &nbsp;|&nbsp;
+      <strong>Data:</strong> <span id="td-data">—</span>
+    </div>
+
+    <div class="termo-section">
+      <h3>1. Identificação</h3>
+      <p>Este termo refere-se ao acompanhamento nutricional prestado pela plataforma Nutri Amorim, destinado ao paciente identificado acima, que expressou interesse em receber orientações nutricionais personalizadas.</p>
+    </div>
+    <div class="termo-section">
+      <h3>2. Objetivo do Atendimento</h3>
+      <p>O atendimento nutricional tem como objetivo elaborar um plano alimentar individualizado, com base nas informações fornecidas pelo paciente através do prontuário eletrônico, tabela de proporção alimentar e recordatório alimentar de 24 horas.</p>
+    </div>
+    <div class="termo-section">
+      <h3>3. Procedimentos</h3>
+      <p>O paciente concorda em fornecer informações verídicas sobre seu histórico de saúde, hábitos alimentares, uso de medicamentos, condições médicas preexistentes e objetivos nutricionais. Todas as informações são tratadas com total confidencialidade.</p>
+    </div>
+    <div class="termo-section">
+      <h3>4. Benefícios e Riscos</h3>
+      <p>O acompanhamento nutricional pode contribuir para a melhora do estado de saúde e qualidade de vida. O plano alimentar elaborado não substitui consulta médica. Em caso de doenças preexistentes, recomenda-se acompanhamento médico concomitante.</p>
+    </div>
+    <div class="termo-section">
+      <h3>5. Confidencialidade dos Dados</h3>
+      <p>Todos os dados fornecidos pelo paciente são armazenados de forma segura e utilizados exclusivamente para fins de acompanhamento nutricional. Não haverá compartilhamento de dados com terceiros sem consentimento expresso.</p>
+    </div>
+    <div class="termo-section">
+      <h3>6. Consentimento</h3>
+      <p>Declaro que li e compreendi todas as informações acima, que tive a oportunidade de esclarecer minhas dúvidas e que aceito voluntariamente participar do acompanhamento nutricional proposto pela plataforma Nutri Amorim.</p>
+    </div>
+
+    <div class="assinatura-box">
+      <p>Assinatura Digital — Aceite eletrônico registrado em:</p>
+      <div class="assinado-tag">✅ Documento assinado eletronicamente em <span id="td-data-ass">—</span></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-download" onclick="baixarPDF()">📄 Baixar PDF</button>
+    <a href="dashboard.html" class="btn-next">Ir para o Dashboard →</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
+
+async function carregarDados() {
+  const { data: { user } } = await window._sb.auth.getUser();
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  const { data: perfil } = await window._sb.from('perfis').select('*').eq('user_id', user.id).single();
+  const nome = perfil ? `${perfil.nome} ${perfil.sobrenome || ''}`.trim() : user.email;
+  const agora = new Date().toLocaleString('pt-BR');
+
+  document.getElementById('td-nome').textContent = nome;
+  document.getElementById('td-email').textContent = user.email;
+  document.getElementById('td-data').textContent = agora;
+  document.getElementById('td-data-ass').textContent = agora;
+}
+
+function baixarPDF() {
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const margin = 20;
+  let y = 20;
+  const lineH = 7;
+
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO', 105, y, { align: 'center' });
+  y += 10;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Nutri Amorim — Plataforma de Nutrição Personalizada', 105, y, { align: 'center' });
+  y += 12;
+
+  doc.setDrawColor(45, 106, 79);
+  doc.line(margin, y, 190, y);
+  y += 8;
+
+  const nome = document.getElementById('td-nome').textContent;
+  const email = document.getElementById('td-email').textContent;
+  const data = document.getElementById('td-data').textContent;
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Paciente: ${nome}   |   E-mail: ${email}`, margin, y);
+  y += lineH;
+  doc.text(`Data: ${data}`, margin, y);
+  y += 12;
+
+  const secoes = [
+    ['1. Identificação', 'Este termo refere-se ao acompanhamento nutricional prestado pela plataforma Nutri Amorim, destinado ao paciente identificado acima.'],
+    ['2. Objetivo do Atendimento', 'O atendimento nutricional tem como objetivo elaborar um plano alimentar individualizado, com base nas informações fornecidas pelo paciente.'],
+    ['3. Procedimentos', 'O paciente concorda em fornecer informações verídicas sobre seu histórico de saúde, hábitos alimentares, uso de medicamentos e objetivos nutricionais.'],
+    ['4. Benefícios e Riscos', 'O acompanhamento nutricional pode contribuir para a melhora do estado de saúde. O plano não substitui consulta médica.'],
+    ['5. Confidencialidade dos Dados', 'Todos os dados fornecidos são armazenados de forma segura e utilizados exclusivamente para fins de acompanhamento nutricional.'],
+    ['6. Consentimento', 'Declaro que li e compreendi todas as informações e aceito voluntariamente participar do acompanhamento nutricional proposto.'],
+  ];
+
+  secoes.forEach(([titulo, texto]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(titulo, margin, y); y += lineH;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const linhas = doc.splitTextToSize(texto, 170);
+    doc.text(linhas, margin, y);
+    y += linhas.length * 6 + 6;
+  });
+
+  y += 10;
+  doc.setDrawColor(45, 106, 79);
+  doc.line(margin, y, 190, y);
+  y += 8;
+  doc.setFont('helvetica', 'bold');
+  doc.text('✓ ASSINATURA DIGITAL — Aceite eletrônico registrado em: ' + data, margin, y);
+
+  doc.save(`termo-consentimento-${nome.replace(/\s/g,'-')}.pdf`);
+}
+
+carregarDados();
+</script>
+</body>
+</html>

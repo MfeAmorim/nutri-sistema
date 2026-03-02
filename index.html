@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutri Amorim — Sua Dieta Personalizada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+      --creme: #f8f4ef; --creme2: #ede8df; --terra: #a67c52;
+      --escuro: #1a2e1f; --texto: #2c3e2d;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); overflow-x: hidden; }
+
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+    .hero-left { background: var(--escuro); display: flex; flex-direction: column; justify-content: center; padding: 80px 60px; position: relative; z-index: 1; }
+    .hero-left::after { content: ''; position: absolute; top: 0; right: -60px; width: 120px; height: 100%; background: var(--escuro); clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%); z-index: 2; }
+    .logo-tag { font-size: 11px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--verde-neon); margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 72px); font-weight: 900; line-height: 1.05; color: #fff; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s; }
+    .hero-title span { color: var(--verde-neon); display: block; }
+    .hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 380px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s; }
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.8s; }
+    .btn-primary { background: var(--verde-neon); color: var(--escuro); border: none; padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; border-radius: 2px; cursor: pointer; text-decoration: none; transition: all 0.3s; display: inline-block; }
+    .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(116,198,157,0.3); }
+    .btn-secondary { background: transparent; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.25); padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 15px; border-radius: 2px; cursor: pointer; text-decoration: none; transition: all 0.3s; display: inline-block; }
+    .btn-secondary:hover { border-color: var(--verde-neon); color: var(--verde-neon); }
+    .hero-right { background: linear-gradient(135deg, #1e4d35 0%, #2d6a4f 40%, #40916c 70%, #52b788 100%); display: flex; align-items: center; justify-content: center; padding: 80px 40px; position: relative; }
+    .hero-right::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(116,198,157,0.15) 0%, transparent 60%); }
+    .hero-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 48px 40px; text-align: center; max-width: 360px; color: #fff; opacity: 0; animation: fadeUp 0.8s ease forwards 1s; position: relative; z-index: 1; }
+    .hero-icon { font-size: 64px; margin-bottom: 20px; display: block; }
+    .hero-card h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+    .hero-card p { font-size: 14px; opacity: 0.75; line-height: 1.6; margin-bottom: 24px; }
+    .features-mini { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .feat-item { display: flex; align-items: center; gap: 12px; font-size: 13px; opacity: 0.85; }
+    .feat-dot { width: 8px; height: 8px; background: var(--verde-neon); border-radius: 50%; flex-shrink: 0; }
+
+    .section { padding: 100px 60px; }
+    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--verde); margin-bottom: 16px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: var(--escuro); margin-bottom: 16px; line-height: 1.15; }
+    .section-sub { font-size: 16px; color: #6b7c6d; max-width: 500px; line-height: 1.7; margin-bottom: 64px; }
+    .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--creme2); }
+    .resource-card { background: var(--creme); padding: 48px 40px; transition: all 0.3s; position: relative; overflow: hidden; }
+    .resource-card::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background: var(--verde); transition: width 0.4s; }
+    .resource-card:hover::before { width: 100%; }
+    .resource-card:hover { background: #fff; }
+    .resource-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--creme2); line-height: 1; margin-bottom: 8px; }
+    .resource-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+    .resource-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--escuro); margin-bottom: 12px; }
+    .resource-desc { font-size: 14px; color: #7a8a7c; line-height: 1.65; }
+
+    .cta-section { background: var(--escuro); padding: 100px 60px; text-align: center; }
+    .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; color: #fff; margin-bottom: 16px; }
+    .cta-section h2 span { color: var(--verde-neon); }
+    .cta-section p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
+    footer { background: var(--escuro); border-top: 1px solid rgba(255,255,255,0.08); padding: 32px 60px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left::after { display: none; }
+      .hero-right { min-height: 40vh; }
+      .resources-grid { grid-template-columns: 1fr; }
+      .section, .cta-section { padding: 60px 24px; }
+      .hero-left { padding: 60px 28px; }
+    }
+  </style>
+</head>
+<body>
+<section class="hero">
+  <div class="hero-left">
+    <p class="logo-tag">🌿 Nutri Amorim</p>
+    <h1 class="hero-title">Bem-vindo ao<br><span>Nutri Amorim</span></h1>
+    <p class="hero-sub">Faça sua dieta personalizada e tire suas dúvidas com acompanhamento nutricional completo — do prontuário ao plano alimentar em um só lugar.</p>
+    <div class="hero-buttons">
+      <a href="login.html" class="btn-primary">Entrar</a>
+      <a href="cadastro.html" class="btn-secondary">Criar Conta</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card">
+      <span class="hero-icon">🥗</span>
+      <h3>Nutrição Inteligente</h3>
+      <p>Acompanhamento completo baseado no seu perfil e objetivos alimentares.</p>
+      <div class="features-mini">
+        <div class="feat-item"><div class="feat-dot"></div> Ficha de Anamnese Completa</div>
+        <div class="feat-item"><div class="feat-dot"></div> Tabela Nutricional TACO/TBCA</div>
+        <div class="feat-item"><div class="feat-dot"></div> Recordatório 24 Horas</div>
+        <div class="feat-item"><div class="feat-dot"></div> Plano Alimentar Personalizado</div>
+        <div class="feat-item"><div class="feat-dot"></div> Exportação em Excel e PDF</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <p class="section-label">O que você encontra aqui</p>
+  <h2 class="section-title">Tudo que você precisa<br>para sua nutrição</h2>
+  <p class="section-sub">Do cadastro ao plano alimentar, acompanhe cada etapa da sua jornada nutricional com dados precisos.</p>
+  <div class="resources-grid">
+    <div class="resource-card"><div class="resource-num">01</div><span class="resource-icon">📋</span><h3 class="resource-title">Prontuário Médico</h3><p class="resource-desc">Preencha sua ficha de anamnese completa. Os dados geram automaticamente um documento PDF e planilha Excel.</p></div>
+    <div class="resource-card"><div class="resource-num">02</div><span class="resource-icon">🥦</span><h3 class="resource-title">Tabela Alimentar</h3><p class="resource-desc">Cadastre alimentos com informações nutricionais baseadas na tabela TACO/TBCA. Dados salvos na sua planilha.</p></div>
+    <div class="resource-card"><div class="resource-num">03</div><span class="resource-icon">⏱️</span><h3 class="resource-title">Recordatório 24h</h3><p class="resource-desc">Registre tudo que comeu no dia e veja em tempo real: proteínas, calorias, sódio e o quanto ainda falta.</p></div>
+    <div class="resource-card"><div class="resource-num">04</div><span class="resource-icon">🎯</span><h3 class="resource-title">Plano Alimentar</h3><p class="resource-desc">Receba um plano com as quantidades certas dos alimentos para déficit ou superávit calórico.</p></div>
+    <div class="resource-card"><div class="resource-num">05</div><span class="resource-icon">📄</span><h3 class="resource-title">Termo de Consentimento</h3><p class="resource-desc">Documento de consentimento assinado digitalmente, disponível para download em PDF.</p></div>
+    <div class="resource-card"><div class="resource-num">06</div><span class="resource-icon">📊</span><h3 class="resource-title">Exportação de Dados</h3><p class="resource-desc">Todos os seus dados exportados em Excel com abas organizadas: prontuário, alimentos e plano alimentar.</p></div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Pronto para começar<br><span>sua jornada?</span></h2>
+  <p>Crie sua conta gratuita e acesse todos os recursos.</p>
+  <a href="cadastro.html" class="btn-primary" style="font-size:16px;padding:18px 48px;">Criar Minha Conta</a>
+</section>
+<footer>© 2026 Nutri Amorim — Todos os direitos reservados</footer>
+</body>
+</html>
