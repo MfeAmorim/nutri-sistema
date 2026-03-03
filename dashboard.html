@@ -157,14 +157,80 @@
     .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
 
-    @media (max-width: 1024px) { body { grid-template-columns: 1fr; } .sidebar { display: none; } .stats-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .content { padding: 20px; } .stats-grid { grid-template-columns: 1fr; } .form-grid, .form-grid-3, .totals-box, .plano-meta { grid-template-columns: 1fr; } }
+    /* ── MOBILE TOPBAR ── */
+    .mobile-topbar { display: none; background: var(--escuro); padding: 14px 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
+    .hamburger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-brand { font-family: 'Playfair Display', serif; color: var(--verde-neon); font-size: 18px; }
+    .mobile-avatar { width: 36px; height: 36px; background: var(--verde); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; overflow: hidden; }
+    .mobile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    /* ── OVERLAY ── */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 299; }
+    .sidebar-overlay.open { display: block; }
+
+    @media (max-width: 1024px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed; left: -280px; top: 0; height: 100vh; width: 280px;
+        z-index: 300; transition: left 0.3s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+      }
+      .sidebar.open { left: 0; }
+      .mobile-topbar { display: flex; }
+      .topbar { display: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .content { padding: 20px 16px; }
+      .pront-card { grid-template-columns: 1fr; }
+      .pront-card-actions { justify-content: flex-start; margin-top: 12px; }
+      .rec-item { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .rec-item > *:nth-child(5) { display: none; }
+      .rec-header { grid-template-columns: 2fr 1fr 1fr 1fr; }
+      .rec-header > *:nth-child(5) { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .stat-card { padding: 16px; }
+      .stat-val { font-size: 24px; }
+      .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+      .totals-box { grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+      .plano-meta { grid-template-columns: 1fr; }
+      .form-section { padding: 20px 16px; }
+      .btn-save, .btn-add { width: 100%; text-align: center; }
+      .search-bar { flex-direction: column; }
+      .topbar-actions { flex-wrap: wrap; gap: 8px; }
+      .chat-bubble { max-width: 90%; font-size: 13px; }
+      .rec-item { grid-template-columns: 2fr 1fr 1fr; }
+      .rec-item > *:nth-child(4), .rec-item > *:nth-child(5) { display: none; }
+      .rec-header { grid-template-columns: 2fr 1fr 1fr; }
+      .rec-header > *:nth-child(4), .rec-header > *:nth-child(5) { display: none; }
+      .perfil-header { flex-direction: column; text-align: center; }
+    }
   </style>
 </head>
 <body>
 
+<!-- ── OVERLAY MOBILE ── -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="fecharMenu()"></div>
+
+<!-- ── TOPBAR MOBILE ── -->
+<div class="mobile-topbar">
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mobile-brand">🌿 Nutri Amorim</div>
+  <div class="mobile-avatar" id="mobile-avatar" onclick="showTab('perfil');fecharMenu()">
+    <img id="mobile-avatar-img" src="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%">
+    <span id="mobile-avatar-emoji">👤</span>
+  </div>
+</div>
+
 <!-- ══ SIDEBAR ══ -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <h2>🌿 <span>Nutri</span> Amorim</h2>
     <p>Plataforma Nutricional</p>
@@ -671,8 +737,8 @@ async function init() {
     document.getElementById('p-objetivo').value = p.objetivo || '';
     document.getElementById('termo-data').textContent = p.termo_aceito_em ? new Date(p.termo_aceito_em).toLocaleDateString('pt-BR') : '—';
     if (p.avatar_url) {
-      ['sb-avatar-img','p-avatar-img'].forEach(id => { const img = document.getElementById(id); if (img) { img.src = p.avatar_url; img.style.display='block'; } });
-      ['sb-avatar-emoji','p-avatar-emoji'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
+      ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id => { const img = document.getElementById(id); if (img) { img.src = p.avatar_url; img.style.display='block'; } });
+      ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
     }
   }
 
@@ -873,6 +939,7 @@ function preencherSintomas(lista) {
 
 // ── NAVEGAÇÃO ──
 function showTab(name) {
+  fecharMenu();
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
@@ -1625,10 +1692,26 @@ async function trocarFoto(input) {
     const {error:upErr}=await window._sb.storage.from('avatares').upload(path,file,{upsert:true}); if (upErr) throw upErr;
     const {data:urlData}=window._sb.storage.from('avatares').getPublicUrl(path); const avatarUrl=urlData.publicUrl;
     await window._sb.from('perfis').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);
-    ['sb-avatar-img','p-avatar-img'].forEach(id=>{const img=document.getElementById(id);if(img){img.src=avatarUrl+'?t='+Date.now();img.style.display='block';}});
-    ['sb-avatar-emoji','p-avatar-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+    ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id=>{const img=document.getElementById(id);if(img){img.src=avatarUrl+'?t='+Date.now();img.style.display='block';}});
+    ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
     msg.textContent='✅ Foto atualizada!';
   } catch(e) { msg.className='msg error'; msg.textContent='Erro ao enviar foto: '+e.message; }
+}
+
+// ── MENU MOBILE ──
+function toggleMenu() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const hamburger = document.getElementById('hamburger');
+  const open = sidebar.classList.toggle('open');
+  overlay.classList.toggle('open', open);
+  hamburger.classList.toggle('open', open);
+}
+
+function fecharMenu() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
 }
 
 // ── CHATBOT ──
