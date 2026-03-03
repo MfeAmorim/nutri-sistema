@@ -840,10 +840,12 @@ async function carregarTodosOsRecordatorios() {
     const { data: recs } = await window._sb.from('recordatorios')
       .select('*').eq('user_id', currentUser.id).order('data', { ascending: true });
     if (recs && recs.length > 0) {
-      // Juntar todos os itens de todas as datas salvas
-      recordatorioItems = recs.flatMap(r => {
+      const itensRaw = recs.flatMap(r => {
         try { return JSON.parse(r.itens || '[]'); } catch(e) { return []; }
       });
+      // Recalcular valores nutricionais com os dados ATUAIS da tabela de alimentos
+      // Garante que correções no Supabase reflitam imediatamente nos totais
+      recordatorioItems = itensRaw.map(item => recalcularItem(item));
     } else {
       recordatorioItems = DADOS_PLANILHA;
     }
@@ -851,6 +853,25 @@ async function carregarTodosOsRecordatorios() {
     recordatorioItems = DADOS_PLANILHA;
   }
   renderizarRecordatorio();
+}
+
+// Recalcula kcal/prot/carb/lip/sodio/fibra de um item usando os dados atuais do alimento
+function recalcularItem(item) {
+  if (!item.alimento_id || !alimentosCadastrados.length) return item;
+  const al = alimentosCadastrados.find(a => a.id === item.alimento_id);
+  if (!al) return item; // alimento não encontrado, mantém valores salvos
+  const qtd = Number(item.qtd) || 1;
+  const gramas = qtd * (Number(al.gramas_unidade) || 100);
+  return {
+    ...item,
+    gramas_total: gramas,
+    kcal:  parseFloat((Number(al.kcal_100g)      * gramas / 100).toFixed(2)),
+    prot:  parseFloat((Number(al.proteina_100g)  * gramas / 100).toFixed(2)),
+    carb:  parseFloat((Number(al.carb_100g)      * gramas / 100).toFixed(2)),
+    lip:   parseFloat(((Number(al.gordura_100g)||0) * gramas / 100).toFixed(2)),
+    sodio: parseFloat((Number(al.sodio_100mg)    * gramas / 100).toFixed(2)),
+    fibra: parseFloat(((Number(al.fibra_100g)||0) * gramas / 100).toFixed(2)),
+  };
 }
 
 // ── RECORDATÓRIO ──
