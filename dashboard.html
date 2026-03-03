@@ -157,6 +157,41 @@
     .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
 
+    /* HOME CARDS */
+    .home-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .home-card { background: var(--creme); border: 1.5px solid #e8efe8; border-radius: 10px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+    .home-card:hover { border-color: var(--verde); box-shadow: 0 4px 16px rgba(45,106,79,0.1); transform: translateY(-2px); }
+    .home-card-icon { font-size: 32px; margin-bottom: 10px; }
+    .home-card-title { font-weight: 600; color: var(--escuro); font-size: 15px; }
+    .home-card-desc { font-size: 12px; color: #7a8a7c; margin-top: 4px; }
+
+    /* CROP MODAL */
+    .crop-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+    .crop-modal.open { display: flex; }
+    .crop-box { background: #fff; border-radius: 12px; padding: 24px; max-width: 440px; width: 100%; }
+    .crop-box h4 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); margin-bottom: 16px; }
+    .crop-preview-wrap { position: relative; width: 100%; padding-bottom: 100%; background: #f0f5f0; border-radius: 8px; overflow: hidden; margin-bottom: 16px; cursor: move; }
+    .crop-preview-wrap img { position: absolute; transform-origin: top left; user-select: none; -webkit-user-drag: none; }
+    .crop-circle-mask { position: absolute; inset: 0; background: rgba(0,0,0,0.45); border-radius: 0; }
+    .crop-circle-hole { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 80%; padding-bottom: 80%; border-radius: 50%; background: transparent; box-shadow: 0 0 0 9999px rgba(0,0,0,0.45); }
+    .crop-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .crop-controls label { font-size: 12px; font-weight: 600; color: var(--verde); text-transform: uppercase; letter-spacing: 1px; }
+    .crop-controls input[type=range] { width: 100%; accent-color: var(--verde); }
+    .crop-actions { display: flex; gap: 10px; }
+    .crop-actions button { flex: 1; padding: 12px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; border: none; font-weight: 500; }
+    .btn-crop-cancel { background: var(--creme); color: var(--texto); border: 1.5px solid #dde8de !important; }
+    .btn-crop-save { background: var(--verde); color: #fff; }
+
+    /* MOBILE CARDS */
+    @media (max-width: 1024px) {
+      .home-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .home-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .home-card { padding: 14px; }
+      .home-card-icon { font-size: 26px; }
+    }
+
     /* ── MOBILE TOPBAR ── */
     .mobile-topbar { display: none; background: var(--escuro); padding: 14px 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
     .hamburger { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 4px; }
@@ -282,21 +317,36 @@
       <div class="form-section">
         <h3>Bem-vindo! 👋</h3>
         <p class="subtitle">Use o menu lateral para navegar pelas seções. Comece pelo Prontuário Médico para registrar suas informações.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;">
-          <div onclick="showTab('prontuario')" style="background:var(--creme);border:1px solid #e8efe8;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='#e8efe8'">
-            <div style="font-size:32px;margin-bottom:8px">📋</div>
-            <div style="font-weight:600;color:var(--escuro);">Prontuário Médico</div>
-            <div style="font-size:13px;color:#7a8a7c;margin-top:4px">Ficha de anamnese completa</div>
+        <div class="home-cards">
+          <div class="home-card" onclick="showTab('prontuario')">
+            <div class="home-card-icon">📋</div>
+            <div class="home-card-title">Prontuário Médico</div>
+            <div class="home-card-desc">Ficha de anamnese completa</div>
           </div>
-          <div onclick="showTab('prontuarios-salvos')" style="background:var(--creme);border:1px solid #e8efe8;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='#e8efe8'">
-            <div style="font-size:32px;margin-bottom:8px">🗂️</div>
-            <div style="font-weight:600;color:var(--escuro);">Prontuários Salvos</div>
-            <div style="font-size:13px;color:#7a8a7c;margin-top:4px">Acesse e edite prontuários</div>
+          <div class="home-card" onclick="showTab('prontuarios-salvos')">
+            <div class="home-card-icon">🗂️</div>
+            <div class="home-card-title">Prontuários Salvos</div>
+            <div class="home-card-desc">Acesse e edite prontuários</div>
           </div>
-          <div onclick="showTab('recordatorio')" style="background:var(--creme);border:1px solid #e8efe8;border-radius:8px;padding:20px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--verde)'" onmouseout="this.style.borderColor='#e8efe8'">
-            <div style="font-size:32px;margin-bottom:8px">⏱️</div>
-            <div style="font-weight:600;color:var(--escuro);">Recordatório 24h</div>
-            <div style="font-size:13px;color:#7a8a7c;margin-top:4px">Registre o que comeu hoje</div>
+          <div class="home-card" onclick="showTab('recordatorio')">
+            <div class="home-card-icon">⏱️</div>
+            <div class="home-card-title">Recordatório 24h</div>
+            <div class="home-card-desc">Registre o que comeu hoje</div>
+          </div>
+          <div class="home-card" onclick="showTab('tabela')">
+            <div class="home-card-icon">🥦</div>
+            <div class="home-card-title">Tabela Alimentar</div>
+            <div class="home-card-desc">Calcule kcal e proteína</div>
+          </div>
+          <div class="home-card" onclick="showTab('plano')">
+            <div class="home-card-icon">🎯</div>
+            <div class="home-card-title">Plano Alimentar</div>
+            <div class="home-card-desc">Metas e distribuição</div>
+          </div>
+          <div class="home-card" onclick="showTab('chatbot')">
+            <div class="home-card-icon">🤖</div>
+            <div class="home-card-title">Assistente IA</div>
+            <div class="home-card-desc">Dúvidas e agendamentos</div>
           </div>
         </div>
       </div>
@@ -570,32 +620,71 @@
 
     <!-- ══ TABELA ALIMENTAR ══ -->
     <div class="tab-content" id="tab-tabela">
+
+      <!-- CADASTRO -->
       <div class="form-section">
         <h3>Tabela de Proporção Alimentar</h3>
-        <p class="subtitle">Cadastre alimentos com base na TACO ou TBCA. Valores por 100g.</p>
+        <p class="subtitle">Cadastre alimentos por 100g (TACO/TBCA). O sistema calcula automaticamente kcal e proteína por porção.</p>
         <div class="msg" id="msg-alimento"></div>
         <div class="form-grid-3" style="align-items:end;gap:16px;">
-          <div class="field"><label>Nome do Alimento <span>*</span></label><input type="text" id="al-nome" placeholder="Ex: Arroz branco cozido"></div>
+          <div class="field"><label>Alimento <span>*</span></label><input type="text" id="al-nome" placeholder="Ex: Arroz branco cozido"></div>
+          <div class="field"><label>Preparo</label><input type="text" id="al-preparo" placeholder="Ex: Cozido, Grelhado, Cru"></div>
           <div class="field"><label>Fonte</label>
             <select id="al-fonte"><option value="TACO">TACO</option><option value="TBCA">TBCA</option><option value="Rótulo">Rótulo</option><option value="Outro">Outro</option></select>
           </div>
+          <div class="field"><label>Unidade de Medida</label>
+            <select id="al-unidade">
+              <option value="Concha">Concha</option>
+              <option value="Colher de sopa">Colher de sopa</option>
+              <option value="Colher de chá">Colher de chá</option>
+              <option value="Unidade">Unidade</option>
+              <option value="Fatia">Fatia</option>
+              <option value="Xícara">Xícara</option>
+              <option value="Porção">Porção</option>
+              <option value="Gramas">Gramas</option>
+            </select>
+          </div>
+          <div class="field"><label>Gramas por Unidade <span>*</span></label><input type="number" id="al-gramas-unid" placeholder="Ex: 80" step="0.1" title="Quantos gramas equivale 1 concha/colher/unidade"></div>
           <div class="field"><label>Kcal (por 100g) <span>*</span></label><input type="number" id="al-kcal" placeholder="128" step="0.1"></div>
-          <div class="field"><label>Proteína (g) <span>*</span></label><input type="number" id="al-prot" placeholder="2.5" step="0.1"></div>
-          <div class="field"><label>Carboidrato (g)</label><input type="number" id="al-carb" placeholder="28.1" step="0.1"></div>
-          <div class="field"><label>Gordura Total (g)</label><input type="number" id="al-gord" placeholder="0.2" step="0.1"></div>
-          <div class="field"><label>Fibra (g)</label><input type="number" id="al-fibra" placeholder="1.6" step="0.1"></div>
-          <div class="field"><label>Sódio (mg)</label><input type="number" id="al-sodio" placeholder="1" step="0.1"></div>
+          <div class="field"><label>Proteína (g/100g) <span>*</span></label><input type="number" id="al-prot" placeholder="2.5" step="0.1"></div>
+          <div class="field"><label>Carboidratos (g/100g)</label><input type="number" id="al-carb" placeholder="28.1" step="0.1"></div>
+          <div class="field"><label>Lipídios (g/100g)</label><input type="number" id="al-gord" placeholder="0.2" step="0.1"></div>
+          <div class="field"><label>Sódio (mg/100g)</label><input type="number" id="al-sodio" placeholder="1" step="0.1"></div>
+          <div class="field"><label>Fibra (g/100g)</label><input type="number" id="al-fibra" placeholder="1.6" step="0.1"></div>
           <div class="field" style="display:flex;align-items:flex-end">
             <button class="btn-save" style="width:100%" onclick="adicionarAlimento()">+ Adicionar</button>
           </div>
         </div>
       </div>
+
+      <!-- CALCULADORA DE PORÇÕES -->
+      <div class="form-section" style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border:none">
+        <h3 style="color:#74c69d">🧮 Calculadora de Porções</h3>
+        <p style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:20px">Simule quantas porções vai comer e veja kcal + proteína total</p>
+        <div id="calc-linhas" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+        <button onclick="adicionarLinhaCalc()" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:8px 18px;border-radius:4px;font-family:DM Sans,sans-serif;font-size:13px;cursor:pointer">+ Adicionar Alimento</button>
+        <div id="calc-total" style="margin-top:20px;display:none;background:rgba(255,255,255,0.1);border-radius:8px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Total Kcal</div><div style="font-family:'Playfair Display',serif;font-size:32px;color:#fff" id="calc-kcal-total">0</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px">Total Proteína</div><div style="font-family:'Playfair Display',serif;font-size:32px;color:#74c69d" id="calc-prot-total">0g</div></div>
+        </div>
+      </div>
+
+      <!-- TABELA COMPLETA -->
       <div class="form-section">
         <h3>Alimentos Cadastrados</h3>
+        <p class="subtitle">Valores por 100g e por unidade de medida definida</p>
         <div class="table-wrap">
           <table id="tabela-alimentos">
-            <thead><tr><th>Alimento</th><th>Fonte</th><th>Kcal</th><th>Proteína</th><th>Carb</th><th>Gordura</th><th>Fibra</th><th>Sódio</th><th>Ação</th></tr></thead>
-            <tbody id="tbody-alimentos"><tr><td colspan="9" style="text-align:center;color:#7a8a7c;padding:32px">Nenhum alimento cadastrado ainda.</td></tr></tbody>
+            <thead>
+              <tr>
+                <th>Alimento</th><th>Preparo</th><th>Unid. Medida</th><th>Gramas/Unid.</th>
+                <th>Kcal (100g)</th><th>Energia/Unid. (kcal)</th>
+                <th>Prot. (100g)</th><th>Prot./Unid. (g)</th>
+                <th>Carb. Total</th><th>Lipídios</th><th>Sódio</th><th>Fibra</th>
+                <th>Fonte</th><th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-alimentos"><tr><td colspan="14" style="text-align:center;color:#7a8a7c;padding:32px">Nenhum alimento cadastrado ainda.</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1544,20 +1633,139 @@ async function adicionarAlimento() {
   const nome = document.getElementById('al-nome').value.trim();
   const kcal = parseFloat(document.getElementById('al-kcal').value);
   const prot = parseFloat(document.getElementById('al-prot').value);
+  const gramas = parseFloat(document.getElementById('al-gramas-unid').value);
   if (!nome || !kcal || !prot) { msg.className='msg error'; msg.textContent='Nome, Kcal e Proteína são obrigatórios.'; return; }
-  const alimento = { user_id: currentUser.id, nome, fonte: document.getElementById('al-fonte').value, kcal_100g: kcal, proteina_100g: prot, carb_100g: parseFloat(document.getElementById('al-carb').value)||0, gordura_100g: parseFloat(document.getElementById('al-gord').value)||0, fibra_100g: parseFloat(document.getElementById('al-fibra').value)||0, sodio_100mg: parseFloat(document.getElementById('al-sodio').value)||0 };
+  const alimento = {
+    user_id: currentUser.id,
+    nome,
+    preparo: document.getElementById('al-preparo').value.trim() || null,
+    unidade_medida: document.getElementById('al-unidade').value,
+    gramas_unidade: gramas || null,
+    fonte: document.getElementById('al-fonte').value,
+    kcal_100g: kcal,
+    proteina_100g: prot,
+    carb_100g: parseFloat(document.getElementById('al-carb').value)||0,
+    gordura_100g: parseFloat(document.getElementById('al-gord').value)||0,
+    fibra_100g: parseFloat(document.getElementById('al-fibra').value)||0,
+    sodio_100mg: parseFloat(document.getElementById('al-sodio').value)||0
+  };
   try {
-    const { data } = await window._sb.from('alimentos').insert(alimento).select().single();
-    alimentosCadastrados.unshift(data); renderizarAlimentos(); atualizarSelectAlimentos();
-    ['al-nome','al-kcal','al-prot','al-carb','al-gord','al-fibra','al-sodio'].forEach(id => document.getElementById(id).value = '');
+    const { data, error } = await window._sb.from('alimentos').insert(alimento).select().single();
+    if (error) throw error;
+    alimentosCadastrados.unshift(data); renderizarAlimentos(); atualizarSelectAlimentos(); atualizarCalc();
+    ['al-nome','al-preparo','al-gramas-unid','al-kcal','al-prot','al-carb','al-gord','al-fibra','al-sodio'].forEach(id => document.getElementById(id).value = '');
     msg.className = 'msg success'; msg.textContent = '✅ Alimento adicionado!';
   } catch(e) { msg.className = 'msg error'; msg.textContent = e.message; }
 }
 
 function renderizarAlimentos() {
   const tbody = document.getElementById('tbody-alimentos');
-  if (!alimentosCadastrados.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#7a8a7c;padding:32px">Nenhum alimento cadastrado ainda.</td></tr>'; return; }
-  tbody.innerHTML = alimentosCadastrados.map(a => `<tr><td><strong>${a.nome}</strong></td><td><span class="tag tag-${a.fonte.toLowerCase()}">${a.fonte}</span></td><td>${a.kcal_100g} kcal</td><td>${a.proteina_100g}g</td><td>${a.carb_100g}g</td><td>${a.gordura_100g}g</td><td>${a.fibra_100g}g</td><td>${a.sodio_100mg}mg</td><td><button class="btn-remove" onclick="removerAlimento('${a.id}')">🗑️</button></td></tr>`).join('');
+  if (!alimentosCadastrados.length) {
+    tbody.innerHTML = '<tr><td colspan="14" style="text-align:center;color:#7a8a7c;padding:32px">Nenhum alimento cadastrado ainda.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = alimentosCadastrados.map(a => {
+    const g = a.gramas_unidade || 100;
+    const kcalUnid = (a.kcal_100g * g / 100).toFixed(1);
+    const protUnid = (a.proteina_100g * g / 100).toFixed(1);
+    return `<tr>
+      <td><strong>${a.nome}</strong></td>
+      <td>${a.preparo || '—'}</td>
+      <td>${a.unidade_medida || 'Gramas'}</td>
+      <td>${g}g</td>
+      <td>${a.kcal_100g} kcal</td>
+      <td style="background:#f0fdf4;font-weight:600;color:var(--verde)">${kcalUnid} kcal</td>
+      <td>${a.proteina_100g}g</td>
+      <td style="background:#f0fdf4;font-weight:600;color:var(--verde)">${protUnid}g</td>
+      <td>${a.carb_100g}g</td>
+      <td>${a.gordura_100g}g</td>
+      <td>${a.sodio_100mg}mg</td>
+      <td>${a.fibra_100g}g</td>
+      <td><span class="tag tag-${(a.fonte||'outro').toLowerCase()}">${a.fonte}</span></td>
+      <td><button class="btn-remove" onclick="removerAlimento('${a.id}')">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── CALCULADORA DE PORÇÕES ──
+function adicionarLinhaCalc() {
+  if (!alimentosCadastrados.length) { alert('Cadastre alimentos primeiro!'); return; }
+  const container = document.getElementById('calc-linhas');
+  const idx = container.children.length;
+  const options = alimentosCadastrados.map(a => `<option value="${a.id}">${a.nome} (${a.unidade_medida||'g'})</option>`).join('');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,0.08);border-radius:6px;padding:10px';
+  div.innerHTML = `
+    <select onchange="calcularLinha(${idx})" style="padding:8px;border-radius:4px;border:none;font-family:DM Sans,sans-serif;font-size:13px" data-idx="${idx}">
+      <option value="">Selecione o alimento</option>${options}
+    </select>
+    <div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:4px">Qtd (${alimentosCadastrados[0]?.unidade_medida||'g'})</div>
+      <input type="number" min="0.5" step="0.5" value="1" onchange="calcularLinha(${idx})" style="width:100%;padding:8px;border-radius:4px;border:none;font-family:DM Sans,sans-serif;font-size:14px;font-weight:600">
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:10px;color:rgba(255,255,255,0.5)">Kcal</div>
+      <div style="font-size:18px;font-weight:700;color:#fff" class="calc-kcal">—</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:10px;color:rgba(255,255,255,0.5)">Proteína</div>
+      <div style="font-size:18px;font-weight:700;color:#74c69d" class="calc-prot">—</div>
+    </div>
+    <button onclick="this.parentElement.remove();calcTotais()" style="background:rgba(220,38,38,0.3);color:#fca5a5;border:none;border-radius:4px;width:28px;height:28px;cursor:pointer;font-size:16px">×</button>
+  `;
+  container.appendChild(div);
+  document.getElementById('calc-total').style.display = 'grid';
+}
+
+function calcularLinha(idx) {
+  const container = document.getElementById('calc-linhas');
+  const linha = container.children[idx];
+  if (!linha) return;
+  const sel = linha.querySelector('select');
+  const qtdInput = linha.querySelector('input[type=number]');
+  const kcalEl = linha.querySelector('.calc-kcal');
+  const protEl = linha.querySelector('.calc-prot');
+  const al = alimentosCadastrados.find(a => a.id === sel.value);
+  if (!al || !qtdInput.value) { kcalEl.textContent = '—'; protEl.textContent = '—'; calcTotais(); return; }
+  const qtd = parseFloat(qtdInput.value);
+  const g = al.gramas_unidade || 100;
+  const totalG = qtd * g;
+
+  // Fórmulas: Energia = G * Kcal(100g) / 100
+  const kcal = (totalG * al.kcal_100g / 100);
+  const prot = (totalG * al.proteina_100g / 100);
+  kcalEl.textContent = kcal.toFixed(0) + ' kcal';
+  protEl.textContent = prot.toFixed(1) + 'g';
+
+  // Atualiza label da unidade
+  const unidLabel = linha.querySelectorAll('div > div')[0];
+  if (unidLabel) unidLabel.textContent = `Qtd (${al.unidade_medida||'g'})`;
+
+  calcTotais();
+}
+
+function atualizarCalc() {
+  // Atualiza os selects da calculadora quando novos alimentos são adicionados
+  const container = document.getElementById('calc-linhas');
+  const options = alimentosCadastrados.map(a => `<option value="${a.id}">${a.nome} (${a.unidade_medida||'g'})</option>`).join('');
+  [...container.querySelectorAll('select')].forEach(sel => {
+    const val = sel.value;
+    sel.innerHTML = `<option value="">Selecione o alimento</option>${options}`;
+    sel.value = val;
+  });
+}
+
+function calcTotais() {
+  const container = document.getElementById('calc-linhas');
+  let totalKcal = 0, totalProt = 0;
+  [...container.children].forEach(linha => {
+    const kcalEl = linha.querySelector('.calc-kcal');
+    const protEl = linha.querySelector('.calc-prot');
+    if (kcalEl && kcalEl.textContent !== '—') totalKcal += parseFloat(kcalEl.textContent)||0;
+    if (protEl && protEl.textContent !== '—') totalProt += parseFloat(protEl.textContent)||0;
+  });
+  document.getElementById('calc-kcal-total').textContent = totalKcal.toFixed(0);
+  document.getElementById('calc-prot-total').textContent = totalProt.toFixed(1) + 'g';
 }
 
 async function removerAlimento(id) {
@@ -1684,18 +1892,114 @@ function calcularMetas() {
   document.getElementById('falta-prot').textContent=metaProt;
 }
 
-async function trocarFoto(input) {
-  if (!input.files||!input.files[0]) return;
-  const file=input.files[0]; const ext=file.name.split('.').pop(); const path=currentUser.id+'/avatar.'+ext;
-  const msg=document.getElementById('msg-perfil'); msg.className='msg success'; msg.textContent='Enviando foto...';
+// ── FOTO COM CROP ──
+let cropFile = null;
+
+function trocarFoto(input) {
+  if (!input.files || !input.files[0]) return;
+  cropFile = input.files[0];
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('crop-img');
+    img.onload = () => {
+      document.getElementById('crop-zoom').value = 1;
+      document.getElementById('crop-x').value = 0;
+      document.getElementById('crop-y').value = 0;
+      atualizarCrop();
+      document.getElementById('crop-modal').classList.add('open');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(cropFile);
+  input.value = ''; // reset input
+}
+
+function atualizarCrop() {
+  const img = document.getElementById('crop-img');
+  const wrap = document.getElementById('crop-wrap');
+  const zoom = parseFloat(document.getElementById('crop-zoom').value);
+  const px = parseFloat(document.getElementById('crop-x').value);
+  const py = parseFloat(document.getElementById('crop-y').value);
+  const ww = wrap.offsetWidth;
+  const iw = img.naturalWidth;
+  const ih = img.naturalHeight;
+  const scale = (ww / Math.min(iw, ih)) * zoom;
+  const sw = iw * scale;
+  const sh = ih * scale;
+  const maxX = Math.max(0, (sw - ww) / 2);
+  const maxY = Math.max(0, (sh - ww) / 2);
+  const tx = (ww - sw) / 2 + (px / 100) * maxX;
+  const ty = (ww - sh) / 2 + (py / 100) * maxY;
+  img.style.width = sw + 'px';
+  img.style.height = sh + 'px';
+  img.style.left = tx + 'px';
+  img.style.top = ty + 'px';
+}
+
+function fecharCrop() {
+  document.getElementById('crop-modal').classList.remove('open');
+  cropFile = null;
+}
+
+async function salvarCrop() {
+  if (!cropFile) return;
+  const msg = document.getElementById('msg-perfil');
+  msg.className = 'msg success'; msg.textContent = '⏳ Processando foto...';
+
   try {
-    const {error:upErr}=await window._sb.storage.from('avatares').upload(path,file,{upsert:true}); if (upErr) throw upErr;
-    const {data:urlData}=window._sb.storage.from('avatares').getPublicUrl(path); const avatarUrl=urlData.publicUrl;
-    await window._sb.from('perfis').update({avatar_url:avatarUrl}).eq('user_id',currentUser.id);
-    ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id=>{const img=document.getElementById(id);if(img){img.src=avatarUrl+'?t='+Date.now();img.style.display='block';}});
-    ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-    msg.textContent='✅ Foto atualizada!';
-  } catch(e) { msg.className='msg error'; msg.textContent='Erro ao enviar foto: '+e.message; }
+    // Gerar canvas com a área visível (círculo)
+    const img = document.getElementById('crop-img');
+    const wrap = document.getElementById('crop-wrap');
+    const size = wrap.offsetWidth;
+    const canvas = document.createElement('canvas');
+    canvas.width = 400; canvas.height = 400;
+    const ctx = canvas.getContext('2d');
+
+    // Círculo
+    ctx.beginPath();
+    ctx.arc(200, 200, 200, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Calcular posição relativa
+    const rect = img.getBoundingClientRect();
+    const wRect = wrap.getBoundingClientRect();
+    const scaleX = img.naturalWidth / img.offsetWidth;
+    const scaleY = img.naturalHeight / img.offsetHeight;
+    const ox = (wRect.left - rect.left) * scaleX;
+    const oy = (wRect.top - rect.top) * scaleY;
+    const sw = size * scaleX;
+    const sh = size * scaleY;
+
+    ctx.drawImage(img, ox, oy, sw, sh, 0, 0, 400, 400);
+
+    // Converter para blob
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.92));
+    const path = currentUser.id + '/avatar.jpg';
+
+    const { error: upErr } = await window._sb.storage.from('avatares').upload(path, blob, { upsert: true, contentType: 'image/jpeg' });
+    if (upErr) throw upErr;
+
+    const { data: urlData } = window._sb.storage.from('avatares').getPublicUrl(path);
+    const avatarUrl = urlData.publicUrl;
+    await window._sb.from('perfis').update({ avatar_url: avatarUrl }).eq('user_id', currentUser.id);
+
+    const ts = '?t=' + Date.now();
+    ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.src = avatarUrl + ts; el.style.display = 'block'; }
+    });
+    ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+
+    fecharCrop();
+    msg.textContent = '✅ Foto atualizada com sucesso!';
+  } catch(e) {
+    msg.className = 'msg error';
+    msg.textContent = 'Erro: ' + e.message;
+    console.error(e);
+  }
 }
 
 // ── MENU MOBILE ──
@@ -1796,5 +2100,29 @@ async function logout() { await window._sb.auth.signOut(); window.location.href=
 
 init();
 </script>
+
+<!-- ══ CROP MODAL ══ -->
+<div class="crop-modal" id="crop-modal">
+  <div class="crop-box">
+    <h4>✂️ Ajustar Foto de Perfil</h4>
+    <div class="crop-preview-wrap" id="crop-wrap">
+      <img id="crop-img" src="" draggable="false">
+      <div class="crop-circle-hole"></div>
+    </div>
+    <div class="crop-controls">
+      <label>Zoom</label>
+      <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1" oninput="atualizarCrop()">
+      <label>Posição Horizontal</label>
+      <input type="range" id="crop-x" min="-100" max="100" step="1" value="0" oninput="atualizarCrop()">
+      <label>Posição Vertical</label>
+      <input type="range" id="crop-y" min="-100" max="100" step="1" value="0" oninput="atualizarCrop()">
+    </div>
+    <div class="crop-actions">
+      <button class="btn-crop-cancel" onclick="fecharCrop()">Cancelar</button>
+      <button class="btn-crop-save" onclick="salvarCrop()">💾 Salvar Foto</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
