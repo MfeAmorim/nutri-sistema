@@ -852,11 +852,14 @@ function adicionarNoRecordatorio() {
   const al = alimentosCadastrados.find(a => a.id === alId);
   if (!al) return;
 
+  // Fórmula exata do PDF: Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
   const gramasTotal = qtd * (al.gramas_unidade || 100);
-  const kcal  = parseFloat((al.kcal_100g       * gramasTotal / 100).toFixed(1));
-  const prot  = parseFloat((al.proteina_100g   * gramasTotal / 100).toFixed(1));
-  const carb  = parseFloat((al.carb_100g       * gramasTotal / 100).toFixed(1));
-  const sodio = parseFloat((al.sodio_100mg     * gramasTotal / 100).toFixed(1));
+  const kcal  = parseFloat((al.kcal_100g      * gramasTotal / 100).toFixed(2));
+  const prot  = parseFloat((al.proteina_100g  * gramasTotal / 100).toFixed(2));
+  const carb  = parseFloat((al.carb_100g      * gramasTotal / 100).toFixed(2));
+  const lip   = parseFloat(((al.gordura_100g||0) * gramasTotal / 100).toFixed(2));
+  const sodio = parseFloat((al.sodio_100mg    * gramasTotal / 100).toFixed(2));
+  const fibra = parseFloat(((al.fibra_100g||0) * gramasTotal / 100).toFixed(2));
 
   recordatorioItems.push({
     alimento_id: alId, nome: al.nome,
@@ -865,7 +868,7 @@ function adicionarNoRecordatorio() {
     tipo:     document.getElementById('rec-tipo').value      || '',
     local:    document.getElementById('rec-local').value     || '',
     obs:      document.getElementById('rec-obs').value       || '',
-    qtd, gramas_total: gramasTotal, kcal, prot, carb, sodio
+    qtd, gramas_total: gramasTotal, kcal, prot, carb, lip, sodio, fibra
   });
 
   renderizarRecordatorio();
@@ -926,26 +929,31 @@ function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordato
 function limparRecordatorio() { if (!confirm('Limpar todos os registros do recordatório?')) return; recordatorioItems = []; renderizarRecordatorio(); }
 
 function atualizarTotais() {
-  // Só soma itens que têm dados nutricionais calculados (gramas_total > 0 ou kcal > 0)
+  // Soma apenas itens com dados nutricionais reais (alimentos cadastrados na tabela)
   const itensComNutri = recordatorioItems.filter(item => item.kcal > 0 || item.gramas_total > 0);
   const semNutri = recordatorioItems.length - itensComNutri.length;
+  // Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
   const tot = itensComNutri.reduce((acc, item) => ({
-    kcal: acc.kcal + (item.kcal||0), prot: acc.prot + (item.prot||0),
-    carb: acc.carb + (item.carb||0), sodio: acc.sodio + (item.sodio||0)
-  }), { kcal:0, prot:0, carb:0, sodio:0 });
+    kcal:  acc.kcal  + (item.kcal ||0),
+    prot:  acc.prot  + (item.prot ||0),
+    carb:  acc.carb  + (item.carb ||0),
+    lip:   acc.lip   + (item.lip  ||0),
+    sodio: acc.sodio + (item.sodio||0),
+    fibra: acc.fibra + (item.fibra||0)
+  }), { kcal:0, prot:0, carb:0, lip:0, sodio:0, fibra:0 });
   const metaKcal = parseFloat(document.getElementById('meta-kcal').textContent)||2000;
   const metaProt = parseFloat(document.getElementById('meta-prot').textContent)||120;
-  document.getElementById('tot-kcal').textContent  = tot.kcal > 0 ? tot.kcal.toFixed(0) : (semNutri > 0 ? '—' : '0');
-  document.getElementById('tot-prot').textContent  = tot.prot > 0 ? tot.prot.toFixed(1)+'g' : (semNutri > 0 ? '—' : '0g');
-  document.getElementById('tot-carb').textContent  = tot.carb > 0 ? tot.carb.toFixed(1)+'g' : (semNutri > 0 ? '—' : '0g');
-  document.getElementById('tot-sodio').textContent = tot.sodio > 0 ? tot.sodio.toFixed(0)+'mg' : (semNutri > 0 ? '—' : '0mg');
-  document.getElementById('falta-kcal').textContent = tot.kcal > 0 ? Math.max(0,metaKcal-tot.kcal).toFixed(0) : '—';
-  document.getElementById('falta-prot').textContent = tot.prot > 0 ? Math.max(0,metaProt-tot.prot).toFixed(1) : '—';
-  document.getElementById('st-kcal').textContent   = tot.kcal > 0 ? tot.kcal.toFixed(0) : '—';
-  document.getElementById('st-prot').textContent   = tot.prot > 0 ? tot.prot.toFixed(1)+'g' : '—';
+  const dash = semNutri > 0 && itensComNutri.length === 0;
+  document.getElementById('tot-kcal').textContent  = dash ? '—' : tot.kcal.toFixed(0);
+  document.getElementById('tot-prot').textContent  = dash ? '—' : tot.prot.toFixed(2)+'g';
+  document.getElementById('tot-carb').textContent  = dash ? '—' : tot.carb.toFixed(2)+'g';
+  document.getElementById('tot-sodio').textContent = dash ? '—' : tot.sodio.toFixed(1)+'mg';
+  document.getElementById('falta-kcal').textContent = dash ? '—' : Math.max(0, metaKcal - tot.kcal).toFixed(0);
+  document.getElementById('falta-prot').textContent = dash ? '—' : Math.max(0, metaProt - tot.prot).toFixed(2);
+  document.getElementById('st-kcal').textContent   = dash ? '—' : tot.kcal.toFixed(0);
+  document.getElementById('st-prot').textContent   = dash ? '—' : tot.prot.toFixed(2)+'g';
   const fs = document.getElementById('falta-sodio');
-  if (tot.sodio > 0) fs.textContent = tot.sodio > 2300 ? '⚠️ Excedeu limite' : '';
-  else fs.textContent = '';
+  fs.textContent = (!dash && tot.sodio > 2300) ? '⚠️ Excedeu limite' : '';
 }
 
 async function salvarRecordatorio() {
