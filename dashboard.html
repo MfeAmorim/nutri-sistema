@@ -861,7 +861,7 @@ function recalcularItem(item) {
   const al = alimentosCadastrados.find(a => a.id === item.alimento_id);
   if (!al) return item; // alimento não encontrado, mantém valores salvos
   const qtd = Number(item.qtd) || 1;
-  const gramas = qtd * ((Number(al.gramas_unidade) || Number(al.grama_unidade) || 0) || 100);
+  const gramas = qtd * ((Number(al.grama_unidade) || Number(al.gramas_unidade) || 0) || 100);
   return {
     ...item,
     gramas_total: gramas,
@@ -902,7 +902,7 @@ function adicionarNoRecordatorio() {
   if (!al) return;
 
   // Fórmula exata do PDF: Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
-  const gramasTotal = qtd * (al.gramas_unidade || al.grama_unidade || 100);
+  const gramasTotal = qtd * (al.grama_unidade || al.gramas_unidade || 100);
   const kcal  = parseFloat((al.kcal_100g      * gramasTotal / 100).toFixed(2));
   const prot  = parseFloat((al.proteina_100g  * gramasTotal / 100).toFixed(2));
   const carb  = parseFloat((al.carb_100g      * gramasTotal / 100).toFixed(2));
@@ -1445,7 +1445,7 @@ async function adicionarAlimento() {
   const prot = parseFloat(document.getElementById('al-prot').value);
   const gramas = parseFloat(document.getElementById('al-gramas-unid').value);
   if (!nome || !kcal || !prot) { msg.className='msg error'; msg.textContent='Nome, Kcal e Proteína são obrigatórios.'; return; }
-  const alimento = { user_id: currentUser.id, nome, preparo: document.getElementById('al-preparo').value.trim()||null, unidade_medida: document.getElementById('al-unidade').value, gramas_unidade: gramas||null, fonte: document.getElementById('al-fonte').value, kcal_100g: kcal, proteina_100g: prot, carb_100g: parseFloat(document.getElementById('al-carb').value)||0, gordura_100g: parseFloat(document.getElementById('al-gord').value)||0, fibra_100g: parseFloat(document.getElementById('al-fibra').value)||0, sodio_100mg: parseFloat(document.getElementById('al-sodio').value)||0 };
+  const alimento = { user_id: currentUser.id, nome, preparo: document.getElementById('al-preparo').value.trim()||null, unidade_medida: document.getElementById('al-unidade').value, grama_unidade: gramas||null, fonte: document.getElementById('al-fonte').value, kcal_100g: kcal, proteina_100g: prot, carb_100g: parseFloat(document.getElementById('al-carb').value)||0, gordura_100g: parseFloat(document.getElementById('al-gord').value)||0, fibra_100g: parseFloat(document.getElementById('al-fibra').value)||0, sodio_100mg: parseFloat(document.getElementById('al-sodio').value)||0 };
   try {
     const { data, error } = await window._sb.from('alimentos').insert(alimento).select().single();
     if (error) throw error;
