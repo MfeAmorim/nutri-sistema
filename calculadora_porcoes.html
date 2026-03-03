@@ -1,0 +1,589 @@
+<!-- ══════════════════════════════════════════════════════
+     CALCULADORA DE PORÇÕES — Cole dentro do <div class="content">
+     no dashboard.html, após o tab-plano existente
+     ══════════════════════════════════════════════════════ -->
+
+<!-- 1. Adicione este item no sidebar-nav (após o item Plano Alimentar): -->
+<!--
+<div class="nav-item" onclick="showTab('calculadora')"><span class="nav-icon">🧮</span> Calculadora de Porções</div>
+-->
+
+<!-- 2. Adicione no objeto `labels` dentro de showTab():
+     calculadora: 'Calculadora de Porções'
+-->
+
+<!-- 3. Cole este bloco inteiro dentro de <div class="content"> no dashboard: -->
+
+<div class="tab-content" id="tab-calculadora">
+
+  <style>
+    /* ── Calculadora de Porções ── */
+    .calc-header-box {
+      background: linear-gradient(135deg, var(--escuro) 0%, #243b2a 100%);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .calc-header-box h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--verde-neon);
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .calc-header-box p { color: rgba(255,255,255,0.5); font-size: 13px; }
+    .calc-totais-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .calc-total-chip {
+      background: rgba(116,198,157,0.12);
+      border: 1px solid rgba(116,198,157,0.25);
+      border-radius: 10px;
+      padding: 10px 18px;
+      text-align: center;
+      min-width: 90px;
+    }
+    .calc-total-chip .chip-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--verde-neon);
+      line-height: 1;
+    }
+    .calc-total-chip .chip-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    /* Linha de adicionar alimento */
+    .calc-add-row {
+      background: #fff;
+      border: 1px solid #e8efe8;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 14px;
+      align-items: end;
+    }
+    .calc-add-row .field label { font-size: 11px; }
+
+    /* Tabela de itens */
+    .calc-lista {
+      background: #fff;
+      border: 1px solid #e8efe8;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .calc-lista-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 40px;
+      gap: 0;
+      background: var(--escuro);
+      padding: 10px 20px;
+    }
+    .calc-lista-header span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .calc-lista-body { padding: 0 0 4px; }
+    .calc-item-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 40px;
+      gap: 0;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f0f5f0;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .calc-item-row:last-child { border-bottom: none; }
+    .calc-item-row:hover { background: #f9fdf9; }
+    .calc-item-nome { font-weight: 600; color: var(--escuro); font-size: 14px; }
+    .calc-item-unid {
+      font-size: 11px;
+      color: #7a8a7c;
+      background: var(--creme2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+    .calc-item-val { font-size: 14px; color: var(--texto); }
+    .calc-item-kcal { font-weight: 700; color: var(--verde); }
+    .calc-item-prot { font-weight: 600; color: #1e40af; }
+    .calc-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #7a8a7c;
+      font-size: 14px;
+    }
+    .calc-empty .calc-empty-icon { font-size: 40px; margin-bottom: 10px; }
+
+    /* Barra de resultado final */
+    .calc-resultado {
+      background: linear-gradient(135deg, var(--verde) 0%, #1b4332 100%);
+      border-radius: 12px;
+      padding: 24px 32px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .calc-resultado-item { text-align: center; }
+    .calc-resultado-item .r-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .calc-resultado-item .r-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .calc-resultado-item .r-unit {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+
+    /* Botão limpar */
+    .btn-calc-limpar {
+      background: transparent;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-calc-limpar:hover { background: #fef2f2; }
+
+    /* select estilizado com info */
+    .calc-alimento-info {
+      font-size: 11px;
+      color: #7a8a7c;
+      margin-top: 4px;
+      min-height: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .calc-add-row { grid-template-columns: 1fr 1fr; }
+      .calc-add-row > *:last-child { grid-column: 1 / -1; }
+      .calc-lista-header { display: none; }
+      .calc-item-row { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px; }
+      .calc-item-row > *:last-child { grid-column: 2; justify-self: end; }
+      .calc-resultado { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+
+  <!-- Cabeçalho com totais em tempo real -->
+  <div class="calc-header-box">
+    <div>
+      <h2>🧮 Calculadora de Porções</h2>
+      <p>Adicione alimentos e veja o total de kcal, proteína e macros instantaneamente</p>
+    </div>
+    <div class="calc-totais-strip">
+      <div class="calc-total-chip">
+        <div class="chip-val" id="calc-chip-kcal">0</div>
+        <div class="chip-label">kcal</div>
+      </div>
+      <div class="calc-total-chip">
+        <div class="chip-val" id="calc-chip-prot">0g</div>
+        <div class="chip-label">Proteína</div>
+      </div>
+      <div class="calc-total-chip">
+        <div class="chip-val" id="calc-chip-carb">0g</div>
+        <div class="chip-label">Carbs</div>
+      </div>
+      <div class="calc-total-chip">
+        <div class="chip-val" id="calc-chip-items">0</div>
+        <div class="chip-label">Itens</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linha de adição -->
+  <div class="calc-add-row">
+    <div class="field">
+      <label>Alimento</label>
+      <select id="calc-select-alimento" onchange="calcAtualizarInfo()">
+        <option value="">— Selecione —</option>
+      </select>
+      <div class="calc-alimento-info" id="calc-alimento-info">Selecione um alimento para ver os detalhes</div>
+    </div>
+    <div class="field">
+      <label>Quantidade</label>
+      <input type="number" id="calc-qtd" placeholder="1" min="0.5" step="0.5" value="1" oninput="calcAtualizarPreview()">
+    </div>
+    <div class="field">
+      <label>Unidade</label>
+      <input type="text" id="calc-unidade-display" placeholder="—" readonly
+        style="background:#f8f9fa;color:#7a8a7c;cursor:default;">
+    </div>
+    <div>
+      <button class="btn-save" onclick="calcAdicionarItem()" style="padding:12px 24px;white-space:nowrap;">
+        + Adicionar
+      </button>
+    </div>
+  </div>
+
+  <!-- Preview antes de adicionar -->
+  <div id="calc-preview" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 20px;margin-bottom:16px;font-size:13px;color:#166534;display:flex;gap:20px;flex-wrap:wrap;">
+    <span>⚡ Preview: </span>
+    <span><strong id="prev-kcal">0</strong> kcal</span>
+    <span><strong id="prev-prot">0</strong>g proteína</span>
+    <span><strong id="prev-carb">0</strong>g carbs</span>
+    <span><strong id="prev-gord">0</strong>g gordura</span>
+    <span><strong id="prev-sodio">0</strong>mg sódio</span>
+  </div>
+
+  <!-- Lista de itens adicionados -->
+  <div class="calc-lista">
+    <div class="calc-lista-header">
+      <span>Alimento</span>
+      <span>Qtd / Unid.</span>
+      <span>Gramas</span>
+      <span style="color:#74c69d">Kcal</span>
+      <span style="color:#93c5fd">Proteína</span>
+      <span>Carbs</span>
+      <span></span>
+    </div>
+    <div class="calc-lista-body" id="calc-lista-body">
+      <div class="calc-empty">
+        <div class="calc-empty-icon">🍽️</div>
+        Nenhum alimento adicionado ainda.<br>
+        <span style="font-size:12px">Selecione um alimento acima e clique em "+ Adicionar"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultado total -->
+  <div class="calc-resultado" id="calc-resultado" style="display:none">
+    <div class="calc-resultado-item">
+      <div class="r-label">🔥 Total Kcal</div>
+      <div class="r-val" id="calc-tot-kcal">0</div>
+      <div class="r-unit">kcal</div>
+    </div>
+    <div class="calc-resultado-item">
+      <div class="r-label">💪 Proteína</div>
+      <div class="r-val" id="calc-tot-prot">0</div>
+      <div class="r-unit">gramas</div>
+    </div>
+    <div class="calc-resultado-item">
+      <div class="r-label">🍞 Carbs</div>
+      <div class="r-val" id="calc-tot-carb">0</div>
+      <div class="r-unit">gramas</div>
+    </div>
+    <div class="calc-resultado-item">
+      <div class="r-label">🫒 Gordura</div>
+      <div class="r-val" id="calc-tot-gord">0</div>
+      <div class="r-unit">gramas</div>
+    </div>
+    <div class="calc-resultado-item">
+      <div class="r-label">🧂 Sódio</div>
+      <div class="r-val" id="calc-tot-sodio">0</div>
+      <div class="r-unit">mg</div>
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px;">
+    <button class="btn-calc-limpar" onclick="calcLimpar()">🗑️ Limpar tudo</button>
+    <button class="btn-sm btn-sm-verde" onclick="calcEnviarParaRecordatorio()" style="padding:10px 20px;font-size:13px;">
+      📋 Enviar para o Recordatório
+    </button>
+    <button class="btn-sm btn-sm-outline" onclick="calcExportarExcel()" style="padding:10px 20px;font-size:13px;">
+      📊 Exportar Excel
+    </button>
+  </div>
+
+</div><!-- /tab-calculadora -->
+
+<!-- ══════════════════════════════════════
+     SCRIPT — Cole antes do </script> final
+     ══════════════════════════════════════ -->
+<script id="calc-script">
+// ── Calculadora de Porções ──
+let calcItens = []; // { alimento, qtd, gramas, kcal, prot, carb, gord, sodio }
+
+// Popula o select com alimentos cadastrados
+function calcPopularSelect() {
+  const sel = document.getElementById('calc-select-alimento');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Selecione —</option>';
+
+  // Agrupar por categoria (detectada pelo nome)
+  const grupos = {
+    '🥩 Carnes e Ovos': ['frango','bife','carne','ovo','fígado','figado'],
+    '🍚 Cereais e Massas': ['arroz','macarrão','macarrao','pão','pao'],
+    '🫘 Leguminosas': ['feijão','feijao'],
+    '🥦 Verduras e Legumes': ['alface','cenoura','tomate','pepino','abobora','abóbora','beterraba','batata inglesa','batata frita'],
+    '🥛 Laticínios': ['leite','queijo','shake'],
+    '🧃 Bebidas': ['café','cafe','coca','água','agua'],
+    '🫒 Outros': []
+  };
+
+  const agrupado = {};
+  const usados = new Set();
+
+  // Classifica cada alimento
+  alimentosCadastrados.forEach(al => {
+    const nomeLower = al.nome.toLowerCase();
+    let grupoEncontrado = '🫒 Outros';
+    for (const [grupo, palavras] of Object.entries(grupos)) {
+      if (grupo === '🫒 Outros') continue;
+      if (palavras.some(p => nomeLower.includes(p))) {
+        grupoEncontrado = grupo;
+        break;
+      }
+    }
+    if (!agrupado[grupoEncontrado]) agrupado[grupoEncontrado] = [];
+    agrupado[grupoEncontrado].push(al);
+    usados.add(al.id);
+  });
+
+  // Renderiza grupos
+  Object.entries(agrupado).forEach(([grupo, lista]) => {
+    if (!lista.length) return;
+    const og = document.createElement('optgroup');
+    og.label = grupo;
+    lista.forEach(al => {
+      const op = document.createElement('option');
+      op.value = al.id;
+      const unid = al.unid_medida || '100g';
+      op.textContent = `${al.nome}  (${al.kcal_100g} kcal/100g · ${unid})`;
+      og.appendChild(op);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function calcAtualizarInfo() {
+  const sel = document.getElementById('calc-select-alimento');
+  const alId = sel.value;
+  const infoEl = document.getElementById('calc-alimento-info');
+  const unidEl = document.getElementById('calc-unidade-display');
+  const preview = document.getElementById('calc-preview');
+
+  if (!alId) {
+    infoEl.textContent = 'Selecione um alimento para ver os detalhes';
+    unidEl.value = '—';
+    preview.style.display = 'none';
+    return;
+  }
+
+  const al = alimentosCadastrados.find(a => a.id === alId);
+  if (!al) return;
+
+  const unid = al.unid_medida || '100g';
+  const gramas = al.gramas_unid || 100;
+  const preparo = al.preparo ? ` · ${al.preparo}` : '';
+
+  infoEl.textContent = `${unid} = ${gramas}g${preparo} · ${al.kcal_100g} kcal/100g · ${al.proteina_100g}g prot/100g`;
+  unidEl.value = unid;
+
+  calcAtualizarPreview();
+}
+
+function calcAtualizarPreview() {
+  const alId = document.getElementById('calc-select-alimento').value;
+  const qtd = parseFloat(document.getElementById('calc-qtd').value) || 1;
+  const preview = document.getElementById('calc-preview');
+
+  if (!alId) { preview.style.display = 'none'; return; }
+
+  const al = alimentosCadastrados.find(a => a.id === alId);
+  if (!al) return;
+
+  const gramas = (al.gramas_unid || 100) * qtd;
+  const fator = gramas / 100;
+
+  document.getElementById('prev-kcal').textContent = (al.kcal_100g * fator).toFixed(1);
+  document.getElementById('prev-prot').textContent = (al.proteina_100g * fator).toFixed(1);
+  document.getElementById('prev-carb').textContent = (al.carb_100g * fator).toFixed(1);
+  document.getElementById('prev-gord').textContent = (al.gordura_100g * fator).toFixed(1);
+  document.getElementById('prev-sodio').textContent = (al.sodio_100mg * fator).toFixed(0);
+  preview.style.display = 'flex';
+}
+
+function calcAdicionarItem() {
+  const alId = document.getElementById('calc-select-alimento').value;
+  const qtd = parseFloat(document.getElementById('calc-qtd').value) || 1;
+
+  if (!alId) { alert('Selecione um alimento.'); return; }
+
+  const al = alimentosCadastrados.find(a => a.id === alId);
+  if (!al) return;
+
+  const gramas = (al.gramas_unid || 100) * qtd;
+  const fator = gramas / 100;
+
+  calcItens.push({
+    id: Date.now(),
+    alimento: al,
+    qtd,
+    unid: al.unid_medida || '100g',
+    gramas: gramas,
+    kcal: al.kcal_100g * fator,
+    prot: al.proteina_100g * fator,
+    carb: al.carb_100g * fator,
+    gord: al.gordura_100g * fator,
+    sodio: al.sodio_100mg * fator
+  });
+
+  calcRenderizar();
+  document.getElementById('calc-qtd').value = '1';
+  document.getElementById('calc-select-alimento').value = '';
+  document.getElementById('calc-alimento-info').textContent = 'Selecione um alimento para ver os detalhes';
+  document.getElementById('calc-unidade-display').value = '—';
+  document.getElementById('calc-preview').style.display = 'none';
+}
+
+function calcRemoverItem(id) {
+  calcItens = calcItens.filter(i => i.id !== id);
+  calcRenderizar();
+}
+
+function calcRenderizar() {
+  const body = document.getElementById('calc-lista-body');
+  const resultado = document.getElementById('calc-resultado');
+
+  if (!calcItens.length) {
+    body.innerHTML = `<div class="calc-empty"><div class="calc-empty-icon">🍽️</div>Nenhum alimento adicionado ainda.<br><span style="font-size:12px">Selecione um alimento acima e clique em "+ Adicionar"</span></div>`;
+    resultado.style.display = 'none';
+    calcAtualizarChips({ kcal: 0, prot: 0, carb: 0 });
+    return;
+  }
+
+  body.innerHTML = calcItens.map(item => `
+    <div class="calc-item-row">
+      <div>
+        <div class="calc-item-nome">${item.alimento.nome}</div>
+        <span class="calc-item-unid">${item.alimento.preparo || ''}</span>
+      </div>
+      <div class="calc-item-val">
+        <strong>${item.qtd}</strong> ${item.unid}<br>
+        <span style="font-size:11px;color:#7a8a7c">${item.gramas.toFixed(0)}g</span>
+      </div>
+      <div class="calc-item-val">${item.gramas.toFixed(0)}g</div>
+      <div class="calc-item-kcal">${item.kcal.toFixed(1)} kcal</div>
+      <div class="calc-item-prot" style="color:#1e40af">${item.prot.toFixed(1)}g</div>
+      <div class="calc-item-val">${item.carb.toFixed(1)}g</div>
+      <button class="btn-remove" onclick="calcRemoverItem(${item.id})" title="Remover">×</button>
+    </div>
+  `).join('');
+
+  // Totais
+  const totais = calcItens.reduce((acc, i) => ({
+    kcal: acc.kcal + i.kcal,
+    prot: acc.prot + i.prot,
+    carb: acc.carb + i.carb,
+    gord: acc.gord + i.gord,
+    sodio: acc.sodio + i.sodio
+  }), { kcal: 0, prot: 0, carb: 0, gord: 0, sodio: 0 });
+
+  document.getElementById('calc-tot-kcal').textContent = totais.kcal.toFixed(1);
+  document.getElementById('calc-tot-prot').textContent = totais.prot.toFixed(1);
+  document.getElementById('calc-tot-carb').textContent = totais.carb.toFixed(1);
+  document.getElementById('calc-tot-gord').textContent = totais.gord.toFixed(1);
+  document.getElementById('calc-tot-sodio').textContent = totais.sodio.toFixed(0);
+  resultado.style.display = 'grid';
+
+  calcAtualizarChips(totais);
+}
+
+function calcAtualizarChips(totais) {
+  document.getElementById('calc-chip-kcal').textContent = (totais.kcal || 0).toFixed(0);
+  document.getElementById('calc-chip-prot').textContent = (totais.prot || 0).toFixed(1) + 'g';
+  document.getElementById('calc-chip-carb').textContent = (totais.carb || 0).toFixed(1) + 'g';
+  document.getElementById('calc-chip-items').textContent = calcItens.length;
+}
+
+function calcLimpar() {
+  if (calcItens.length && !confirm('Limpar todos os itens?')) return;
+  calcItens = [];
+  calcRenderizar();
+}
+
+function calcEnviarParaRecordatorio() {
+  if (!calcItens.length) { alert('Adicione alimentos antes de enviar.'); return; }
+
+  calcItens.forEach(item => {
+    recordatorioItems.push({
+      alimento_id: item.alimento.id,
+      nome: item.alimento.nome,
+      qtd: item.gramas,
+      kcal: item.kcal,
+      prot: item.prot,
+      carb: item.carb,
+      sodio: item.sodio
+    });
+  });
+
+  renderizarRecordatorio();
+  showTab('recordatorio');
+  const msg = document.getElementById('msg-rec');
+  msg.className = 'msg success';
+  msg.textContent = `✅ ${calcItens.length} alimento(s) adicionados ao Recordatório!`;
+}
+
+function calcExportarExcel() {
+  if (!calcItens.length) { alert('Adicione alimentos primeiro.'); return; }
+
+  const rows = [
+    ['Nutri Amorim — Calculadora de Porções', '', '', '', '', '', ''],
+    ['Gerado em: ' + new Date().toLocaleString('pt-BR'), '', '', '', '', '', ''],
+    [''],
+    ['Alimento', 'Preparo', 'Qtd', 'Unidade', 'Gramas', 'Kcal', 'Proteína (g)', 'Carbs (g)', 'Gordura (g)', 'Sódio (mg)'],
+    ...calcItens.map(i => [
+      i.alimento.nome,
+      i.alimento.preparo || '',
+      i.qtd,
+      i.unid,
+      i.gramas.toFixed(0),
+      i.kcal.toFixed(1),
+      i.prot.toFixed(1),
+      i.carb.toFixed(1),
+      i.gord.toFixed(1),
+      i.sodio.toFixed(0)
+    ]),
+    [''],
+    ['TOTAL', '', '', '', '',
+      calcItens.reduce((a,i) => a + i.kcal, 0).toFixed(1),
+      calcItens.reduce((a,i) => a + i.prot, 0).toFixed(1),
+      calcItens.reduce((a,i) => a + i.carb, 0).toFixed(1),
+      calcItens.reduce((a,i) => a + i.gord, 0).toFixed(1),
+      calcItens.reduce((a,i) => a + i.sodio, 0).toFixed(0)
+    ]
+  ];
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols'] = [{ wch: 28 }, { wch: 14 }, { wch: 8 }, { wch: 18 }, { wch: 10 }, { wch: 10 }, { wch: 14 }, { wch: 12 }, { wch: 14 }, { wch: 12 }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Calculadora');
+  XLSX.writeFile(wb, 'nutri-calculadora-porcoes.xlsx');
+}
+
+// Chama quando alimentos são carregados
+// (adicione calcPopularSelect() no final da função que carrega alimentos no init)
+</script>
