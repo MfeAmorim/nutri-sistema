@@ -1115,7 +1115,8 @@ async function salvarRecordatorioSilencioso() {
 }
 
 async function exportarRecPDF() {
-  if (!recordatorioItems.length) { alert('Nenhum item para exportar.'); return; }
+  const itensPDF = getItensFiltrados();
+  if (!itensPDF.length) { alert('Nenhum item para exportar.'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit:'mm', format:'a4' });
   const ML=14, PW=182;
@@ -1125,14 +1126,14 @@ async function exportarRecPDF() {
   // Cabeçalho
   doc.setFillColor(...VE); doc.rect(0,0,210,28,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...VC);
-  doc.text('🌿 NUTRI AMORIM — Recordatório Alimentar', 14, 12);
+  doc.text('NUTRI AMORIM - Recordatorio Alimentar', 14, 12);
   doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...BR);
   doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 20);
   y = 36;
 
   // Agrupar por data
   const porData = {};
-  recordatorioItems.forEach(item => {
+  itensPDF.forEach(item => {
     const d = item.data || '—';
     if (!porData[d]) porData[d] = [];
     porData[d].push(item);
@@ -1147,7 +1148,7 @@ async function exportarRecPDF() {
     doc.setFillColor(45,106,79); doc.rect(ML,y,PW,8,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...VC);
     const dataFmt = data ? new Date(data+'T12:00:00').toLocaleDateString('pt-BR') : data;
-    doc.text(`📅 ${dataFmt} — ${itens.length} item(s)`, ML+2, y+5.5);
+    doc.text(dataFmt + ' - ' + itens.length + ' item(s)', ML+2, y+5.5);
     y += 10;
 
     // Cabeçalho tabela
@@ -1175,46 +1176,61 @@ async function exportarRecPDF() {
     });
 
     // Subtotais da data
-    const totD = itens.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,sodio:0});
+    const totD = itens.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,carb:0,sodio:0});
     if (y > 270) { doc.addPage(); y = 14; }
     doc.setFillColor(200,230,200); doc.rect(ML,y,PW,6.5,'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(26,46,31);
-    doc.text(`Totais do dia: Energia ${totD.kcal.toFixed(0)} kcal  |  Proteína ${totD.prot.toFixed(1)}g  |  Sódio ${totD.sodio.toFixed(0)}mg`, ML+2, y+4.5);
+    doc.text('Totais do dia: Energia ' + totD.kcal.toFixed(0) + ' kcal | Proteina ' + totD.prot.toFixed(2) + 'g | Carb ' + totD.carb.toFixed(2) + 'g | Sodio ' + totD.sodio.toFixed(1) + 'mg', ML+2, y+4.5);
     y += 10;
   }
 
   // Totais gerais
   if (y > 265) { doc.addPage(); y = 14; }
-  const tot = recordatorioItems.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,carb:0,sodio:0});
+  const tot = itensPDF.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,carb:0,sodio:0});
   doc.setFillColor(...VE); doc.rect(ML,y,PW,16,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...VC);
-  doc.text('TOTAIS GERAIS DO PERÍODO', ML+2, y+6);
+  doc.text('TOTAIS GERAIS DO PERIODO', ML+2, y+6);
   doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...BR);
-  doc.text(`Energia: ${tot.kcal.toFixed(0)} kcal   Proteína: ${tot.prot.toFixed(1)}g   Carboidratos: ${tot.carb.toFixed(1)}g   Sódio: ${tot.sodio.toFixed(0)}mg`, ML+2, y+13);
+  doc.text('Energia: ' + tot.kcal.toFixed(0) + ' kcal   Proteina: ' + tot.prot.toFixed(2) + 'g   Carboidratos: ' + tot.carb.toFixed(2) + 'g   Sodio: ' + tot.sodio.toFixed(1) + 'mg', ML+2, y+13);
 
-  const nome = (typeof perfilData !== 'undefined' && perfilData.nome) ? perfilData.nome.replace(/\s+/g,'-') : 'paciente';
-  doc.save(`recordatorio-${nome}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
+  const nomeP = (typeof prontuarioData !== 'undefined' && prontuarioData && prontuarioData.nome) ? prontuarioData.nome.replace(/[^a-zA-Z0-9]/g,'-') : 'paciente';
+  doc.save('recordatorio-' + nomeP + '-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.pdf');
 }
 
 function exportarRecExcel() {
-  if (!recordatorioItems.length) { alert('Nenhum item para exportar.'); return; }
-  const rows = [['Data','Horário','Refeição','Alimento','Qtd','Tipo','Local','Observações','Gramas Total','Energia (kcal)','Proteína (g)','Carboidratos (g)','Lipídios (g)','Sódio (mg)','Fibra (g)']];
-  recordatorioItems.forEach(i => {
+  const itensXLS = getItensFiltrados();
+  if (!itensXLS.length) { alert('Nenhum item para exportar.'); return; }
+  const rows = [['Data','Horario','Refeicao','Alimento','Qtd','Tipo','Local','Observacoes','Gramas Total','Energia (kcal)','Proteina (g)','Carboidratos (g)','Lipidios (g)','Sodio (mg)','Fibra (g)']];
+  itensXLS.forEach(i => {
     const dataFmt = i.data ? new Date(i.data+'T12:00:00').toLocaleDateString('pt-BR') : '—';
-    rows.push([dataFmt, i.horario||'', i.refeicao||'', i.nome||'', i.qtd||'', i.tipo||'', i.local||'', i.obs||'', i.gramas_total||'', i.kcal||0, i.prot||0, i.carb||0, i.lip||0, i.sodio||0, i.fibra||0]);
+    rows.push([
+      dataFmt, i.horario||'', i.refeicao||'', i.nome||'', Number(i.qtd)||0,
+      i.tipo||'', i.local||'', i.obs||'', Number(i.gramas_total)||0,
+      Number(i.kcal)||0, Number(i.prot)||0, Number(i.carb)||0,
+      Number(i.lip)||0,  Number(i.sodio)||0, Number(i.fibra)||0
+    ]);
   });
-  // Linha de totais
-  const tot = recordatorioItems.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), lip:a.lip+(i.lip||0), sodio:a.sodio+(i.sodio||0), fibra:a.fibra+(i.fibra||0) }), {kcal:0,prot:0,carb:0,lip:0,sodio:0,fibra:0});
+  const tot = itensXLS.reduce((a,i) => ({
+    kcal:  a.kcal  + (Number(i.kcal) ||0),
+    prot:  a.prot  + (Number(i.prot) ||0),
+    carb:  a.carb  + (Number(i.carb) ||0),
+    lip:   a.lip   + (Number(i.lip)  ||0),
+    sodio: a.sodio + (Number(i.sodio)||0),
+    fibra: a.fibra + (Number(i.fibra)||0)
+  }), {kcal:0,prot:0,carb:0,lip:0,sodio:0,fibra:0});
   rows.push([]);
-  rows.push(['','','','','TOTAL','','','','', tot.kcal.toFixed(2), tot.prot.toFixed(2), tot.carb.toFixed(2), tot.lip.toFixed(2), tot.sodio.toFixed(2), tot.fibra.toFixed(2)]);
-
+  rows.push(['','','','','TOTAL','','','','',
+    parseFloat(tot.kcal.toFixed(2)), parseFloat(tot.prot.toFixed(2)),
+    parseFloat(tot.carb.toFixed(2)), parseFloat(tot.lip.toFixed(2)),
+    parseFloat(tot.sodio.toFixed(2)), parseFloat(tot.fibra.toFixed(2))
+  ]);
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
-  // Larguras das colunas
-  ws['!cols'] = [10,8,16,22,5,8,12,20,10,12,10,12,10,10,8].map(w=>({wch:w}));
-  XLSX.utils.book_append_sheet(wb, ws, 'Recordatório');
-  const nome = (typeof perfilData !== 'undefined' && perfilData.nome) ? perfilData.nome.replace(/\s+/g,'-') : 'paciente';
-  XLSX.writeFile(wb, `recordatorio-${nome}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.xlsx`);
+  ws['!cols'] = [12,8,18,24,5,10,14,22,11,13,11,13,10,11,8].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws, 'Recordatorio');
+  const nomeP = (typeof prontuarioData !== 'undefined' && prontuarioData && prontuarioData.nome)
+    ? prontuarioData.nome.replace(/[^a-zA-Z0-9]/g,'-') : 'paciente';
+  XLSX.writeFile(wb, 'recordatorio-' + nomeP + '-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.xlsx');
 }
 
 // ══ PRONTUÁRIOS ══
