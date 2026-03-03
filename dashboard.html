@@ -625,38 +625,17 @@
             </div>
           </div>
 
-          <!-- Linha 2: Alimento · Quantidade · Unidade · Local -->
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:14px;align-items:end;margin-bottom:14px">
+          <!-- Linha 2: Alimento · Quantidade · Local -->
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end;margin-bottom:14px">
             <div class="rec-field">
               <label>🥦 Alimento / Bebida <span style="color:#dc2626">*</span></label>
-              <select id="rec-alimento" onchange="recAutoUnidade()">
+              <select id="rec-alimento">
                 <option value="">— Selecione um alimento —</option>
               </select>
             </div>
             <div class="rec-field">
               <label>📏 Quantidade <span style="color:#dc2626">*</span></label>
               <input type="number" id="rec-qtd" placeholder="Ex: 2" min="0.1" step="0.1">
-            </div>
-            <div class="rec-field">
-              <label>⚖️ Unidade <span style="color:#dc2626">*</span></label>
-              <select id="rec-unidade">
-                <option value="">Selecione</option>
-                <option value="Concha">Concha</option>
-                <option value="Colher de sopa">Colher de sopa</option>
-                <option value="Colher de chá">Colher de chá</option>
-                <option value="Xícara">Xícara</option>
-                <option value="Unidade">Unidade</option>
-                <option value="Fatia">Fatia</option>
-                <option value="Folha">Folha</option>
-                <option value="Garfo">Garfo</option>
-                <option value="Porção">Porção</option>
-                <option value="Gramas">Gramas (g)</option>
-                <option value="Mililitros">Mililitros (ml)</option>
-                <option value="Copo">Copo</option>
-                <option value="Lata">Lata</option>
-                <option value="Sachê">Sachê</option>
-                <option value="Barra">Barra</option>
-              </select>
             </div>
             <div class="rec-field">
               <label>📍 Local</label>
@@ -702,7 +681,6 @@
                   <th>Refeição</th>
                   <th>Alimento / Bebida</th>
                   <th>Qtd</th>
-                  <th>Unidade</th>
                   <th>Tipo</th>
                   <th>Local</th>
                   <th>Observações</th>
@@ -784,7 +762,7 @@
 <script src="supabase-config.js"></script>
 <script>
 // ── Estado ──
-const DADOS_PLANILHA = [{"data": "2026-01-29", "horario": "09:50", "refeicao": "Café da Manhã", "nome": "Pão de queijo", "qtd": 5, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "1 copo de café com açucar", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "12:50", "refeicao": "Almoço", "nome": "Coca cola", "qtd": 8, "unidade": "copo", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "12:50", "refeicao": "Almoço", "nome": "Abóbora cozida", "qtd": 2, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "12:50", "refeicao": "Almoço", "nome": "Batata inglesa cozida", "qtd": 2, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "12:50", "refeicao": "Almoço", "nome": "Tomate", "qtd": 2, "unidade": "rodela", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "16:30", "refeicao": "Lanche", "nome": "Pão de queijo", "qtd": 5, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "4 copos de coca", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "22:22", "refeicao": "Jantar", "nome": "Arroz", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "esquentado no microondas", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "22:22", "refeicao": "Jantar", "nome": "Feijão", "qtd": 3, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "esquentado no microondas", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "22:22", "refeicao": "Jantar", "nome": "Tomate", "qtd": 4, "unidade": "rodela", "tipo": "", "local": "Casa", "obs": "esquentado no microondas", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-29", "horario": "22:22", "refeicao": "Jantar", "nome": "Ovo cozido", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "esquentado no microondas", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "11:48", "refeicao": "Almoço", "nome": "Arroz", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "esquentado no microondas", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "11:48", "refeicao": "Almoço", "nome": "Feijão", "qtd": 2, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "11:48", "refeicao": "Almoço", "nome": "Ovo cozido", "qtd": 2, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "21:30", "refeicao": "Jantar", "nome": "Arroz", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "21:30", "refeicao": "Jantar", "nome": "Feijão", "qtd": 3, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "21:30", "refeicao": "Jantar", "nome": "Ovo frito", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-30", "horario": "21:30", "refeicao": "Jantar", "nome": "Tomate", "qtd": 2, "unidade": "rodela", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "10:10", "refeicao": "Café da Manhã", "nome": "Pão de queijo", "qtd": 7, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "10:10", "refeicao": "Café da Manhã", "nome": "Café", "qtd": 1, "unidade": "copo", "tipo": "", "local": "Casa", "obs": "com açucar", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Arroz", "qtd": 5, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Feijão", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Ovo cozido", "qtd": 3, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Fricassê de frango", "qtd": 1, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "com queijo", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Alface", "qtd": 2, "unidade": "folhas", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "13:30", "refeicao": "Almoço", "nome": "Tomate cereja", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-01-31", "horario": "20:09", "refeicao": "Jantar", "nome": "Pizza de microondas", "qtd": 2, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "com queijo e presunto", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "08:51", "refeicao": "Café da Manhã", "nome": "Pão de queijo", "qtd": 7, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "08:51", "refeicao": "Café da Manhã", "nome": "Café", "qtd": 1, "unidade": "copo", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "10:10", "refeicao": "Café da Manhã", "nome": "Pastel", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "com carne e queijo", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "10:10", "refeicao": "Café da Manhã", "nome": "Coca cola", "qtd": 3, "unidade": "copo", "tipo": "", "local": "Casa", "obs": "com açucar", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "14:00", "refeicao": "Almoço", "nome": "Arroz", "qtd": 3, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "14:00", "refeicao": "Almoço", "nome": "Feijão", "qtd": 3, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "14:00", "refeicao": "Almoço", "nome": "Batata frita", "qtd": 3, "unidade": "pegador", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "14:00", "refeicao": "Almoço", "nome": "Ovo frito", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "14:00", "refeicao": "Almoço", "nome": "Coca cola", "qtd": 6, "unidade": "copo", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "21:14", "refeicao": "Jantar", "nome": "Arroz", "qtd": 10, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "21:14", "refeicao": "Jantar", "nome": "Feijão", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-01", "horario": "21:14", "refeicao": "Jantar", "nome": "Ovo frito", "qtd": 2, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-02", "horario": "07:30", "refeicao": "Café da Manhã", "nome": "Pão de queijo", "qtd": 7, "unidade": "unidade", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-02", "horario": "07:30", "refeicao": "Café da Manhã", "nome": "Pão de sal", "qtd": 1, "unidade": "unidade", "tipo": "", "local": "Emprego", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-02", "horario": "21:40", "refeicao": "Jantar", "nome": "Arroz", "qtd": 4, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-02", "horario": "21:40", "refeicao": "Jantar", "nome": "Feijão", "qtd": 2, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-02", "horario": "21:40", "refeicao": "Jantar", "nome": "Macarrão", "qtd": 4, "unidade": "colher", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}, {"data": "2026-02-03", "horario": "12:00", "refeicao": "Almoço", "nome": "Arroz", "qtd": 4, "unidade": "concha", "tipo": "", "local": "Casa", "obs": "-", "alimento_id": "", "gramas_total": 0, "kcal": 0, "prot": 0, "carb": 0, "sodio": 0}];
+const DADOS_PLANILHA = [{"data":"2026-01-29","horario":"09:50","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":5,"tipo":"","local":"Casa","obs":"1 copo de café com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Coca cola","qtd":8,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Abóbora cozida","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Batata inglesa cozida","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Tomate","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"16:30","refeicao":"Lanche","nome":"Pão de queijo","qtd":5,"tipo":"","local":"Casa","obs":"4 copos de coca","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Tomate","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Ovo cozido","qtd":1,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Feijão","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Ovo cozido","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Ovo frito","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Tomate","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"10:10","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"10:10","refeicao":"Café da Manhã","nome":"Café","qtd":1,"tipo":"","local":"Casa","obs":"com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Arroz","qtd":5,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Feijão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Ovo cozido","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Fricassê de frango","qtd":1,"tipo":"","local":"Casa","obs":"com queijo","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Alface","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Tomate cereja","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"20:09","refeicao":"Jantar","nome":"Pizza de microondas","qtd":2,"tipo":"","local":"Casa","obs":"com queijo e presunto","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"08:51","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"08:51","refeicao":"Café da Manhã","nome":"Café","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"10:10","refeicao":"Café da Manhã","nome":"Pastel","qtd":1,"tipo":"","local":"Casa","obs":"com carne e queijo","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"10:10","refeicao":"Café da Manhã","nome":"Coca cola","qtd":3,"tipo":"","local":"Casa","obs":"com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Arroz","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Batata frita","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Ovo frito","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Coca cola","qtd":6,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Arroz","qtd":10,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Feijão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Ovo frito","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"07:30","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"07:30","refeicao":"Café da Manhã","nome":"Pão de sal","qtd":1,"tipo":"","local":"Emprego","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Feijão","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Macarrão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-03","horario":"12:00","refeicao":"Almoço","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0}];
 
 let currentUser = null;
 let perfilData = {};
@@ -854,11 +832,7 @@ function atualizarSelectAlimentos() {
     + alimentosCadastrados.map(a => `<option value="${a.id}">${a.nome}</option>`).join('');
 }
 
-function recAutoUnidade() {
-  const alId = document.getElementById('rec-alimento').value;
-  const al = alimentosCadastrados.find(a => a.id === alId);
-  if (al && al.unidade_medida) document.getElementById('rec-unidade').value = al.unidade_medida;
-}
+
 
 function calcularGramas(al, qtd, unidadeSel) {
   if (!unidadeSel || unidadeSel === 'Gramas' || unidadeSel === 'Mililitros') return qtd;
@@ -870,17 +844,15 @@ function adicionarNoRecordatorio() {
   const data    = document.getElementById('rec-data').value;
   const alId    = document.getElementById('rec-alimento').value;
   const qtd     = parseFloat(document.getElementById('rec-qtd').value);
-  const unidade = document.getElementById('rec-unidade').value;
 
   if (!data)    { showMsgRec('error', '⚠️ Informe a data.'); return; }
   if (!alId)    { showMsgRec('error', '⚠️ Selecione um alimento.'); return; }
   if (!qtd || qtd <= 0) { showMsgRec('error', '⚠️ Informe a quantidade.'); return; }
-  if (!unidade) { showMsgRec('error', '⚠️ Selecione a unidade.'); return; }
 
   const al = alimentosCadastrados.find(a => a.id === alId);
   if (!al) return;
 
-  const gramasTotal = calcularGramas(al, qtd, unidade);
+  const gramasTotal = qtd * (al.gramas_unidade || 100);
   const kcal  = parseFloat((al.kcal_100g       * gramasTotal / 100).toFixed(1));
   const prot  = parseFloat((al.proteina_100g   * gramasTotal / 100).toFixed(1));
   const carb  = parseFloat((al.carb_100g       * gramasTotal / 100).toFixed(1));
@@ -893,13 +865,12 @@ function adicionarNoRecordatorio() {
     tipo:     document.getElementById('rec-tipo').value      || '',
     local:    document.getElementById('rec-local').value     || '',
     obs:      document.getElementById('rec-obs').value       || '',
-    qtd, unidade, gramas_total: gramasTotal, kcal, prot, carb, sodio
+    qtd, gramas_total: gramasTotal, kcal, prot, carb, sodio
   });
 
   renderizarRecordatorio();
   document.getElementById('rec-alimento').value = '';
   document.getElementById('rec-qtd').value      = '';
-  document.getElementById('rec-unidade').value  = '';
   document.getElementById('rec-obs').value      = '';
   showMsgRec('', '');
 }
@@ -939,7 +910,6 @@ function renderizarRecordatorio() {
       <td style="white-space:nowrap">${item.refeicao || '—'}</td>
       <td style="font-weight:600;color:var(--escuro)">${item.nome}</td>
       <td style="text-align:center">${item.qtd}</td>
-      <td>${item.unidade || '—'}</td>
       <td>${item.tipo || '—'}</td>
       <td>${item.local || '—'}</td>
       <td style="color:#7a8a7c;font-size:12px">${item.obs || '—'}</td>
@@ -956,22 +926,26 @@ function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordato
 function limparRecordatorio() { if (!confirm('Limpar todos os registros do recordatório?')) return; recordatorioItems = []; renderizarRecordatorio(); }
 
 function atualizarTotais() {
-  const tot = recordatorioItems.reduce((acc, item) => ({
+  // Só soma itens que têm dados nutricionais calculados (gramas_total > 0 ou kcal > 0)
+  const itensComNutri = recordatorioItems.filter(item => item.kcal > 0 || item.gramas_total > 0);
+  const semNutri = recordatorioItems.length - itensComNutri.length;
+  const tot = itensComNutri.reduce((acc, item) => ({
     kcal: acc.kcal + (item.kcal||0), prot: acc.prot + (item.prot||0),
     carb: acc.carb + (item.carb||0), sodio: acc.sodio + (item.sodio||0)
   }), { kcal:0, prot:0, carb:0, sodio:0 });
   const metaKcal = parseFloat(document.getElementById('meta-kcal').textContent)||2000;
   const metaProt = parseFloat(document.getElementById('meta-prot').textContent)||120;
-  document.getElementById('tot-kcal').textContent  = tot.kcal.toFixed(0);
-  document.getElementById('tot-prot').textContent  = tot.prot.toFixed(1)+'g';
-  document.getElementById('tot-carb').textContent  = tot.carb.toFixed(1)+'g';
-  document.getElementById('tot-sodio').textContent = tot.sodio.toFixed(0)+'mg';
-  document.getElementById('falta-kcal').textContent = Math.max(0,metaKcal-tot.kcal).toFixed(0);
-  document.getElementById('falta-prot').textContent = Math.max(0,metaProt-tot.prot).toFixed(1);
-  document.getElementById('st-kcal').textContent   = tot.kcal.toFixed(0);
-  document.getElementById('st-prot').textContent   = tot.prot.toFixed(1)+'g';
+  document.getElementById('tot-kcal').textContent  = tot.kcal > 0 ? tot.kcal.toFixed(0) : (semNutri > 0 ? '—' : '0');
+  document.getElementById('tot-prot').textContent  = tot.prot > 0 ? tot.prot.toFixed(1)+'g' : (semNutri > 0 ? '—' : '0g');
+  document.getElementById('tot-carb').textContent  = tot.carb > 0 ? tot.carb.toFixed(1)+'g' : (semNutri > 0 ? '—' : '0g');
+  document.getElementById('tot-sodio').textContent = tot.sodio > 0 ? tot.sodio.toFixed(0)+'mg' : (semNutri > 0 ? '—' : '0mg');
+  document.getElementById('falta-kcal').textContent = tot.kcal > 0 ? Math.max(0,metaKcal-tot.kcal).toFixed(0) : '—';
+  document.getElementById('falta-prot').textContent = tot.prot > 0 ? Math.max(0,metaProt-tot.prot).toFixed(1) : '—';
+  document.getElementById('st-kcal').textContent   = tot.kcal > 0 ? tot.kcal.toFixed(0) : '—';
+  document.getElementById('st-prot').textContent   = tot.prot > 0 ? tot.prot.toFixed(1)+'g' : '—';
   const fs = document.getElementById('falta-sodio');
-  fs.textContent = tot.sodio > 2300 ? '⚠️ Excedeu limite' : '';
+  if (tot.sodio > 0) fs.textContent = tot.sodio > 2300 ? '⚠️ Excedeu limite' : '';
+  else fs.textContent = '';
 }
 
 async function salvarRecordatorio() {
@@ -1221,7 +1195,7 @@ function exportarExcel() {
   const wb=XLSX.utils.book_new();
   const prows=[['Campo','Valor']]; if(prontuarioData.nome){Object.entries({Nome:prontuarioData.nome,Email:prontuarioData.email_paciente,Nascimento:prontuarioData.nascimento,Sexo:prontuarioData.sexo,Peso:prontuarioData.peso,Altura:prontuarioData.altura,IMC:prontuarioData.imc,Atividade:prontuarioData.nivel_atividade,Objetivo:prontuarioData.objetivo}).forEach(([k,v])=>prows.push([k,v||'']));} XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(prows),'Prontuário');
   const arows=[['Alimento','Fonte','Kcal/100g','Proteína','Carb','Gordura','Fibra','Sódio']]; alimentosCadastrados.forEach(a=>arows.push([a.nome,a.fonte,a.kcal_100g,a.proteina_100g,a.carb_100g,a.gordura_100g,a.fibra_100g,a.sodio_100mg])); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(arows),'Tabela Alimentar');
-  const rrows=[['Data','Horário','Refeição','Alimento','Qtd','Unidade','Gramas Total','Kcal','Proteína (g)','Carb (g)','Sódio (mg)','Tipo','Local','Observações']]; recordatorioItems.forEach(i=>rrows.push([i.data||'',i.horario||'',i.refeicao||'',i.nome,i.qtd,i.unidade||'',i.gramas_total||'',i.kcal,i.prot,i.carb,i.sodio,i.tipo||'',i.local||'',i.obs||''])); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rrows),'Recordatório 24h');
+  const rrows=[['Data','Horário','Refeição','Alimento','Qtd','Gramas Total','Kcal','Proteína (g)','Carb (g)','Sódio (mg)','Tipo','Local','Observações']]; recordatorioItems.forEach(i=>rrows.push([i.data||'',i.horario||'',i.refeicao||'',i.nome,i.qtd,i.gramas_total||'',i.kcal,i.prot,i.carb,i.sodio,i.tipo||'',i.local||'',i.obs||''])); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rrows),'Recordatório 24h');
   XLSX.writeFile(wb,`nutri-amorim-${(perfilData.nome||'paciente').replace(/\s/g,'-')}.xlsx`);
 }
 
