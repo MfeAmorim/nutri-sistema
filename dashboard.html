@@ -664,11 +664,26 @@
         <!-- TABELA COM SCROLL DUPLO -->
         <div id="rec-tabela-wrap" style="display:none;margin-top:8px">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-            <div style="font-size:13px;font-weight:600;color:var(--escuro)">📋 Registros (<span id="rec-count">0</span> itens)</div>
-            <div style="display:flex;gap:8px">
+            <div style="font-size:13px;font-weight:600;color:var(--escuro)">📋 Registros (<span id="rec-count">0</span> itens) <span id="autosave-ind" style="font-size:11px;font-weight:400;color:var(--verde-claro);margin-left:8px"></span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn-sm btn-sm-outline" onclick="salvarRecordatorio()">💾 Salvar</button>
+              <button class="btn-sm btn-sm-verde" onclick="exportarRecPDF()">📄 PDF</button>
+              <button class="btn-sm" style="background:#1e40af;color:#fff" onclick="exportarRecExcel()">📊 Excel</button>
               <button class="btn-sm btn-sm-red" onclick="limparRecordatorio()">🗑️ Limpar tudo</button>
             </div>
+          </div>
+
+          <!-- FILTRO POR DATA -->
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;background:#f0fdf4;border-radius:8px;border:1px solid #c8e6c9">
+            <span style="font-size:13px;font-weight:600;color:var(--escuro)">🔍 Filtrar por data:</span>
+            <input type="date" id="filtro-data-ini" onchange="aplicarFiltroData()" style="padding:5px 10px;border:1.5px solid #c8e6c9;border-radius:6px;font-family:DM Sans,sans-serif;font-size:13px;color:var(--escuro)">
+            <span style="font-size:12px;color:#7a8a7c">até</span>
+            <input type="date" id="filtro-data-fim" onchange="aplicarFiltroData()" style="padding:5px 10px;border:1.5px solid #c8e6c9;border-radius:6px;font-family:DM Sans,sans-serif;font-size:13px;color:var(--escuro)">
+            <button class="btn-sm btn-sm-outline" onclick="filtrarHoje()" style="padding:5px 14px">📅 Hoje</button>
+            <button class="btn-sm btn-sm-outline" onclick="filtrarSemana()" style="padding:5px 14px">📆 7 dias</button>
+            <button class="btn-sm btn-sm-outline" onclick="filtrarMes()" style="padding:5px 14px">🗓️ Este mês</button>
+            <button class="btn-sm" onclick="limparFiltroData()" style="padding:5px 14px;background:none;border:1px solid #d1d5db;color:#7a8a7c;border-radius:6px;cursor:pointer;font-size:12px">✕ Limpar filtro</button>
+            <span id="filtro-info" style="font-size:12px;color:var(--verde);font-weight:600;margin-left:4px"></span>
           </div>
 
           <!-- ✅ SCROLL DUPLO: horizontal + vertical, cabeçalho fixo -->
@@ -814,15 +829,28 @@ async function init() {
   document.getElementById('rec-data').value = hoje;
   document.getElementById('rec-horario').value = new Date().toTimeString().slice(0,5);
 
-  const { data: rec } = await window._sb.from('recordatorios').select('*').eq('user_id', user.id).eq('data', hoje).single();
-  if (rec && rec.itens) {
-    recordatorioItems = JSON.parse(rec.itens || '[]');
-  } else {
+  // Carregar TODOS os registros salvos (todas as datas)
+  await carregarTodosOsRecordatorios();
+  calcularMetas();
+  gerarTabelaSintomas();
+}
+
+async function carregarTodosOsRecordatorios() {
+  try {
+    const { data: recs } = await window._sb.from('recordatorios')
+      .select('*').eq('user_id', currentUser.id).order('data', { ascending: true });
+    if (recs && recs.length > 0) {
+      // Juntar todos os itens de todas as datas salvas
+      recordatorioItems = recs.flatMap(r => {
+        try { return JSON.parse(r.itens || '[]'); } catch(e) { return []; }
+      });
+    } else {
+      recordatorioItems = DADOS_PLANILHA;
+    }
+  } catch(e) {
     recordatorioItems = DADOS_PLANILHA;
   }
   renderizarRecordatorio();
-  calcularMetas();
-  gerarTabelaSintomas();
 }
 
 // ── RECORDATÓRIO ──
@@ -872,6 +900,7 @@ function adicionarNoRecordatorio() {
   });
 
   renderizarRecordatorio();
+  agendarAutoSave();
   document.getElementById('rec-alimento').value = '';
   document.getElementById('rec-qtd').value      = '';
   document.getElementById('rec-obs').value      = '';
@@ -882,6 +911,61 @@ function showMsgRec(tipo, txt) {
   const msg = document.getElementById('msg-rec');
   msg.className = tipo ? 'msg ' + tipo : '';
   msg.textContent = txt;
+}
+
+// Filtro de datas
+let _filtroIni = '', _filtroFim = '';
+
+function aplicarFiltroData() {
+  _filtroIni = document.getElementById('filtro-data-ini').value;
+  _filtroFim = document.getElementById('filtro-data-fim').value;
+  renderizarRecordatorio();
+}
+
+function filtrarHoje() {
+  const h = new Date().toISOString().split('T')[0];
+  document.getElementById('filtro-data-ini').value = h;
+  document.getElementById('filtro-data-fim').value = h;
+  _filtroIni = h; _filtroFim = h;
+  renderizarRecordatorio();
+}
+
+function filtrarSemana() {
+  const fim = new Date();
+  const ini = new Date(); ini.setDate(ini.getDate() - 6);
+  const f = d => d.toISOString().split('T')[0];
+  document.getElementById('filtro-data-ini').value = f(ini);
+  document.getElementById('filtro-data-fim').value = f(fim);
+  _filtroIni = f(ini); _filtroFim = f(fim);
+  renderizarRecordatorio();
+}
+
+function filtrarMes() {
+  const hoje = new Date();
+  const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+  const f = d => d.toISOString().split('T')[0];
+  document.getElementById('filtro-data-ini').value = f(ini);
+  document.getElementById('filtro-data-fim').value = f(hoje);
+  _filtroIni = f(ini); _filtroFim = f(hoje);
+  renderizarRecordatorio();
+}
+
+function limparFiltroData() {
+  document.getElementById('filtro-data-ini').value = '';
+  document.getElementById('filtro-data-fim').value = '';
+  _filtroIni = ''; _filtroFim = '';
+  document.getElementById('filtro-info').textContent = '';
+  renderizarRecordatorio();
+}
+
+function getItensFiltrados() {
+  if (!_filtroIni && !_filtroFim) return recordatorioItems;
+  return recordatorioItems.filter(item => {
+    const d = item.data || '';
+    if (_filtroIni && d < _filtroIni) return false;
+    if (_filtroFim && d > _filtroFim) return false;
+    return true;
+  });
 }
 
 function renderizarRecordatorio() {
@@ -896,12 +980,36 @@ function renderizarRecordatorio() {
   }
 
   wrap.style.display = 'block'; vazio.style.display = 'none'; totbox.style.display = 'grid';
-  document.getElementById('rec-count').textContent = recordatorioItems.length;
+
+  const itensFiltrados = getItensFiltrados();
+  const filtroAtivo = _filtroIni || _filtroFim;
+
+  // Atualizar contador e info do filtro
+  document.getElementById('rec-count').textContent = filtroAtivo
+    ? `${itensFiltrados.length} de ${recordatorioItems.length}`
+    : recordatorioItems.length;
+
+  const infoEl = document.getElementById('filtro-info');
+  if (filtroAtivo && infoEl) {
+    if (itensFiltrados.length === 0) {
+      infoEl.textContent = '⚠️ Nenhum registro nesse período';
+    } else {
+      const datas = [...new Set(itensFiltrados.map(i => i.data))].length;
+      infoEl.textContent = `${itensFiltrados.length} item(s) em ${datas} dia(s)`;
+    }
+  }
 
   const cores = ['#fff','#f4f9f4'];
   let grupoAtual = '', grupoIdx = -1;
 
-  tbody.innerHTML = recordatorioItems.map((item, i) => {
+  if (!itensFiltrados.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:#7a8a7c;font-size:13px">📭 Nenhum registro encontrado para o período selecionado</td></tr>`;
+    atualizarTotais(itensFiltrados); return;
+  }
+
+  tbody.innerHTML = itensFiltrados.map((item) => {
+    // índice real no array original para remover corretamente
+    const idxReal = recordatorioItems.indexOf(item);
     const grupo = item.data + item.refeicao;
     if (grupo !== grupoAtual) { grupoAtual = grupo; grupoIdx++; }
     const bg = cores[grupoIdx % 2];
@@ -917,20 +1025,21 @@ function renderizarRecordatorio() {
       <td>${item.local || '—'}</td>
       <td style="color:#7a8a7c;font-size:12px">${item.obs || '—'}</td>
       <td style="text-align:center">
-        <button onclick="removerItemRec(${i})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
+        <button onclick="removerItemRec(${idxReal})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
       </td>
     </tr>`;
   }).join('');
 
-  atualizarTotais();
+  atualizarTotais(itensFiltrados);
 }
 
-function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordatorio(); }
+function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordatorio(); agendarAutoSave(); }
 function limparRecordatorio() { if (!confirm('Limpar todos os registros do recordatório?')) return; recordatorioItems = []; renderizarRecordatorio(); }
 
-function atualizarTotais() {
+function atualizarTotais(lista) {
   // Soma apenas itens com dados nutricionais reais (alimentos cadastrados na tabela)
-  const itensComNutri = recordatorioItems.filter(item => item.kcal > 0 || item.gramas_total > 0);
+  const base = lista || recordatorioItems;
+  const itensComNutri = base.filter(item => item.kcal > 0 || item.gramas_total > 0);
   const semNutri = recordatorioItems.length - itensComNutri.length;
   // Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
   const tot = itensComNutri.reduce((acc, item) => ({
@@ -957,11 +1066,155 @@ function atualizarTotais() {
 }
 
 async function salvarRecordatorio() {
-  const dataRef = recordatorioItems.length > 0 ? recordatorioItems[0].data : new Date().toISOString().split('T')[0];
+  if (!recordatorioItems.length) { showMsgRec('error', '⚠️ Nenhum item para salvar.'); return; }
   try {
-    await window._sb.from('recordatorios').upsert({ user_id: currentUser.id, data: dataRef, itens: JSON.stringify(recordatorioItems) });
-    showMsgRec('success', '✅ Recordatório salvo com sucesso!');
-  } catch(e) { showMsgRec('error', e.message); }
+    // Agrupar itens por data e salvar cada data separadamente
+    const porData = {};
+    recordatorioItems.forEach(item => {
+      const d = item.data || new Date().toISOString().split('T')[0];
+      if (!porData[d]) porData[d] = [];
+      porData[d].push(item);
+    });
+    for (const [data, itens] of Object.entries(porData)) {
+      await window._sb.from('recordatorios').upsert({
+        user_id: currentUser.id, data, itens: JSON.stringify(itens)
+      }, { onConflict: 'user_id,data' });
+    }
+    showMsgRec('success', `✅ Recordatório salvo! (${Object.keys(porData).length} dia(s))`);
+  } catch(e) { showMsgRec('error', '❌ Erro ao salvar: ' + e.message); }
+}
+
+// Auto-save: salva automaticamente 3 segundos após adicionar item
+let _autoSaveTimer = null;
+function agendarAutoSave() {
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer = setTimeout(async () => {
+    if (recordatorioItems.length > 0 && currentUser) {
+      await salvarRecordatorioSilencioso();
+    }
+  }, 3000);
+}
+
+async function salvarRecordatorioSilencioso() {
+  try {
+    const porData = {};
+    recordatorioItems.forEach(item => {
+      const d = item.data || new Date().toISOString().split('T')[0];
+      if (!porData[d]) porData[d] = [];
+      porData[d].push(item);
+    });
+    for (const [data, itens] of Object.entries(porData)) {
+      await window._sb.from('recordatorios').upsert({
+        user_id: currentUser.id, data, itens: JSON.stringify(itens)
+      }, { onConflict: 'user_id,data' });
+    }
+    // Indicador discreto de auto-save
+    const ind = document.getElementById('autosave-ind');
+    if (ind) { ind.textContent = '✓ salvo automaticamente'; setTimeout(() => ind.textContent = '', 3000); }
+  } catch(e) { console.warn('Auto-save falhou:', e.message); }
+}
+
+async function exportarRecPDF() {
+  if (!recordatorioItems.length) { alert('Nenhum item para exportar.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4' });
+  const ML=14, PW=182;
+  let y=14;
+  const VE=[26,46,31], VC=[116,198,157], BR=[255,255,255], TX=[28,40,30];
+
+  // Cabeçalho
+  doc.setFillColor(...VE); doc.rect(0,0,210,28,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...VC);
+  doc.text('🌿 NUTRI AMORIM — Recordatório Alimentar', 14, 12);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...BR);
+  doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 20);
+  y = 36;
+
+  // Agrupar por data
+  const porData = {};
+  recordatorioItems.forEach(item => {
+    const d = item.data || '—';
+    if (!porData[d]) porData[d] = [];
+    porData[d].push(item);
+  });
+
+  const cols = [22, 16, 32, 50, 10, 20, 20];
+  const headers = ['Data','Horário','Refeição','Alimento','Qtd','Tipo','Local'];
+
+  for (const [data, itens] of Object.entries(porData)) {
+    // Título da data
+    if (y > 260) { doc.addPage(); y = 14; }
+    doc.setFillColor(45,106,79); doc.rect(ML,y,PW,8,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...VC);
+    const dataFmt = data ? new Date(data+'T12:00:00').toLocaleDateString('pt-BR') : data;
+    doc.text(`📅 ${dataFmt} — ${itens.length} item(s)`, ML+2, y+5.5);
+    y += 10;
+
+    // Cabeçalho tabela
+    doc.setFillColor(26,46,31); doc.rect(ML,y,PW,7,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(...VC);
+    let cx = ML;
+    headers.forEach((h,i) => { doc.text(h, cx+1, y+5); cx+=cols[i]; });
+    y += 7;
+
+    // Linhas
+    itens.forEach((item, idx) => {
+      if (y > 270) { doc.addPage(); y = 14; }
+      const bg = idx%2===0 ? [244,249,244] : [255,255,255];
+      doc.setFillColor(...bg); doc.rect(ML,y,PW,6.5,'F');
+      doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...TX);
+      const dataFmt2 = item.data ? new Date(item.data+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+      const cells = [dataFmt2, item.horario||'—', item.refeicao||'—', item.nome||'—', String(item.qtd||''), item.tipo||'—', item.local||'—'];
+      cx = ML;
+      cells.forEach((c,i) => {
+        const txt = doc.splitTextToSize(c, cols[i]-2);
+        doc.text(txt[0]||'', cx+1, y+4.5);
+        cx += cols[i];
+      });
+      y += 6.5;
+    });
+
+    // Subtotais da data
+    const totD = itens.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,sodio:0});
+    if (y > 270) { doc.addPage(); y = 14; }
+    doc.setFillColor(200,230,200); doc.rect(ML,y,PW,6.5,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(26,46,31);
+    doc.text(`Totais do dia: Energia ${totD.kcal.toFixed(0)} kcal  |  Proteína ${totD.prot.toFixed(1)}g  |  Sódio ${totD.sodio.toFixed(0)}mg`, ML+2, y+4.5);
+    y += 10;
+  }
+
+  // Totais gerais
+  if (y > 265) { doc.addPage(); y = 14; }
+  const tot = recordatorioItems.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), sodio:a.sodio+(i.sodio||0) }), {kcal:0,prot:0,carb:0,sodio:0});
+  doc.setFillColor(...VE); doc.rect(ML,y,PW,16,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...VC);
+  doc.text('TOTAIS GERAIS DO PERÍODO', ML+2, y+6);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...BR);
+  doc.text(`Energia: ${tot.kcal.toFixed(0)} kcal   Proteína: ${tot.prot.toFixed(1)}g   Carboidratos: ${tot.carb.toFixed(1)}g   Sódio: ${tot.sodio.toFixed(0)}mg`, ML+2, y+13);
+
+  const nome = (typeof perfilData !== 'undefined' && perfilData.nome) ? perfilData.nome.replace(/\s+/g,'-') : 'paciente';
+  doc.save(`recordatorio-${nome}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
+}
+
+function exportarRecExcel() {
+  if (!recordatorioItems.length) { alert('Nenhum item para exportar.'); return; }
+  const rows = [['Data','Horário','Refeição','Alimento','Qtd','Tipo','Local','Observações','Gramas Total','Energia (kcal)','Proteína (g)','Carboidratos (g)','Lipídios (g)','Sódio (mg)','Fibra (g)']];
+  recordatorioItems.forEach(i => {
+    const dataFmt = i.data ? new Date(i.data+'T12:00:00').toLocaleDateString('pt-BR') : '—';
+    rows.push([dataFmt, i.horario||'', i.refeicao||'', i.nome||'', i.qtd||'', i.tipo||'', i.local||'', i.obs||'', i.gramas_total||'', i.kcal||0, i.prot||0, i.carb||0, i.lip||0, i.sodio||0, i.fibra||0]);
+  });
+  // Linha de totais
+  const tot = recordatorioItems.reduce((a,i) => ({ kcal:a.kcal+(i.kcal||0), prot:a.prot+(i.prot||0), carb:a.carb+(i.carb||0), lip:a.lip+(i.lip||0), sodio:a.sodio+(i.sodio||0), fibra:a.fibra+(i.fibra||0) }), {kcal:0,prot:0,carb:0,lip:0,sodio:0,fibra:0});
+  rows.push([]);
+  rows.push(['','','','','TOTAL','','','','', tot.kcal.toFixed(2), tot.prot.toFixed(2), tot.carb.toFixed(2), tot.lip.toFixed(2), tot.sodio.toFixed(2), tot.fibra.toFixed(2)]);
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  // Larguras das colunas
+  ws['!cols'] = [10,8,16,22,5,8,12,20,10,12,10,12,10,10,8].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws, 'Recordatório');
+  const nome = (typeof perfilData !== 'undefined' && perfilData.nome) ? perfilData.nome.replace(/\s+/g,'-') : 'paciente';
+  XLSX.writeFile(wb, `recordatorio-${nome}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.xlsx`);
 }
 
 // ══ PRONTUÁRIOS ══
