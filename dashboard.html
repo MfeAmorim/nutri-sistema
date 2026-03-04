@@ -698,6 +698,9 @@
                   <th>Qtd</th>
                   <th>Tipo</th>
                   <th>Local</th>
+                  <th style="background:rgba(116,198,157,0.2);color:#1a2e1f">Kcal</th>
+                  <th style="background:rgba(116,198,157,0.2);color:#1a2e1f">Proteína</th>
+                  <th style="background:rgba(116,198,157,0.15);color:#1a2e1f">Sódio</th>
                   <th>Observações</th>
                   <th style="text-align:center">—</th>
                 </tr>
@@ -716,6 +719,8 @@
         </div>
 
         <!-- TOTAIS -->
+        <div id="rec-aviso-nao-encontrados" style="display:none;margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:13px;color:#92400e;line-height:1.6"></div>
+
         <div class="totals-box" id="rec-totais" style="display:none;margin-top:20px">
           <div class="total-item"><h4>Calorias</h4><div class="val" id="tot-kcal">0</div><div class="meta">Meta: <span id="meta-kcal">2000</span> kcal</div><div class="falta">Falta: <span id="falta-kcal">2000</span> kcal</div></div>
           <div class="total-item"><h4>Proteína</h4><div class="val" id="tot-prot">0g</div><div class="meta">Meta: <span id="meta-prot">120</span>g</div><div class="falta">Falta: <span id="falta-prot">120</span>g</div></div>
@@ -1048,6 +1053,12 @@ function renderizarRecordatorio() {
     const bg = cores[grupoIdx % 2];
     const dataFmt = item.data ? new Date(item.data + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
 
+    // Recalcula buscando o alimento pelo nome/id na tabela alimentar
+    const nutri = calcularNutriItem(item);
+    const kcalStr  = nutri ? nutri.kcal.toFixed(2)     : '<span style="color:#f59e0b;font-size:11px" title="Cadastre este alimento na Tabela Alimentar">⚠️ n/c</span>';
+    const protStr  = nutri ? nutri.prot.toFixed(2)+'g'  : '—';
+    const sodioStr = nutri ? nutri.sodio.toFixed(2)+'mg': '—';
+
     return `<tr style="background:${bg}">
       <td style="white-space:nowrap">${dataFmt}</td>
       <td style="white-space:nowrap">${item.horario || '—'}</td>
@@ -1056,6 +1067,9 @@ function renderizarRecordatorio() {
       <td style="text-align:center">${item.qtd}</td>
       <td>${item.tipo || '—'}</td>
       <td>${item.local || '—'}</td>
+      <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${kcalStr}</td>
+      <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${protStr}</td>
+      <td style="text-align:right;font-size:12px;color:#7a8a7c;background:rgba(116,198,157,0.05)">${sodioStr}</td>
       <td style="color:#7a8a7c;font-size:12px">${item.obs || '—'}</td>
       <td style="text-align:center">
         <button onclick="removerItemRec(${idxReal})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
@@ -1069,33 +1083,81 @@ function renderizarRecordatorio() {
 function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordatorio(); agendarAutoSave(); }
 function limparRecordatorio() { if (!confirm('Limpar todos os registros do recordatório?')) return; recordatorioItems = []; renderizarRecordatorio(); }
 
+function calcularNutriItem(item) {
+  // Busca o alimento na tabela pelo id ou pelo nome (case-insensitive)
+  let al = null;
+  if (item.alimento_id) {
+    al = alimentosCadastrados.find(a => a.id === item.alimento_id);
+  }
+  if (!al && item.nome) {
+    const nomeLower = item.nome.toLowerCase().trim();
+    al = alimentosCadastrados.find(a => a.nome.toLowerCase().trim() === nomeLower);
+  }
+
+  if (!al) return null; // alimento não encontrado na tabela
+
+  // Fórmula: totalGramas = qtd × gramas_unidade
+  // Energia = totalGramas × kcal_100g / 100
+  // Proteína = totalGramas × proteina_100g / 100
+  const gramas = al.gramas_unidade || 100;
+  const totalG = (item.qtd || 1) * gramas;
+  return {
+    kcal:  parseFloat((al.kcal_100g          * totalG / 100).toFixed(2)),
+    prot:  parseFloat(((al.proteina_100g||0) * totalG / 100).toFixed(2)),
+    carb:  parseFloat(((al.carb_100g    ||0) * totalG / 100).toFixed(2)),
+    lip:   parseFloat(((al.gordura_100g ||0) * totalG / 100).toFixed(2)),
+    sodio: parseFloat(((al.sodio_100mg  ||0) * totalG / 100).toFixed(2)),
+    fibra: parseFloat(((al.fibra_100g   ||0) * totalG / 100).toFixed(2)),
+    gramas: totalG,
+    encontrado: true
+  };
+}
+
 function atualizarTotais(lista) {
-  // Soma apenas itens com dados nutricionais reais (alimentos cadastrados na tabela)
   const base = lista || recordatorioItems;
-  const itensComNutri = base.filter(item => item.kcal > 0 || item.gramas_total > 0);
-  const semNutri = recordatorioItems.length - itensComNutri.length;
-  // Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
-  const tot = itensComNutri.reduce((acc, item) => ({
-    kcal:  acc.kcal  + (item.kcal ||0),
-    prot:  acc.prot  + (item.prot ||0),
-    carb:  acc.carb  + (item.carb ||0),
-    lip:   acc.lip   + (item.lip  ||0),
-    sodio: acc.sodio + (item.sodio||0),
-    fibra: acc.fibra + (item.fibra||0)
-  }), { kcal:0, prot:0, carb:0, lip:0, sodio:0, fibra:0 });
   const metaKcal = parseFloat(document.getElementById('meta-kcal').textContent)||2000;
   const metaProt = parseFloat(document.getElementById('meta-prot').textContent)||120;
-  const dash = semNutri > 0 && itensComNutri.length === 0;
-  document.getElementById('tot-kcal').textContent  = dash ? '—' : tot.kcal.toFixed(0);
-  document.getElementById('tot-prot').textContent  = dash ? '—' : tot.prot.toFixed(2)+'g';
-  document.getElementById('tot-carb').textContent  = dash ? '—' : tot.carb.toFixed(2)+'g';
-  document.getElementById('tot-sodio').textContent = dash ? '—' : tot.sodio.toFixed(1)+'mg';
-  document.getElementById('falta-kcal').textContent = dash ? '—' : Math.max(0, metaKcal - tot.kcal).toFixed(0);
-  document.getElementById('falta-prot').textContent = dash ? '—' : Math.max(0, metaProt - tot.prot).toFixed(2);
-  document.getElementById('st-kcal').textContent   = dash ? '—' : tot.kcal.toFixed(0);
-  document.getElementById('st-prot').textContent   = dash ? '—' : tot.prot.toFixed(2)+'g';
+
+  let tot = { kcal:0, prot:0, carb:0, lip:0, sodio:0, fibra:0 };
+  let naoEncontrados = [];
+
+  base.forEach(item => {
+    const nutri = calcularNutriItem(item);
+    if (nutri) {
+      tot.kcal  += nutri.kcal;
+      tot.prot  += nutri.prot;
+      tot.carb  += nutri.carb;
+      tot.lip   += nutri.lip;
+      tot.sodio += nutri.sodio;
+      tot.fibra += nutri.fibra;
+    } else {
+      naoEncontrados.push(item.nome);
+    }
+  });
+
+  document.getElementById('tot-kcal').textContent  = tot.kcal.toFixed(2);
+  document.getElementById('tot-prot').textContent  = tot.prot.toFixed(2)+'g';
+  document.getElementById('tot-carb').textContent  = tot.carb.toFixed(2)+'g';
+  document.getElementById('tot-sodio').textContent = tot.sodio.toFixed(2)+'mg';
+  document.getElementById('falta-kcal').textContent = Math.max(0, metaKcal - tot.kcal).toFixed(0);
+  document.getElementById('falta-prot').textContent = Math.max(0, metaProt - tot.prot).toFixed(2);
+  document.getElementById('st-kcal').textContent   = tot.kcal.toFixed(0);
+  document.getElementById('st-prot').textContent   = tot.prot.toFixed(2)+'g';
   const fs = document.getElementById('falta-sodio');
-  fs.textContent = (!dash && tot.sodio > 2300) ? '⚠️ Excedeu limite' : '';
+  fs.textContent = tot.sodio > 2300 ? '⚠️ Excedeu limite' : '';
+
+  // Aviso de alimentos não encontrados na tabela
+  const avisoEl = document.getElementById('rec-aviso-nao-encontrados');
+  if (avisoEl) {
+    if (naoEncontrados.length > 0) {
+      const unicos = [...new Set(naoEncontrados)];
+      avisoEl.style.display = 'block';
+      avisoEl.innerHTML = `⚠️ <strong>${unicos.length} alimento(s) não encontrado(s) na Tabela Alimentar</strong> — não contabilizados nos totais:<br>
+        <span style="font-size:12px;color:#7a8a7c">${unicos.join(', ')}</span>`;
+    } else {
+      avisoEl.style.display = 'none';
+    }
+  }
 }
 
 async function salvarRecordatorio() {
