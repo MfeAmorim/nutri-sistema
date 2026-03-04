@@ -629,7 +629,7 @@
           <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end;margin-bottom:14px">
             <div class="rec-field">
               <label>🥦 Alimento / Bebida <span style="color:#dc2626">*</span></label>
-              <select id="rec-alimento">
+              <select id="rec-alimento" onchange="preencherTipoAuto()">
                 <option value="">— Selecione um alimento —</option>
               </select>
             </div>
@@ -887,6 +887,18 @@ function calcularGramas(al, qtd, unidadeSel) {
   if (!unidadeSel || unidadeSel === 'Gramas' || unidadeSel === 'Mililitros') return qtd;
   if (unidadeSel === al.unidade_medida && al.gramas_unidade) return qtd * al.gramas_unidade;
   return qtd * (GRAMAS_UNIDADE_PADRAO[unidadeSel] || 100);
+}
+
+function preencherTipoAuto() {
+  const alId = document.getElementById('rec-alimento').value;
+  const al = alimentosCadastrados.find(a => a.id === alId);
+  const tipoSel = document.getElementById('rec-tipo');
+  if (al && al.unidade_medida) {
+    // Tenta selecionar a opção correspondente
+    const opts = [...tipoSel.options];
+    const match = opts.find(o => o.value.toLowerCase() === al.unidade_medida.toLowerCase());
+    if (match) tipoSel.value = match.value;
+  }
 }
 
 function adicionarNoRecordatorio() {
