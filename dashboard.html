@@ -722,10 +722,30 @@
         <div id="rec-aviso-nao-encontrados" style="display:none;margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:13px;color:#92400e;line-height:1.6"></div>
 
         <div class="totals-box" id="rec-totais" style="display:none;margin-top:20px">
-          <div class="total-item"><h4>Calorias</h4><div class="val" id="tot-kcal">0</div><div class="meta">Meta: <span id="meta-kcal">2000</span> kcal</div><div class="falta">Falta: <span id="falta-kcal">2000</span> kcal</div></div>
-          <div class="total-item"><h4>Proteína</h4><div class="val" id="tot-prot">0g</div><div class="meta">Meta: <span id="meta-prot">120</span>g</div><div class="falta">Falta: <span id="falta-prot">120</span>g</div></div>
-          <div class="total-item"><h4>Carboidrato</h4><div class="val" id="tot-carb">0g</div><div class="meta">—</div><div class="falta"></div></div>
-          <div class="total-item"><h4>Sódio</h4><div class="val" id="tot-sodio">0mg</div><div class="meta">Limite: 2300mg</div><div class="falta" id="falta-sodio"></div></div>
+          <div class="total-item">
+            <h4>Calorias</h4>
+            <div class="val" id="tot-kcal">0</div>
+            <div class="meta">Meta: <span id="meta-kcal">2000</span> kcal</div>
+            <div class="falta">Falta: <span id="falta-kcal">2000</span> kcal</div>
+          </div>
+          <div class="total-item">
+            <h4>Proteína</h4>
+            <div class="val" id="tot-prot">0g</div>
+            <div class="meta">Meta: <span id="meta-prot">120</span>g</div>
+            <div class="falta">Falta: <span id="falta-prot">120</span>g</div>
+          </div>
+          <div class="total-item">
+            <h4>Carboidrato</h4>
+            <div class="val" id="tot-carb">0g</div>
+            <div class="meta">Meta: <span id="meta-carb">300</span>g</div>
+            <div class="falta">Falta: <span id="falta-carb">300</span>g</div>
+          </div>
+          <div class="total-item">
+            <h4>Sódio</h4>
+            <div class="val" id="tot-sodio">0mg</div>
+            <div class="meta">Limite: <span id="limite-sodio">2300</span>mg</div>
+            <div class="falta" id="falta-sodio">Falta: 2300mg</div>
+          </div>
         </div>
 
       </div>
@@ -1139,12 +1159,32 @@ function atualizarTotais(lista) {
   document.getElementById('tot-prot').textContent  = tot.prot.toFixed(2)+'g';
   document.getElementById('tot-carb').textContent  = tot.carb.toFixed(2)+'g';
   document.getElementById('tot-sodio').textContent = tot.sodio.toFixed(2)+'mg';
+
+  // Kcal
   document.getElementById('falta-kcal').textContent = Math.max(0, metaKcal - tot.kcal).toFixed(0);
+
+  // Proteína
   document.getElementById('falta-prot').textContent = Math.max(0, metaProt - tot.prot).toFixed(2);
+
+  // Carboidrato — meta + falta
+  const metaCarb  = parseFloat(document.getElementById('meta-carb').textContent) || 300;
+  const faltaCarb = Math.max(0, metaCarb - tot.carb);
+  document.getElementById('falta-carb').textContent = faltaCarb.toFixed(2) + 'g';
+
+  // Sódio — limite + falta ou aviso de excesso
+  const limiteSodio = parseFloat(document.getElementById('limite-sodio').textContent) || 2300;
+  const faltaSodio  = limiteSodio - tot.sodio;
+  const fs = document.getElementById('falta-sodio');
+  if (faltaSodio < 0) {
+    fs.style.color = '#f87171';
+    fs.textContent = `⚠️ Excedeu em ${Math.abs(faltaSodio).toFixed(0)}mg`;
+  } else {
+    fs.style.color = '';
+    fs.textContent = `Falta: ${faltaSodio.toFixed(0)}mg`;
+  }
+
   document.getElementById('st-kcal').textContent   = tot.kcal.toFixed(0);
   document.getElementById('st-prot').textContent   = tot.prot.toFixed(2)+'g';
-  const fs = document.getElementById('falta-sodio');
-  fs.textContent = tot.sodio > 2300 ? '⚠️ Excedeu limite' : '';
 
   // Aviso de alimentos não encontrados na tabela
   const avisoEl = document.getElementById('rec-aviso-nao-encontrados');
