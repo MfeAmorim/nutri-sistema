@@ -698,9 +698,9 @@
                   <th>Qtd</th>
                   <th>Tipo</th>
                   <th>Local</th>
-                  <th style="background:rgba(116,198,157,0.2);color:#1a2e1f">Kcal</th>
-                  <th style="background:rgba(116,198,157,0.2);color:#1a2e1f">Proteína</th>
-                  <th style="background:rgba(116,198,157,0.15);color:#1a2e1f">Sódio</th>
+                  <th>Kcal</th>
+                  <th>Proteína</th>
+                  <th>Sódio</th>
                   <th>Observações</th>
                   <th style="text-align:center">—</th>
                 </tr>
@@ -755,7 +755,7 @@
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
           <div>
             <h3 style="margin:0">📋 Consumo de Hoje</h3>
-            <p style="margin:4px 0 0;font-size:13px;color:#7a8a7c">Alimentos registrados hoje — atualiza em tempo real</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#7a8a7c">Apenas o dia atual — zera automaticamente a meia-noite</p>
           </div>
           <div style="font-size:13px;color:#7a8a7c" id="painel-data-hoje"></div>
         </div>
@@ -768,38 +768,26 @@
               <thead>
                 <tr>
                   <th>Horário</th><th>Refeição</th><th>Alimento</th><th>Qtd</th><th>Tipo</th>
-                  <th style="text-align:right;background:rgba(116,198,157,0.2)">Kcal</th>
-                  <th style="text-align:right;background:rgba(116,198,157,0.2)">Proteína</th>
-                  <th style="text-align:right;background:rgba(116,198,157,0.15)">Sódio</th>
+                  <th style="text-align:right">Kcal</th>
+                  <th style="text-align:right">Proteína</th>
                 </tr>
               </thead>
               <tbody id="painel-lista"></tbody>
             </table>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;padding:16px;background:var(--escuro);border-radius:8px;color:#fff">
-            <div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Calorias</div>
-              <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif" id="painel-kcal">0</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">de <span id="painel-meta-kcal">2000</span> kcal</div>
-              <div style="font-size:11px;color:#74c69d;margin-top:1px">Falta: <span id="painel-falta-kcal">2000</span> kcal</div>
+          <!-- Só kcal e proteína -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;max-width:480px">
+            <div style="background:var(--escuro);border-radius:8px;padding:16px;color:#fff">
+              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Calorias hoje</div>
+              <div style="font-size:26px;font-weight:700;font-family:'Playfair Display',serif" id="painel-kcal">0</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">de <span id="painel-meta-kcal">2000</span> kcal</div>
+              <div style="font-size:12px;color:#74c69d;margin-top:2px">Falta: <span id="painel-falta-kcal">2000</span> kcal</div>
             </div>
-            <div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Proteína</div>
-              <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif" id="painel-prot">0g</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">de <span id="painel-meta-prot">120</span>g</div>
-              <div style="font-size:11px;color:#74c69d;margin-top:1px">Falta: <span id="painel-falta-prot">120</span>g</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Carboidrato</div>
-              <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif" id="painel-carb">0g</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">de <span id="painel-meta-carb">300</span>g</div>
-              <div style="font-size:11px;color:#74c69d;margin-top:1px">Falta: <span id="painel-falta-carb">300</span>g</div>
-            </div>
-            <div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Sódio</div>
-              <div style="font-size:22px;font-weight:700;font-family:'Playfair Display',serif" id="painel-sodio">0mg</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Limite: <span id="painel-limite-sodio">2300</span>mg</div>
-              <div style="font-size:11px;color:#74c69d;margin-top:1px" id="painel-falta-sodio">Falta: 2300mg</div>
+            <div style="background:var(--escuro);border-radius:8px;padding:16px;color:#fff">
+              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Proteína hoje</div>
+              <div style="font-size:26px;font-weight:700;font-family:'Playfair Display',serif" id="painel-prot">0g</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">de <span id="painel-meta-prot">120</span>g</div>
+              <div style="font-size:12px;color:#74c69d;margin-top:2px">Falta: <span id="painel-falta-prot">120</span>g</div>
             </div>
           </div>
         </div>
@@ -1164,9 +1152,9 @@ function renderizarRecordatorio() {
         <td style="text-align:center">${item.qtd}</td>
         <td>${item.tipo || '—'}</td>
         <td>${item.local || '—'}</td>
-        <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${kcalStr}</td>
-        <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${protStr}</td>
-        <td style="text-align:right;font-size:12px;color:#7a8a7c;background:rgba(116,198,157,0.05)">${sodioStr}</td>
+        <td style="text-align:right;font-weight:700">${kcalStr}</td>
+        <td style="text-align:right;font-weight:700">${protStr}</td>
+        <td style="text-align:right;font-size:12px;color:#7a8a7c">${sodioStr}</td>
         <td style="color:#7a8a7c;font-size:12px">${item.obs || '—'}</td>
         <td style="text-align:center">
           <button onclick="removerItemRec(${idxReal})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
@@ -1176,13 +1164,13 @@ function renderizarRecordatorio() {
 
     // ── Linha de TOTAL DO DIA ──
     const dataFmtDia = dia !== 'sem-data' ? new Date(dia + 'T12:00:00').toLocaleDateString('pt-BR') : '—';
-    html += `<tr style="background:var(--escuro);color:#fff;font-weight:700;font-size:13px">
-      <td colspan="7" style="padding:10px 12px;letter-spacing:0.5px">
+    html += `<tr style="background:#e8f5e9;border-top:2px solid #a5d6a7">
+      <td colspan="7" style="padding:10px 12px;font-weight:700;font-size:13px;color:#1a2e1f;letter-spacing:0.3px">
         📊 Total do dia — ${dataFmtDia}
       </td>
-      <td style="text-align:right;padding:10px 12px;color:#74c69d">${totDia.kcal.toFixed(2)} kcal</td>
-      <td style="text-align:right;padding:10px 12px;color:#74c69d">${totDia.prot.toFixed(2)}g</td>
-      <td style="text-align:right;padding:10px 12px;color:rgba(255,255,255,0.6);font-size:12px">${totDia.sodio.toFixed(2)}mg</td>
+      <td style="text-align:right;padding:10px 12px;font-weight:700;color:#1a2e1f">${totDia.kcal.toFixed(2)} kcal</td>
+      <td style="text-align:right;padding:10px 12px;font-weight:700;color:#1a2e1f">${totDia.prot.toFixed(2)}g</td>
+      <td style="text-align:right;padding:10px 12px;font-size:12px;color:#4a6a4f">${totDia.sodio.toFixed(2)}mg</td>
       <td colspan="2"></td>
     </tr>`;
   });
@@ -1329,9 +1317,9 @@ function renderizarPainelHoje() {
       <td style="font-weight:600;color:var(--escuro)">${item.nome}</td>
       <td style="text-align:center">${item.qtd}</td>
       <td>${item.tipo || '—'}</td>
-      <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${nutri ? nutri.kcal.toFixed(2) : '—'}</td>
-      <td style="text-align:right;font-weight:700;color:var(--verde);background:rgba(116,198,157,0.08)">${nutri ? nutri.prot.toFixed(2)+'g' : '—'}</td>
-      <td style="text-align:right;font-size:12px;color:#7a8a7c;background:rgba(116,198,157,0.05)">${nutri ? nutri.sodio.toFixed(2)+'mg' : '—'}</td>
+      <td style="text-align:right;font-weight:700">${nutri ? nutri.kcal.toFixed(2) : '—'}</td>
+      <td style="text-align:right;font-weight:700">${nutri ? nutri.prot.toFixed(2)+'g' : '—'}</td>
+      <td style="text-align:right;font-size:12px;color:#7a8a7c">${nutri ? nutri.sodio.toFixed(2)+'mg' : '—'}</td>
     </tr>`;
   }).join('');
 
