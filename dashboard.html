@@ -722,7 +722,19 @@
         <!-- TOTAIS -->
         <div id="rec-aviso-nao-encontrados" style="display:none;margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:13px;color:#92400e;line-height:1.6"></div>
 
-        <div class="totals-box" id="rec-totais" style="display:none;margin-top:20px">
+        <!-- Filtros do Resumo -->
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:20px;margin-bottom:8px">
+          <select id="totais-filtro-mes" onchange="totaisFiltrarMes()" style="padding:7px 12px;border:1.5px solid #c8e6c9;border-radius:6px;font-family:DM Sans,sans-serif;font-size:13px;background:#f0fdf4;color:var(--escuro);cursor:pointer">
+            <option value="">📅 Mês</option>
+          </select>
+          <select id="totais-filtro-dia" onchange="totaisFiltrarDia()" style="padding:7px 12px;border:1.5px solid #c8e6c9;border-radius:6px;font-family:DM Sans,sans-serif;font-size:13px;background:#f0fdf4;color:var(--escuro);cursor:pointer">
+            <option value="">📆 Dia</option>
+          </select>
+          <button onclick="totaisLimparFiltro()" style="padding:6px 12px;background:none;border:1.5px solid #d1d5db;color:#7a8a7c;border-radius:6px;cursor:pointer;font-size:12px;font-family:DM Sans,sans-serif">✕ Limpar</button>
+          <span id="totais-label-dia" style="font-size:12px;font-weight:600;color:var(--verde)"></span>
+        </div>
+
+        <div class="totals-box" id="rec-totais" style="display:none;margin-top:0">
           <div class="total-item">
             <h4>Calorias</h4>
             <div class="val" id="tot-kcal">0</div>
@@ -1036,7 +1048,7 @@ function renderizarRecordatorio() {
 
   if (!recordatorioItems.length) {
     wrap.style.display = 'none'; vazio.style.display = 'block'; totbox.style.display = 'none';
-    atualizarTotais(); return;
+    totaisPopularFiltros(); totaisAplicarFiltro(); return;
   }
 
   wrap.style.display = 'block'; vazio.style.display = 'none'; totbox.style.display = 'grid';
@@ -1064,7 +1076,7 @@ function renderizarRecordatorio() {
 
   if (!itensFiltrados.length) {
     tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:#7a8a7c;font-size:13px">📭 Nenhum registro encontrado para o período selecionado</td></tr>`;
-    atualizarTotais(itensFiltrados); return;
+    totaisPopularFiltros(); totaisAplicarFiltro(); return;
   }
 
   // Agrupa itens por dia e gera linhas + linha de total por dia
@@ -1135,7 +1147,7 @@ function renderizarRecordatorio() {
 
   tbody.innerHTML = html;
 
-  atualizarTotais(itensFiltrados);
+  totaisPopularFiltros(); totaisAplicarFiltro();
 
 }
 
@@ -1172,6 +1184,68 @@ function calcularNutriItem(item) {
   };
 }
 
+
+// ── Filtros do Resumo do dia ──
+let _totaisMes = "", _totaisDia = "";
+
+function totaisPopularFiltros() {
+  const selMes = document.getElementById("totais-filtro-mes");
+  const selDia = document.getElementById("totais-filtro-dia");
+  if (!selMes || !selDia || !recordatorioItems.length) return;
+  const datas = [...new Set(recordatorioItems.map(i => i.data))].filter(Boolean).sort().reverse();
+  const meses = [...new Set(datas.map(d => d.slice(0,7)))];
+  selMes.innerHTML = '<option value="">📅 Mês</option>' + meses.map(m => {
+    const [ano,mes] = m.split("-");
+    const label = new Date(ano, mes-1, 1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
+    return `<option value="${m}" ${m===_totaisMes?"selected":""}>${label}</option>`;
+  }).join("");
+  const diasFiltrados = _totaisMes ? datas.filter(d => d.slice(0,7)===_totaisMes) : datas;
+  selDia.innerHTML = '<option value="">📆 Dia</option>' + diasFiltrados.map(d => {
+    const label = new Date(d+"T12:00:00").toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit"});
+    return `<option value="${d}" ${d===_totaisDia?"selected":""}>${label}</option>`;
+  }).join("");
+}
+
+function totaisFiltrarMes() {
+  _totaisMes = document.getElementById("totais-filtro-mes").value;
+  _totaisDia = "";
+  totaisPopularFiltros();
+  totaisAplicarFiltro();
+}
+
+function totaisFiltrarDia() {
+  _totaisDia = document.getElementById("totais-filtro-dia").value;
+  totaisAplicarFiltro();
+}
+
+function totaisLimparFiltro() {
+  _totaisMes = ""; _totaisDia = "";
+  totaisPopularFiltros();
+  totaisAplicarFiltro();
+}
+
+function totaisAplicarFiltro() {
+  let base = recordatorioItems;
+  if (_totaisDia) base = base.filter(i => i.data === _totaisDia);
+  else if (_totaisMes) base = base.filter(i => (i.data||"").slice(0,7) === _totaisMes);
+  else {
+    const datas = [...new Set(recordatorioItems.map(i => i.data))].filter(Boolean).sort();
+    const ultimo = datas[datas.length-1];
+    base = recordatorioItems.filter(i => i.data === ultimo);
+    _totaisDia = ultimo || "";
+    const selDia = document.getElementById("totais-filtro-dia");
+    if (selDia) selDia.value = _totaisDia;
+  }
+  const labelEl = document.getElementById("totais-label-dia");
+  if (labelEl) {
+    if (_totaisDia) labelEl.textContent = new Date(_totaisDia+"T12:00:00").toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"2-digit",year:"numeric"});
+    else if (_totaisMes) { const [a,m]=_totaisMes.split("-"); labelEl.textContent = new Date(a,m-1,1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"}); }
+    else labelEl.textContent = "";
+  }
+  const totbox = document.getElementById("rec-totais");
+  if (totbox) totbox.style.display = base.length ? "grid" : "none";
+  atualizarTotais(base);
+}
 function atualizarTotais(lista) {
   const base = lista || recordatorioItems;
   const metaKcal = parseFloat(document.getElementById('meta-kcal').textContent)||2000;
