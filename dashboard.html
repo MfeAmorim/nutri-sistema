@@ -933,42 +933,57 @@ function preencherTipoAuto() {
 }
 
 function adicionarNoRecordatorio() {
-  const data    = document.getElementById('rec-data').value;
-  const alId    = document.getElementById('rec-alimento').value;
-  const qtd     = parseFloat(document.getElementById('rec-qtd').value);
+  try {
+    const data = document.getElementById('rec-data').value;
+    const alId = document.getElementById('rec-alimento').value;
+    const qtd  = parseFloat(document.getElementById('rec-qtd').value);
 
-  if (!data)    { showMsgRec('error', '⚠️ Informe a data.'); return; }
-  if (!alId)    { showMsgRec('error', '⚠️ Selecione um alimento.'); return; }
-  if (!qtd || qtd <= 0) { showMsgRec('error', '⚠️ Informe a quantidade.'); return; }
+    if (!data)         { showMsgRec('error', '⚠️ Informe a data.'); return; }
+    if (!alId)         { showMsgRec('error', '⚠️ Selecione um alimento.'); return; }
+    if (!qtd || qtd <= 0) { showMsgRec('error', '⚠️ Informe a quantidade.'); return; }
 
-  const al = alimentosCadastrados.find(a => a.id === alId);
-  if (!al) return;
+    const al = alimentosCadastrados.find(a => a.id === alId);
+    if (!al) { showMsgRec('error', '⚠️ Alimento não encontrado.'); return; }
 
-  // Fórmula exata do PDF: Energia = kcal_100g × gramas / 100 | Proteína consumida = gramas × proteina_100g / 100
-  const gramasTotal = qtd * (Number(al.gramas_unidade) || 100);
-  const kcal  = parseFloat((al.kcal_100g      * gramasTotal / 100).toFixed(2));
-  const prot  = parseFloat((al.proteina_100g  * gramasTotal / 100).toFixed(2));
-  const carb  = parseFloat((al.carb_100g      * gramasTotal / 100).toFixed(2));
-  const lip   = parseFloat(((al.gordura_100g || 0) * gramasTotal / 100).toFixed(2));
-  const sodio = parseFloat((al.sodio_100mg    * gramasTotal / 100).toFixed(2));
-  const fibra = parseFloat(((al.fibra_100g||0) * gramasTotal / 100).toFixed(2));
+    const gramasTotal = qtd * (Number(al.gramas_unidade) || 100);
+    const kcal  = parseFloat((al.kcal_100g           * gramasTotal / 100).toFixed(2));
+    const prot  = parseFloat((al.proteina_100g        * gramasTotal / 100).toFixed(2));
+    const carb  = parseFloat((al.carb_100g            * gramasTotal / 100).toFixed(2));
+    const lip   = parseFloat(((al.gordura_100g || 0)  * gramasTotal / 100).toFixed(2));
+    const sodio = parseFloat((al.sodio_100mg          * gramasTotal / 100).toFixed(2));
+    const fibra = parseFloat(((al.fibra_100g || 0)    * gramasTotal / 100).toFixed(2));
 
-  recordatorioItems.push({
-    alimento_id: alId, nome: al.nome,
-    data, horario: document.getElementById('rec-horario').value || '',
-    refeicao: document.getElementById('rec-refeicao').value || '',
-    tipo:     document.getElementById('rec-tipo').value      || '',
-    local:    document.getElementById('rec-local').value     || '',
-    obs:      document.getElementById('rec-obs').value       || '',
-    qtd, gramas_total: gramasTotal, kcal, prot, carb, lip, sodio, fibra
-  });
+    const localEl = document.getElementById('rec-local');
 
-  renderizarRecordatorio();
-  agendarAutoSave();
-  document.getElementById('rec-alimento').value = '';
-  document.getElementById('rec-qtd').value      = '';
-  document.getElementById('rec-obs').value      = '';
-  showMsgRec('', '');
+    recordatorioItems.push({
+      alimento_id: alId, nome: al.nome,
+      data,
+      horario:  document.getElementById('rec-horario').value  || '',
+      refeicao: document.getElementById('rec-refeicao').value || '',
+      tipo:     document.getElementById('rec-tipo').value     || '',
+      local:    localEl ? localEl.value : '',
+      obs:      document.getElementById('rec-obs').value      || '',
+      qtd, gramas_total: gramasTotal, kcal, prot, carb, lip, sodio, fibra
+    });
+
+    renderizarRecordatorio();
+    salvarRecordatorioSilencioso();
+
+    // Scroll para última linha
+    setTimeout(() => {
+      const outer = document.querySelector('.rec-sheet-outer');
+      if (outer) outer.scrollTop = outer.scrollHeight;
+    }, 50);
+
+    document.getElementById('rec-alimento').value = '';
+    document.getElementById('rec-qtd').value      = '';
+    document.getElementById('rec-obs').value      = '';
+    showMsgRec('success', '✅ ' + al.nome + ' adicionado!');
+    setTimeout(() => showMsgRec('', ''), 2500);
+
+  } catch(e) {
+    showMsgRec('error', '❌ Erro: ' + e.message);
+  }
 }
 
 function showMsgRec(tipo, txt) {
