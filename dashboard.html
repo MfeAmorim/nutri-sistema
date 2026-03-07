@@ -525,10 +525,6 @@
         <div class="search-bar">
           <input type="text" id="busca-pront" placeholder="🔍  Buscar por nome do paciente..." oninput="filtrarProntuarios()">
           <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">+ Novo Prontuário</button>
-          <label class="btn-save" style="cursor:pointer;background:var(--verde-claro);display:flex;align-items:center;gap:6px;white-space:nowrap">
-            📎 Adicionar Prontuário
-            <input type="file" accept="application/pdf" style="display:none" onchange="adicionarProntuarioPDF(this)">
-          </label>
         </div>
         <div id="lista-prontuarios">
           <div class="empty-state"><div class="empty-icon">🗂️</div><h4>Nenhum prontuário salvo</h4><p>Clique em "Novo Prontuário" para criar o primeiro registro.</p></div>
@@ -590,8 +586,8 @@
         <div class="rec-form-card">
           <div style="font-size:12px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:18px;">➕ Adicionar Item</div>
 
-          <!-- Linha 1: Data · Horário · Refeição · Tipo -->
-          <div class="rec-form-grid-2">
+          <!-- Linha 1: Data · Horário -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
             <div class="rec-field">
               <label>📅 Data <span style="color:#dc2626">*</span></label>
               <input type="date" id="rec-data">
@@ -600,6 +596,10 @@
               <label>🕐 Horário</label>
               <input type="time" id="rec-horario">
             </div>
+          </div>
+
+          <!-- Linha 2: Refeição -->
+          <div style="margin-bottom:14px">
             <div class="rec-field">
               <label>🍽️ Refeição</label>
               <select id="rec-refeicao">
@@ -613,7 +613,10 @@
                 <option value="Outro">Outro</option>
               </select>
             </div>
-            <!-- ✅ COLUNA TIPO CORRIGIDA -->
+          </div>
+
+          <!-- Linha 3: Tipo -->
+          <div style="margin-bottom:14px">
             <div class="rec-field">
               <label>🏷️ Tipo</label>
               <select id="rec-tipo">
@@ -629,40 +632,34 @@
             </div>
           </div>
 
-          <!-- Linha 2: Alimento · Quantidade · Local -->
-          <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;align-items:end;margin-bottom:14px">
+          <!-- Linha 4: Alimento / Bebida -->
+          <div style="margin-bottom:14px">
             <div class="rec-field">
               <label>🥦 Alimento / Bebida <span style="color:#dc2626">*</span></label>
               <select id="rec-alimento" onchange="preencherTipoAuto()">
                 <option value="">— Selecione um alimento —</option>
               </select>
             </div>
+          </div>
+
+          <!-- Linha 5: Quantidade -->
+          <div style="margin-bottom:14px">
             <div class="rec-field">
               <label>📏 Quantidade <span style="color:#dc2626">*</span></label>
               <input type="number" id="rec-qtd" placeholder="Ex: 2" min="0.1" step="0.1">
             </div>
+          </div>
+
+          <!-- Linha 6: Observações -->
+          <div style="margin-bottom:14px">
             <div class="rec-field">
-              <label>📍 Local</label>
-              <select id="rec-local">
-                <option value="">Selecione</option>
-                <option value="Em casa">Em casa</option>
-                <option value="No trabalho">No trabalho</option>
-                <option value="Restaurante">Restaurante</option>
-                <option value="Na rua">Na rua</option>
-                <option value="Escola">Escola</option>
-                <option value="Outro">Outro</option>
-              </select>
+              <label>📝 Observações</label>
+              <input type="text" id="rec-obs" placeholder="Ex: comeu rápido, estava ansioso...">
             </div>
           </div>
 
-          <!-- Linha 3: Observações · Botão -->
-          <div style="display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end">
-            <div class="rec-field">
-              <label>📝 Observações</label>
-              <input type="text" id="rec-obs" placeholder="Ex: comeu rápido, estava ansioso, preparação específica...">
-            </div>
-            <button class="btn-save" style="padding:12px 28px;white-space:nowrap" onclick="adicionarNoRecordatorio()">➕ Adicionar</button>
-          </div>
+          <!-- Botão Adicionar -->
+          <button class="btn-save" style="width:100%;padding:14px;font-size:15px" onclick="adicionarNoRecordatorio()">➕ Adicionar</button>
         </div>
 
         <!-- TABELA COM SCROLL DUPLO -->
@@ -1543,7 +1540,7 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 PDF anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<a href="${p.pdf_url}" target="_blank" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;text-decoration:none">📎 Ver PDF</a>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
+    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button><button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
   }).join('');
 }
 
@@ -1554,42 +1551,6 @@ function limparFormProntuario() { const campos = ['pr-nome','pr-nasc','pr-sexo',
 async function excluirProntuario(id, nome) { if (!confirm(`Excluir prontuário de "${nome}"? Esta ação não pode ser desfeita.`)) return; try { await window._sb.from('prontuarios').delete().eq('id', id).eq('user_id', currentUser.id); prontuariosSalvos = prontuariosSalvos.filter(p => p.id !== id); if (editandoProntuarioId === id) { editandoProntuarioId = null; limparFormProntuario(); } renderizarProntuariosSalvos(document.getElementById('busca-pront').value); document.getElementById('badge-salvos').textContent = prontuariosSalvos.length; document.getElementById('st-salvos').textContent = prontuariosSalvos.length; document.getElementById('st-prontuario').textContent = prontuariosSalvos.length > 0 ? '✓' : '✗'; } catch(e) { alert('Erro ao excluir: ' + e.message); } }
 function exportarPDFById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioPDF(); }
 function exportarWordById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioWord(); }
-
-async function adicionarProntuarioPDF(input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  if (file.type !== 'application/pdf') { alert('Selecione um arquivo PDF válido.'); return; }
-  if (file.size > 10 * 1024 * 1024) { alert('O PDF não pode ter mais de 10MB.'); return; }
-
-  const nomePaciente = file.name.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
-
-  try {
-    // 1. Criar registro na tabela prontuarios
-    const { data: pront, error: errPront } = await window._sb
-      .from('prontuarios').insert({ user_id: currentUser.id, nome: nomePaciente }).select().single();
-    if (errPront) throw errPront;
-
-    // 2. Upload do PDF no storage
-    const path = `${currentUser.id}/${pront.id}.pdf`;
-    const { error: errUp } = await window._sb.storage
-      .from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (errUp) throw errUp;
-
-    // 3. Salvar URL pública no registro
-    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    await window._sb.from('prontuarios').update({ pdf_url: urlData.publicUrl }).eq('id', pront.id);
-
-    pront.pdf_url = urlData.publicUrl;
-    prontuariosSalvos.unshift(pront);
-    document.getElementById('badge-salvos').textContent = prontuariosSalvos.length;
-    document.getElementById('st-salvos').textContent = prontuariosSalvos.length;
-    document.getElementById('st-prontuario').textContent = '✓';
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-    input.value = '';
-  } catch(e) {
-    alert('Erro ao adicionar prontuário: ' + e.message);
-  }
-}
 
 function gerarTabelaSintomas() {
   const sintomas = ["Vômito","Náusea","Mastigação","Deglutição","Digestão","Pirose","Refluxo","Diarreia","Obstipação","Insônia","Estresse","Cansaço","Ansiedade","Depressão","Trabalho/Estudo"];
