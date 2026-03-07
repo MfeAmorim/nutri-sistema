@@ -525,6 +525,10 @@
         <div class="search-bar">
           <input type="text" id="busca-pront" placeholder="🔍  Buscar por nome do paciente..." oninput="filtrarProntuarios()">
           <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">+ Novo Prontuário</button>
+          <label class="btn-save" style="cursor:pointer;background:var(--verde-claro);display:flex;align-items:center;gap:6px;white-space:nowrap">
+            📎 Adicionar Prontuário
+            <input type="file" accept="application/pdf" style="display:none" onchange="adicionarProntuarioPDF(this)">
+          </label>
         </div>
         <div id="lista-prontuarios">
           <div class="empty-state"><div class="empty-icon">🗂️</div><h4>Nenhum prontuário salvo</h4><p>Clique em "Novo Prontuário" para criar o primeiro registro.</p></div>
@@ -1539,34 +1543,7 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    const pdfAnexado = p.pdf_url
-      ? `<a href="${p.pdf_url}" target="_blank" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;text-decoration:none">📎 Ver PDF</a>
-         <button class="btn-sm" style="background:none;border:1.5px solid #fecaca;color:#dc2626" onclick="removerPDFProntuario('${p.id}')">🗑️ PDF</button>`
-      : `<label class="btn-sm btn-sm-outline" style="cursor:pointer" title="Anexar PDF existente">
-           📎 Anexar PDF
-           <input type="file" accept="application/pdf" style="display:none" onchange="anexarPDFProntuario('${p.id}', this)">
-         </label>`;
-    return `<div class="pront-card">
-      <div class="pront-card-info">
-        <h4>👤 ${p.nome || '(sem nome)'}</h4>
-        <div class="pront-card-meta">
-          <span>📅 Criado: ${data}</span>
-          <span>🔄 Atualizado: ${atualiz}</span>
-          ${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}
-          ${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}
-          ${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}
-          ${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}
-          ${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 PDF anexado</span>` : ''}
-        </div>
-      </div>
-      <div class="pront-card-actions">
-        <button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button>
-        <button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 Gerar PDF</button>
-        <button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>
-        ${pdfAnexado}
-        <button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button>
-      </div>
-    </div>`;
+    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 PDF anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<a href="${p.pdf_url}" target="_blank" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;text-decoration:none">📎 Ver PDF</a>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
   }).join('');
 }
 
@@ -1578,59 +1555,39 @@ async function excluirProntuario(id, nome) { if (!confirm(`Excluir prontuário d
 function exportarPDFById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioPDF(); }
 function exportarWordById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioWord(); }
 
-async function anexarPDFProntuario(prontuarioId, input) {
+async function adicionarProntuarioPDF(input) {
   if (!input.files || !input.files[0]) return;
   const file = input.files[0];
   if (file.type !== 'application/pdf') { alert('Selecione um arquivo PDF válido.'); return; }
   if (file.size > 10 * 1024 * 1024) { alert('O PDF não pode ter mais de 10MB.'); return; }
 
-  // Feedback visual
-  const label = input.parentElement;
-  const textoOriginal = label.textContent.trim();
-  label.textContent = '⏳ Enviando...';
-  label.style.pointerEvents = 'none';
+  const nomePaciente = file.name.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
 
   try {
-    const path = `${currentUser.id}/${prontuarioId}.pdf`;
-    const { error: upErr } = await window._sb.storage
-      .from('prontuarios-pdf')
-      .upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (upErr) throw upErr;
+    // 1. Criar registro na tabela prontuarios
+    const { data: pront, error: errPront } = await window._sb
+      .from('prontuarios').insert({ user_id: currentUser.id, nome: nomePaciente }).select().single();
+    if (errPront) throw errPront;
 
+    // 2. Upload do PDF no storage
+    const path = `${currentUser.id}/${pront.id}.pdf`;
+    const { error: errUp } = await window._sb.storage
+      .from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (errUp) throw errUp;
+
+    // 3. Salvar URL pública no registro
     const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    const pdfUrl = urlData.publicUrl;
+    await window._sb.from('prontuarios').update({ pdf_url: urlData.publicUrl }).eq('id', pront.id);
 
-    await window._sb.from('prontuarios')
-      .update({ pdf_url: pdfUrl })
-      .eq('id', prontuarioId)
-      .eq('user_id', currentUser.id);
-
-    // Atualizar lista local
-    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
-    if (idx >= 0) prontuariosSalvos[idx].pdf_url = pdfUrl;
-
+    pront.pdf_url = urlData.publicUrl;
+    prontuariosSalvos.unshift(pront);
+    document.getElementById('badge-salvos').textContent = prontuariosSalvos.length;
+    document.getElementById('st-salvos').textContent = prontuariosSalvos.length;
+    document.getElementById('st-prontuario').textContent = '✓';
     renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+    input.value = '';
   } catch(e) {
-    alert('Erro ao anexar PDF: ' + e.message);
-    label.innerHTML = `📎 Anexar PDF<input type="file" accept="application/pdf" style="display:none" onchange="anexarPDFProntuario('${prontuarioId}', this)">`;
-    label.style.pointerEvents = '';
-  }
-}
-
-async function removerPDFProntuario(prontuarioId) {
-  if (!confirm('Remover o PDF anexado a este prontuário?')) return;
-  try {
-    const path = `${currentUser.id}/${prontuarioId}.pdf`;
-    await window._sb.storage.from('prontuarios-pdf').remove([path]);
-    await window._sb.from('prontuarios')
-      .update({ pdf_url: null })
-      .eq('id', prontuarioId)
-      .eq('user_id', currentUser.id);
-    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
-    if (idx >= 0) prontuariosSalvos[idx].pdf_url = null;
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-  } catch(e) {
-    alert('Erro ao remover PDF: ' + e.message);
+    alert('Erro ao adicionar prontuário: ' + e.message);
   }
 }
 
