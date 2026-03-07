@@ -831,7 +831,20 @@ async function init() {
   currentUser = user;
   document.getElementById('sb-email').textContent = user.email;
 
-  const { data: p } = await window._sb.from('perfis').select('*').eq('user_id', user.id).single();
+  let { data: p } = await window._sb.from('perfis').select('*').eq('user_id', user.id).single();
+
+  // Se não existe perfil, cria um registro vazio automaticamente
+  if (!p) {
+    const { data: novo } = await window._sb.from('perfis').insert({
+      user_id: user.id,
+      email: user.email,
+      nome: user.user_metadata?.nome || '',
+      sobrenome: user.user_metadata?.sobrenome || '',
+      termo_aceito: false
+    }).select().single();
+    p = novo;
+  }
+
   if (p) {
     perfilData = p;
     const nome = `${p.nome || ''} ${p.sobrenome || ''}`.trim() || user.email;
@@ -849,6 +862,10 @@ async function init() {
       ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id => { const img = document.getElementById(id); if (img) { img.src = p.avatar_url; img.style.display='block'; } });
       ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
     }
+  } else {
+    // Fallback: mostra email se perfil não carregou
+    document.getElementById('sb-nome').textContent = user.email;
+    document.getElementById('p-email').value = user.email;
   }
 
   await carregarProntuarios();
