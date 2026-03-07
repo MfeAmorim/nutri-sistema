@@ -1003,11 +1003,21 @@ function adicionarNoRecordatorio() {
   });
 
   renderizarRecordatorio();
-  agendarAutoSave();
-  document.getElementById('rec-alimento').value = '';
-  document.getElementById('rec-qtd').value      = '';
-  document.getElementById('rec-obs').value      = '';
-  showMsgRec('', '');
+
+  // Salva imediatamente (mobile suspende JS e o setTimeout de 3s nunca dispara)
+  salvarRecordatorioSilencioso();
+
+  // Scroll para a ultima linha adicionada na tabela
+  setTimeout(() => {
+    const outer = document.querySelector(".rec-sheet-outer");
+    if (outer) outer.scrollTop = outer.scrollHeight;
+  }, 50);
+
+  document.getElementById("rec-alimento").value = "";
+  document.getElementById("rec-qtd").value      = "";
+  document.getElementById("rec-obs").value      = "";
+  showMsgRec("success", "✅ " + al.nome + " adicionado!");
+  setTimeout(() => showMsgRec("", ""), 2500);
 }
 
 function showMsgRec(tipo, txt) {
