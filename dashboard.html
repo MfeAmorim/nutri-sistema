@@ -751,49 +751,6 @@
 
       </div>
 
-      <!-- ══ PAINEL CONSUMO DE HOJE (tempo real, não salvo) ══ -->
-      <div class="form-section" style="margin-top:16px;border-top:2px solid #e8efe8;padding-top:24px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-          <div>
-            <h3 style="margin:0">📋 Consumo de Hoje</h3>
-            <p style="margin:4px 0 0;font-size:13px;color:#7a8a7c">Apenas o dia atual — zera automaticamente a meia-noite</p>
-          </div>
-          <div style="font-size:13px;color:#7a8a7c" id="painel-data-hoje"></div>
-        </div>
-        <div id="painel-vazio" style="text-align:center;padding:24px;color:#7a8a7c;font-size:13px">
-          Nenhum alimento registrado hoje ainda.
-        </div>
-        <div id="painel-wrap" style="display:none">
-          <div class="rec-sheet-outer">
-            <table class="rec-sheet-table">
-              <thead>
-                <tr>
-                  <th>Horário</th><th>Refeição</th><th>Alimento</th><th>Qtd</th><th>Tipo</th>
-                  <th style="text-align:right">Kcal</th>
-                  <th style="text-align:right">Proteína</th>
-                </tr>
-              </thead>
-              <tbody id="painel-lista"></tbody>
-            </table>
-          </div>
-          <!-- Só kcal e proteína -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;max-width:480px">
-            <div style="background:var(--escuro);border-radius:8px;padding:16px;color:#fff">
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Calorias hoje</div>
-              <div style="font-size:26px;font-weight:700;font-family:'Playfair Display',serif" id="painel-kcal">0</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">de <span id="painel-meta-kcal">2000</span> kcal</div>
-              <div style="font-size:12px;color:#74c69d;margin-top:2px">Falta: <span id="painel-falta-kcal">2000</span> kcal</div>
-            </div>
-            <div style="background:var(--escuro);border-radius:8px;padding:16px;color:#fff">
-              <div style="font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Proteína hoje</div>
-              <div style="font-size:26px;font-weight:700;font-family:'Playfair Display',serif" id="painel-prot">0g</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">de <span id="painel-meta-prot">120</span>g</div>
-              <div style="font-size:12px;color:#74c69d;margin-top:2px">Falta: <span id="painel-falta-prot">120</span>g</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div><!-- fim tab-recordatorio -->
 
     <!-- ══ PLANO ALIMENTAR ══ -->
@@ -997,14 +954,13 @@ function adicionarNoRecordatorio() {
     data, horario: document.getElementById('rec-horario').value || '',
     refeicao: document.getElementById('rec-refeicao').value || '',
     tipo:     document.getElementById('rec-tipo').value      || '',
-    local:    (document.getElementById('rec-local') ? document.getElementById('rec-local').value : '') || '',
+    local:    document.getElementById('rec-local').value     || '',
     obs:      document.getElementById('rec-obs').value       || '',
     qtd, gramas_total: gramasTotal, kcal, prot, carb, lip, sodio, fibra
   });
 
   renderizarRecordatorio();
-  salvarRecordatorioSilencioso();
-  setTimeout(() => { const o = document.querySelector(".rec-sheet-outer"); if(o) o.scrollTop = o.scrollHeight; }, 50);
+  agendarAutoSave();
   document.getElementById('rec-alimento').value = '';
   document.getElementById('rec-qtd').value      = '';
   document.getElementById('rec-obs').value      = '';
@@ -1180,7 +1136,7 @@ function renderizarRecordatorio() {
   tbody.innerHTML = html;
 
   atualizarTotais(itensFiltrados);
-  renderizarPainelHoje();
+
 }
 
 function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordatorio(); agendarAutoSave(); }
@@ -1283,75 +1239,6 @@ function atualizarTotais(lista) {
   }
 }
 
-function renderizarPainelHoje() {
-  const hoje = new Date().toISOString().split('T')[0];
-  const itensHoje = recordatorioItems.filter(i => i.data === hoje);
-
-  const wrap   = document.getElementById('painel-wrap');
-  const vazio  = document.getElementById('painel-vazio');
-  const dtEl   = document.getElementById('painel-data-hoje');
-  if (dtEl) dtEl.textContent = new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
-
-  if (!wrap || !vazio) return;
-
-  if (!itensHoje.length) {
-    wrap.style.display  = 'none';
-    vazio.style.display = 'block';
-    return;
-  }
-
-  wrap.style.display  = 'block';
-  vazio.style.display = 'none';
-
-  let tot = { kcal:0, prot:0, carb:0, sodio:0 };
-  const cores = ['#fff','#f4f9f4'];
-  let grupoAtual = '', grupoIdx = -1;
-
-  document.getElementById('painel-lista').innerHTML = itensHoje.map(item => {
-    const grupo = item.refeicao;
-    if (grupo !== grupoAtual) { grupoAtual = grupo; grupoIdx++; }
-    const bg = cores[grupoIdx % 2];
-    const nutri = calcularNutriItem(item);
-    if (nutri) { tot.kcal += nutri.kcal; tot.prot += nutri.prot; tot.carb += nutri.carb; tot.sodio += nutri.sodio; }
-    return `<tr style="background:${bg}">
-      <td style="white-space:nowrap">${item.horario || '—'}</td>
-      <td style="white-space:nowrap">${item.refeicao || '—'}</td>
-      <td style="font-weight:600;color:var(--escuro)">${item.nome}</td>
-      <td style="text-align:center">${item.qtd}</td>
-      <td>${item.tipo || '—'}</td>
-      <td style="text-align:right;font-weight:700">${nutri ? nutri.kcal.toFixed(2) : '—'}</td>
-      <td style="text-align:right;font-weight:700">${nutri ? nutri.prot.toFixed(2)+'g' : '—'}</td>
-      <td style="text-align:right;font-size:12px;color:#7a8a7c">${nutri ? nutri.sodio.toFixed(2)+'mg' : '—'}</td>
-    </tr>`;
-  }).join('');
-
-  // Totais
-  const metaKcal  = parseFloat(document.getElementById('meta-kcal')?.textContent)  || 2000;
-  const metaProt  = parseFloat(document.getElementById('meta-prot')?.textContent)  || 120;
-  const metaCarb  = parseFloat(document.getElementById('meta-carb')?.textContent)  || 300;
-  const limSodio  = parseFloat(document.getElementById('limite-sodio')?.textContent) || 2300;
-
-  document.getElementById('painel-kcal').textContent  = tot.kcal.toFixed(2);
-  document.getElementById('painel-prot').textContent  = tot.prot.toFixed(2)+'g';
-  document.getElementById('painel-carb').textContent  = tot.carb.toFixed(2)+'g';
-  document.getElementById('painel-sodio').textContent = tot.sodio.toFixed(2)+'mg';
-  document.getElementById('painel-meta-kcal').textContent = metaKcal;
-  document.getElementById('painel-meta-prot').textContent = metaProt;
-  document.getElementById('painel-meta-carb').textContent = metaCarb;
-  document.getElementById('painel-limite-sodio').textContent = limSodio;
-  document.getElementById('painel-falta-kcal').textContent = Math.max(0, metaKcal - tot.kcal).toFixed(0);
-  document.getElementById('painel-falta-prot').textContent = Math.max(0, metaProt - tot.prot).toFixed(2)+'g';
-  document.getElementById('painel-falta-carb').textContent = Math.max(0, metaCarb - tot.carb).toFixed(2)+'g';
-  const faltaSodio = limSodio - tot.sodio;
-  const fsEl = document.getElementById('painel-falta-sodio');
-  if (faltaSodio < 0) {
-    fsEl.style.color = '#f87171';
-    fsEl.textContent = `⚠️ Excedeu em ${Math.abs(faltaSodio).toFixed(0)}mg`;
-  } else {
-    fsEl.style.color = '#74c69d';
-    fsEl.textContent = `Falta: ${faltaSodio.toFixed(0)}mg`;
-  }
-}
 async function salvarRecordatorio() {
   if (!recordatorioItems.length) { showMsgRec('error', '⚠️ Nenhum item para salvar.'); return; }
   try {
