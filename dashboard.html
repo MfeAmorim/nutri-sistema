@@ -619,6 +619,51 @@
 
         <button class="btn-save" onclick="calcularMetasManual()" style="margin-bottom:24px">⚡ Calcular Automaticamente</button>
 
+        <!-- Exercícios -->
+        <hr class="form-divider">
+        <div style="font-size:13px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">🏃 Exercícios Praticados (opcional)</div>
+        <p class="subtitle" style="margin-bottom:16px">Selecione os exercícios que o paciente pratica para incluir no cálculo do tempo estimado para atingir a meta.</p>
+        <div id="mt-exercicios" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="caminhada" data-kcal="280" style="accent-color:var(--verde)"> 🚶 Caminhada (30min/dia, 280 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="corrida" data-kcal="600" style="accent-color:var(--verde)"> 🏃 Corrida (30min/dia, 600 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="musculacao" data-kcal="350" style="accent-color:var(--verde)"> 🏋️ Musculação (1h/dia, 350 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="bike" data-kcal="500" style="accent-color:var(--verde)"> 🚴 Bicicleta (30min/dia, 500 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="natacao" data-kcal="550" style="accent-color:var(--verde)"> 🏊 Natação (30min/dia, 550 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="funcional" data-kcal="450" style="accent-color:var(--verde)"> 🤸 Funcional (45min/dia, 450 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="spinning" data-kcal="600" style="accent-color:var(--verde)"> 🚵 Spinning (45min/dia, 600 kcal/h)
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
+            <input type="checkbox" value="yoga" data-kcal="200" style="accent-color:var(--verde)"> 🧘 Yoga/Pilates (1h/dia, 200 kcal/h)
+          </label>
+        </div>
+        <div class="field" style="max-width:300px;margin-bottom:20px">
+          <label>Frequência dos exercícios (dias/semana)</label>
+          <select id="mt-freq-exercicio">
+            <option value="3">3x por semana</option>
+            <option value="4">4x por semana</option>
+            <option value="5" selected>5x por semana</option>
+            <option value="6">6x por semana</option>
+            <option value="7">Todos os dias</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:300px;margin-bottom:20px">
+          <label>Peso desejado (kg)</label>
+          <input type="number" id="mt-peso-desejado" step="0.1" placeholder="Ex: 70.0">
+        </div>
+
         <hr class="form-divider">
         <p class="subtitle" style="margin-top:16px">Ou defina os valores manualmente:</p>
 
@@ -644,11 +689,22 @@
         <!-- Resultado calculado -->
         <div id="mt-resultado" style="display:none;background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border-radius:12px;padding:24px;margin:20px 0">
           <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:16px">📊 Resultado do Cálculo</div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">GET (Gasto Energético Total)</div><div style="font-size:28px;font-weight:700" id="mt-res-get">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta Calórica</div><div style="font-size:28px;font-weight:700" id="mt-res-kcal">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Proteína</div><div style="font-size:28px;font-weight:700" id="mt-res-prot">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Carboidrato</div><div style="font-size:28px;font-weight:700" id="mt-res-carb">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
+          </div>
+          <!-- Estimativa de tempo -->
+          <div id="mt-estimativa" style="display:none;border-top:1px solid rgba(255,255,255,0.15);padding-top:16px;margin-top:4px">
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:12px">⏱️ Estimativa para Atingir a Meta</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Déficit total diário</div><div style="font-size:22px;font-weight:700" id="mt-res-deficit">—</div><div style="font-size:11px;color:#74c69d">kcal/dia (dieta + exercício)</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Peso a perder</div><div style="font-size:22px;font-weight:700" id="mt-res-diferenca">—</div><div style="font-size:11px;color:#74c69d">kg</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Tempo estimado</div><div style="font-size:22px;font-weight:700" id="mt-res-semanas">—</div><div style="font-size:11px;color:#74c69d">semanas</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Equivale a</div><div style="font-size:22px;font-weight:700" id="mt-res-meses">—</div><div style="font-size:11px;color:#74c69d">meses aproximadamente</div></div>
+            </div>
+            <div id="mt-res-obs" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6"></div>
           </div>
         </div>
 
@@ -1838,7 +1894,6 @@ function calcularMetasManual() {
   else tmb = 10*peso + 6.25*altura - 5*idade - 161;
 
   const get = Math.round(tmb * fat);
-
   const ajuste = {manutencao:0, perda:-500, perda_rapida:-1000, ganho:300};
   const metaKcal = Math.max(1200, get + (ajuste[objetivo] || 0));
   const metaProt = Math.round(peso * 1.8);
@@ -1850,12 +1905,48 @@ function calcularMetasManual() {
   document.getElementById('mt-res-carb').textContent = metaCarb;
   document.getElementById('mt-resultado').style.display = 'block';
 
-  // Preencher campos manuais com os valores calculados
+  // Preencher campos manuais
   document.getElementById('mt-meta-kcal').value = metaKcal;
   document.getElementById('mt-meta-prot').value = metaProt;
   document.getElementById('mt-meta-carb').value = metaCarb;
   if (!document.getElementById('mt-limite-sodio').value)
     document.getElementById('mt-limite-sodio').value = 2300;
+
+  // ── Estimativa de tempo ──
+  const pesoDesejado = parseFloat(document.getElementById('mt-peso-desejado').value);
+  const deficitDieta = get - metaKcal; // kcal de déficit pela dieta
+
+  // Calcular gasto com exercícios
+  const freq = parseInt(document.getElementById('mt-freq-exercicio').value) || 5;
+  const checkboxes = document.querySelectorAll('#mt-exercicios input[type=checkbox]:checked');
+  let gastoExercicioSemana = 0;
+  checkboxes.forEach(cb => {
+    const kcalH = parseFloat(cb.dataset.kcal) || 0;
+    gastoExercicioSemana += kcalH * 0.5; // média 30min por exercício
+  });
+  const gastoExercicioDia = Math.round((gastoExercicioSemana * freq) / 7);
+  const deficitTotal = deficitDieta + gastoExercicioDia;
+
+  const estEl = document.getElementById('mt-estimativa');
+  if (pesoDesejado && pesoDesejado < peso && deficitTotal > 0) {
+    const diferenca = peso - pesoDesejado;
+    // 1 kg de gordura ≈ 7700 kcal
+    const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
+    const meses = (semanas / 4.33).toFixed(1);
+
+    document.getElementById('mt-res-deficit').textContent  = deficitTotal;
+    document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
+    document.getElementById('mt-res-semanas').textContent  = semanas;
+    document.getElementById('mt-res-meses').textContent    = meses;
+
+    let obs = `📌 Déficit pela dieta: ${deficitDieta} kcal/dia`;
+    if (gastoExercicioDia > 0) obs += ` | Exercício: ~${gastoExercicioDia} kcal/dia (${freq}x/semana)`;
+    obs += `<br>⚠️ Estimativa teórica. Resultados variam conforme adesão, metabolismo e outros fatores.`;
+    document.getElementById('mt-res-obs').innerHTML = obs;
+    estEl.style.display = 'block';
+  } else {
+    estEl.style.display = 'none';
+  }
 }
 
 function aplicarMetas() {
