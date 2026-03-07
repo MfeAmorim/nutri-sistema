@@ -1597,7 +1597,7 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 Prontuário anexado</span>` : ''}${p.rec_url ? `<span style="color:#1e40af;font-weight:600">📋 Recordatório anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<a href="${p.pdf_url}" target="_blank" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;text-decoration:none">📎 Ver Prontuário</a>` : ''}<label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer" title="Anexar recordatório em PDF">${p.rec_url ? '📋 Trocar Recordatório' : '📋 Adicionar Recordatório'}<input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)"></label>${p.rec_url ? `<a href="${p.rec_url}" target="_blank" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;text-decoration:none">📋 Ver Recordatório</a>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
+    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 Prontuário anexado</span>` : ''}${p.rec_url ? `<span style="color:#1e40af;font-weight:600">📋 Recordatório anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Prontuário – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">📎 Ver Prontuário</button>` : ''}<label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer" title="Anexar recordatório em PDF">${p.rec_url ? '📋 Trocar Recordatório' : '📋 Adicionar Recordatório'}<input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)"></label>${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">📋 Ver Recordatório</button>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
   }).join('');
 }
 
@@ -2022,5 +2022,37 @@ init();
   </div>
 </div>
 
+<!-- Modal PDF Viewer -->
+<div id="pdf-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:16px">
+  <div style="width:100%;max-width:860px;height:90vh;background:#1a1a1a;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111;border-bottom:1px solid #333">
+      <span id="pdf-modal-titulo" style="color:#fff;font-size:14px;font-weight:600">📄 Visualizando PDF</span>
+      <div style="display:flex;gap:8px">
+        <a id="pdf-modal-baixar" href="#" download style="background:#2d6a4f;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;text-decoration:none">⬇️ Baixar</a>
+        <button onclick="fecharPdfModal()" style="background:#444;color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer">✕ Fechar</button>
+      </div>
+    </div>
+    <iframe id="pdf-modal-frame" src="" style="flex:1;border:none;width:100%;background:#fff"></iframe>
+  </div>
+</div>
+
+<script>
+function abrirPdfModal(url, titulo) {
+  document.getElementById('pdf-modal-titulo').textContent = '📄 ' + (titulo || 'Visualizando PDF');
+  document.getElementById('pdf-modal-frame').src = url;
+  document.getElementById('pdf-modal-baixar').href = url;
+  const modal = document.getElementById('pdf-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+function fecharPdfModal() {
+  document.getElementById('pdf-modal').style.display = 'none';
+  document.getElementById('pdf-modal-frame').src = '';
+  document.body.style.overflow = '';
+}
+document.getElementById('pdf-modal').addEventListener('click', function(e) {
+  if (e.target === this) fecharPdfModal();
+});
+</script>
 </body>
 </html>
