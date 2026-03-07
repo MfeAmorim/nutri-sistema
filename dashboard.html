@@ -1539,7 +1539,34 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button><button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
+    const pdfAnexado = p.pdf_url
+      ? `<a href="${p.pdf_url}" target="_blank" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;text-decoration:none">📎 Ver PDF</a>
+         <button class="btn-sm" style="background:none;border:1.5px solid #fecaca;color:#dc2626" onclick="removerPDFProntuario('${p.id}')">🗑️ PDF</button>`
+      : `<label class="btn-sm btn-sm-outline" style="cursor:pointer" title="Anexar PDF existente">
+           📎 Anexar PDF
+           <input type="file" accept="application/pdf" style="display:none" onchange="anexarPDFProntuario('${p.id}', this)">
+         </label>`;
+    return `<div class="pront-card">
+      <div class="pront-card-info">
+        <h4>👤 ${p.nome || '(sem nome)'}</h4>
+        <div class="pront-card-meta">
+          <span>📅 Criado: ${data}</span>
+          <span>🔄 Atualizado: ${atualiz}</span>
+          ${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}
+          ${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}
+          ${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}
+          ${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}
+          ${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 PDF anexado</span>` : ''}
+        </div>
+      </div>
+      <div class="pront-card-actions">
+        <button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button>
+        <button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 Gerar PDF</button>
+        <button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>
+        ${pdfAnexado}
+        <button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button>
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -1550,6 +1577,62 @@ function limparFormProntuario() { const campos = ['pr-nome','pr-nasc','pr-sexo',
 async function excluirProntuario(id, nome) { if (!confirm(`Excluir prontuário de "${nome}"? Esta ação não pode ser desfeita.`)) return; try { await window._sb.from('prontuarios').delete().eq('id', id).eq('user_id', currentUser.id); prontuariosSalvos = prontuariosSalvos.filter(p => p.id !== id); if (editandoProntuarioId === id) { editandoProntuarioId = null; limparFormProntuario(); } renderizarProntuariosSalvos(document.getElementById('busca-pront').value); document.getElementById('badge-salvos').textContent = prontuariosSalvos.length; document.getElementById('st-salvos').textContent = prontuariosSalvos.length; document.getElementById('st-prontuario').textContent = prontuariosSalvos.length > 0 ? '✓' : '✗'; } catch(e) { alert('Erro ao excluir: ' + e.message); } }
 function exportarPDFById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioPDF(); }
 function exportarWordById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioWord(); }
+
+async function anexarPDFProntuario(prontuarioId, input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (file.type !== 'application/pdf') { alert('Selecione um arquivo PDF válido.'); return; }
+  if (file.size > 10 * 1024 * 1024) { alert('O PDF não pode ter mais de 10MB.'); return; }
+
+  // Feedback visual
+  const label = input.parentElement;
+  const textoOriginal = label.textContent.trim();
+  label.textContent = '⏳ Enviando...';
+  label.style.pointerEvents = 'none';
+
+  try {
+    const path = `${currentUser.id}/${prontuarioId}.pdf`;
+    const { error: upErr } = await window._sb.storage
+      .from('prontuarios-pdf')
+      .upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (upErr) throw upErr;
+
+    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
+    const pdfUrl = urlData.publicUrl;
+
+    await window._sb.from('prontuarios')
+      .update({ pdf_url: pdfUrl })
+      .eq('id', prontuarioId)
+      .eq('user_id', currentUser.id);
+
+    // Atualizar lista local
+    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
+    if (idx >= 0) prontuariosSalvos[idx].pdf_url = pdfUrl;
+
+    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+  } catch(e) {
+    alert('Erro ao anexar PDF: ' + e.message);
+    label.innerHTML = `📎 Anexar PDF<input type="file" accept="application/pdf" style="display:none" onchange="anexarPDFProntuario('${prontuarioId}', this)">`;
+    label.style.pointerEvents = '';
+  }
+}
+
+async function removerPDFProntuario(prontuarioId) {
+  if (!confirm('Remover o PDF anexado a este prontuário?')) return;
+  try {
+    const path = `${currentUser.id}/${prontuarioId}.pdf`;
+    await window._sb.storage.from('prontuarios-pdf').remove([path]);
+    await window._sb.from('prontuarios')
+      .update({ pdf_url: null })
+      .eq('id', prontuarioId)
+      .eq('user_id', currentUser.id);
+    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
+    if (idx >= 0) prontuariosSalvos[idx].pdf_url = null;
+    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+  } catch(e) {
+    alert('Erro ao remover PDF: ' + e.message);
+  }
+}
 
 function gerarTabelaSintomas() {
   const sintomas = ["Vômito","Náusea","Mastigação","Deglutição","Digestão","Pirose","Refluxo","Diarreia","Obstipação","Insônia","Estresse","Cansaço","Ansiedade","Depressão","Trabalho/Estudo"];
