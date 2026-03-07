@@ -297,6 +297,7 @@
     <div class="nav-item" onclick="showTab('prontuario')"><span class="nav-icon">📋</span> Prontuário Médico</div>
     <div class="nav-item" onclick="showTab('prontuarios-salvos')"><span class="nav-icon">🗂️</span> Prontuários Salvos <span class="nav-badge" id="badge-salvos">0</span></div>
     <div class="nav-item" onclick="showTab('tabela')"><span class="nav-icon">🥦</span> Tabela Alimentar</div>
+    <div class="nav-item" onclick="showTab('metas')"><span class="nav-icon">🎯</span> Calcular Metas</div>
     <div class="nav-item" onclick="showTab('recordatorio')"><span class="nav-icon">⏱️</span> Recordatório 24h</div>
     <div class="nav-item" onclick="showTab('plano')"><span class="nav-icon">🎯</span> Plano Alimentar</div>
     <div class="nav-section">Atendimento</div>
@@ -580,6 +581,82 @@
     </div>
 
     <!-- ══ RECORDATÓRIO 24H ══ -->
+    <!-- ══ CALCULAR METAS ══ -->
+    <div class="tab-content" id="tab-metas">
+      <div class="form-section">
+        <h3>🎯 Calcular Metas Nutricionais</h3>
+        <p class="subtitle">Preencha os dados abaixo para calcular ou definir manualmente as metas do cliente. Os valores aparecem automaticamente no Resumo do Dia.</p>
+
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="field"><label>Sexo</label>
+            <select id="mt-sexo">
+              <option value="">Selecione</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+            </select>
+          </div>
+          <div class="field"><label>Idade (anos)</label><input type="number" id="mt-idade" placeholder="Ex: 30" min="1" max="120"></div>
+          <div class="field"><label>Peso (kg)</label><input type="number" id="mt-peso" step="0.1" placeholder="Ex: 70.0"></div>
+          <div class="field"><label>Altura (cm)</label><input type="number" id="mt-altura" placeholder="Ex: 170"></div>
+          <div class="field"><label>Nível de Atividade</label>
+            <select id="mt-atividade">
+              <option value="sedentario">Sedentário (pouco ou nenhum exercício)</option>
+              <option value="leve">Levemente ativo (1-3x/semana)</option>
+              <option value="moderado" selected>Moderadamente ativo (3-5x/semana)</option>
+              <option value="ativo">Muito ativo (6-7x/semana)</option>
+              <option value="extremo">Extremamente ativo (atleta)</option>
+            </select>
+          </div>
+          <div class="field"><label>Objetivo</label>
+            <select id="mt-objetivo">
+              <option value="manutencao">Manutenção do Peso</option>
+              <option value="perda">Perda de Peso (-500 kcal)</option>
+              <option value="perda_rapida">Perda Rápida (-1000 kcal)</option>
+              <option value="ganho">Ganho de Massa (+300 kcal)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-save" onclick="calcularMetasManual()" style="margin-bottom:24px">⚡ Calcular Automaticamente</button>
+
+        <hr class="form-divider">
+        <p class="subtitle" style="margin-top:16px">Ou defina os valores manualmente:</p>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>🔥 Meta Calórica Diária (kcal)</label>
+            <input type="number" id="mt-meta-kcal" placeholder="Ex: 2000" min="0">
+          </div>
+          <div class="field">
+            <label>💪 Meta de Proteína Diária (g)</label>
+            <input type="number" id="mt-meta-prot" placeholder="Ex: 120" min="0">
+          </div>
+          <div class="field">
+            <label>🍚 Meta de Carboidrato Diária (g)</label>
+            <input type="number" id="mt-meta-carb" placeholder="Ex: 300" min="0">
+          </div>
+          <div class="field">
+            <label>🧂 Limite de Sódio Diário (mg)</label>
+            <input type="number" id="mt-limite-sodio" placeholder="Ex: 2300" min="0">
+          </div>
+        </div>
+
+        <!-- Resultado calculado -->
+        <div id="mt-resultado" style="display:none;background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border-radius:12px;padding:24px;margin:20px 0">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:16px">📊 Resultado do Cálculo</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">GET (Gasto Energético Total)</div><div style="font-size:28px;font-weight:700" id="mt-res-get">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta Calórica</div><div style="font-size:28px;font-weight:700" id="mt-res-kcal">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Proteína</div><div style="font-size:28px;font-weight:700" id="mt-res-prot">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Carboidrato</div><div style="font-size:28px;font-weight:700" id="mt-res-carb">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
+          </div>
+        </div>
+
+        <button class="btn-save" onclick="aplicarMetas()" style="width:100%;padding:14px;font-size:15px">✅ Aplicar Metas ao Resumo do Dia</button>
+        <div id="mt-msg" class="msg" style="margin-top:12px"></div>
+      </div>
+    </div>
+
     <div class="tab-content" id="tab-recordatorio">
       <div class="form-section">
         <h3>Recordatório Alimentar 24 Horas</h3>
@@ -1743,6 +1820,62 @@ function exportarExcel() {
 }
 
 function exportarPlanoExcel() { const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Refeição','Alimento','Quantidade (g)','Kcal Estimada']]),'Plano Alimentar'); XLSX.writeFile(wb,'plano-alimentar.xlsx'); }
+
+function calcularMetasManual() {
+  const sexo     = document.getElementById('mt-sexo').value;
+  const idade    = parseFloat(document.getElementById('mt-idade').value) || 30;
+  const peso     = parseFloat(document.getElementById('mt-peso').value)  || 70;
+  const altura   = parseFloat(document.getElementById('mt-altura').value)|| 170;
+  const ativ     = document.getElementById('mt-atividade').value;
+  const objetivo = document.getElementById('mt-objetivo').value;
+
+  const fator = {sedentario:1.2, leve:1.375, moderado:1.55, ativo:1.725, extremo:1.9};
+  const fat = fator[ativ] || 1.55;
+
+  // TMB Harris-Benedict
+  let tmb;
+  if (sexo === 'Masculino') tmb = 10*peso + 6.25*altura - 5*idade + 5;
+  else tmb = 10*peso + 6.25*altura - 5*idade - 161;
+
+  const get = Math.round(tmb * fat);
+
+  const ajuste = {manutencao:0, perda:-500, perda_rapida:-1000, ganho:300};
+  const metaKcal = Math.max(1200, get + (ajuste[objetivo] || 0));
+  const metaProt = Math.round(peso * 1.8);
+  const metaCarb = Math.round((metaKcal * 0.45) / 4);
+
+  document.getElementById('mt-res-get').textContent  = get;
+  document.getElementById('mt-res-kcal').textContent = metaKcal;
+  document.getElementById('mt-res-prot').textContent = metaProt;
+  document.getElementById('mt-res-carb').textContent = metaCarb;
+  document.getElementById('mt-resultado').style.display = 'block';
+
+  // Preencher campos manuais com os valores calculados
+  document.getElementById('mt-meta-kcal').value = metaKcal;
+  document.getElementById('mt-meta-prot').value = metaProt;
+  document.getElementById('mt-meta-carb').value = metaCarb;
+  if (!document.getElementById('mt-limite-sodio').value)
+    document.getElementById('mt-limite-sodio').value = 2300;
+}
+
+function aplicarMetas() {
+  const kcal  = parseFloat(document.getElementById('mt-meta-kcal').value)  || 2000;
+  const prot  = parseFloat(document.getElementById('mt-meta-prot').value)  || 120;
+  const carb  = parseFloat(document.getElementById('mt-meta-carb').value)  || 300;
+  const sodio = parseFloat(document.getElementById('mt-limite-sodio').value)|| 2300;
+
+  document.getElementById('meta-kcal').textContent    = kcal;
+  document.getElementById('meta-prot').textContent    = prot;
+  document.getElementById('meta-carb').textContent    = carb;
+  document.getElementById('limite-sodio').textContent = sodio;
+  document.getElementById('pl-meta-kcal').value = kcal;
+  document.getElementById('pl-meta-prot').value = prot;
+
+  const msg = document.getElementById('mt-msg');
+  msg.className = 'msg success';
+  msg.textContent = '✅ Metas aplicadas! Veja o Resumo do Dia no Recordatório.';
+  setTimeout(() => { msg.className = 'msg'; msg.textContent = ''; }, 3000);
+}
 
 function calcularMetas() {
   const peso=parseFloat(prontuarioData.peso)||70; const metaProt=Math.round(peso*1.8); let metaKcal=2000;
