@@ -295,7 +295,7 @@
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
     <div class="nav-section">Nutrição</div>
     <div class="nav-item" onclick="showTab('prontuario')"><span class="nav-icon">📋</span> Prontuário Médico</div>
-    <div class="nav-item" onclick="showTab('prontuarios-salvos')"><span class="nav-icon">🗂️</span> Prontuários Salvos <span class="nav-badge" id="badge-salvos">0</span></div>
+    <div class="nav-item" onclick="showTab('prontuarios-salvos')"><span class="nav-icon" style="filter:hue-rotate(200deg) saturate(2)">🗃️</span> Minhas Fichas <span class="nav-badge" id="badge-salvos">0</span></div>
     <div class="nav-item" onclick="showTab('tabela')"><span class="nav-icon">🥦</span> Tabela Alimentar</div>
     <div class="nav-item" onclick="showTab('metas')"><span class="nav-icon">🎯</span> Calcular Metas</div>
     <div class="nav-item" onclick="showTab('recordatorio')"><span class="nav-icon">⏱️</span> Recordatório 24h</div>
@@ -326,38 +326,41 @@
           <div class="stat-icon">🎯</div>
           <div style="display:flex;align-items:baseline;gap:6px">
             <div class="stat-val" id="st-meta-kcal">—</div>
-            <div style="font-size:13px;color:#7a8a7c">kcal</div>
+            <div style="font-size:15px;color:#7a8a7c;font-weight:600">kcal</div>
           </div>
-          <div class="stat-label">Meta Calórica Diária</div>
-          <div style="font-size:11px;color:#74c69d;margin-top:4px">Proteína: <span id="st-meta-prot">—</span>g/dia</div>
+          <div class="stat-label" style="font-size:13px;margin-top:6px">Meta Calórica Diária</div>
+          <div style="font-size:14px;color:#74c69d;font-weight:700;margin-top:6px">Proteína: <span id="st-meta-prot">—</span>g/dia</div>
         </div>
         <div class="stat-card verde" style="cursor:pointer" onclick="showTab('metas')">
           <div class="stat-icon">⏱️</div>
-          <div class="stat-val" id="st-est-semanas">—</div>
-          <div class="stat-label">Semanas p/ Meta de Peso</div>
-          <div style="font-size:11px;color:#74c69d;margin-top:4px">~<span id="st-est-meses">—</span> meses</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <div class="stat-val" id="st-est-semanas">—</div>
+            <div style="font-size:15px;color:#7a8a7c;font-weight:600">sem.</div>
+          </div>
+          <div class="stat-label" style="font-size:13px;margin-top:6px">Para a Meta de Peso</div>
+          <div style="font-size:14px;color:#74c69d;font-weight:700;margin-top:6px">~<span id="st-est-meses">—</span> meses</div>
         </div>
         <div class="stat-card verde">
           <div class="stat-icon">🔥</div>
           <div style="display:flex;align-items:baseline;gap:6px">
             <div class="stat-val" id="st-kcal">0</div>
-            <div style="font-size:13px;color:#7a8a7c">kcal</div>
+            <div style="font-size:15px;color:#7a8a7c;font-weight:600">kcal</div>
           </div>
-          <div class="stat-label">Consumido Hoje</div>
-          <div style="font-size:11px;color:#74c69d;margin-top:4px">Proteína: <span id="st-prot">0g</span></div>
+          <div class="stat-label" style="font-size:13px;margin-top:6px">Consumido Hoje</div>
+          <div style="font-size:14px;color:#74c69d;font-weight:700;margin-top:6px">Proteína: <span id="st-prot">0g</span></div>
         </div>
       </div>
       <!-- Segunda linha: prontuário + salvos -->
       <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:24px;margin-top:-20px">
         <div class="stat-card verde"><div class="stat-icon">📋</div><div class="stat-val" id="st-prontuario">—</div><div class="stat-label">Prontuário</div></div>
-        <div class="stat-card verde"><div class="stat-icon">🗂️</div><div class="stat-val" id="st-salvos">0</div><div class="stat-label">Prontuários Salvos</div></div>
+        <div class="stat-card" style="border-left:4px solid #3b82f6"><div class="stat-icon">🗃️</div><div class="stat-val" id="st-salvos">0</div><div class="stat-label" style="color:#3b82f6">Minhas Fichas</div></div>
       </div>
       <div class="form-section">
         <h3>Bem-vindo! 👋</h3>
         <p class="subtitle">Use o menu lateral para navegar pelas seções. Comece pelo Prontuário Médico para registrar suas informações.</p>
         <div class="home-cards">
           <div class="home-card" onclick="showTab('prontuario')"><div class="home-card-icon">📋</div><div class="home-card-title">Prontuário Médico</div><div class="home-card-desc">Ficha de anamnese completa</div></div>
-          <div class="home-card" onclick="showTab('prontuarios-salvos')"><div class="home-card-icon">🗂️</div><div class="home-card-title">Prontuários Salvos</div><div class="home-card-desc">Acesse e edite prontuários</div></div>
+          <div class="home-card" onclick="showTab('prontuarios-salvos')" style="border-color:#bfdbfe"><div class="home-card-icon">🗃️</div><div class="home-card-title" style="color:#1d4ed8">Minhas Fichas</div><div class="home-card-desc">Acesse e edite suas fichas</div></div>
           <div class="home-card" onclick="showTab('recordatorio')"><div class="home-card-icon">⏱️</div><div class="home-card-title">Recordatório 24h</div><div class="home-card-desc">Registre o que comeu hoje</div></div>
           <div class="home-card" onclick="showTab('tabela')"><div class="home-card-icon">🥦</div><div class="home-card-title">Tabela Alimentar</div><div class="home-card-desc">Calcule kcal e proteína</div></div>
           <div class="home-card" onclick="showTab('plano')"><div class="home-card-icon">🎯</div><div class="home-card-title">Plano Alimentar</div><div class="home-card-desc">Metas e distribuição</div></div>
@@ -546,18 +549,41 @@
     <!-- ══ PRONTUÁRIOS SALVOS ══ -->
     <div class="tab-content" id="tab-prontuarios-salvos">
       <div class="form-section">
-        <h3>Prontuários Salvos</h3>
-        <p class="subtitle">Gerencie todos os prontuários cadastrados. Edite, baixe ou exclua.</p>
+        <h3 style="color:#1d4ed8">🗃️ Minhas Fichas</h3>
+        <p class="subtitle">Gerencie todas as suas fichas de atendimento. Edite, baixe ou exclua.</p>
         <div class="search-bar">
           <input type="text" id="busca-pront" placeholder="🔍  Buscar por nome do paciente..." oninput="filtrarProntuarios()">
-          <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">+ Novo Prontuário</button>
+          <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">+ Nova Ficha</button>
           <label class="btn-save" style="cursor:pointer;background:#2d6a4f;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin:0">
-            📎 Adicionar Prontuário
+            📎 Adicionar Prontuário PDF
             <input type="file" accept="application/pdf" style="display:none" onchange="adicionarProntuarioPDF(this)">
           </label>
+          <button class="btn-save" style="background:#1e40af;white-space:nowrap" onclick="abrirModalPlanoAlimentar()">🥗 Adicionar Plano Alimentar</button>
+        </div>
+        <!-- Modal Plano Alimentar por Paciente -->
+        <div id="modal-plano-pac" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9997;align-items:center;justify-content:center;padding:16px">
+          <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+            <h3 style="font-family:'Playfair Display',serif;color:#1a2e1f;margin:0 0 6px">🥗 Adicionar Plano Alimentar</h3>
+            <p style="font-size:13px;color:#7a8a7c;margin:0 0 20px">Selecione o paciente e faça upload do plano alimentar em PDF.</p>
+            <div class="field" style="margin-bottom:16px">
+              <label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:6px">Paciente</label>
+              <select id="plano-pac-select" style="width:100%;padding:10px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px">
+                <option value="">Selecione o paciente...</option>
+              </select>
+            </div>
+            <div class="field" style="margin-bottom:20px">
+              <label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:6px">Arquivo PDF do Plano</label>
+              <input type="file" id="plano-pac-arquivo" accept="application/pdf" style="width:100%;padding:8px;border:1.5px dashed #c8e6c9;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div style="display:flex;gap:10px">
+              <button onclick="salvarPlanoAlimentarPac()" style="flex:1;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">✅ Salvar Plano</button>
+              <button onclick="fecharModalPlanoAlimentar()" style="flex:1;background:#f1f5f1;color:#555;border:none;padding:12px;border-radius:8px;font-size:14px;cursor:pointer">Cancelar</button>
+            </div>
+            <div id="msg-plano-pac" class="msg" style="margin-top:12px"></div>
+          </div>
         </div>
         <div id="lista-prontuarios">
-          <div class="empty-state"><div class="empty-icon">🗂️</div><h4>Nenhum prontuário salvo</h4><p>Clique em "Novo Prontuário" para criar o primeiro registro.</p></div>
+          <div class="empty-state"><div class="empty-icon">🗃️</div><h4>Nenhuma ficha cadastrada</h4><p>Clique em "+ Nova Ficha" para criar o primeiro registro.</p></div>
         </div>
       </div>
     </div>
@@ -724,7 +750,8 @@
         <div id="mt-resultado" style="display:none;background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border-radius:12px;padding:24px;margin:20px 0">
           <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:16px">📊 Resultado do Cálculo</div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px">
-            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">GET (Gasto Energético Total)</div><div style="font-size:28px;font-weight:700" id="mt-res-get">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">TMB (Taxa Metabólica Basal)</div><div style="font-size:22px;font-weight:700" id="mt-res-tmb">—</div><div style="font-size:11px;color:#74c69d">kcal em repouso</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">GET (Gasto Energético Total)</div><div style="font-size:22px;font-weight:700" id="mt-res-get">—</div><div style="font-size:11px;color:#74c69d">kcal/dia com atividade</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta Calórica</div><div style="font-size:28px;font-weight:700" id="mt-res-kcal">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Proteína</div><div style="font-size:28px;font-weight:700" id="mt-res-prot">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
             <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Meta de Carboidrato</div><div style="font-size:28px;font-weight:700" id="mt-res-carb">—</div><div style="font-size:11px;color:#74c69d">g/dia</div></div>
@@ -957,13 +984,36 @@
       </div>
       <div class="form-section">
         <h3>Plano Alimentar Personalizado</h3>
-        <p class="subtitle">Configure seu objetivo e gere seu plano com base nos alimentos mais consumidos.</p>
+        <p class="subtitle">Preencha os dados do paciente para gerar um plano realista com base nos alimentos mais consumidos.</p>
         <div class="msg" id="msg-plano"></div>
+
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a8a7c;margin-bottom:10px">👤 Dados do Paciente</div>
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="field"><label>Peso Atual (kg)</label><input type="number" id="pl-peso" step="0.1" placeholder="Ex: 80"></div>
+          <div class="field"><label>Peso Desejado (kg)</label><input type="number" id="pl-peso-desejado" step="0.1" placeholder="Ex: 70"></div>
+          <div class="field"><label>Objetivo do Plano</label>
+            <select id="pl-objetivo">
+              <option value="deficit">Déficit Calórico (Perda de Peso)</option>
+              <option value="manutencao">Manutenção</option>
+              <option value="superavit">Superávit Calórico (Ganho de Massa)</option>
+            </select>
+          </div>
+          <div class="field"><label>Atividade Física</label>
+            <select id="pl-atividade">
+              <option value="nenhum">🚫 Não faz atividade física</option>
+              <option value="sedentario">Sedentário (1-2x/semana)</option>
+              <option value="leve">Levemente ativo (3x/semana)</option>
+              <option value="moderado">Moderadamente ativo (4-5x/semana)</option>
+              <option value="ativo">Muito ativo (6-7x/semana)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a8a7c;margin-bottom:10px">🍽️ Configuração do Plano</div>
         <div class="form-grid" style="margin-bottom:24px">
-          <div class="field"><label>Objetivo do Plano</label><select id="pl-objetivo"><option value="deficit">Déficit Calórico (Perda de Peso)</option><option value="manutencao">Manutenção</option><option value="superavit">Superávit Calórico (Ganho de Massa)</option></select></div>
-          <div class="field"><label>Meta Calórica Diária (kcal)</label><input type="number" id="pl-meta-kcal" placeholder="2000"></div>
-          <div class="field"><label>Meta de Proteína Diária (g)</label><input type="number" id="pl-meta-prot" placeholder="120"></div>
-          <div class="field"><label>Número de Refeições</label><input type="number" id="pl-refeicoes" min="3" max="8" value="5"></div>
+          <div class="field"><label>Meta Calórica Diária (kcal)</label><input type="number" id="pl-meta-kcal" placeholder="Deixe vazio para calcular"></div>
+          <div class="field"><label>Meta de Proteína Diária (g)</label><input type="number" id="pl-meta-prot" placeholder="Deixe vazio para calcular"></div>
+          <div class="field"><label>Número de Refeições</label><input type="number" id="pl-refeicoes" min="3" max="6" value="5"></div>
         </div>
         <button class="btn-save" onclick="gerarPlano()">🎯 Gerar Plano Alimentar</button>
       </div>
@@ -1711,7 +1761,7 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 Prontuário anexado</span>` : ''}${p.rec_url ? `<span style="color:#1e40af;font-weight:600">📋 Recordatório anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Prontuário – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">📎 Ver Prontuário</button>` : ''}<label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer" title="Anexar recordatório em PDF">${p.rec_url ? '📋 Trocar Recordatório' : '📋 Adicionar Recordatório'}<input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)"></label>${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">📋 Ver Recordatório</button>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
+    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 Prontuário anexado</span>` : ''}${p.rec_url ? `<span style="color:#1e40af;font-weight:600">📋 Recordatório anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Prontuário – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">📎 Ver Prontuário</button>` : ''}<label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer" title="Anexar recordatório em PDF">${p.rec_url ? '📋 Trocar Recordatório' : '📋 Adicionar Recordatório'}<input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)"></label>${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">📋 Ver Recordatório</button>` : ''}${p.plano_url ? `<button onclick="abrirPdfModal('${p.plano_url}', 'Plano Alimentar – ${p.nome||''}')" class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer">🥗 Ver Plano Alimentar</button>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
   }).join('');
 }
 
@@ -1795,7 +1845,7 @@ function showTab(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
   if (tab) tab.classList.add('active');
-  const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Prontuários Salvos', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA' };
+  const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
 }
@@ -1973,10 +2023,23 @@ async function removerAlimento(id) { if(!confirm('Remover este alimento?'))retur
 function gerarPlano() {
   const msg = document.getElementById('msg-plano');
   if (!alimentosCadastrados.length) { msg.className='msg error'; msg.textContent='Cadastre alimentos na tabela alimentar antes de gerar o plano.'; return; }
-  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value)||2000;
-  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value)||120;
+
+  const objetivo  = document.getElementById('pl-objetivo').value;
+  const atividade = document.getElementById('pl-atividade').value;
   const refeicoes = parseInt(document.getElementById('pl-refeicoes').value)||5;
-  const objetivo = document.getElementById('pl-objetivo').value;
+  const peso      = parseFloat(document.getElementById('pl-peso').value) || 70;
+  const pesoDesej = parseFloat(document.getElementById('pl-peso-desejado').value) || 0;
+
+  // Calcular meta calórica automaticamente se não informada
+  const fatorAtiv = {nenhum:1.0, sedentario:1.2, leve:1.375, moderado:1.55, ativo:1.725};
+  const fat = fatorAtiv[atividade] || 1.2;
+  const tmbEstimado = 10*peso + 6.25*165 - 5*30 - 161; // estimativa genérica
+  const getEstimado = Math.round(tmbEstimado * fat);
+  const ajusteObj = {deficit:-400, manutencao:0, superavit:250};
+  const metaKcalCalc = Math.max(1200, getEstimado + (ajusteObj[objetivo]||0));
+
+  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value) || metaKcalCalc;
+  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value) || Math.round(peso * 1.6);
 
   // Contar frequência de cada alimento no recordatório
   const freq = {};
@@ -2045,15 +2108,36 @@ function gerarPlano() {
     let kcalRef = 0;
     itensRef.forEach(al => {
       if (!al) return;
-      const qtd = isReficaoPrincipal ? (al.gramas_unidade ? Math.round(al.gramas_unidade * 2) : 150) : (al.gramas_unidade || 50);
-      const kcalItem = (al.kcal_100g || 0) * qtd / 100;
-      const protItem = (al.proteina_100g || 0) * qtd / 100;
+
+      // Quantidades realistas por tipo de unidade
+      let qtd = 1;
+      const unid = (al.unidade_medida || '').toLowerCase();
+      const gramas = al.gramas_unidade || 100;
+      if (unid === 'unidade' || unid === 'und' || unid === 'un') {
+        // ex: ovo, pão de queijo — 1 a 3 unidades
+        qtd = isCafe ? 2 : (isReficaoPrincipal ? 1 : 1);
+      } else if (unid === 'concha' || unid === 'colher' || unid === 'colher de sopa') {
+        qtd = isReficaoPrincipal ? 3 : 2;
+      } else if (unid === 'fatia' || unid === 'pedaço') {
+        qtd = isReficaoPrincipal ? 2 : 1;
+      } else if (unid === 'copo' || unid === 'ml' || unid === 'l') {
+        qtd = 1;
+      } else {
+        // gramas — limitar a porções razoáveis
+        const gRef = isReficaoPrincipal ? 150 : (isCafe ? 80 : 60);
+        qtd = Math.max(1, Math.round(gRef / gramas));
+      }
+
+      const totalGramas = qtd * gramas;
+      const kcalItem = (al.kcal_100g || 0) * totalGramas / 100;
+      const protItem = (al.proteina_100g || 0) * totalGramas / 100;
       kcalRef += kcalItem;
+      const unidLabel = al.unidade_medida || 'g';
       const freqLabel = freq[al.id] ? `<span style="font-size:10px;color:#2d6a4f;background:#f0fdf4;padding:1px 6px;border-radius:10px;margin-left:4px">${freq[al.id]}x no histórico</span>` : '';
       html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px">
         <span style="font-size:13px;color:#1a2e1f;font-weight:500">${al.nome}${freqLabel}</span>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <span style="font-size:12px;color:#7a8a7c">${qtd}${al.unidade_medida||'g'}</span>
+          <span style="font-size:12px;color:#7a8a7c">${qtd} ${unidLabel}</span>
           <span style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
           <span style="font-size:11px;color:#7a8a7c">${protItem.toFixed(1)}g prot</span>
         </div>
@@ -2063,6 +2147,29 @@ function gerarPlano() {
     html += `</div>
       <div style="font-size:12px;color:#7a8a7c;margin-top:10px;text-align:right">Total aprox.: <strong>${kcalRef.toFixed(0)} kcal</strong></div>
     </div>`;
+  }
+
+  // Estimativa de tempo se peso desejado informado
+  if (pesoDesej && pesoDesej < peso) {
+    const diferenca = peso - pesoDesej;
+    const deficitDiario = metaKcalCalc - metaKcal; // déficit pela dieta
+    const gastoExerc = {nenhum:0, sedentario:100, leve:200, moderado:300, ativo:400}[atividade] || 0;
+    const deficitTotal = deficitDiario + gastoExerc;
+    if (deficitTotal > 0) {
+      const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
+      const meses = (semanas / 4.33).toFixed(1);
+      const aviso = atividade === 'nenhum' ? '<br>⚠️ Sem atividade física o processo é mais lento. Pequenas caminhadas já fazem diferença!' : '';
+      html += `<div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border-radius:12px;padding:20px;margin-top:8px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:12px">⏱️ Estimativa para Atingir ${pesoDesej}kg</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Peso a perder</div><div style="font-size:24px;font-weight:700">${diferenca.toFixed(1)}</div><div style="font-size:11px;color:#74c69d">kg</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Déficit total/dia</div><div style="font-size:24px;font-weight:700">${deficitTotal}</div><div style="font-size:11px;color:#74c69d">kcal</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Tempo estimado</div><div style="font-size:24px;font-weight:700">${semanas}</div><div style="font-size:11px;color:#74c69d">semanas</div></div>
+          <div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Equivale a</div><div style="font-size:24px;font-weight:700">${meses}</div><div style="font-size:11px;color:#74c69d">meses aprox.</div></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6">📌 Déficit dieta: ${deficitDiario} kcal | Exercício: ~${gastoExerc} kcal/dia${aviso}<br>⚠️ Estimativa teórica. Resultados variam conforme adesão e metabolismo.</div>
+      </div>`;
+    }
   }
 
   document.getElementById('plano-content').innerHTML = html;
@@ -2174,19 +2281,32 @@ function baixarPlanoPDF() {
 
 function calcularMetasManual() {
   const sexo     = document.getElementById('mt-sexo').value;
-  const idade    = parseFloat(document.getElementById('mt-idade').value) || 30;
-  const peso     = parseFloat(document.getElementById('mt-peso').value)  || 70;
-  const altura   = parseFloat(document.getElementById('mt-altura').value)|| 170;
+  const idade    = parseFloat(document.getElementById('mt-idade').value);
+  const peso     = parseFloat(document.getElementById('mt-peso').value);
+  let   altura   = parseFloat(document.getElementById('mt-altura').value);
   const ativ     = document.getElementById('mt-atividade').value;
   const objetivo = document.getElementById('mt-objetivo').value;
+
+  // Validações obrigatórias
+  if (!sexo)   { alert('⚠️ Selecione o Sexo antes de calcular.'); return; }
+  if (!idade || idade < 10 || idade > 110) { alert('⚠️ Informe uma Idade válida (10–110 anos).'); return; }
+  if (!peso  || peso  < 20 || peso  > 300) { alert('⚠️ Informe um Peso válido (20–300 kg).'); return; }
+  if (!altura) { alert('⚠️ Informe a Altura antes de calcular.'); return; }
+
+  // Detectar se digitou em metros (ex: 1.70) em vez de cm (170)
+  if (altura < 3) {
+    altura = Math.round(altura * 100);
+    document.getElementById('mt-altura').value = altura;
+  }
+  if (altura < 100 || altura > 250) { alert('⚠️ Altura inválida. Informe em centímetros (ex: 165).'); return; }
 
   const fator = {nenhum:1.0, sedentario:1.2, leve:1.375, moderado:1.55, ativo:1.725, extremo:1.9};
   const fat = fator[ativ] || 1.2;
 
-  // TMB Harris-Benedict
+  // Fórmula Mifflin-St Jeor (mais precisa que Harris-Benedict)
   let tmb;
   if (sexo === 'Masculino') tmb = 10*peso + 6.25*altura - 5*idade + 5;
-  else tmb = 10*peso + 6.25*altura - 5*idade - 161;
+  else                      tmb = 10*peso + 6.25*altura - 5*idade - 161;
 
   const get = Math.round(tmb * fat);
   const ajuste = {manutencao:0, perda:-500, perda_rapida:-1000, ganho:300};
@@ -2198,6 +2318,9 @@ function calcularMetasManual() {
   document.getElementById('mt-res-kcal').textContent = metaKcal;
   document.getElementById('mt-res-prot').textContent = metaProt;
   document.getElementById('mt-res-carb').textContent = metaCarb;
+  // Mostrar TMB para conferência
+  const tmbEl = document.getElementById('mt-res-tmb');
+  if (tmbEl) tmbEl.textContent = Math.round(tmb);
   document.getElementById('mt-resultado').style.display = 'block';
 
   // Preencher campos manuais
@@ -2291,17 +2414,117 @@ function aplicarMetas() {
   if (stMetaKcal) stMetaKcal.textContent = kcal;
   if (stMetaProt) stMetaProt.textContent = prot;
 
+  // Persistir no localStorage
+  try {
+    localStorage.setItem('na_meta_kcal', kcal);
+    localStorage.setItem('na_meta_prot', prot);
+    localStorage.setItem('na_meta_carb', carb);
+    localStorage.setItem('na_limite_sodio', sodio);
+    if (window._estimativaMeta) {
+      localStorage.setItem('na_estimativa', JSON.stringify(window._estimativaMeta));
+    }
+  } catch(e) {}
+
   const msg = document.getElementById('mt-msg');
   msg.className = 'msg success';
   msg.textContent = '✅ Metas aplicadas! Veja o Resumo do Dia no Recordatório.';
   setTimeout(() => { msg.className = 'msg'; msg.textContent = ''; }, 3000);
 }
 
-function calcularMetas() {
+function carregarMetasSalvas() {
+  try {
+    const kcal  = localStorage.getItem('na_meta_kcal');
+    const prot  = localStorage.getItem('na_meta_prot');
+    const carb  = localStorage.getItem('na_meta_carb');
+    const sodio = localStorage.getItem('na_limite_sodio');
+    const estStr = localStorage.getItem('na_estimativa');
+
+    if (kcal) {
+      document.getElementById('meta-kcal').textContent = kcal;
+      document.getElementById('pl-meta-kcal').value    = kcal;
+      const el = document.getElementById('mt-meta-kcal'); if (el) el.value = kcal;
+      const stEl = document.getElementById('st-meta-kcal'); if (stEl) stEl.textContent = kcal;
+    }
+    if (prot) {
+      document.getElementById('meta-prot').textContent = prot;
+      document.getElementById('pl-meta-prot').value    = prot;
+      const el = document.getElementById('mt-meta-prot'); if (el) el.value = prot;
+      const stEl = document.getElementById('st-meta-prot'); if (stEl) stEl.textContent = prot;
+    }
+    if (carb) { const el = document.getElementById('meta-carb'); if (el) el.textContent = carb; }
+    if (sodio) { const el = document.getElementById('limite-sodio'); if (el) el.textContent = sodio; }
+
+    if (estStr) {
+      const est = JSON.parse(estStr);
+      window._estimativaMeta = est;
+      // Cards do home
+      const stSem = document.getElementById('st-est-semanas'); if (stSem) stSem.textContent = est.semanas;
+      const stMes = document.getElementById('st-est-meses');  if (stMes) stMes.textContent  = est.meses;
+      // Resumo do dia
+      const recEst = document.getElementById('rec-estimativa');
+      if (recEst && est.deficitTotal) {
+        document.getElementById('rec-est-deficit').textContent   = est.deficitTotal;
+        document.getElementById('rec-est-diferenca').textContent = est.diferenca;
+        document.getElementById('rec-est-semanas').textContent   = est.semanas;
+        document.getElementById('rec-est-meses').textContent     = est.meses;
+        document.getElementById('rec-est-obs').innerHTML         = est.obs || '';
+        recEst.style.display = 'block';
+      }
+    }
+  } catch(e) {}
+}
+
+function carregarMetas() {
   const peso=parseFloat(prontuarioData.peso)||70; const metaProt=Math.round(peso*1.8); let metaKcal=2000;
   const fator={sedentario:1.2,leve:1.375,moderado:1.55,ativo:1.725,extremo:1.9}; const fat=fator[prontuarioData.nivel_atividade]||1.55;
   if(prontuarioData.sexo==='Masculino')metaKcal=Math.round((10*peso+6.25*(prontuarioData.altura||170)-5*30+5)*fat); else metaKcal=Math.round((10*peso+6.25*(prontuarioData.altura||170)-5*30-161)*fat);
   document.getElementById('meta-kcal').textContent=metaKcal; document.getElementById('meta-prot').textContent=metaProt; document.getElementById('pl-meta-kcal').value=metaKcal; document.getElementById('pl-meta-prot').value=metaProt;
+}
+
+function abrirModalPlanoAlimentar() {
+  // Popular select com pacientes
+  const sel = document.getElementById('plano-pac-select');
+  sel.innerHTML = '<option value="">Selecione o paciente...</option>';
+  prontuariosSalvos.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = p.nome || '(sem nome)';
+    sel.appendChild(opt);
+  });
+  document.getElementById('plano-pac-arquivo').value = '';
+  document.getElementById('msg-plano-pac').textContent = '';
+  const modal = document.getElementById('modal-plano-pac');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalPlanoAlimentar() {
+  document.getElementById('modal-plano-pac').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+async function salvarPlanoAlimentarPac() {
+  const pacId = document.getElementById('plano-pac-select').value;
+  const arquivo = document.getElementById('plano-pac-arquivo').files[0];
+  const msg = document.getElementById('msg-plano-pac');
+
+  if (!pacId) { msg.className='msg error'; msg.textContent='Selecione um paciente.'; return; }
+  if (!arquivo) { msg.className='msg error'; msg.textContent='Selecione um arquivo PDF.'; return; }
+
+  msg.className='msg success'; msg.textContent='⏳ Enviando plano...';
+  try {
+    const path = `${currentUser.id}/plano-${pacId}.pdf`;
+    const { error: upErr } = await window._sb.storage.from('prontuarios-pdf').upload(path, arquivo, { upsert: true, contentType: 'application/pdf' });
+    if (upErr) throw upErr;
+    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
+    await window._sb.from('prontuarios').update({ plano_url: urlData.publicUrl }).eq('id', pacId).eq('user_id', currentUser.id);
+    // Atualizar lista local
+    const idx = prontuariosSalvos.findIndex(p => p.id === pacId);
+    if (idx >= 0) prontuariosSalvos[idx].plano_url = urlData.publicUrl;
+    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+    msg.textContent = '✅ Plano salvo com sucesso!';
+    setTimeout(() => fecharModalPlanoAlimentar(), 1500);
+  } catch(e) { msg.className='msg error'; msg.textContent='Erro: ' + e.message; }
 }
 
 let cropFile = null;
