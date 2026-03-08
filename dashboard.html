@@ -2627,48 +2627,73 @@ function calcularMetasManual() {
   const deficitTotal = deficitDieta + gastoExercicioDia;
 
   const estEl = document.getElementById('mt-estimativa');
-  if (pesoDesejado && pesoDesejado < peso) {
-    const diferenca = peso - pesoDesejado;
 
-    if (deficitTotal <= 0) {
-      // Sem déficit — impossível calcular
-      document.getElementById('mt-res-deficit').textContent   = '0';
-      document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
-      document.getElementById('mt-res-semanas').textContent   = '—';
-      document.getElementById('mt-res-meses').textContent     = '—';
-      document.getElementById('mt-res-obs').innerHTML = '⚠️ Com manutenção calórica e sem exercícios não há déficit para calcular o tempo. Selecione exercícios ou mude o objetivo para Perda de Peso.';
-      estEl.style.display = 'block';
-      window._estimativaMeta = null;
+  // Funciona para perda (pesoDesejado < peso) E ganho (pesoDesejado > peso)
+  const isPerda  = pesoDesejado && pesoDesejado < peso;
+  const isGanho  = pesoDesejado && pesoDesejado > peso;
+  const temMeta  = isPerda || isGanho;
+
+  if (temMeta) {
+    const diferenca = Math.abs(peso - pesoDesejado);
+
+    if (isGanho) {
+      // Ganho de massa: tempo baseado no superávit calórico
+      // ~7700 kcal para ganhar 1kg (similar à perda, mas do lado positivo)
+      const superavitDieta = Math.max(0, metaKcal - get); // kcal acima do GET
+      const superavitTotal = superavitDieta + gastoExercicioDia; // exercício acelera ganho de massa
+      if (superavitTotal > 0) {
+        const semanas = Math.ceil((diferenca * 7700) / (superavitTotal * 7));
+        const meses   = (semanas / 4.33).toFixed(1);
+        document.getElementById('mt-res-deficit').textContent   = superavitTotal;
+        document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
+        document.getElementById('mt-res-semanas').textContent   = semanas;
+        document.getElementById('mt-res-meses').textContent     = meses;
+        let obs = `📌 Superávit calórico: ${superavitDieta} kcal/dia`;
+        if (gastoExercicioDia > 0) obs += ` | Exercício: ~${gastoExercicioDia} kcal/dia (${freq}x/semana)`;
+        obs += `<br>⚠️ Estimativa teórica. Ganho real depende de treino, descanso e adesão.`;
+        document.getElementById('mt-res-obs').innerHTML = obs;
+        estEl.style.display = 'block';
+        window._estimativaMeta = { deficitTotal: superavitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs };
+        const stSem = document.getElementById('st-est-semanas'); if (stSem) stSem.textContent = semanas;
+        const stMes = document.getElementById('st-est-meses');   if (stMes) stMes.textContent = meses;
+      } else {
+        document.getElementById('mt-res-obs').innerHTML = '⚠️ Meta calórica igual ou abaixo do GET — sem superávit para ganho de massa. Aumente a meta calórica ou selecione Ganho de Massa no objetivo.';
+        estEl.style.display = 'block';
+        window._estimativaMeta = null;
+      }
     } else {
-      // 1 kg de gordura corporal ≈ 7700 kcal
-      const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
-      const meses = (semanas / 4.33).toFixed(1);
-
-      document.getElementById('mt-res-deficit').textContent   = deficitTotal;
-      document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
-      document.getElementById('mt-res-semanas').textContent   = semanas;
-      document.getElementById('mt-res-meses').textContent     = meses;
-
-      let obs = `📌 Déficit pela dieta: ${deficitDieta} kcal/dia`;
-      if (gastoExercicioDia > 0) obs += ` | Exercício: ~${gastoExercicioDia} kcal/dia (${freq}x/semana)`;
-      if (ativ === 'nenhum' && checkboxes.length === 0) obs += `<br>⚠️ Sem atividade física o processo é mais lento. Pequenas caminhadas já fazem diferença!`;
-      obs += `<br>⚠️ Estimativa teórica. Resultados variam conforme adesão, metabolismo e outros fatores.`;
-      document.getElementById('mt-res-obs').innerHTML = obs;
-      estEl.style.display = 'block';
-
-      window._estimativaMeta = { deficitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs, gastoExercicioDia, deficitDieta, ativ };
-      const stSem = document.getElementById('st-est-semanas');
-      const stMes = document.getElementById('st-est-meses');
-      if (stSem) stSem.textContent = semanas;
-      if (stMes) stMes.textContent = meses;
+      // Perda de peso: tempo baseado no déficit calórico
+      if (deficitTotal <= 0) {
+        document.getElementById('mt-res-deficit').textContent   = '0';
+        document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
+        document.getElementById('mt-res-semanas').textContent   = '—';
+        document.getElementById('mt-res-meses').textContent     = '—';
+        document.getElementById('mt-res-obs').innerHTML = '⚠️ Sem déficit calórico não é possível calcular. Mude o objetivo para Perda de Peso ou adicione exercícios.';
+        estEl.style.display = 'block';
+        window._estimativaMeta = null;
+      } else {
+        const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
+        const meses   = (semanas / 4.33).toFixed(1);
+        document.getElementById('mt-res-deficit').textContent   = deficitTotal;
+        document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
+        document.getElementById('mt-res-semanas').textContent   = semanas;
+        document.getElementById('mt-res-meses').textContent     = meses;
+        let obs = `📌 Déficit pela dieta: ${deficitDieta} kcal/dia`;
+        if (gastoExercicioDia > 0) obs += ` | Exercício: ~${gastoExercicioDia} kcal/dia (${freq}x/semana)`;
+        if (ativ === 'nenhum' && checkboxes.length === 0) obs += `<br>⚠️ Sem atividade física o processo é mais lento.`;
+        obs += `<br>⚠️ Estimativa teórica. Resultados variam conforme adesão e metabolismo.`;
+        document.getElementById('mt-res-obs').innerHTML = obs;
+        estEl.style.display = 'block';
+        window._estimativaMeta = { deficitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs };
+        const stSem = document.getElementById('st-est-semanas'); if (stSem) stSem.textContent = semanas;
+        const stMes = document.getElementById('st-est-meses');   if (stMes) stMes.textContent = meses;
+      }
     }
   } else {
     estEl.style.display = 'none';
     window._estimativaMeta = null;
-    const stSem2 = document.getElementById('st-est-semanas');
-    const stMes2 = document.getElementById('st-est-meses');
-    if (stSem2) stSem2.textContent = '—';
-    if (stMes2) stMes2.textContent = '—';
+    const stSem2 = document.getElementById('st-est-semanas'); if (stSem2) stSem2.textContent = '—';
+    const stMes2 = document.getElementById('st-est-meses');   if (stMes2) stMes2.textContent = '—';
   }
 }
 
