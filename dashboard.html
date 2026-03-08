@@ -2668,15 +2668,43 @@ async function aplicarMetas() {
   document.getElementById('pl-meta-kcal').value = kcal;
   document.getElementById('pl-meta-prot').value = prot;
 
-  // Sincronizar estimativa de tempo no Resumo do Dia
-  const est = window._estimativaMeta;
+  // Sincronizar estimativa de tempo — usa _estimativaMeta se existir,
+  // senão tenta calcular na hora com os campos de peso
+  let est = window._estimativaMeta;
+
+  if (!est) {
+    // Tentar calcular estimativa com dados disponíveis no form
+    const pesoAtual   = parseFloat(document.getElementById('mt-peso')?.value);
+    const pesoDesejado = parseFloat(document.getElementById('mt-peso-desejado')?.value);
+    if (pesoAtual && pesoDesejado && pesoDesejado < pesoAtual) {
+      const diferenca = pesoAtual - pesoDesejado;
+      // Usar a meta calórica aplicada vs uma estimativa de GET (peso × 30 como proxy simples)
+      const getProxy = Math.round(pesoAtual * 30);
+      const deficitDieta = Math.max(0, getProxy - kcal);
+      const freq = parseInt(document.getElementById('mt-freq-exercicio')?.value) || 0;
+      let gastoEx = 0;
+      document.querySelectorAll('#mt-exercicios input[type=checkbox]:checked').forEach(cb => {
+        const kcalH = parseFloat(cb.dataset.kcal) || 0;
+        gastoEx += kcalH * (kcalH >= 500 ? 0.75 : 0.5);
+      });
+      const gastoExDia = Math.round((gastoEx * freq) / 7);
+      const deficitTotal = deficitDieta + gastoExDia;
+      if (deficitTotal > 0) {
+        const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
+        const meses = (semanas / 4.33).toFixed(1);
+        est = { deficitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs: '' };
+        window._estimativaMeta = est;
+      }
+    }
+  }
+
   const recEst = document.getElementById('rec-estimativa');
   if (est && recEst) {
     document.getElementById('rec-est-deficit').textContent   = est.deficitTotal;
     document.getElementById('rec-est-diferenca').textContent = est.diferenca;
     document.getElementById('rec-est-semanas').textContent   = est.semanas;
     document.getElementById('rec-est-meses').textContent     = est.meses;
-    document.getElementById('rec-est-obs').innerHTML         = est.obs;
+    document.getElementById('rec-est-obs').innerHTML         = est.obs || '';
     recEst.style.display = 'block';
   } else if (recEst) {
     recEst.style.display = 'none';
@@ -2687,6 +2715,14 @@ async function aplicarMetas() {
   const stMetaProt = document.getElementById('st-meta-prot');
   if (stMetaKcal) stMetaKcal.textContent = kcal;
   if (stMetaProt) stMetaProt.textContent = prot;
+
+  // Atualizar card de tempo estimado no home
+  if (est) {
+    const stSem = document.getElementById('st-est-semanas');
+    const stMes = document.getElementById('st-est-meses');
+    if (stSem) stSem.textContent = est.semanas;
+    if (stMes) stMes.textContent = est.meses;
+  }
 
   // Persistir no Supabase (sincroniza entre dispositivos) + localStorage como cache
   try {
