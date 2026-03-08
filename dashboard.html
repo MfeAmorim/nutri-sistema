@@ -2355,28 +2355,33 @@ function gerarPlano() {
       const kcal100 = al.kcal_100g || 1;
       const prot100 = al.proteina_100g || 0;
       const gramas  = al.gramas_unidade || 100;
-      const unid    = (al.unidade_medida || '').toLowerCase();
-      const discreto = ['unidade','und','un','fatia','pedaço','concha','colher de sopa','colher'].includes(unid);
+      const unidRaw = (al.unidade_medida || '').trim();
+      const unidLC  = unidRaw.toLowerCase();
+
+      // Qualquer unidade que NÃO seja grama pura é discreta (colher, concha, unidade, fatia, xícara, copo, etc)
+      const ehGrama = unidLC === '' || unidLC === 'g' || unidLC === 'gramas' || unidLC === 'grama';
+      const discreto = !ehGrama;
+      const unidLabel = ehGrama ? 'g' : (unidRaw || 'unidade');
+      const passo = ehGrama ? 5 : 1;
 
       // Calcular quantidade para bater kcalPorItem
       const gramasExatas = (kcalPorItem / kcal100) * 100;
 
       let qtd, totalG;
       if (discreto) {
-        qtd   = Math.max(1, Math.round(gramasExatas / gramas));
+        qtd    = Math.max(1, Math.round(gramasExatas / gramas));
         totalG = qtd * gramas;
       } else {
-        totalG = Math.max(10, Math.round(gramasExatas / 5) * 5);
+        totalG = Math.max(5, Math.round(gramasExatas / 5) * 5);
         qtd    = totalG;
       }
 
       const kcalItem = (kcal100 * totalG) / 100;
       const protItem = (prot100 * totalG) / 100;
-      kcalRef  += kcalItem;
-      protRef  += protItem;
+      kcalRef   += kcalItem;
+      protRef   += protItem;
       kcalTotal += kcalItem;
       protTotal += protItem;
-      const unidLabel = discreto ? (al.unidade_medida || 'unidade') : 'g';
       planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: al.nome, qtd: discreto ? qtd : totalG, unidade: unidLabel, totalG, kcal: kcalItem, prot: protItem });
       const itemId = `plano-item-${r}-${al.id}`;
 
@@ -2384,13 +2389,14 @@ function gerarPlano() {
         <span style="font-size:13px;color:#1a2e1f;font-weight:500;flex:1">${al.nome}</span>
         <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:4px;background:#fff;border:1.5px solid #d1fae5;border-radius:8px;padding:2px 6px">
-            <button onclick="ajustarQtdPlano('${itemId}',${al.gramas_unidade||100},${kcal100},${prot100},'${unidLabel}',${discreto?1:5},-1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">−</button>
+            <button onclick="ajustarQtdPlano('${itemId}',${gramas},${kcal100},${prot100},'${unidLabel}',${passo},-1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">−</button>
             <span id="${itemId}-qtd" style="font-size:13px;font-weight:700;color:#1a2e1f;min-width:28px;text-align:center">${discreto ? qtd : totalG}</span>
             <span style="font-size:11px;color:#7a8a7c">${unidLabel}</span>
-            <button onclick="ajustarQtdPlano('${itemId}',${al.gramas_unidade||100},${kcal100},${prot100},'${unidLabel}',${discreto?1:5},+1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">+</button>
+            <button onclick="ajustarQtdPlano('${itemId}',${gramas},${kcal100},${prot100},'${unidLabel}',${passo},+1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">+</button>
           </div>
           <span id="${itemId}-kcal" style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
           <span id="${itemId}-prot" style="font-size:11px;color:#2d6a4f">${protItem.toFixed(1)}g prot</span>
+          <button onclick="removerItemPlano('${itemId}-row','${al.id}',${r})" title="Remover" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:17px;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
         </div>
       </div>`;
     });
@@ -2462,6 +2468,21 @@ function ajustarQtdPlano(itemId, gramasUnidade, kcal100, prot100, unidade, passo
   protEl.textContent = novaProt.toFixed(1) + 'g prot';
 
   // Atualizar totais de todas as refeições
+  recalcularTotaisPlano();
+}
+
+function removerItemPlano(rowId, alId, refIdx) {
+  const row = document.getElementById(rowId);
+  if (row) row.remove();
+
+  // Desselecionar o alimento na aba correspondente
+  if (_selecaoPorRefeicao[refIdx]) {
+    _selecaoPorRefeicao[refIdx].delete(alId);
+    // Atualizar badge da aba sem resetar a ativa
+    const n = parseInt(document.getElementById('pl-refeicoes').value) || 3;
+    renderizarNavAbas(n);
+  }
+
   recalcularTotaisPlano();
 }
 
