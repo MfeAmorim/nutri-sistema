@@ -554,33 +554,6 @@
         <div class="search-bar">
           <input type="text" id="busca-pront" placeholder="🔍  Buscar por nome do paciente..." oninput="filtrarProntuarios()">
           <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">Nova Ficha</button>
-          <label class="btn-save" style="cursor:pointer;background:#2d6a4f;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin:0">
-            Adicionar Prontuário PDF
-            <input type="file" accept="application/pdf" style="display:none" onchange="adicionarProntuarioPDF(this)">
-          </label>
-          <button class="btn-save" style="white-space:nowrap" onclick="abrirModalPlanoAlimentar()">Adicionar Plano Alimentar</button>
-        </div>
-        <!-- Modal Plano Alimentar por Paciente -->
-        <div id="modal-plano-pac" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9997;align-items:center;justify-content:center;padding:16px">
-          <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-            <h3 style="font-family:'Playfair Display',serif;color:#1a2e1f;margin:0 0 6px">🥗 Adicionar Plano Alimentar</h3>
-            <p style="font-size:13px;color:#7a8a7c;margin:0 0 20px">Selecione o paciente e faça upload do plano alimentar em PDF.</p>
-            <div class="field" style="margin-bottom:16px">
-              <label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:6px">Paciente</label>
-              <select id="plano-pac-select" style="width:100%;padding:10px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px">
-                <option value="">Selecione o paciente...</option>
-              </select>
-            </div>
-            <div class="field" style="margin-bottom:20px">
-              <label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:6px">Arquivo PDF do Plano</label>
-              <input type="file" id="plano-pac-arquivo" accept="application/pdf" style="width:100%;padding:8px;border:1.5px dashed #c8e6c9;border-radius:8px;font-size:13px;box-sizing:border-box">
-            </div>
-            <div style="display:flex;gap:10px">
-              <button onclick="salvarPlanoAlimentarPac()" style="flex:1;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">✅ Salvar Plano</button>
-              <button onclick="fecharModalPlanoAlimentar()" style="flex:1;background:#f1f5f1;color:#555;border:none;padding:12px;border-radius:8px;font-size:14px;cursor:pointer">Cancelar</button>
-            </div>
-            <div id="msg-plano-pac" class="msg" style="margin-top:12px"></div>
-          </div>
         </div>
         <div id="lista-prontuarios">
           <div class="empty-state"><div class="empty-icon">🗃️</div><h4>Nenhuma ficha cadastrada</h4><p>Clique em "Nova Ficha" para criar o primeiro registro.</p></div>
@@ -1129,6 +1102,8 @@ async function init() {
 
   // Carregar TODOS os registros salvos (todas as datas)
   await carregarTodosOsRecordatorios();
+  carregarMetasSalvas();
+  await carregarArquivosFichas();
   calcularMetas();
   gerarTabelaSintomas();
 }
@@ -1762,40 +1737,56 @@ function renderizarProntuariosSalvos(filtro = '') {
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
     // Mini-card de documento reutilizável
-    const docCard = (label, cor, borda, fundo, url, uploadFn, viewTitle) => {
-      const conteudo = url
-        ? `<div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:10px;text-align:center">${label}.pdf</div>
-           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-             <button onclick="abrirPdfModal('${url}', '${viewTitle}')" style="flex:1;background:${cor};color:#fff;border:none;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center">Visualizar</button>
-             <a href="${url}" target="_blank" download style="flex:1;background:#fff;color:${cor};border:1.5px solid ${borda};padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center">Baixar</a>
-           </div>
-           <label style="display:block;text-align:center;font-size:11px;color:#9ca3af;cursor:pointer;padding:4px">
-             Trocar arquivo <input type="file" accept="application/pdf" style="display:none" onchange="${uploadFn}">
-           </label>`
-        : `<div style="font-size:12px;color:#9ca3af;margin-bottom:12px;text-align:center">Nenhum arquivo</div>
-           <label style="display:block;background:${cor};color:#fff;border:none;padding:8px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center">
-             Anexar <input type="file" accept="application/pdf" style="display:none" onchange="${uploadFn}">
-           </label>`;
-      return `<div style="background:${fundo};border:1.5px solid ${borda};border-radius:10px;padding:14px;min-width:160px;flex:1;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
-        <div style="font-size:11px;font-weight:700;color:${cor};text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;text-align:center">${label}</div>
-        ${conteudo}
+    // Arquivos desta ficha
+    const arquivos = (window._arquivosPorFicha || {})[p.id] || [];
+    const qtdArq = arquivos.length;
+
+    // Cards dos arquivos existentes
+    const coresArq = ['#2d6a4f','#1e40af','#7e22ce','#b45309','#0f766e','#be185d'];
+    const bordArq  = ['#74c69d','#93c5fd','#d8b4fe','#fcd34d','#5eead4','#f9a8d4'];
+    const fundArq  = ['#f0fdf4','#eff6ff','#fdf4ff','#fffbeb','#f0fdfa','#fdf2f8'];
+    let arqCardsHtml = arquivos.map((arq, i) => {
+      const cor   = coresArq[i % coresArq.length];
+      const borda = bordArq[i % bordArq.length];
+      const fundo = fundArq[i % fundArq.length];
+      return `<div style="background:${fundo};border:1.5px solid ${borda};border-radius:10px;padding:14px;min-width:150px;flex:1;max-width:220px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+        <div style="font-size:11px;font-weight:700;color:${cor};text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;text-align:center;word-break:break-word">${arq.nome}</div>
+        <div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:10px">${arq.data_upload ? new Date(arq.data_upload).toLocaleDateString('pt-BR') : ''}</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button onclick="abrirPdfModal('${arq.url}','${arq.nome} – ${p.nome||''}')" style="background:${cor};color:#fff;border:none;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;width:100%">Visualizar</button>
+          <a href="${arq.url}" target="_blank" download="${arq.nome}.pdf" style="background:#fff;color:${cor};border:1.5px solid ${borda};padding:6px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;display:block">Baixar</a>
+          <button onclick="excluirArquivoFicha('${p.id}','${arq.id}')" style="background:#fff;color:#ef4444;border:1.5px solid #fca5a5;padding:5px;border-radius:6px;font-size:11px;cursor:pointer;width:100%">Remover</button>
+        </div>
       </div>`;
-    };
+    }).join('');
+
+    // Card de adicionar novo arquivo
+    arqCardsHtml += `<div style="background:#f8faf8;border:2px dashed #c8e6c9;border-radius:10px;padding:14px;min-width:150px;flex:1;max-width:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+      <div style="font-size:11px;font-weight:700;color:#7a8a7c;text-transform:uppercase;letter-spacing:.7px;text-align:center">${qtdArq > 0 ? 'Adicionar outro' : 'Nenhum arquivo'}</div>
+      <label style="background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;padding:8px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;white-space:nowrap">
+        Adicionar Arquivo
+        <input type="file" accept="application/pdf,image/*,.doc,.docx" multiple style="display:none" onchange="adicionarArquivoFicha('${p.id}', this)">
+      </label>
+      ${qtdArq > 0 ? `<div style="font-size:11px;color:#2d6a4f;font-weight:700">${qtdArq} arquivo${qtdArq>1?'s':''}</div>` : ''}
+    </div>`;
 
     return `
     <div class="pront-card" style="padding:0;overflow:hidden">
 
       <!-- Cabeçalho -->
-      <div style="padding:16px 20px;border-bottom:1px solid #e8efe8">
-        <h4 style="margin:0 0 8px;font-size:16px;color:#1a2e1f">👤 ${p.nome || '(sem nome)'}</h4>
-        <div class="pront-card-meta">
-          <span>📅 ${data}</span>
-          <span>🔄 ${atualiz}</span>
-          ${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}
-          ${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}
-          ${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}
-          ${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}
+      <div style="padding:16px 20px;border-bottom:1px solid #e8efe8;display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div>
+          <h4 style="margin:0 0 8px;font-size:16px;color:#1a2e1f">👤 ${p.nome || '(sem nome)'}</h4>
+          <div class="pront-card-meta">
+            <span>📅 ${data}</span>
+            <span>🔄 ${atualiz}</span>
+            ${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}
+            ${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}
+            ${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}
+            ${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}
+          </div>
         </div>
+        ${qtdArq > 0 ? `<div style="background:#2d6a4f;color:#fff;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0">${qtdArq} arquivo${qtdArq>1?'s':''}</div>` : ''}
       </div>
 
       <!-- Ações da ficha -->
@@ -1806,14 +1797,9 @@ function renderizarProntuariosSalvos(filtro = '') {
         <button class="btn-sm btn-sm-red" style="margin-left:auto" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">Excluir</button>
       </div>
 
-      <!-- Cards de documentos -->
+      <!-- Arquivos -->
       <div style="padding:16px 20px;display:flex;gap:12px;flex-wrap:wrap">
-        ${docCard('Anamnese', '#2d6a4f', '#74c69d', '#f0fdf4',
-          p.pdf_url||'', `anexarAnamnesePDF('${p.id}', this)`, `Anamnese – ${p.nome||''}`)}
-        ${docCard('Recordatório', '#1e40af', '#93c5fd', '#eff6ff',
-          p.rec_url||'', `anexarRecordatorioPDF('${p.id}', this)`, `Recordatório – ${p.nome||''}`)}
-        ${docCard('Plano Alimentar', '#7e22ce', '#d8b4fe', '#fdf4ff',
-          p.plano_url||'', `anexarPlanoAlimentarPDF('${p.id}', this)`, `Plano Alimentar – ${p.nome||''}`)}
+        ${arqCardsHtml}
       </div>
 
     </div>`;
@@ -1828,90 +1814,70 @@ async function excluirProntuario(id, nome) { if (!confirm(`Excluir prontuário d
 function exportarPDFById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioPDF(); }
 function exportarWordById(id) { const p = prontuariosSalvos.find(x => x.id === id); if (!p) return; preencherProntuario(p); exportarProntuarioWord(); }
 
-async function adicionarProntuarioPDF(input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  if (file.type !== 'application/pdf') { alert('Selecione um arquivo PDF válido.'); return; }
-  if (file.size > 10 * 1024 * 1024) { alert('O PDF não pode ter mais de 10MB.'); return; }
+// ── Gerenciador de arquivos por ficha ──────────────────────
+// Usa tabela: prontuario_arquivos (id, prontuario_id, user_id, nome, url, data_upload)
+// Storage: bucket prontuarios-pdf
 
-  const nomePaciente = file.name.replace(/\.pdf$/i, '').replace(/[-_]/g, ' ');
+window._arquivosPorFicha = {};
 
+async function carregarArquivosFichas() {
+  if (!currentUser) return;
   try {
-    const { data: pront, error: errPront } = await window._sb
-      .from('prontuarios').insert({ user_id: currentUser.id, nome: nomePaciente }).select().single();
-    if (errPront) throw errPront;
+    const { data, error } = await window._sb
+      .from('prontuario_arquivos')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('data_upload', { ascending: true });
+    if (error) throw error;
+    window._arquivosPorFicha = {};
+    (data || []).forEach(arq => {
+      if (!window._arquivosPorFicha[arq.prontuario_id]) window._arquivosPorFicha[arq.prontuario_id] = [];
+      window._arquivosPorFicha[arq.prontuario_id].push(arq);
+    });
+    renderizarProntuariosSalvos(document.getElementById('busca-pront')?.value || '');
+  } catch(e) { console.warn('Erro ao carregar arquivos:', e.message); }
+}
 
-    const path = `${currentUser.id}/${pront.id}.pdf`;
-    const { error: errUp } = await window._sb.storage
-      .from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (errUp) throw errUp;
-
-    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    await window._sb.from('prontuarios').update({ pdf_url: urlData.publicUrl }).eq('id', pront.id);
-
-    pront.pdf_url = urlData.publicUrl;
-    prontuariosSalvos.unshift(pront);
-    document.getElementById('badge-salvos').textContent = prontuariosSalvos.length;
-    document.getElementById('st-salvos').textContent = prontuariosSalvos.length;
-    document.getElementById('st-prontuario').textContent = '✓';
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-    input.value = '';
-    alert('✅ Prontuário "' + nomePaciente + '" adicionado com sucesso!');
-  } catch(e) {
-    alert('Erro ao adicionar prontuário: ' + e.message);
+async function adicionarArquivoFicha(prontuarioId, input) {
+  if (!input.files || !input.files.length) return;
+  const files = Array.from(input.files);
+  let erros = 0;
+  for (const file of files) {
+    if (file.size > 20 * 1024 * 1024) { alert(`"${file.name}" é maior que 20MB e foi ignorado.`); erros++; continue; }
+    try {
+      const ts = Date.now();
+      const path = `${currentUser.id}/${prontuarioId}/${ts}-${file.name.replace(/\s+/g,'_')}`;
+      const { error: upErr } = await window._sb.storage
+        .from('prontuarios-pdf').upload(path, file, { upsert: false, contentType: file.type || 'application/pdf' });
+      if (upErr) throw upErr;
+      const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
+      const nomeExib = file.name.replace(/\.[^.]+$/, '');
+      const { error: dbErr } = await window._sb.from('prontuario_arquivos').insert({
+        prontuario_id: prontuarioId,
+        user_id: currentUser.id,
+        nome: nomeExib,
+        url: urlData.publicUrl,
+        data_upload: new Date().toISOString()
+      });
+      if (dbErr) throw dbErr;
+      if (!window._arquivosPorFicha[prontuarioId]) window._arquivosPorFicha[prontuarioId] = [];
+      window._arquivosPorFicha[prontuarioId].push({ nome: nomeExib, url: urlData.publicUrl, data_upload: new Date().toISOString() });
+    } catch(e) { alert(`Erro ao enviar "${file.name}": ${e.message}`); erros++; }
   }
+  input.value = '';
+  renderizarProntuariosSalvos(document.getElementById('busca-pront')?.value || '');
+  if (!erros) { const b = document.getElementById('badge-salvos'); if(b) b.textContent = prontuariosSalvos.length; }
 }
 
-async function anexarAnamnesePDF(prontuarioId, input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
+async function excluirArquivoFicha(prontuarioId, arquivoId) {
+  if (!confirm('Remover este arquivo?')) return;
   try {
-    const path = `${currentUser.id}/anamnese-${prontuarioId}.pdf`;
-    const { error: upErr } = await window._sb.storage.from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (upErr) throw upErr;
-    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    await window._sb.from('prontuarios').update({ pdf_url: urlData.publicUrl }).eq('id', prontuarioId).eq('user_id', currentUser.id);
-    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
-    if (idx >= 0) prontuariosSalvos[idx].pdf_url = urlData.publicUrl;
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-  } catch(e) { alert('Erro ao anexar anamnese: ' + e.message); }
-}
-
-async function anexarPlanoAlimentarPDF(prontuarioId, input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  try {
-    const path = `${currentUser.id}/plano-${prontuarioId}.pdf`;
-    const { error: upErr } = await window._sb.storage.from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (upErr) throw upErr;
-    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    await window._sb.from('prontuarios').update({ plano_url: urlData.publicUrl }).eq('id', prontuarioId).eq('user_id', currentUser.id);
-    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
-    if (idx >= 0) prontuariosSalvos[idx].plano_url = urlData.publicUrl;
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-  } catch(e) { alert('Erro ao anexar plano: ' + e.message); }
-}
-
-async function anexarRecordatorioPDF(prontuarioId, input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  if (file.type !== 'application/pdf') { alert('Selecione um arquivo PDF válido.'); return; }
-  if (file.size > 10 * 1024 * 1024) { alert('O PDF não pode ter mais de 10MB.'); return; }
-  try {
-    const path = `${currentUser.id}/rec-${prontuarioId}.pdf`;
-    const { error: errUp } = await window._sb.storage
-      .from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
-    if (errUp) throw errUp;
-    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
-    await window._sb.from('prontuarios').update({ rec_url: urlData.publicUrl }).eq('id', prontuarioId).eq('user_id', currentUser.id);
-    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
-    if (idx >= 0) prontuariosSalvos[idx].rec_url = urlData.publicUrl;
-    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
-    input.value = '';
-    alert('✅ Recordatório anexado com sucesso!');
-  } catch(e) {
-    alert('Erro ao anexar recordatório: ' + e.message);
-  }
+    const { error } = await window._sb.from('prontuario_arquivos').delete().eq('id', arquivoId).eq('user_id', currentUser.id);
+    if (error) throw error;
+    if (window._arquivosPorFicha[prontuarioId])
+      window._arquivosPorFicha[prontuarioId] = window._arquivosPorFicha[prontuarioId].filter(a => a.id !== arquivoId);
+    renderizarProntuariosSalvos(document.getElementById('busca-pront')?.value || '');
+  } catch(e) { alert('Erro ao remover: ' + e.message); }
 }
 
 function gerarTabelaSintomas() {
