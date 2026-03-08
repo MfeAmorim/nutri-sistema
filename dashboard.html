@@ -941,7 +941,7 @@
 <script src="supabase-config.js"></script>
 <script>
 // ── Estado ──
-const DADOS_PLANILHA = [{"data":"2026-01-29","horario":"09:50","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":5,"tipo":"","local":"Casa","obs":"1 copo de café com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Coca cola","qtd":8,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Abóbora cozida","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Batata inglesa cozida","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"12:50","refeicao":"Almoço","nome":"Tomate","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"16:30","refeicao":"Lanche","nome":"Pão de queijo","qtd":5,"tipo":"","local":"Casa","obs":"4 copos de coca","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Tomate","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-29","horario":"22:22","refeicao":"Jantar","nome":"Ovo cozido","qtd":1,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"esquentado no microondas","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Feijão","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"11:48","refeicao":"Almoço","nome":"Ovo cozido","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Ovo frito","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-30","horario":"21:30","refeicao":"Jantar","nome":"Tomate","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"10:10","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"10:10","refeicao":"Café da Manhã","nome":"Café","qtd":1,"tipo":"","local":"Casa","obs":"com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Arroz","qtd":5,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Feijão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Ovo cozido","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Fricassê de frango","qtd":1,"tipo":"","local":"Casa","obs":"com queijo","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Alface","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"13:30","refeicao":"Almoço","nome":"Tomate cereja","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-01-31","horario":"20:09","refeicao":"Jantar","nome":"Pizza de microondas","qtd":2,"tipo":"","local":"Casa","obs":"com queijo e presunto","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"08:51","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"08:51","refeicao":"Café da Manhã","nome":"Café","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"10:10","refeicao":"Café da Manhã","nome":"Pastel","qtd":1,"tipo":"","local":"Casa","obs":"com carne e queijo","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"10:10","refeicao":"Café da Manhã","nome":"Coca cola","qtd":3,"tipo":"","local":"Casa","obs":"com açucar","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Arroz","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Feijão","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Batata frita","qtd":3,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Ovo frito","qtd":1,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"14:00","refeicao":"Almoço","nome":"Coca cola","qtd":6,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Arroz","qtd":10,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Feijão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-01","horario":"21:14","refeicao":"Jantar","nome":"Ovo frito","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"07:30","refeicao":"Café da Manhã","nome":"Pão de queijo","qtd":7,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"07:30","refeicao":"Café da Manhã","nome":"Pão de sal","qtd":1,"tipo":"","local":"Emprego","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Feijão","qtd":2,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-02","horario":"21:40","refeicao":"Jantar","nome":"Macarrão","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0},{"data":"2026-02-03","horario":"12:00","refeicao":"Almoço","nome":"Arroz","qtd":4,"tipo":"","local":"Casa","obs":"-","alimento_id":"","gramas_total":0,"kcal":0,"prot":0,"carb":0,"sodio":0}];
+const DADOS_PLANILHA = [];
 
 let currentUser = null;
 let perfilData = {};
@@ -1024,14 +1024,12 @@ async function carregarTodosOsRecordatorios() {
       const itensRaw = recs.flatMap(r => {
         try { return JSON.parse(r.itens || '[]'); } catch(e) { return []; }
       });
-      // Recalcular valores nutricionais com os dados ATUAIS da tabela de alimentos
-      // Garante que correções no Supabase reflitam imediatamente nos totais
       recordatorioItems = itensRaw.map(item => recalcularItem(item));
     } else {
-      recordatorioItems = DADOS_PLANILHA;
+      recordatorioItems = [];
     }
   } catch(e) {
-    recordatorioItems = DADOS_PLANILHA;
+    recordatorioItems = [];
   }
   renderizarRecordatorio();
 }
@@ -1284,7 +1282,7 @@ function renderizarRecordatorio() {
         <td style="text-align:right;font-size:12px;color:#7a8a7c">${sodioStr}</td>
         <td style="color:#7a8a7c;font-size:12px">${item.obs || '—'}</td>
         <td style="text-align:center">
-          <button onclick="removerItemRec(${idxReal})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
+          <button onclick="editarItemRec(${idxReal})" style="background:none;border:none;color:#2d6a4f;cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Editar">✏️</button><button onclick="removerItemRec(${idxReal})" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:16px;line-height:1" title="Remover">×</button>
         </td>
       </tr>`;
     });
@@ -1308,8 +1306,42 @@ function renderizarRecordatorio() {
 
 }
 
-function removerItemRec(i) { recordatorioItems.splice(i, 1); renderizarRecordatorio(); agendarAutoSave(); }
-function limparRecordatorio() { if (!confirm('Limpar todos os registros do recordatório?')) return; recordatorioItems = []; renderizarRecordatorio(); }
+async function removerItemRec(i) {
+  recordatorioItems.splice(i, 1);
+  renderizarRecordatorio();
+  // Salvar imediatamente após remoção — incluindo datas que ficaram sem itens
+  try {
+    const datasComItens = {};
+    recordatorioItems.forEach(item => {
+      const d = item.data || new Date().toISOString().split('T')[0];
+      if (!datasComItens[d]) datasComItens[d] = [];
+      datasComItens[d].push(item);
+    });
+    // Buscar todas as datas salvas e deletar as que ficaram vazias
+    const { data: recs } = await window._sb.from('recordatorios').select('data').eq('user_id', currentUser.id);
+    if (recs) {
+      for (const rec of recs) {
+        if (!datasComItens[rec.data]) {
+          await window._sb.from('recordatorios').delete().eq('user_id', currentUser.id).eq('data', rec.data);
+        }
+      }
+    }
+    // Salvar datas que ainda têm itens
+    for (const [data, itens] of Object.entries(datasComItens)) {
+      await window._sb.from('recordatorios').upsert({ user_id: currentUser.id, data, itens: JSON.stringify(itens) }, { onConflict: 'user_id,data' });
+    }
+  } catch(e) { console.warn('Erro ao salvar após remoção:', e.message); }
+}
+async function limparRecordatorio() {
+  if (!confirm('Limpar todos os registros do recordatório? Esta ação não pode ser desfeita.')) return;
+  try {
+    await window._sb.from('recordatorios').delete().eq('user_id', currentUser.id);
+    recordatorioItems = [];
+    renderizarRecordatorio();
+    const ind = document.getElementById('autosave-ind');
+    if (ind) { ind.textContent = '✓ Recordatório limpo'; setTimeout(() => ind.textContent = '', 3000); }
+  } catch(e) { alert('Erro ao limpar: ' + e.message); }
+}
 
 function calcularNutriItem(item) {
   // Busca o alimento na tabela pelo id ou pelo nome (case-insensitive)
@@ -2052,6 +2084,82 @@ function fecharPdfModal() {
 }
 document.getElementById('pdf-modal').addEventListener('click', function(e) {
   if (e.target === this) fecharPdfModal();
+});
+</script>
+<!-- Modal editar item recordatório -->
+<div id="edit-rec-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+    <h3 style="font-family:'Playfair Display',serif;color:#1a2e1f;margin:0 0 20px">✏️ Editar Item</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Alimento/Bebida</label>
+        <input id="edit-rec-nome" type="text" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Data</label>
+        <input id="edit-rec-data" type="date" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Horário</label>
+        <input id="edit-rec-horario" type="time" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Refeição</label>
+        <select id="edit-rec-refeicao" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+          <option>Café da Manhã</option><option>Lanche da Manhã</option><option>Almoço</option>
+          <option>Lanche da Tarde</option><option>Jantar</option><option>Ceia</option>
+        </select>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Quantidade</label>
+        <input id="edit-rec-qtd" type="number" min="0.1" step="0.1" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Tipo/Unidade</label>
+        <input id="edit-rec-tipo" type="text" placeholder="Ex: concha, unidade, g..." style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+      <div style="grid-column:1/-1"><label style="font-size:12px;font-weight:600;color:#7a8a7c;display:block;margin-bottom:4px">Observações</label>
+        <input id="edit-rec-obs" type="text" style="width:100%;padding:8px 12px;border:1.5px solid #e8efe8;border-radius:8px;font-size:14px;box-sizing:border-box">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button onclick="salvarEdicaoRec()" style="flex:1;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">✅ Salvar</button>
+      <button onclick="fecharEditRec()" style="flex:1;background:#f1f5f1;color:#555;border:none;padding:12px;border-radius:8px;font-size:14px;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let _editRecIdx = -1;
+function editarItemRec(i) {
+  _editRecIdx = i;
+  const item = recordatorioItems[i];
+  document.getElementById('edit-rec-nome').value     = item.nome || '';
+  document.getElementById('edit-rec-data').value     = item.data || '';
+  document.getElementById('edit-rec-horario').value  = item.horario || '';
+  document.getElementById('edit-rec-refeicao').value = item.refeicao || 'Almoço';
+  document.getElementById('edit-rec-qtd').value      = item.qtd || 1;
+  document.getElementById('edit-rec-tipo').value     = item.tipo || '';
+  document.getElementById('edit-rec-obs').value      = item.obs || '';
+  const modal = document.getElementById('edit-rec-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+async function salvarEdicaoRec() {
+  if (_editRecIdx < 0) return;
+  const item = recordatorioItems[_editRecIdx];
+  item.nome     = document.getElementById('edit-rec-nome').value.trim();
+  item.data     = document.getElementById('edit-rec-data').value;
+  item.horario  = document.getElementById('edit-rec-horario').value;
+  item.refeicao = document.getElementById('edit-rec-refeicao').value;
+  item.qtd      = parseFloat(document.getElementById('edit-rec-qtd').value) || 1;
+  item.tipo     = document.getElementById('edit-rec-tipo').value.trim();
+  item.obs      = document.getElementById('edit-rec-obs').value.trim();
+  fecharEditRec();
+  renderizarRecordatorio();
+  await salvarRecordatorioSilencioso();
+}
+function fecharEditRec() {
+  document.getElementById('edit-rec-modal').style.display = 'none';
+  document.body.style.overflow = '';
+  _editRecIdx = -1;
+}
+document.getElementById('edit-rec-modal').addEventListener('click', function(e) {
+  if (e.target === this) fecharEditRec();
 });
 </script>
 </body>
