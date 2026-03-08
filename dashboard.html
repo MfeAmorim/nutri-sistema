@@ -1022,9 +1022,9 @@
           <div class="field"><label>💪 Meta de Proteína (g/dia)</label><input type="number" id="pl-meta-prot" placeholder="Ex: 140"></div>
           <div class="field"><label>Número de Refeições</label>
             <select id="pl-refeicoes" onchange="inicializarAbasRefeicao()">
-              <option value="3">3 refeições</option>
+              <option value="3" selected>3 — Café, Almoço e Jantar</option>
               <option value="4">4 refeições</option>
-              <option value="5" selected>5 refeições</option>
+              <option value="5">5 refeições</option>
               <option value="6">6 refeições</option>
             </select>
           </div>
@@ -2153,7 +2153,7 @@ async function removerAlimento(id) { if(!confirm('Remover este alimento?'))retur
 // ── Seleção de alimentos para o plano ──────────────────────
 // ══ PLANO ALIMENTAR — sistema por refeição ══════════════════════════
 
-const REFEICAO_NOMES = ['Café da Manhã','Almoço','Lanche da Tarde','Jantar','Ceia','Refeição Extra'];
+const REFEICAO_NOMES = ['Café da Manhã','Almoço','Jantar','Refeição Extra','Refeição Extra 2','Refeição Extra 3'];
 
 // Seleções por refeição: { 0: Set(ids), 1: Set(ids), ... }
 let _selecaoPorRefeicao = {};
@@ -2295,9 +2295,8 @@ function gerarPlano() {
     if ((_selecaoPorRefeicao[r]?.size || 0) > 0) refsComSel.push(r);
   }
 
-  // Distribuição proporcional respeitando que café é sempre mais leve
-  // Café(idx0)=20%, Almoço(idx1)=40%, Lanche(idx2)=15%, Jantar(idx3)=40%, outros=25%
-  const pesoNatural = { 0: 0.20, 1: 0.40, 2: 0.15, 3: 0.40, 4: 0.20, 5: 0.15 };
+  // Café=20%, Almoço=40%, Jantar=40% — dividido só entre refeições com seleção
+  const pesoNatural = { 0: 0.20, 1: 0.40, 2: 0.40, 3: 0.25, 4: 0.25, 5: 0.25 };
   const pesoTotal = refsComSel.reduce((s, r) => s + (pesoNatural[r] ?? 0.25), 0);
   const kcalPorRefIdx = {};
   const protPorRefIdx = {};
@@ -2322,78 +2321,65 @@ function gerarPlano() {
 
     const kcalAlvo = kcalPorRefIdx[r];
     const protAlvo = protPorRefIdx[r];
-    const candidatos = alimentosCadastrados.filter(a => sel.has(a.id));
+    const alimentosDaRef = alimentosCadastrados.filter(a => sel.has(a.id));
 
-    // Escolher o melhor alimento: se tiver proteína alvo, priorizar o que tem mais prot/kcal
-    // Senão pegar o que melhor preenche a kcal sem exceder muito
-    let melhor = candidatos[0];
-    if (metaProt && candidatos.length > 1) {
-      // Pontuar cada alimento: quem mais se aproxima da relação prot/kcal ideal
-      const relIdeal = protAlvo / kcalAlvo;
-      melhor = candidatos.reduce((m, a) => {
-        const relA = (a.proteina_100g || 0) / Math.max(a.kcal_100g || 1, 1);
-        const relM = (m.proteina_100g || 0) / Math.max(m.kcal_100g || 1, 1);
-        return Math.abs(relA - relIdeal) < Math.abs(relM - relIdeal) ? a : m;
-      });
-    }
-
-    // Calcular quantidade exata para bater kcalAlvo
-    const kcal100 = melhor.kcal_100g || 1;
-    const prot100 = melhor.proteina_100g || 0;
-    const gramas = melhor.gramas_unidade || 100;
-    const unid = (melhor.unidade_medida || '').toLowerCase();
-
-    // Gramas necessárias para atingir EXATAMENTE kcalAlvo
-    const gramasExatas = (kcalAlvo / kcal100) * 100;
-
-    // Converter para qtd de unidades e arredondar
-    const qtdExata = gramasExatas / gramas;
-    let qtd, totalG, kcalFinal, protFinal;
-
-    // Para unidades discretas (pão, ovo...) arredondar mas ajustar caloria declarada
-    if (['unidade','und','un','fatia','pedaço','concha','colher de sopa','colher'].includes(unid)) {
-      qtd = Math.max(1, Math.round(qtdExata));
-      totalG = qtd * gramas;
-      kcalFinal = (kcal100 * totalG) / 100;
-      protFinal = (prot100 * totalG) / 100;
-    } else {
-      // Gramas livres — usar valor exato arredondado para 5g
-      totalG = Math.max(10, Math.round(gramasExatas / 5) * 5);
-      qtd = totalG; // em gramas direto
-      kcalFinal = (kcal100 * totalG) / 100;
-      protFinal = (prot100 * totalG) / 100;
-    }
-
-    kcalTotal += kcalFinal;
-    protTotal += protFinal;
-    planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: melhor.nome, qtd, unidade: melhor.unidade_medida||'g', totalG, kcal: kcalFinal, prot: protFinal });
-
-    const unidLabel = ['unidade','und','un','fatia','pedaço','concha','colher de sopa','colher'].includes(unid)
-      ? `${qtd} ${melhor.unidade_medida || 'unidade'}${qtd > 1 ? 's' : ''}`
-      : `${totalG}g`;
-
-    // Mostrar os outros candidatos que não foram escolhidos
-    const outros = candidatos.filter(a => a.id !== melhor.id);
-    const outrosHtml = outros.length > 0
-      ? `<div style="font-size:11px;color:#9ca3af;margin-top:6px;padding:6px 10px;background:#f9f9f9;border-radius:6px">
-          Alternativas que você adicionou: ${outros.map(a => a.nome).join(', ')}
-         </div>`
-      : '';
+    // Dividir kcal alvo igualmente entre todos os alimentos selecionados nessa refeição
+    const kcalPorItem = kcalAlvo / alimentosDaRef.length;
 
     html += `<div style="background:#fff;border:1px solid #e8efe8;border-radius:10px;padding:16px;margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <h4 style="margin:0;font-size:14px;color:#1a2e1f">${REFEICAO_NOMES[r]}</h4>
         <span style="font-size:12px;color:#7a8a7c;background:#f1f5f1;padding:3px 10px;border-radius:20px">alvo: ${Math.round(kcalAlvo)} kcal</span>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f0fdf4;border:1.5px solid #74c69d;border-radius:8px">
-        <span style="font-size:14px;color:#1a2e1f;font-weight:600">${melhor.nome}</span>
+      <div style="display:flex;flex-direction:column;gap:8px">`;
+
+    let kcalRef = 0, protRef = 0;
+    alimentosDaRef.forEach(al => {
+      const kcal100 = al.kcal_100g || 1;
+      const prot100 = al.proteina_100g || 0;
+      const gramas  = al.gramas_unidade || 100;
+      const unid    = (al.unidade_medida || '').toLowerCase();
+      const discreto = ['unidade','und','un','fatia','pedaço','concha','colher de sopa','colher'].includes(unid);
+
+      // Calcular quantidade para bater kcalPorItem
+      const gramasExatas = (kcalPorItem / kcal100) * 100;
+
+      let qtd, totalG;
+      if (discreto) {
+        qtd   = Math.max(1, Math.round(gramasExatas / gramas));
+        totalG = qtd * gramas;
+      } else {
+        totalG = Math.max(10, Math.round(gramasExatas / 5) * 5);
+        qtd    = totalG;
+      }
+
+      const kcalItem = (kcal100 * totalG) / 100;
+      const protItem = (prot100 * totalG) / 100;
+      kcalRef  += kcalItem;
+      protRef  += protItem;
+      kcalTotal += kcalItem;
+      protTotal += protItem;
+      planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: al.nome, qtd, unidade: al.unidade_medida||'g', totalG, kcal: kcalItem, prot: protItem });
+
+      const unidLabel = discreto
+        ? `${qtd} ${al.unidade_medida || 'unidade'}${qtd > 1 ? 's' : ''}`
+        : `${totalG}g`;
+
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px">
+        <span style="font-size:13px;color:#1a2e1f;font-weight:500">${al.nome}</span>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <span style="font-size:13px;color:#555;font-weight:600">${unidLabel}</span>
-          <span style="font-size:13px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:3px 10px;border-radius:10px">${kcalFinal.toFixed(0)} kcal</span>
-          <span style="font-size:12px;color:#2d6a4f;font-weight:600">${protFinal.toFixed(1)}g prot</span>
+          <span style="font-size:12px;color:#555;font-weight:600">${unidLabel}</span>
+          <span style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
+          <span style="font-size:11px;color:#2d6a4f">${protItem.toFixed(1)}g prot</span>
         </div>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;font-size:12px;color:#7a8a7c">
+        <span>Total: <strong style="color:#1a2e1f">${kcalRef.toFixed(0)} kcal</strong></span>
+        <span><strong style="color:#2d6a4f">${protRef.toFixed(1)}g</strong> prot</span>
       </div>
-      ${outrosHtml}
     </div>`;
   }
 
