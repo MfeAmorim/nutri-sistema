@@ -1761,7 +1761,58 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
-    return `<div class="pront-card"><div class="pront-card-info"><h4>👤 ${p.nome || '(sem nome)'}</h4><div class="pront-card-meta"><span>📅 Criado: ${data}</span><span>🔄 Atualizado: ${atualiz}</span>${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}${p.pdf_url ? `<span style="color:#2d6a4f;font-weight:600">📎 Prontuário anexado</span>` : ''}${p.rec_url ? `<span style="color:#1e40af;font-weight:600">📋 Recordatório anexado</span>` : ''}</div></div><div class="pront-card-actions"><button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button><button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 PDF</button><button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Prontuário – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">📎 Ver Prontuário</button>` : ''}<label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer" title="Anexar recordatório em PDF">${p.rec_url ? '📋 Trocar Recordatório' : '📋 Adicionar Recordatório'}<input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)"></label>${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">📋 Ver Recordatório</button>` : ''}${p.plano_url ? `<button onclick="abrirPdfModal('${p.plano_url}', 'Plano Alimentar – ${p.nome||''}')" class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer">🥗 Ver Plano Alimentar</button>` : ''}<button class="btn-sm btn-sm-red" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button></div></div>`;
+    return `
+    <div class="pront-card" style="padding:0;overflow:hidden">
+
+      <!-- Cabeçalho do card -->
+      <div style="padding:16px 20px;border-bottom:1px solid #e8efe8">
+        <h4 style="margin:0 0 8px;font-size:16px;color:#1a2e1f">👤 ${p.nome || '(sem nome)'}</h4>
+        <div class="pront-card-meta">
+          <span>📅 ${data}</span>
+          <span>🔄 ${atualiz}</span>
+          ${p.peso ? `<span>⚖️ ${p.peso} kg</span>` : ''}
+          ${imc ? `<span>${imcClass} IMC: ${imc} — ${classificarIMC(imc)}</span>` : ''}
+          ${p.objetivo ? `<span>🎯 ${p.objetivo}</span>` : ''}
+          ${p.email_paciente ? `<span>📧 ${p.email_paciente}</span>` : ''}
+        </div>
+      </div>
+
+      <!-- Linha 1: Ações principais da ficha -->
+      <div style="padding:12px 20px;border-bottom:1px solid #f0f5f0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:11px;font-weight:700;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px;margin-right:4px">Ficha:</span>
+        <button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button>
+        <button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 Gerar PDF</button>
+        <button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>
+        <button class="btn-sm btn-sm-red" style="margin-left:auto" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button>
+      </div>
+
+      <!-- Linha 2: Documentos PDF -->
+      <div style="padding:12px 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:11px;font-weight:700;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px;margin-right:4px">Documentos:</span>
+
+        <!-- Anamnese PDF -->
+        <label class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer;margin:0">
+          ${p.pdf_url ? '📎 Trocar Anamnese' : '📎 Anexar Anamnese'}
+          <input type="file" accept="application/pdf" style="display:none" onchange="anexarAnamnesePDF('${p.id}', this)">
+        </label>
+        ${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Anamnese – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">👁️ Ver Anamnese</button>` : ''}
+
+        <!-- Recordatório PDF -->
+        <label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer;margin:0">
+          ${p.rec_url ? '📋 Trocar Recordatório' : '📋 Anexar Recordatório'}
+          <input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)">
+        </label>
+        ${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">👁️ Ver Recordatório</button>` : ''}
+
+        <!-- Plano Alimentar PDF -->
+        <label class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer;margin:0">
+          ${p.plano_url ? '🥗 Trocar Plano' : '🥗 Anexar Plano Alimentar'}
+          <input type="file" accept="application/pdf" style="display:none" onchange="anexarPlanoAlimentarPDF('${p.id}', this)">
+        </label>
+        ${p.plano_url ? `<button onclick="abrirPdfModal('${p.plano_url}', 'Plano Alimentar – ${p.nome||''}')" class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer">👁️ Ver Plano</button>` : ''}
+      </div>
+
+    </div>`;
   }).join('');
 }
 
@@ -1805,6 +1856,36 @@ async function adicionarProntuarioPDF(input) {
   } catch(e) {
     alert('Erro ao adicionar prontuário: ' + e.message);
   }
+}
+
+async function anexarAnamnesePDF(prontuarioId, input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  try {
+    const path = `${currentUser.id}/anamnese-${prontuarioId}.pdf`;
+    const { error: upErr } = await window._sb.storage.from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (upErr) throw upErr;
+    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
+    await window._sb.from('prontuarios').update({ pdf_url: urlData.publicUrl }).eq('id', prontuarioId).eq('user_id', currentUser.id);
+    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
+    if (idx >= 0) prontuariosSalvos[idx].pdf_url = urlData.publicUrl;
+    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+  } catch(e) { alert('Erro ao anexar anamnese: ' + e.message); }
+}
+
+async function anexarPlanoAlimentarPDF(prontuarioId, input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  try {
+    const path = `${currentUser.id}/plano-${prontuarioId}.pdf`;
+    const { error: upErr } = await window._sb.storage.from('prontuarios-pdf').upload(path, file, { upsert: true, contentType: 'application/pdf' });
+    if (upErr) throw upErr;
+    const { data: urlData } = window._sb.storage.from('prontuarios-pdf').getPublicUrl(path);
+    await window._sb.from('prontuarios').update({ plano_url: urlData.publicUrl }).eq('id', prontuarioId).eq('user_id', currentUser.id);
+    const idx = prontuariosSalvos.findIndex(p => p.id === prontuarioId);
+    if (idx >= 0) prontuariosSalvos[idx].plano_url = urlData.publicUrl;
+    renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
+  } catch(e) { alert('Erro ao anexar plano: ' + e.message); }
 }
 
 async function anexarRecordatorioPDF(prontuarioId, input) {
