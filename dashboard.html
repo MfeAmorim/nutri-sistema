@@ -695,10 +695,11 @@
           </div>
           <div class="field"><label>Nível de Atividade</label>
             <select id="mt-atividade">
+              <option value="" disabled selected>Selecione seu nível</option>
               <option value="nenhum">Não faço atividade física</option>
               <option value="sedentario">Sedentário (pouco ou nenhum exercício)</option>
               <option value="leve">Levemente ativo (1-3x/semana)</option>
-              <option value="moderado" selected>Moderadamente ativo (3-5x/semana)</option>
+              <option value="moderado">Moderadamente ativo (3-5x/semana)</option>
               <option value="ativo">Muito ativo (6-7x/semana)</option>
               <option value="extremo">Extremamente ativo (atleta)</option>
             </select>
@@ -769,10 +770,10 @@
           </div>
           <!-- Estimativa de tempo -->
           <div id="mt-estimativa" style="display:none;border-top:1px solid rgba(255,255,255,0.15);padding-top:16px;margin-top:4px">
-            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:12px">⏱️ Estimativa para Atingir a Meta</div>
+            <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:12px" id="mt-estimativa-titulo">⏱️ Estimativa para Atingir a Meta</div>
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Déficit total diário</div><div style="font-size:22px;font-weight:700" id="mt-res-deficit">—</div><div style="font-size:11px;color:#74c69d">kcal/dia (dieta + exercício)</div></div>
-              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Peso a perder</div><div style="font-size:22px;font-weight:700" id="mt-res-diferenca">—</div><div style="font-size:11px;color:#74c69d">kg</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px" id="mt-label-deficit">Déficit total diário</div><div style="font-size:22px;font-weight:700" id="mt-res-deficit">—</div><div style="font-size:11px;color:#74c69d">kcal/dia (dieta + exercício)</div></div>
+              <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px" id="mt-label-diferenca">Peso a perder</div><div style="font-size:22px;font-weight:700" id="mt-res-diferenca">—</div><div style="font-size:11px;color:#74c69d">kg</div></div>
               <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Tempo estimado</div><div style="font-size:22px;font-weight:700" id="mt-res-semanas">—</div><div style="font-size:11px;color:#74c69d">semanas</div></div>
               <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Equivale a</div><div style="font-size:22px;font-weight:700" id="mt-res-meses">—</div><div style="font-size:11px;color:#74c69d">meses aproximadamente</div></div>
             </div>
@@ -2549,6 +2550,7 @@ function calcularMetasManual() {
   if (!idade || idade < 10 || idade > 110) { alert('⚠️ Informe uma Idade válida (10–110 anos).'); return; }
   if (!peso  || peso  < 20 || peso  > 300) { alert('⚠️ Informe um Peso válido (20–300 kg).'); return; }
   if (!altura) { alert('⚠️ Informe a Altura antes de calcular.'); return; }
+  if (!ativ)   { alert('⚠️ Selecione o Nível de Atividade antes de calcular.'); return; }
 
   // Detectar se digitou em metros (ex: 1.70) em vez de cm (170)
   if (altura < 3) {
@@ -2644,6 +2646,10 @@ function calcularMetasManual() {
       if (superavitTotal > 0) {
         const semanas = Math.ceil((diferenca * 7700) / (superavitTotal * 7));
         const meses   = (semanas / 4.33).toFixed(1);
+        // Atualizar labels para ganho de massa
+        const lDef = document.getElementById('mt-label-deficit'); if (lDef) lDef.textContent = 'Superávit total diário';
+        const lDif = document.getElementById('mt-label-diferenca'); if (lDif) lDif.textContent = 'Peso a ganhar';
+        const lTit = document.getElementById('mt-estimativa-titulo'); if (lTit) lTit.textContent = '🏋️ Estimativa para Ganho de Massa';
         document.getElementById('mt-res-deficit').textContent   = superavitTotal;
         document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
         document.getElementById('mt-res-semanas').textContent   = semanas;
@@ -2674,6 +2680,10 @@ function calcularMetasManual() {
       } else {
         const semanas = Math.ceil((diferenca * 7700) / (deficitTotal * 7));
         const meses   = (semanas / 4.33).toFixed(1);
+        // Restaurar labels para perda de peso
+        const lDef2 = document.getElementById('mt-label-deficit'); if (lDef2) lDef2.textContent = 'Déficit total diário';
+        const lDif2 = document.getElementById('mt-label-diferenca'); if (lDif2) lDif2.textContent = 'Peso a perder';
+        const lTit2 = document.getElementById('mt-estimativa-titulo'); if (lTit2) lTit2.textContent = '⏱️ Estimativa para Atingir a Meta';
         document.getElementById('mt-res-deficit').textContent   = deficitTotal;
         document.getElementById('mt-res-diferenca').textContent = diferenca.toFixed(1);
         document.getElementById('mt-res-semanas').textContent   = semanas;
