@@ -321,11 +321,36 @@
 
     <!-- ══ HOME ══ -->
     <div class="tab-content active" id="tab-home">
-      <div class="stats-grid">
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat-card verde" style="cursor:pointer" onclick="showTab('metas')">
+          <div class="stat-icon">🎯</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <div class="stat-val" id="st-meta-kcal">—</div>
+            <div style="font-size:13px;color:#7a8a7c">kcal</div>
+          </div>
+          <div class="stat-label">Meta Calórica Diária</div>
+          <div style="font-size:11px;color:#74c69d;margin-top:4px">Proteína: <span id="st-meta-prot">—</span>g/dia</div>
+        </div>
+        <div class="stat-card verde" style="cursor:pointer" onclick="showTab('metas')">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-val" id="st-est-semanas">—</div>
+          <div class="stat-label">Semanas p/ Meta de Peso</div>
+          <div style="font-size:11px;color:#74c69d;margin-top:4px">~<span id="st-est-meses">—</span> meses</div>
+        </div>
+        <div class="stat-card verde">
+          <div class="stat-icon">🔥</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <div class="stat-val" id="st-kcal">0</div>
+            <div style="font-size:13px;color:#7a8a7c">kcal</div>
+          </div>
+          <div class="stat-label">Consumido Hoje</div>
+          <div style="font-size:11px;color:#74c69d;margin-top:4px">Proteína: <span id="st-prot">0g</span></div>
+        </div>
+      </div>
+      <!-- Segunda linha: prontuário + salvos -->
+      <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:24px;margin-top:-20px">
         <div class="stat-card verde"><div class="stat-icon">📋</div><div class="stat-val" id="st-prontuario">—</div><div class="stat-label">Prontuário</div></div>
         <div class="stat-card verde"><div class="stat-icon">🗂️</div><div class="stat-val" id="st-salvos">0</div><div class="stat-label">Prontuários Salvos</div></div>
-        <div class="stat-card verde"><div class="stat-icon">🔥</div><div class="stat-val" id="st-kcal">0</div><div class="stat-label">Kcal Hoje</div></div>
-        <div class="stat-card verde"><div class="stat-icon">💪</div><div class="stat-val" id="st-prot">0g</div><div class="stat-label">Proteína Hoje</div></div>
       </div>
       <div class="form-section">
         <h3>Bem-vindo! 👋</h3>
@@ -946,7 +971,11 @@
         <div class="form-section">
           <h3>Seu Plano Alimentar</h3>
           <div id="plano-content"></div>
-          <div style="margin-top:24px"><button class="btn-add" onclick="exportarPlanoExcel()">📊 Exportar Plano</button></div>
+          <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn-add" onclick="visualizarPlanoPDF()">👁️ Visualizar PDF</button>
+            <button class="btn-add" onclick="baixarPlanoPDF()">📄 Baixar PDF</button>
+            <button class="btn-add" onclick="exportarPlanoExcel()">📊 Exportar Excel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2053,6 +2082,96 @@ function exportarExcel() {
 
 function exportarPlanoExcel() { const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Refeição','Alimento','Quantidade (g)','Kcal Estimada']]),'Plano Alimentar'); XLSX.writeFile(wb,'plano-alimentar.xlsx'); }
 
+function gerarPlanoPDFDoc() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4' });
+  const VE=[26,46,31], VC=[116,198,157], BR=[255,255,255], TX=[28,40,30];
+  const ML=14, PW=182;
+  let y=14;
+
+  // Cabeçalho
+  doc.setFillColor(...VE); doc.rect(0,0,210,28,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...VC);
+  doc.text('NUTRI AMORIM — Plano Alimentar', ML, 12);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...BR);
+  doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, ML, 20);
+  y = 36;
+
+  // Meta
+  const metaKcal = document.getElementById('pl-meta-kcal').value || document.getElementById('meta-kcal').textContent || '2000';
+  const metaProt = document.getElementById('pl-meta-prot').value || document.getElementById('meta-prot').textContent || '120';
+  doc.setFillColor(240,253,244); doc.roundedRect(ML, y, PW, 14, 3, 3, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...TX);
+  doc.text(`Meta Calórica: ${metaKcal} kcal/dia   |   Meta de Proteína: ${metaProt}g/dia`, ML+4, y+9);
+  y += 20;
+
+  // Conteúdo do plano
+  const planoEl = document.getElementById('plano-content');
+  if (!planoEl || !planoEl.textContent.trim()) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...TX);
+    doc.text('Nenhum plano gerado ainda.', ML, y);
+    return doc;
+  }
+
+  // Extrair refeições do HTML
+  const refeicoes = planoEl.querySelectorAll('div[style*="border:1px solid"]');
+  refeicoes.forEach(ref => {
+    const titulo = ref.querySelector('h4');
+    const itens = ref.querySelectorAll('div[style*="background:#f8fdf8"]');
+    const totalEl = ref.querySelector('div[style*="text-align:right"]');
+
+    if (!titulo) return;
+    if (y > 260) { doc.addPage(); y = 14; }
+
+    // Cabeçalho da refeição
+    doc.setFillColor(...VE); doc.roundedRect(ML, y, PW, 10, 2, 2, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BR);
+    doc.text(titulo.textContent.trim(), ML+4, y+7);
+    y += 13;
+
+    itens.forEach(item => {
+      if (y > 270) { doc.addPage(); y = 14; }
+      const spans = item.querySelectorAll('span');
+      const nome = spans[0] ? spans[0].textContent.replace(/\d+x no histórico/,'').trim() : '';
+      const qtd  = spans[1] ? spans[1].textContent.trim() : '';
+      const kcal = spans[2] ? spans[2].textContent.trim() : '';
+      const prot = spans[3] ? spans[3].textContent.trim() : '';
+
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...TX);
+      doc.text(`• ${nome}`, ML+4, y);
+      doc.setTextColor(100,130,100);
+      doc.text(`${qtd}  ${kcal}  ${prot}`, ML+80, y);
+      y += 7;
+    });
+
+    if (totalEl) {
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,106,79);
+      doc.text(totalEl.textContent.trim(), ML+4, y);
+      y += 4;
+    }
+    y += 6;
+  });
+
+  // Rodapé
+  doc.setFillColor(...VE); doc.rect(0,287,210,10,'F');
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...VC);
+  doc.text('Nutri Amorim | nutriamorim69@gmail.com | (62) 99854-0552', ML, 293);
+
+  return doc;
+}
+
+function visualizarPlanoPDF() {
+  const doc = gerarPlanoPDFDoc();
+  const blob = doc.output('blob');
+  const url = URL.createObjectURL(blob);
+  abrirPdfModal(url, 'Plano Alimentar');
+}
+
+function baixarPlanoPDF() {
+  const doc = gerarPlanoPDFDoc();
+  doc.save(`plano-alimentar-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
+}
+
 function calcularMetasManual() {
   const sexo     = document.getElementById('mt-sexo').value;
   const idade    = parseFloat(document.getElementById('mt-idade').value) || 30;
@@ -2124,9 +2243,18 @@ function calcularMetasManual() {
 
     // Guardar para sincronizar com o Resumo do Dia ao aplicar
     window._estimativaMeta = { deficitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs, gastoExercicioDia, deficitDieta, ativ };
+    // Atualizar cards do home imediatamente
+    const stSem = document.getElementById('st-est-semanas');
+    const stMes = document.getElementById('st-est-meses');
+    if (stSem) stSem.textContent = semanas;
+    if (stMes) stMes.textContent = meses;
   } else {
     estEl.style.display = 'none';
     window._estimativaMeta = null;
+    const stSem2 = document.getElementById('st-est-semanas');
+    const stMes2 = document.getElementById('st-est-meses');
+    if (stSem2) stSem2.textContent = '—';
+    if (stMes2) stMes2.textContent = '—';
   }
 }
 
@@ -2156,6 +2284,12 @@ function aplicarMetas() {
   } else if (recEst) {
     recEst.style.display = 'none';
   }
+
+  // Atualizar cards do home
+  const stMetaKcal = document.getElementById('st-meta-kcal');
+  const stMetaProt = document.getElementById('st-meta-prot');
+  if (stMetaKcal) stMetaKcal.textContent = kcal;
+  if (stMetaProt) stMetaProt.textContent = prot;
 
   const msg = document.getElementById('mt-msg');
   msg.className = 'msg success';
