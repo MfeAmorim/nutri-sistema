@@ -1181,7 +1181,7 @@ async function init() {
 
   // Carregar TODOS os registros salvos (todas as datas)
   await carregarTodosOsRecordatorios();
-  carregarMetasSalvas();
+  await carregarMetasSalvas();
   carregarNotificacoesSalvas();
   await carregarArquivosFichas();
   calcularMetas();
@@ -2637,7 +2637,7 @@ function calcularMetasManual() {
   }
 }
 
-function aplicarMetas() {
+async function aplicarMetas() {
   const kcal  = parseFloat(document.getElementById('mt-meta-kcal').value)  || 2000;
   const prot  = parseFloat(document.getElementById('mt-meta-prot').value)  || 120;
   const carb  = parseFloat(document.getElementById('mt-meta-carb').value)  || 300;
@@ -2670,54 +2670,80 @@ function aplicarMetas() {
   if (stMetaKcal) stMetaKcal.textContent = kcal;
   if (stMetaProt) stMetaProt.textContent = prot;
 
-  // Persistir no localStorage
+  // Persistir no Supabase (sincroniza entre dispositivos) + localStorage como cache
   try {
-    const _uid = currentUser?.id||''; localStorage.setItem('na_meta_kcal_'+_uid, kcal);
+    const _uid = currentUser?.id||'';
+    const estJson = window._estimativaMeta ? JSON.stringify(window._estimativaMeta) : null;
+
+    // Supabase — salva nas colunas de metas do perfil
+    await window._sb.from('perfis').upsert({
+      user_id: currentUser.id,
+      meta_kcal: kcal,
+      meta_prot: prot,
+      meta_carb: carb,
+      limite_sodio: sodio,
+      estimativa_meta: estJson
+    }, { onConflict: 'user_id' });
+
+    // localStorage como cache local
+    localStorage.setItem('na_meta_kcal_'+_uid, kcal);
     localStorage.setItem('na_meta_prot_'+_uid, prot);
     localStorage.setItem('na_meta_carb_'+_uid, carb);
     localStorage.setItem('na_limite_sodio_'+_uid, sodio);
-    if (window._estimativaMeta) {
-      localStorage.setItem('na_estimativa_'+_uid, JSON.stringify(window._estimativaMeta));
-    }
-  } catch(e) {}
+    if (estJson) localStorage.setItem('na_estimativa_'+_uid, estJson);
+  } catch(e) { console.warn('Erro ao salvar metas:', e.message); }
 
   const msg = document.getElementById('mt-msg');
   msg.className = 'msg success';
-  msg.textContent = '✅ Metas aplicadas! Veja o Resumo do Dia no Recordatório.';
+  msg.textContent = '✅ Metas salvas e sincronizadas em todos os dispositivos!';
   setTimeout(() => { msg.className = 'msg'; msg.textContent = ''; }, 3000);
 }
 
-function carregarMetasSalvas() {
+async function carregarMetasSalvas() {
+  const _uid = currentUser?.id || '';
+
+  let kcal, prot, carb, sodio, estStr;
+
+  // Tentar carregar do Supabase primeiro
   try {
-    const _uid = currentUser?.id || '';
-    const kcal  = localStorage.getItem('na_meta_kcal_'+_uid);
-    const prot  = localStorage.getItem('na_meta_prot_'+_uid);
-    const carb  = localStorage.getItem('na_meta_carb_'+_uid);
-    const sodio = localStorage.getItem('na_limite_sodio_'+_uid);
-    const estStr = localStorage.getItem('na_estimativa_'+_uid);
-
-    if (kcal) {
-      document.getElementById('meta-kcal').textContent = kcal;
-      document.getElementById('pl-meta-kcal').value    = kcal;
-      const el = document.getElementById('mt-meta-kcal'); if (el) el.value = kcal;
-      const stEl = document.getElementById('st-meta-kcal'); if (stEl) stEl.textContent = kcal;
+    const { data: p } = await window._sb.from('perfis').select('meta_kcal,meta_prot,meta_carb,limite_sodio,estimativa_meta').eq('user_id', currentUser.id).single();
+    if (p) {
+      kcal    = p.meta_kcal;
+      prot    = p.meta_prot;
+      carb    = p.meta_carb;
+      sodio   = p.limite_sodio;
+      estStr  = p.estimativa_meta;
     }
-    if (prot) {
-      document.getElementById('meta-prot').textContent = prot;
-      document.getElementById('pl-meta-prot').value    = prot;
-      const el = document.getElementById('mt-meta-prot'); if (el) el.value = prot;
-      const stEl = document.getElementById('st-meta-prot'); if (stEl) stEl.textContent = prot;
-    }
-    if (carb) { const el = document.getElementById('meta-carb'); if (el) el.textContent = carb; }
-    if (sodio) { const el = document.getElementById('limite-sodio'); if (el) el.textContent = sodio; }
+  } catch(e) {}
 
-    if (estStr) {
-      const est = JSON.parse(estStr);
+  // Fallback: localStorage
+  if (!kcal)   kcal   = localStorage.getItem('na_meta_kcal_'+_uid);
+  if (!prot)   prot   = localStorage.getItem('na_meta_prot_'+_uid);
+  if (!carb)   carb   = localStorage.getItem('na_meta_carb_'+_uid);
+  if (!sodio)  sodio  = localStorage.getItem('na_limite_sodio_'+_uid);
+  if (!estStr) estStr = localStorage.getItem('na_estimativa_'+_uid);
+
+  if (kcal) {
+    document.getElementById('meta-kcal').textContent = kcal;
+    document.getElementById('pl-meta-kcal').value    = kcal;
+    const el = document.getElementById('mt-meta-kcal'); if (el) el.value = kcal;
+    const stEl = document.getElementById('st-meta-kcal'); if (stEl) stEl.textContent = kcal;
+  }
+  if (prot) {
+    document.getElementById('meta-prot').textContent = prot;
+    document.getElementById('pl-meta-prot').value    = prot;
+    const el = document.getElementById('mt-meta-prot'); if (el) el.value = prot;
+    const stEl = document.getElementById('st-meta-prot'); if (stEl) stEl.textContent = prot;
+  }
+  if (carb)  { const el = document.getElementById('meta-carb');    if (el) el.textContent = carb; }
+  if (sodio) { const el = document.getElementById('limite-sodio'); if (el) el.textContent = sodio; }
+
+  if (estStr) {
+    try {
+      const est = typeof estStr === 'string' ? JSON.parse(estStr) : estStr;
       window._estimativaMeta = est;
-      // Cards do home
       const stSem = document.getElementById('st-est-semanas'); if (stSem) stSem.textContent = est.semanas;
-      const stMes = document.getElementById('st-est-meses');  if (stMes) stMes.textContent  = est.meses;
-      // Resumo do dia
+      const stMes = document.getElementById('st-est-meses');   if (stMes) stMes.textContent  = est.meses;
       const recEst = document.getElementById('rec-estimativa');
       if (recEst && est.deficitTotal) {
         document.getElementById('rec-est-deficit').textContent   = est.deficitTotal;
@@ -2727,8 +2753,8 @@ function carregarMetasSalvas() {
         document.getElementById('rec-est-obs').innerHTML         = est.obs || '';
         recEst.style.display = 'block';
       }
-    }
-  } catch(e) {}
+    } catch(e) {}
+  }
 }
 
 function carregarMetas() {
