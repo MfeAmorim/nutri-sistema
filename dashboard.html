@@ -553,12 +553,12 @@
         <p class="subtitle">Gerencie todas as suas fichas de atendimento. Edite, baixe ou exclua.</p>
         <div class="search-bar">
           <input type="text" id="busca-pront" placeholder="🔍  Buscar por nome do paciente..." oninput="filtrarProntuarios()">
-          <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">+ Nova Ficha</button>
+          <button class="btn-save" onclick="showTab('prontuario');novoProntuario()">Nova Ficha</button>
           <label class="btn-save" style="cursor:pointer;background:#2d6a4f;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin:0">
-            📎 Adicionar Prontuário PDF
+            Adicionar Prontuário PDF
             <input type="file" accept="application/pdf" style="display:none" onchange="adicionarProntuarioPDF(this)">
           </label>
-          <button class="btn-save" style="background:#1e40af;white-space:nowrap" onclick="abrirModalPlanoAlimentar()">🥗 Adicionar Plano Alimentar</button>
+          <button class="btn-save" style="white-space:nowrap" onclick="abrirModalPlanoAlimentar()">Adicionar Plano Alimentar</button>
         </div>
         <!-- Modal Plano Alimentar por Paciente -->
         <div id="modal-plano-pac" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9997;align-items:center;justify-content:center;padding:16px">
@@ -583,7 +583,7 @@
           </div>
         </div>
         <div id="lista-prontuarios">
-          <div class="empty-state"><div class="empty-icon">🗃️</div><h4>Nenhuma ficha cadastrada</h4><p>Clique em "+ Nova Ficha" para criar o primeiro registro.</p></div>
+          <div class="empty-state"><div class="empty-icon">🗃️</div><h4>Nenhuma ficha cadastrada</h4><p>Clique em "Nova Ficha" para criar o primeiro registro.</p></div>
         </div>
       </div>
     </div>
@@ -1761,10 +1761,31 @@ function renderizarProntuariosSalvos(filtro = '') {
     const imcClass = imc < 18.5 ? '🔵' : imc < 25 ? '🟢' : imc < 30 ? '🟡' : '🔴';
     const data = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR') : '—';
     const atualiz = p.updated_at ? new Date(p.updated_at).toLocaleDateString('pt-BR') : '—';
+    // Mini-card de documento reutilizável
+    const docCard = (label, cor, borda, fundo, url, uploadFn, viewTitle) => {
+      const conteudo = url
+        ? `<div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:10px;text-align:center">${label}.pdf</div>
+           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+             <button onclick="abrirPdfModal('${url}', '${viewTitle}')" style="flex:1;background:${cor};color:#fff;border:none;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center">Visualizar</button>
+             <a href="${url}" target="_blank" download style="flex:1;background:#fff;color:${cor};border:1.5px solid ${borda};padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center">Baixar</a>
+           </div>
+           <label style="display:block;text-align:center;font-size:11px;color:#9ca3af;cursor:pointer;padding:4px">
+             Trocar arquivo <input type="file" accept="application/pdf" style="display:none" onchange="${uploadFn}">
+           </label>`
+        : `<div style="font-size:12px;color:#9ca3af;margin-bottom:12px;text-align:center">Nenhum arquivo</div>
+           <label style="display:block;background:${cor};color:#fff;border:none;padding:8px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center">
+             Anexar <input type="file" accept="application/pdf" style="display:none" onchange="${uploadFn}">
+           </label>`;
+      return `<div style="background:${fundo};border:1.5px solid ${borda};border-radius:10px;padding:14px;min-width:160px;flex:1;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+        <div style="font-size:11px;font-weight:700;color:${cor};text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;text-align:center">${label}</div>
+        ${conteudo}
+      </div>`;
+    };
+
     return `
     <div class="pront-card" style="padding:0;overflow:hidden">
 
-      <!-- Cabeçalho do card -->
+      <!-- Cabeçalho -->
       <div style="padding:16px 20px;border-bottom:1px solid #e8efe8">
         <h4 style="margin:0 0 8px;font-size:16px;color:#1a2e1f">👤 ${p.nome || '(sem nome)'}</h4>
         <div class="pront-card-meta">
@@ -1777,39 +1798,22 @@ function renderizarProntuariosSalvos(filtro = '') {
         </div>
       </div>
 
-      <!-- Linha 1: Ações principais da ficha -->
+      <!-- Ações da ficha -->
       <div style="padding:12px 20px;border-bottom:1px solid #f0f5f0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:11px;font-weight:700;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px;margin-right:4px">Ficha:</span>
-        <button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">✏️ Editar</button>
-        <button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">📄 Gerar PDF</button>
-        <button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">📝 Word</button>
-        <button class="btn-sm btn-sm-red" style="margin-left:auto" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">🗑️ Excluir</button>
+        <button class="btn-sm btn-sm-verde" onclick="editarProntuario('${p.id}')">Editar Ficha</button>
+        <button class="btn-sm btn-sm-outline" onclick="exportarPDFById('${p.id}')">Gerar PDF</button>
+        <button class="btn-sm btn-sm-word" onclick="exportarWordById('${p.id}')">Word</button>
+        <button class="btn-sm btn-sm-red" style="margin-left:auto" onclick="excluirProntuario('${p.id}', '${(p.nome||'este prontuário').replace(/'/g,"\\'")}')">Excluir</button>
       </div>
 
-      <!-- Linha 2: Documentos PDF -->
-      <div style="padding:12px 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:11px;font-weight:700;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px;margin-right:4px">Documentos:</span>
-
-        <!-- Anamnese PDF -->
-        <label class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer;margin:0">
-          ${p.pdf_url ? '📎 Trocar Anamnese' : '📎 Anexar Anamnese'}
-          <input type="file" accept="application/pdf" style="display:none" onchange="anexarAnamnesePDF('${p.id}', this)">
-        </label>
-        ${p.pdf_url ? `<button onclick="abrirPdfModal('${p.pdf_url}', 'Anamnese – ${p.nome||''}')" class="btn-sm" style="background:#f0fdf4;color:#2d6a4f;border:1.5px solid #74c69d;cursor:pointer">👁️ Ver Anamnese</button>` : ''}
-
-        <!-- Recordatório PDF -->
-        <label class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer;margin:0">
-          ${p.rec_url ? '📋 Trocar Recordatório' : '📋 Anexar Recordatório'}
-          <input type="file" accept="application/pdf" style="display:none" onchange="anexarRecordatorioPDF('${p.id}', this)">
-        </label>
-        ${p.rec_url ? `<button onclick="abrirPdfModal('${p.rec_url}', 'Recordatório – ${p.nome||''}')" class="btn-sm" style="background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;cursor:pointer">👁️ Ver Recordatório</button>` : ''}
-
-        <!-- Plano Alimentar PDF -->
-        <label class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer;margin:0">
-          ${p.plano_url ? '🥗 Trocar Plano' : '🥗 Anexar Plano Alimentar'}
-          <input type="file" accept="application/pdf" style="display:none" onchange="anexarPlanoAlimentarPDF('${p.id}', this)">
-        </label>
-        ${p.plano_url ? `<button onclick="abrirPdfModal('${p.plano_url}', 'Plano Alimentar – ${p.nome||''}')" class="btn-sm" style="background:#fdf4ff;color:#7e22ce;border:1.5px solid #d8b4fe;cursor:pointer">👁️ Ver Plano</button>` : ''}
+      <!-- Cards de documentos -->
+      <div style="padding:16px 20px;display:flex;gap:12px;flex-wrap:wrap">
+        ${docCard('Anamnese', '#2d6a4f', '#74c69d', '#f0fdf4',
+          p.pdf_url||'', `anexarAnamnesePDF('${p.id}', this)`, `Anamnese – ${p.nome||''}`)}
+        ${docCard('Recordatório', '#1e40af', '#93c5fd', '#eff6ff',
+          p.rec_url||'', `anexarRecordatorioPDF('${p.id}', this)`, `Recordatório – ${p.nome||''}`)}
+        ${docCard('Plano Alimentar', '#7e22ce', '#d8b4fe', '#fdf4ff',
+          p.plano_url||'', `anexarPlanoAlimentarPDF('${p.id}', this)`, `Plano Alimentar – ${p.nome||''}`)}
       </div>
 
     </div>`;
