@@ -1071,6 +1071,12 @@
           <span id="pl-saldo-kcal" style="font-size:22px;font-weight:800;color:#7a8a7c">—</span>
           <span style="font-size:13px;color:#7a8a7c">kcal</span>
         </div>
+        <div style="width:1px;background:#e8efe8;height:28px"></div>
+        <div style="display:flex;gap:6px;align-items:baseline">
+          <span id="pl-saldo-prot-label" style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px">Faltam</span>
+          <span id="pl-saldo-prot" style="font-size:22px;font-weight:800;color:#7a8a7c">—</span>
+          <span style="font-size:13px;color:#7a8a7c">g prot</span>
+        </div>
       </div>
     </div>
 
@@ -2336,6 +2342,14 @@ function atualizarResumoPlano() {
     else if (saldo >= 0) labelEl.textContent = 'Faltam';
     else labelEl.textContent = 'Excedeu';
   }
+
+  // Saldo proteína
+  const saldoProt = metaP ? metaP - protTotal : null;
+  const corProt2  = saldoProt === null ? '#7a8a7c' : Math.abs(saldoProt) < 5 ? '#2d6a4f' : saldoProt > 0 ? '#f59e0b' : '#ef4444';
+  const elSaldoP  = document.getElementById('pl-saldo-prot');
+  const labelElP  = document.getElementById('pl-saldo-prot-label');
+  if (elSaldoP) { elSaldoP.textContent = saldoProt !== null ? Math.abs(saldoProt).toFixed(1) : '—'; elSaldoP.style.color = corProt2; }
+  if (labelElP) labelElP.textContent = saldoProt === null || saldoProt >= 0 ? 'Faltam' : 'Excedeu';
   if (elMetaKL) elMetaKL.textContent = metaK ? `/ ${metaK} kcal` : '/ — kcal';
   if (elMetaPL) elMetaPL.textContent = metaP ? `g / ${metaP}g` : 'g / — g';
 }
