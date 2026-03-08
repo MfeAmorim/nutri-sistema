@@ -1029,49 +1029,52 @@
     <!-- ══ PLANO ALIMENTAR ══ -->
     <div class="tab-content" id="tab-plano">
       <div class="form-section">
-        <h3>🍽️ Plano Alimentar Personalizado</h3>
-        <p class="subtitle">Configure sua meta, selecione os alimentos de cada refeição e o sistema calcula as quantidades para bater exatamente sua meta.</p>
+        <h3>🍽️ Plano Alimentar</h3>
+        <p class="subtitle">Preencha os alimentos de cada refeição, ajuste as quantidades e veja o total em tempo real.</p>
         <div class="msg" id="msg-plano"></div>
 
         <!-- Metas -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px">
-          <div class="field"><label>🔥 Meta Calórica (kcal/dia)</label><input type="number" id="pl-meta-kcal" placeholder="Ex: 2800"></div>
-          <div class="field"><label>💪 Meta de Proteína (g/dia)</label><input type="number" id="pl-meta-prot" placeholder="Ex: 140"></div>
-          <div class="field"><label>Número de Refeições</label>
-            <select id="pl-refeicoes" onchange="inicializarAbasRefeicao()">
-              <option value="3" selected>3 — Café, Almoço e Jantar</option>
-              <option value="4">4 refeições</option>
-              <option value="5">5 refeições</option>
-              <option value="6">6 refeições</option>
-            </select>
-          </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px">
+          <div class="field"><label>🔥 Meta Calórica (kcal)</label><input type="number" id="pl-meta-kcal" placeholder="Ex: 2800" oninput="atualizarResumoPlano()"></div>
+          <div class="field"><label>💪 Meta Proteína (g)</label><input type="number" id="pl-meta-prot" placeholder="Ex: 140" oninput="atualizarResumoPlano()"></div>
           <div class="field" style="display:flex;align-items:flex-end">
             <button class="btn-save" style="width:100%" onclick="preencherMetasDoCalculo()">↙️ Usar metas calculadas</button>
           </div>
         </div>
 
-        <!-- Abas de refeição -->
-        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a8a7c;margin-bottom:10px">🥗 Selecione os alimentos de cada refeição</div>
-        <div id="pl-abas-nav" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid #e8efe8;padding-bottom:10px"></div>
-        <div id="pl-abas-content"></div>
+        <!-- Refeições -->
+        <div id="pl-refeicoes-container"></div>
 
-        <button class="btn-save" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="gerarPlano()">🎯 Calcular e Gerar Plano</button>
+        <!-- Botões -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn-save" style="flex:1;min-width:160px;padding:14px" onclick="gerarPlanoPDF()">📄 Baixar PDF</button>
+          <button class="btn-add"  style="flex:1;min-width:160px;padding:14px" onclick="visualizarPlanoPDFNovo()">👁️ Visualizar PDF</button>
+        </div>
       </div>
 
-      <div id="plano-resultado" style="display:none">
-        <div class="form-section">
-          <h3>Seu Plano Alimentar</h3>
-          <div id="plano-content"></div>
-          <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
-            <button class="btn-add" onclick="visualizarPlanoPDF()">👁️ Visualizar PDF</button>
-            <button class="btn-add" onclick="baixarPlanoPDF()">📄 Baixar PDF</button>
-            <button class="btn-add" onclick="exportarPlanoExcel()">📊 Exportar Excel</button>
-          </div>
+      <!-- Resumo fixo embaixo -->
+      <div id="pl-resumo-fixo" style="position:sticky;bottom:0;background:#fff;border-top:2px solid #74c69d;padding:12px 20px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;z-index:10;box-shadow:0 -4px 16px rgba(0,0,0,0.07)">
+        <div style="display:flex;gap:6px;align-items:baseline">
+          <span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px">Total Kcal</span>
+          <span id="pl-total-kcal" style="font-size:22px;font-weight:800;color:#1a2e1f">0</span>
+          <span id="pl-meta-kcal-label" style="font-size:13px;color:#7a8a7c">/ — kcal</span>
+        </div>
+        <div style="width:1px;background:#e8efe8;height:28px"></div>
+        <div style="display:flex;gap:6px;align-items:baseline">
+          <span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px">Proteína</span>
+          <span id="pl-total-prot" style="font-size:22px;font-weight:800;color:#2d6a4f">0</span>
+          <span id="pl-meta-prot-label" style="font-size:13px;color:#7a8a7c">g / — g</span>
+        </div>
+        <div style="width:1px;background:#e8efe8;height:28px"></div>
+        <div style="display:flex;gap:6px;align-items:baseline">
+          <span id="pl-saldo-label" style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:.8px">Faltam</span>
+          <span id="pl-saldo-kcal" style="font-size:22px;font-weight:800;color:#7a8a7c">—</span>
+          <span style="font-size:13px;color:#7a8a7c">kcal</span>
         </div>
       </div>
     </div>
 
-        <!-- ══ CHATBOT ══ -->
+    <!-- ══ CHATBOT ══ -->
     <div class="tab-content" id="tab-chatbot">
       <div class="form-section" style="max-width:800px;margin:0 auto">
         <h3>Assistente Nutri Amorim 🤖</h3>
@@ -1994,7 +1997,7 @@ function showTab(name) {
   const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
-  if (name === 'plano') setTimeout(() => inicializarAbasRefeicao(), 100);
+  if (name === 'plano') setTimeout(() => inicializarPlanoLinhas(), 100);
 }
 
 document.addEventListener('input', function(e) {
@@ -2168,361 +2171,216 @@ function calcTotais() { const container=document.getElementById('calc-linhas'); 
 async function removerAlimento(id) { if(!confirm('Remover este alimento?'))return; await window._sb.from('alimentos').delete().eq('id',id); alimentosCadastrados=alimentosCadastrados.filter(a=>a.id!==id); renderizarAlimentos(); atualizarSelectAlimentos(); }
 
 // ── Seleção de alimentos para o plano ──────────────────────
-// ══ PLANO ALIMENTAR — sistema por refeição ══════════════════════════
+// ══ PLANO ALIMENTAR — novo sistema por linhas ══════════════════════════
 
-const REFEICAO_NOMES = ['Café da Manhã','Almoço','Jantar','Refeição Extra','Refeição Extra 2','Refeição Extra 3'];
+const PL_REFEICOES = [
+  { id: 'cafe',   nome: 'Café da Manhã', icon: '☕' },
+  { id: 'almoco', nome: 'Almoço',        icon: '🍽️' },
+  { id: 'jantar', nome: 'Jantar',        icon: '🌙' },
+];
+const PL_LINHAS_POR_REF = 5;
 
-// Seleções por refeição: { 0: Set(ids), 1: Set(ids), ... }
-let _selecaoPorRefeicao = {};
-let _abaAtiva = 0;
-let _filtroAtivo = {};  // filtro por aba
+function inicializarPlanoLinhas() {
+  const container = document.getElementById('pl-refeicoes-container');
+  if (!container) return;
 
-function preencherMetasDoCalculo() {
-  const kcal = document.getElementById('meta-kcal')?.textContent;
-  const prot = document.getElementById('meta-prot')?.textContent;
-  if (kcal && kcal !== '—') document.getElementById('pl-meta-kcal').value = kcal;
-  if (prot && prot !== '—') document.getElementById('pl-meta-prot').value = prot;
+  // Preencher metas salvas
+  preencherMetasDoCalculo();
+
+  container.innerHTML = PL_REFEICOES.map(ref => `
+    <div style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:14px;font-weight:700;color:#1a2e1f">${ref.icon} ${ref.nome}</div>
+        <div style="font-size:12px;color:#7a8a7c">
+          Total: <strong id="pl-sub-kcal-${ref.id}" style="color:#2d6a4f">0</strong> kcal &nbsp;|&nbsp;
+          <strong id="pl-sub-prot-${ref.id}" style="color:#2d6a4f">0</strong>g prot
+        </div>
+      </div>
+      <div id="pl-linhas-${ref.id}">
+        ${Array.from({length: PL_LINHAS_POR_REF}, (_,i) => criarLinhaHTML(ref.id, i)).join('')}
+      </div>
+      <button onclick="adicionarLinhaPlano('${ref.id}')" style="background:none;border:1.5px dashed #74c69d;color:#2d6a4f;font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;margin-top:6px;width:100%">+ adicionar alimento</button>
+    </div>
+  `).join('<hr style="border:none;border-top:1.5px solid #e8efe8;margin:4px 0 20px">');
 }
 
-function inicializarAbasRefeicao() {
-  const n = parseInt(document.getElementById('pl-refeicoes').value) || 5;
-  // Preservar seleções existentes
-  for (let i = 0; i < n; i++) {
-    if (!_selecaoPorRefeicao[i]) _selecaoPorRefeicao[i] = new Set();
-    if (!_filtroAtivo[i]) _filtroAtivo[i] = 'todos';
-  }
-  _abaAtiva = Math.min(_abaAtiva, n - 1);
-  renderizarNavAbas(n);
-  renderizarAbaAtiva();
+function criarLinhaHTML(refId, idx) {
+  const linhaId = `pl-linha-${refId}-${idx}`;
+  // Opções de alimentos cadastrados
+  const opts = alimentosCadastrados.map(a =>
+    `<option value="${a.id}" data-unid="${a.unidade_medida||'g'}" data-gramas="${a.gramas_unidade||100}" data-kcal="${a.kcal_100g||0}" data-prot="${a.proteina_100g||0}">${a.nome}</option>`
+  ).join('');
+
+  return `<div class="pl-linha" id="${linhaId}" style="display:grid;grid-template-columns:1fr 80px 70px 70px 32px;gap:6px;align-items:center;margin-bottom:6px">
+    <select onchange="calcularLinhaPlano('${refId}','${linhaId}')" style="padding:8px 10px;border:1.5px solid #e8efe8;border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;background:#fff;color:#1a2e1f">
+      <option value="">— alimento —</option>
+      ${opts}
+    </select>
+    <div style="position:relative">
+      <input type="number" min="0" step="0.5" value="" placeholder="qtd" onchange="calcularLinhaPlano('${refId}','${linhaId}')" oninput="calcularLinhaPlano('${refId}','${linhaId}')"
+        style="width:100%;padding:8px 6px;border:1.5px solid #e8efe8;border-radius:8px;font-size:13px;font-family:DM Sans,sans-serif;text-align:center">
+    </div>
+    <div style="font-size:11px;color:#7a8a7c;text-align:center;background:#f8fdf8;border-radius:8px;padding:4px 2px" id="${linhaId}-unid">—</div>
+    <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-align:center;background:#f0fdf4;border-radius:8px;padding:4px 2px" id="${linhaId}-kcal">—</div>
+    <button onclick="removerLinhaPlano('${linhaId}','${refId}')" style="background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer;padding:0;line-height:1">✕</button>
+  </div>`;
 }
 
-function renderizarNavAbas(n) {
-  const nav = document.getElementById('pl-abas-nav');
-  if (!nav) return;
-  nav.innerHTML = '';
-  for (let i = 0; i < n; i++) {
-    const count = _selecaoPorRefeicao[i]?.size || 0;
-    const ativo = i === _abaAtiva;
-    const btn = document.createElement('button');
-    btn.className = 'pl-aba-btn' + (ativo ? ' ativa' : '');
-    btn.innerHTML = `${REFEICAO_NOMES[i]} ${count > 0 ? `<span style="background:#2d6a4f;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;margin-left:4px">${count}</span>` : ''}`;
-    btn.onclick = () => { _abaAtiva = i; renderizarNavAbas(parseInt(document.getElementById('pl-refeicoes').value)||5); renderizarAbaAtiva(); };
-    nav.appendChild(btn);
-  }
+let _plLinhaCounter = 100;
+function adicionarLinhaPlano(refId) {
+  _plLinhaCounter++;
+  const container = document.getElementById(`pl-linhas-${refId}`);
+  if (!container) return;
+  const div = document.createElement('div');
+  div.innerHTML = criarLinhaHTML(refId, _plLinhaCounter);
+  container.appendChild(div.firstElementChild);
 }
 
-function renderizarAbaAtiva() {
-  const container = document.getElementById('pl-abas-content');
-  if (!container || !alimentosCadastrados.length) {
-    if (container) container.innerHTML = '<div style="color:#9ca3af;font-size:13px;padding:16px">Nenhum alimento cadastrado ainda. Cadastre na Tabela Alimentar.</div>';
+function removerLinhaPlano(linhaId, refId) {
+  const el = document.getElementById(linhaId);
+  if (el) el.remove();
+  atualizarSubtotalRefeicao(refId);
+  atualizarResumoPlano();
+}
+
+function calcularLinhaPlano(refId, linhaId) {
+  const linha = document.getElementById(linhaId);
+  if (!linha) return;
+  const sel   = linha.querySelector('select');
+  const input = linha.querySelector('input[type=number]');
+  const unidEl = document.getElementById(linhaId + '-unid');
+  const kcalEl = document.getElementById(linhaId + '-kcal');
+  if (!sel || !input || !unidEl || !kcalEl) return;
+
+  const alId = sel.value;
+  const al   = alimentosCadastrados.find(a => a.id === alId);
+  const qtd  = parseFloat(input.value);
+
+  if (!al || !qtd || qtd <= 0) {
+    unidEl.textContent = '—';
+    kcalEl.textContent = '—';
+    kcalEl.style.color = '#7a8a7c';
+    atualizarSubtotalRefeicao(refId);
+    atualizarResumoPlano();
     return;
   }
 
-  const sel = _selecaoPorRefeicao[_abaAtiva] || new Set();
-  const filtroAtual = _filtroAtivo[_abaAtiva] || 'todos';
+  const unidRaw = (al.unidade_medida || '').trim();
+  const ehGrama = !unidRaw || unidRaw.toLowerCase() === 'g' || unidRaw.toLowerCase() === 'gramas';
+  const unidLabel = ehGrama ? 'g' : unidRaw;
+  const gramas = al.gramas_unidade || 100;
+  const totalG = ehGrama ? qtd : qtd * gramas;
+  const kcal   = (al.kcal_100g  * totalG) / 100;
 
-  // Filtrar alimentos
-  const palavrasGrupoLocal = {
-    cafe:       ['pão','café','iogurte','tapioca','mingau','aveia','granola','leite','mel','geleia','queijo','manteiga','cuscuz','ovo'],
-    almoco:     ['arroz','feijão','lentilha','macarrão','batata','mandioca','milho','farofa','carne','frango','peixe','atum','salmão','tilápia','brócolis','abobrinha','cenoura','couve','alface'],
-    lanche:     ['fruta','banana','maçã','mamão','laranja','uva','morango','abacaxi','melancia','castanha','amendoim','biscoito','barra','iogurte'],
-    proteina:   ['frango','carne','peixe','atum','ovo','whey','albumina','salmão','tilápia','peito','carne'],
-    carboidrato:['arroz','pão','macarrão','batata','mandioca','tapioca','aveia','granola','cuscuz','milho','batata-doce']
-  };
+  unidEl.textContent = unidLabel;
+  kcalEl.textContent = kcal.toFixed(0) + ' kcal';
+  kcalEl.style.color = '#2d6a4f';
 
-  const lista = filtroAtual === 'todos'
-    ? alimentosCadastrados
-    : alimentosCadastrados.filter(a => (palavrasGrupoLocal[filtroAtual]||[]).some(p => a.nome.toLowerCase().includes(p)));
+  atualizarSubtotalRefeicao(refId);
+  atualizarResumoPlano();
+}
 
-  // Botões de filtro
-  const filtros = [
-    {k:'todos', l:'Todos'},
-    {k:'cafe', l:'☕ Café'},
-    {k:'almoco', l:'🍽️ Almoço/Jantar'},
-    {k:'lanche', l:'🍎 Lanche'},
-    {k:'proteina', l:'💪 Proteína'},
-    {k:'carboidrato', l:'🍚 Carboidrato'},
-  ];
-
-  let html = `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">`;
-  filtros.forEach(f => {
-    const ativo = filtroAtual === f.k;
-    html += `<button class="pl-filtro-btn${ativo?' active':''}" onclick="_filtroAtivo[${_abaAtiva}]='${f.k}';renderizarAbaAtiva()">${f.l}</button>`;
+function atualizarSubtotalRefeicao(refId) {
+  const container = document.getElementById(`pl-linhas-${refId}`);
+  if (!container) return;
+  let kcalSum = 0, protSum = 0;
+  container.querySelectorAll('.pl-linha').forEach(linha => {
+    const linhaId = linha.id;
+    const sel   = linha.querySelector('select');
+    const input = linha.querySelector('input[type=number]');
+    if (!sel || !input) return;
+    const al  = alimentosCadastrados.find(a => a.id === sel.value);
+    const qtd = parseFloat(input.value);
+    if (!al || !qtd || qtd <= 0) return;
+    const unidRaw = (al.unidade_medida || '').trim();
+    const ehGrama = !unidRaw || unidRaw.toLowerCase() === 'g' || unidRaw.toLowerCase() === 'gramas';
+    const gramas = al.gramas_unidade || 100;
+    const totalG = ehGrama ? qtd : qtd * gramas;
+    kcalSum += (al.kcal_100g   * totalG) / 100;
+    protSum += (al.proteina_100g * totalG) / 100;
   });
-  html += `</div>`;
-
-  // Contagem selecionados
-  html += `<div style="font-size:12px;color:#7a8a7c;margin-bottom:12px">
-    <span style="font-weight:700;color:#2d6a4f">${sel.size}</span> alimento${sel.size!==1?'s':''} selecionado${sel.size!==1?'s':''}
-    ${sel.size > 0 ? `<button onclick="limparAba(${_abaAtiva})" style="background:none;border:none;color:#ef4444;font-size:12px;cursor:pointer;margin-left:8px">Limpar</button>` : ''}
-  </div>`;
-
-  if (!lista.length) {
-    html += '<div style="color:#9ca3af;font-size:13px;padding:16px">Nenhum alimento nessa categoria.</div>';
-  } else {
-    html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-height:340px;overflow-y:auto;padding:4px">`;
-    lista.forEach(al => {
-      const selecionado = sel.has(al.id);
-      html += `<div class="pl-alimento-card${selecionado?' selecionado':''}" onclick="toggleAlimentoAba('${al.id}')">
-        <div class="pl-al-check">${selecionado?'✅':'⬜'}</div>
-        <div class="pl-al-nome">${al.nome}</div>
-        <div class="pl-al-info">${al.kcal_100g||0} kcal/100g</div>
-        <div class="pl-al-info">${al.proteina_100g||0}g prot</div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-
-  container.innerHTML = html;
+  const subKcal = document.getElementById(`pl-sub-kcal-${refId}`);
+  const subProt = document.getElementById(`pl-sub-prot-${refId}`);
+  if (subKcal) subKcal.textContent = kcalSum.toFixed(0);
+  if (subProt) subProt.textContent = protSum.toFixed(1);
 }
 
-function toggleAlimentoAba(id) {
-  const sel = _selecaoPorRefeicao[_abaAtiva];
-  if (!sel) return;
-  if (sel.has(id)) sel.delete(id); else sel.add(id);
-  const n = parseInt(document.getElementById('pl-refeicoes').value) || 5;
-  renderizarNavAbas(n);
-  renderizarAbaAtiva();
-}
-
-function limparAba(idx) {
-  _selecaoPorRefeicao[idx] = new Set();
-  const n = parseInt(document.getElementById('pl-refeicoes').value) || 5;
-  renderizarNavAbas(n);
-  renderizarAbaAtiva();
-}
-
-function gerarPlano() {
-  const msg = document.getElementById('msg-plano');
-  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value);
-  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value) || 0;
-  const refeicoes = parseInt(document.getElementById('pl-refeicoes').value) || 4;
-
-  if (!metaKcal) { msg.className='msg error'; msg.textContent='⚠️ Informe a Meta Calórica antes de gerar.'; return; }
-  if (!alimentosCadastrados.length) { msg.className='msg error'; msg.textContent='Cadastre alimentos na Tabela Alimentar.'; return; }
-
-  const totalSel = Object.values(_selecaoPorRefeicao).reduce((s,v)=>s+(v?.size||0),0);
-  if (totalSel === 0) { msg.className='msg error'; msg.textContent='⚠️ Selecione alimentos em pelo menos uma refeição.'; return; }
-
-  msg.className=''; msg.textContent='';
-
-  // Contar refeições com seleção
-  const refsComSel = [];
-  for (let r = 0; r < refeicoes; r++) {
-    if ((_selecaoPorRefeicao[r]?.size || 0) > 0) refsComSel.push(r);
-  }
-
-  // Café=20%, Almoço=40%, Jantar=40% — dividido só entre refeições com seleção
-  const pesoNatural = { 0: 0.20, 1: 0.40, 2: 0.40, 3: 0.25, 4: 0.25, 5: 0.25 };
-  const pesoTotal = refsComSel.reduce((s, r) => s + (pesoNatural[r] ?? 0.25), 0);
-  const kcalPorRefIdx = {};
-  const protPorRefIdx = {};
-  refsComSel.forEach(r => {
-    const frac = (pesoNatural[r] ?? 0.25) / pesoTotal;
-    kcalPorRefIdx[r] = metaKcal * frac;
-    protPorRefIdx[r] = metaProt * frac;
-  });
-
-  let html = `<div style="margin-bottom:16px;padding:16px;background:var(--creme);border-radius:8px;font-size:13px">
-    <strong>Meta:</strong> ${metaKcal} kcal/dia
-    ${metaProt ? ` &nbsp;|&nbsp; <strong>Proteína:</strong> ${metaProt}g/dia` : ''}
-    &nbsp;|&nbsp; <strong>Refeições:</strong> ${refsComSel.length}
-  </div>`;
-
+function atualizarResumoPlano() {
   let kcalTotal = 0, protTotal = 0;
-  const planoDados = [];
+  PL_REFEICOES.forEach(ref => {
+    const sub = parseFloat(document.getElementById(`pl-sub-kcal-${ref.id}`)?.textContent) || 0;
+    const subP = parseFloat(document.getElementById(`pl-sub-prot-${ref.id}`)?.textContent) || 0;
+    kcalTotal += sub;
+    protTotal += subP;
+  });
+  const metaK = parseFloat(document.getElementById('pl-meta-kcal')?.value) || 0;
+  const metaP = parseFloat(document.getElementById('pl-meta-prot')?.value) || 0;
+  const saldo = metaK ? metaK - kcalTotal : null;
+  const corSaldo = saldo === null ? '#7a8a7c' : Math.abs(saldo) < 100 ? '#2d6a4f' : saldo > 0 ? '#f59e0b' : '#ef4444';
 
-  for (let r = 0; r < refeicoes; r++) {
-    const sel = _selecaoPorRefeicao[r] || new Set();
-    if (sel.size === 0) continue;
+  const elKcal  = document.getElementById('pl-total-kcal');
+  const elProt  = document.getElementById('pl-total-prot');
+  const elSaldo = document.getElementById('pl-saldo-kcal');
+  const elMetaKL = document.getElementById('pl-meta-kcal-label');
+  const elMetaPL = document.getElementById('pl-meta-prot-label');
 
-    const kcalAlvo = kcalPorRefIdx[r];
-    const protAlvo = protPorRefIdx[r];
-    const alimentosDaRef = alimentosCadastrados.filter(a => sel.has(a.id));
+  if (elKcal)  elKcal.textContent  = kcalTotal.toFixed(0);
+  if (elProt)  elProt.textContent  = protTotal.toFixed(1);
+  if (elSaldo) { 
+    elSaldo.textContent = saldo !== null ? Math.abs(saldo).toFixed(0) : '—'; 
+    elSaldo.style.color = corSaldo; 
+  }
+  const labelEl = document.getElementById('pl-saldo-label');
+  if (labelEl) {
+    if (saldo === null) labelEl.textContent = 'Faltam';
+    else if (saldo >= 0) labelEl.textContent = 'Faltam';
+    else labelEl.textContent = 'Excedeu';
+  }
+  if (elMetaKL) elMetaKL.textContent = metaK ? `/ ${metaK} kcal` : '/ — kcal';
+  if (elMetaPL) elMetaPL.textContent = metaP ? `g / ${metaP}g` : 'g / — g';
+}
 
-    // Dividir kcal alvo igualmente entre todos os alimentos selecionados nessa refeição
-    const kcalPorItem = kcalAlvo / alimentosDaRef.length;
-
-    html += `<div style="background:#fff;border:1px solid #e8efe8;border-radius:10px;padding:16px;margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <h4 style="margin:0;font-size:14px;color:#1a2e1f">${REFEICAO_NOMES[r]}</h4>
-        <span style="font-size:12px;color:#7a8a7c;background:#f1f5f1;padding:3px 10px;border-radius:20px">alvo: ${Math.round(kcalAlvo)} kcal</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px">`;
-
-    let kcalRef = 0, protRef = 0;
-    alimentosDaRef.forEach(al => {
-      const kcal100 = al.kcal_100g || 1;
-      const prot100 = al.proteina_100g || 0;
-      const gramas  = al.gramas_unidade || 100;
+function coletarDadosPlano() {
+  const dados = [];
+  PL_REFEICOES.forEach(ref => {
+    const container = document.getElementById(`pl-linhas-${ref.id}`);
+    if (!container) return;
+    container.querySelectorAll('.pl-linha').forEach(linha => {
+      const sel   = linha.querySelector('select');
+      const input = linha.querySelector('input[type=number]');
+      if (!sel || !input) return;
+      const al  = alimentosCadastrados.find(a => a.id === sel.value);
+      const qtd = parseFloat(input.value);
+      if (!al || !qtd || qtd <= 0) return;
       const unidRaw = (al.unidade_medida || '').trim();
-      const unidLC  = unidRaw.toLowerCase();
-
-      // Qualquer unidade que NÃO seja grama pura é discreta (colher, concha, unidade, fatia, xícara, copo, etc)
-      const ehGrama = unidLC === '' || unidLC === 'g' || unidLC === 'gramas' || unidLC === 'grama';
-      const discreto = !ehGrama;
-      const unidLabel = ehGrama ? 'g' : (unidRaw || 'unidade');
-      const passo = ehGrama ? 5 : 1;
-
-      // Calcular quantidade para bater kcalPorItem
-      const gramasExatas = (kcalPorItem / kcal100) * 100;
-
-      let qtd, totalG;
-      if (discreto) {
-        qtd    = Math.max(1, Math.round(gramasExatas / gramas));
-        totalG = qtd * gramas;
-      } else {
-        totalG = Math.max(5, Math.round(gramasExatas / 5) * 5);
-        qtd    = totalG;
-      }
-
-      const kcalItem = (kcal100 * totalG) / 100;
-      const protItem = (prot100 * totalG) / 100;
-      kcalRef   += kcalItem;
-      protRef   += protItem;
-      kcalTotal += kcalItem;
-      protTotal += protItem;
-      planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: al.nome, qtd: discreto ? qtd : totalG, unidade: unidLabel, totalG, kcal: kcalItem, prot: protItem });
-      const itemId = `plano-item-${r}-${al.id}`;
-
-      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px;gap:8px" id="${itemId}-row">
-        <span style="font-size:13px;color:#1a2e1f;font-weight:500;flex:1">${al.nome}</span>
-        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:4px;background:#fff;border:1.5px solid #d1fae5;border-radius:8px;padding:2px 6px">
-            <button onclick="ajustarQtdPlano('${itemId}',${gramas},${kcal100},${prot100},'${unidLabel}',${passo},-1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">−</button>
-            <span id="${itemId}-qtd" style="font-size:13px;font-weight:700;color:#1a2e1f;min-width:28px;text-align:center">${discreto ? qtd : totalG}</span>
-            <span style="font-size:11px;color:#7a8a7c">${unidLabel}</span>
-            <button onclick="ajustarQtdPlano('${itemId}',${gramas},${kcal100},${prot100},'${unidLabel}',${passo},+1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">+</button>
-          </div>
-          <span id="${itemId}-kcal" style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
-          <span id="${itemId}-prot" style="font-size:11px;color:#2d6a4f">${protItem.toFixed(1)}g prot</span>
-          <button onclick="removerItemPlano('${itemId}-row','${al.id}',${r})" title="Remover" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:17px;padding:0 2px;line-height:1;flex-shrink:0">✕</button>
-        </div>
-      </div>`;
+      const ehGrama = !unidRaw || unidRaw.toLowerCase() === 'g' || unidRaw.toLowerCase() === 'gramas';
+      const unidLabel = ehGrama ? 'g' : unidRaw;
+      const gramas = al.gramas_unidade || 100;
+      const totalG = ehGrama ? qtd : qtd * gramas;
+      const kcal   = (al.kcal_100g     * totalG) / 100;
+      const prot   = (al.proteina_100g * totalG) / 100;
+      dados.push({ refeicao: ref.nome, nome: al.nome, qtd, unidade: unidLabel, totalG, kcal, prot });
     });
-
-    html += `</div>
-      <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;font-size:12px;color:#7a8a7c">
-        <span>Total: <strong style="color:#1a2e1f">${kcalRef.toFixed(0)} kcal</strong></span>
-        <span><strong style="color:#2d6a4f">${protRef.toFixed(1)}g</strong> prot</span>
-      </div>
-    </div>`;
-  }
-
-  // Ajuste fino: a diferença entre meta e total (por arredondamentos) é exibida
-  const diffKcal = metaKcal - kcalTotal;
-  const diffProt = metaProt ? metaProt - protTotal : null;
-  const corKcal = Math.abs(diffKcal) < 100 ? '#2d6a4f' : '#ef4444';
-  const corProt = diffProt !== null && Math.abs(diffProt) < 10 ? '#2d6a4f' : '#ef4444';
-
-  html += `<div style="background:#f0fdf4;border:2px solid #74c69d;border-radius:12px;padding:18px;margin-top:8px">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#2d6a4f;margin-bottom:14px">📊 Resumo do Plano <span style="font-weight:400;color:#7a8a7c;text-transform:none;font-size:11px">(atualiza ao ajustar as quantidades ↑↓)</span></div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px">
-      <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
-        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Total Kcal</div>
-        <div id="resumo-total-kcal" style="font-size:24px;font-weight:700;color:#1a2e1f">${kcalTotal.toFixed(0)}</div>
-        <div style="font-size:11px;color:#7a8a7c">meta: ${metaKcal}</div>
-      </div>
-      <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
-        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Diferença</div>
-        <div id="resumo-diff-kcal" style="font-size:24px;font-weight:700;color:${corKcal}">${diffKcal >= 0 ? '+' : ''}${diffKcal.toFixed(0)}</div>
-        <div style="font-size:11px;color:#7a8a7c">kcal</div>
-      </div>
-      ${metaProt ? `
-      <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
-        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Proteína</div>
-        <div id="resumo-total-prot" style="font-size:24px;font-weight:700;color:#1a2e1f">${protTotal.toFixed(0)}g</div>
-        <div style="font-size:11px;color:#7a8a7c">meta: ${metaProt}g</div>
-      </div>
-      <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
-        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Dif. Proteína</div>
-        <div id="resumo-diff-prot" style="font-size:24px;font-weight:700;color:${corProt}">${diffProt >= 0 ? '+' : ''}${diffProt.toFixed(0)}g</div>
-        <div style="font-size:11px;color:#7a8a7c">proteína</div>
-      </div>` : ''}
-    </div>
-  </div>`;
-
-  window._planoDados = planoDados;
-  document.getElementById('plano-content').innerHTML = html;
-  document.getElementById('plano-resultado').style.display = 'block';
-  document.getElementById('plano-resultado').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-// ── Ajuste manual de quantidade no resultado do plano ──────────────────
-function ajustarQtdPlano(itemId, gramasUnidade, kcal100, prot100, unidade, passo, delta) {
-  const qtdEl  = document.getElementById(itemId + '-qtd');
-  const kcalEl = document.getElementById(itemId + '-kcal');
-  const protEl = document.getElementById(itemId + '-prot');
-  if (!qtdEl) return;
-
-  let qtdAtual = parseFloat(qtdEl.textContent) || 1;
-  qtdAtual = Math.max(passo, qtdAtual + delta * passo);
-  qtdEl.textContent = qtdAtual;
-
-  // Recalcular kcal e prot com base na nova quantidade
-  const totalG = qtdAtual * gramasUnidade;
-  const novaKcal = (kcal100 * totalG) / 100;
-  const novaProt = (prot100 * totalG) / 100;
-
-  kcalEl.textContent = novaKcal.toFixed(0) + ' kcal';
-  protEl.textContent = novaProt.toFixed(1) + 'g prot';
-
-  // Atualizar totais de todas as refeições
-  recalcularTotaisPlano();
-}
-
-function removerItemPlano(rowId, alId, refIdx) {
-  const row = document.getElementById(rowId);
-  if (row) row.remove();
-
-  // Desselecionar o alimento na aba correspondente
-  if (_selecaoPorRefeicao[refIdx]) {
-    _selecaoPorRefeicao[refIdx].delete(alId);
-    // Atualizar badge da aba sem resetar a ativa
-    const n = parseInt(document.getElementById('pl-refeicoes').value) || 3;
-    renderizarNavAbas(n);
-  }
-
-  recalcularTotaisPlano();
-}
-
-function recalcularTotaisPlano() {
-  // Somar todos os kcal e prot dos itens visíveis
-  let kcalGrand = 0, protGrand = 0;
-  document.querySelectorAll('[id$="-kcal"]').forEach(el => {
-    if (el.id.startsWith('plano-item-')) {
-      kcalGrand += parseFloat(el.textContent) || 0;
-    }
   });
-  document.querySelectorAll('[id$="-prot"]').forEach(el => {
-    if (el.id.startsWith('plano-item-')) {
-      protGrand += parseFloat(el.textContent) || 0;
-    }
-  });
+  return dados;
+}
 
-  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value) || 0;
-  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value) || 0;
-  const diffKcal = metaKcal - kcalGrand;
-  const diffProt = metaProt ? metaProt - protGrand : null;
-  const corKcal  = Math.abs(diffKcal) < 100 ? '#2d6a4f' : '#ef4444';
-  const corProt  = diffProt !== null && Math.abs(diffProt) < 10 ? '#2d6a4f' : '#ef4444';
-
-  // Atualizar cards de resumo se existirem
-  const resumoKcal = document.getElementById('resumo-total-kcal');
-  const resumoDiff = document.getElementById('resumo-diff-kcal');
-  const resumoProt = document.getElementById('resumo-total-prot');
-  const resumoDiffP = document.getElementById('resumo-diff-prot');
-  if (resumoKcal) resumoKcal.textContent = kcalGrand.toFixed(0);
-  if (resumoDiff) { resumoDiff.textContent = (diffKcal >= 0 ? '+' : '') + diffKcal.toFixed(0); resumoDiff.style.color = corKcal; }
-  if (resumoProt) resumoProt.textContent = protGrand.toFixed(0) + 'g';
-  if (resumoDiffP) { resumoDiffP.textContent = (diffProt >= 0 ? '+' : '') + (diffProt||0).toFixed(0) + 'g'; resumoDiffP.style.color = corProt; }
+function preencherMetasDoCalculo() {
+  const kcalEl = document.getElementById('meta-kcal');
+  const protEl = document.getElementById('meta-prot');
+  const inKcal = document.getElementById('pl-meta-kcal');
+  const inProt = document.getElementById('pl-meta-prot');
+  if (kcalEl && inKcal && kcalEl.textContent !== '—' && !inKcal.value) inKcal.value = kcalEl.textContent.trim();
+  if (protEl && inProt && protEl.textContent !== '—' && !inProt.value) inProt.value = protEl.textContent.trim();
+  atualizarResumoPlano();
 }
 
 function exportarPlanoExcel() {
-  if (!window._planoDados || !window._planoDados.length) { alert('Gere o plano primeiro.'); return; }
+  const dados = coletarDadosPlano();
+  if (!dados.length) { alert('Preencha o plano antes de exportar.'); return; }
   const wb = XLSX.utils.book_new();
   const rows = [['Refeição','Alimento','Quantidade','Unidade','Kcal','Proteína (g)']];
-  window._planoDados.forEach(d => rows.push([d.refeicao, d.nome, d.qtd, d.unidade, d.kcal.toFixed(0), d.prot.toFixed(1)]));
+  dados.forEach(d => rows.push([d.refeicao, d.nome, d.qtd, d.unidade, d.kcal.toFixed(0), d.prot.toFixed(1)]));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Plano Alimentar');
   XLSX.writeFile(wb, 'plano-alimentar.xlsx');
 }
@@ -2534,118 +2392,82 @@ function gerarPlanoPDFDoc() {
   const ML=14, PW=182;
   let y=14;
 
-  // Cabeçalho
   doc.setFillColor(...VE); doc.rect(0,0,210,28,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(...VC);
   doc.text('NUTRI AMORIM — Plano Alimentar', ML, 12);
   doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...BR);
-  doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, ML, 20);
+  doc.text(`Paciente: ${perfilData.nome||'—'}   |   Gerado em: ${new Date().toLocaleString('pt-BR')}`, ML, 20);
   y = 36;
 
-  // Meta
-  const metaKcal = document.getElementById('pl-meta-kcal').value || '2000';
-  const metaProt = document.getElementById('pl-meta-prot').value || '0';
+  const metaKcal = document.getElementById('pl-meta-kcal')?.value || '—';
+  const metaProt = document.getElementById('pl-meta-prot')?.value || '—';
   doc.setFillColor(240,253,244); doc.roundedRect(ML, y, PW, 14, 3, 3, 'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...TX);
   doc.text(`Meta Calórica: ${metaKcal} kcal/dia   |   Meta de Proteína: ${metaProt}g/dia`, ML+4, y+9);
-  y += 20;
+  y += 22;
 
-  if (!window._planoDados || !window._planoDados.length) {
+  const dados = coletarDadosPlano();
+  if (!dados.length) {
     doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...TX);
-    doc.text('Nenhum plano gerado ainda.', ML, y);
+    doc.text('Nenhum alimento preenchido no plano.', ML, y);
     return doc;
   }
 
-  // Agrupar por refeição
+  // Agrupar por refeição mantendo ordem
   const grupos = {};
-  window._planoDados.forEach(d => {
-    if (!grupos[d.refeicao]) grupos[d.refeicao] = [];
-    grupos[d.refeicao].push(d);
-  });
-
-  // Ler qtd ajustada do DOM (pode ter sido editada pelo usuário com +/-)
-  const getQtdAtual = (refeicao, nome) => {
-    const rows = document.querySelectorAll('[id^="plano-item-"][id$="-row"]');
-    for (const row of rows) {
-      const nomeEl = row.querySelector('span');
-      if (nomeEl && nomeEl.textContent.trim() === nome) {
-        const qtdEl = row.querySelector('[id$="-qtd"]');
-        const kcalEl = row.querySelector('[id$="-kcal"]');
-        const protEl = row.querySelector('[id$="-prot"]');
-        return {
-          qtd:  qtdEl  ? qtdEl.textContent.trim()  : '—',
-          kcal: kcalEl ? kcalEl.textContent.trim()  : '—',
-          prot: protEl ? protEl.textContent.trim()  : '—',
-        };
-      }
-    }
-    return { qtd: '—', kcal: '—', prot: '—' };
-  };
+  PL_REFEICOES.forEach(r => { grupos[r.nome] = []; });
+  dados.forEach(d => { if (grupos[d.refeicao]) grupos[d.refeicao].push(d); });
 
   Object.entries(grupos).forEach(([refeicao, itens]) => {
-    if (y > 255) { doc.addPage(); y = 14; }
+    if (!itens.length) return;
+    if (y > 250) { doc.addPage(); y = 14; }
 
-    // Cabeçalho da refeição
+    // Cabeçalho refeição
     doc.setFillColor(...VE); doc.roundedRect(ML, y, PW, 10, 2, 2, 'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BR);
     doc.text(refeicao, ML+4, y+7);
-    y += 14;
+    y += 13;
 
-    // Cabeçalho da tabela
-    doc.setFillColor(240,253,244); doc.rect(ML, y-4, PW, 8, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...TX);
-    doc.text('Alimento', ML+2, y+1);
-    doc.text('Quantidade', ML+90, y+1);
-    doc.text('Kcal', ML+130, y+1);
-    doc.text('Proteína', ML+155, y+1);
-    y += 8;
+    // Header tabela
+    doc.setFillColor(240,253,244); doc.rect(ML, y-3, PW, 7, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(100,120,100);
+    doc.text('ALIMENTO', ML+2, y+1);
+    doc.text('QTD', ML+100, y+1);
+    doc.text('UNIDADE', ML+118, y+1);
+    doc.text('KCAL', ML+148, y+1);
+    doc.text('PROT', ML+166, y+1);
+    y += 9;
 
+    let kcalRef = 0, protRef = 0;
     itens.forEach((d, idx) => {
-      if (y > 270) { doc.addPage(); y = 14; }
-      const atual = getQtdAtual(d.refeicao, d.nome);
-
-      // Zebra
-      if (idx % 2 === 0) { doc.setFillColor(248,253,248); doc.rect(ML, y-4, PW, 8, 'F'); }
-
+      if (y > 272) { doc.addPage(); y = 14; }
+      if (idx % 2 === 0) { doc.setFillColor(250,254,250); doc.rect(ML, y-4, PW, 8, 'F'); }
       doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...TX);
-      const nomeStr = d.nome.length > 35 ? d.nome.substring(0,33)+'…' : d.nome;
-      doc.text(nomeStr, ML+2, y+1);
-
-      // Quantidade com unidade real (colher, unidade, g, etc)
-      const qtdStr = `${atual.qtd} ${d.unidade}`;
+      const nm = d.nome.length > 36 ? d.nome.slice(0,34)+'…' : d.nome;
+      doc.text(nm, ML+2, y+1);
       doc.setFont('helvetica','bold'); doc.setTextColor(45,106,79);
-      doc.text(qtdStr, ML+90, y+1);
-
+      doc.text(String(d.qtd), ML+100, y+1);
       doc.setFont('helvetica','normal'); doc.setTextColor(...TX);
-      doc.text(atual.kcal, ML+130, y+1);
-      doc.text(atual.prot, ML+155, y+1);
+      doc.text(d.unidade, ML+118, y+1);
+      doc.text(d.kcal.toFixed(0), ML+148, y+1);
+      doc.text(d.prot.toFixed(1)+'g', ML+166, y+1);
+      kcalRef += d.kcal; protRef += d.prot;
       y += 9;
     });
 
-    // Total da refeição
-    const kcalRef = itens.reduce((s,d) => {
-      const atual = getQtdAtual(d.refeicao, d.nome);
-      return s + (parseFloat(atual.kcal) || 0);
-    }, 0);
-    const protRef = itens.reduce((s,d) => {
-      const atual = getQtdAtual(d.refeicao, d.nome);
-      return s + (parseFloat(atual.prot) || 0);
-    }, 0);
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,106,79);
-    doc.text(`Total: ${kcalRef.toFixed(0)} kcal  |  ${protRef.toFixed(1)}g proteína`, ML+90, y+1);
-    y += 10;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(45,106,79);
+    doc.text(`Subtotal: ${kcalRef.toFixed(0)} kcal  |  ${protRef.toFixed(1)}g proteína`, ML+80, y+1);
+    y += 11;
   });
 
-  // Resumo final
-  if (y > 250) { doc.addPage(); y = 14; }
-  doc.setFillColor(240,253,244); doc.roundedRect(ML, y, PW, 16, 3, 3, 'F');
-  const totalKcal = document.getElementById('resumo-total-kcal')?.textContent || '—';
-  const totalProt = document.getElementById('resumo-total-prot')?.textContent || '—';
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...TX);
-  doc.text(`Total do Plano: ${totalKcal} kcal  |  Proteína: ${totalProt}`, ML+4, y+10);
-  y += 22;
+  // Totais finais
+  if (y > 255) { doc.addPage(); y = 14; }
+  const totKcal = parseFloat(document.getElementById('pl-total-kcal')?.textContent)||0;
+  const totProt = parseFloat(document.getElementById('pl-total-prot')?.textContent)||0;
+  doc.setFillColor(26,46,31); doc.roundedRect(ML, y, PW, 16, 3, 3, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...VC);
+  doc.text(`TOTAL: ${totKcal.toFixed(0)} kcal   |   Proteína: ${totProt.toFixed(1)}g`, ML+4, y+10);
 
-  // Rodapé
   doc.setFillColor(...VE); doc.rect(0,287,210,10,'F');
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(...VC);
   doc.text('Nutri Amorim | nutriamorim69@gmail.com | (62) 99854-0552', ML, 293);
@@ -2653,17 +2475,19 @@ function gerarPlanoPDFDoc() {
   return doc;
 }
 
-function visualizarPlanoPDF() {
+function gerarPlanoPDF() {
   const doc = gerarPlanoPDFDoc();
-  const blob = doc.output('blob');
-  const url = URL.createObjectURL(blob);
+  doc.save(`plano-alimentar-${perfilData.nome||'paciente'}-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
+}
+
+function visualizarPlanoPDFNovo() {
+  const doc = gerarPlanoPDFDoc();
+  const url = URL.createObjectURL(doc.output('blob'));
   abrirPdfModal(url, 'Plano Alimentar');
 }
 
-function baixarPlanoPDF() {
-  const doc = gerarPlanoPDFDoc();
-  doc.save(`plano-alimentar-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.pdf`);
-}
+function visualizarPlanoPDF() { visualizarPlanoPDFNovo(); }
+function baixarPlanoPDF()     { gerarPlanoPDF(); }
 
 function calcularMetasManual() {
   const sexo     = document.getElementById('mt-sexo').value;
