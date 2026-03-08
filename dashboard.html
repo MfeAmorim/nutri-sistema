@@ -2825,6 +2825,26 @@ async function carregarMetasSalvas() {
         recEst.style.display = 'block';
       }
     } catch(e) {}
+  } else if (kcal) {
+    // Sem estimativa salva — tentar calcular com dados do prontuário
+    try {
+      const pesoAtual    = parseFloat(prontuarioData?.peso) || 0;
+      const pesoDesejado = parseFloat(prontuarioData?.peso_desejado) || 0;
+      const metaKcalNum  = parseFloat(kcal);
+      if (pesoAtual && pesoDesejado && pesoDesejado < pesoAtual && metaKcalNum) {
+        const diferenca   = pesoAtual - pesoDesejado;
+        const getProxy    = Math.round(pesoAtual * 30);
+        const deficitDieta = Math.max(0, getProxy - metaKcalNum);
+        if (deficitDieta > 0) {
+          const semanas = Math.ceil((diferenca * 7700) / (deficitDieta * 7));
+          const meses   = (semanas / 4.33).toFixed(1);
+          const est = { deficitTotal: deficitDieta, diferenca: diferenca.toFixed(1), semanas, meses, obs: '' };
+          window._estimativaMeta = est;
+          const stSem = document.getElementById('st-est-semanas'); if (stSem) stSem.textContent = semanas;
+          const stMes = document.getElementById('st-est-meses');   if (stMes) stMes.textContent  = meses;
+        }
+      }
+    } catch(e) {}
   }
 }
 
