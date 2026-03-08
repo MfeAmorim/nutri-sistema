@@ -600,6 +600,7 @@
           <div class="field"><label>Altura (cm)</label><input type="number" id="mt-altura" placeholder="Ex: 170"></div>
           <div class="field"><label>Nível de Atividade</label>
             <select id="mt-atividade">
+              <option value="nenhum">🚫 Não faço atividade física</option>
               <option value="sedentario">Sedentário (pouco ou nenhum exercício)</option>
               <option value="leve">Levemente ativo (1-3x/semana)</option>
               <option value="moderado" selected>Moderadamente ativo (3-5x/semana)</option>
@@ -886,12 +887,32 @@
           </div>
         </div>
 
+        <!-- Estimativa de tempo -->
+        <div id="rec-estimativa" style="display:none;margin-top:16px;background:linear-gradient(135deg,#1a2e1f,#2d6a4f);color:#fff;border-radius:12px;padding:20px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#74c69d;margin-bottom:12px">⏱️ Estimativa para Atingir a Meta de Peso</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Déficit diário total</div><div style="font-size:22px;font-weight:700" id="rec-est-deficit">—</div><div style="font-size:11px;color:#74c69d">kcal/dia</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Peso a perder</div><div style="font-size:22px;font-weight:700" id="rec-est-diferenca">—</div><div style="font-size:11px;color:#74c69d">kg</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Tempo estimado</div><div style="font-size:22px;font-weight:700" id="rec-est-semanas">—</div><div style="font-size:11px;color:#74c69d">semanas</div></div>
+            <div><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Equivale a</div><div style="font-size:22px;font-weight:700" id="rec-est-meses">—</div><div style="font-size:11px;color:#74c69d">meses aprox.</div></div>
+          </div>
+          <div id="rec-est-obs" style="margin-top:10px;font-size:11px;color:rgba(255,255,255,0.55);line-height:1.6"></div>
+        </div>
+
       </div>
 
     </div><!-- fim tab-recordatorio -->
 
     <!-- ══ PLANO ALIMENTAR ══ -->
     <div class="tab-content" id="tab-plano">
+      <!-- Lembrete elegante -->
+      <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px">
+        <span style="font-size:22px;line-height:1">🌿</span>
+        <div>
+          <div style="font-weight:700;color:#166534;font-size:14px;margin-bottom:3px">Para um plano mais preciso</div>
+          <div style="font-size:13px;color:#15803d;line-height:1.6">Quanto mais completo o seu <strong>Recordatório 24h</strong>, mais fiel à sua rotina será o plano alimentar gerado. Registre seus alimentos com regularidade para melhores resultados. 🥗</div>
+        </div>
+      </div>
       <div class="form-section">
         <h3>Plano Alimentar Personalizado</h3>
         <p class="subtitle">Configure seu objetivo e gere seu plano com base nos alimentos mais consumidos.</p>
@@ -1891,12 +1912,92 @@ async function removerAlimento(id) { if(!confirm('Remover este alimento?'))retur
 function gerarPlano() {
   const msg = document.getElementById('msg-plano');
   if (!alimentosCadastrados.length) { msg.className='msg error'; msg.textContent='Cadastre alimentos na tabela alimentar antes de gerar o plano.'; return; }
-  const metaKcal=parseFloat(document.getElementById('pl-meta-kcal').value)||2000; const metaProt=parseFloat(document.getElementById('pl-meta-prot').value)||120; const refeicoes=parseInt(document.getElementById('pl-refeicoes').value)||5; const objetivo=document.getElementById('pl-objetivo').value;
-  const fonteDados=recordatorioItems.length>0?[...new Map(recordatorioItems.map(i=>[i.alimento_id,i])).values()].map(i=>alimentosCadastrados.find(a=>a.id===i.alimento_id)).filter(Boolean):alimentosCadastrados.slice(0,8);
-  const refeicaoNomes=['Café da Manhã','Lanche da Manhã','Almoço','Lanche da Tarde','Jantar','Ceia'];
-  let html=`<div style="margin-bottom:16px;padding:16px;background:var(--creme);border-radius:8px"><strong>Objetivo:</strong> ${objetivo==='deficit'?'🔻 Déficit':objetivo==='superavit'?'🔺 Superávit':'⚖️ Manutenção'} | <strong>Meta:</strong> ${metaKcal} kcal | <strong>Proteína:</strong> ${metaProt}g</div>`;
-  for(let r=0;r<refeicoes;r++){html+=`<div class="plano-item" style="margin-bottom:16px"><h4>${refeicaoNomes[r]||`Refeição ${r+1}`}</h4><ul class="plano-list">`; let kcalRef=0; fonteDados.slice(0,Math.min(4,fonteDados.length)).forEach((al,i)=>{if(!al)return;const qtd=(r===2||r===4?150:50)+(i*20);const kcalItem=al.kcal_100g*qtd/100;kcalRef+=kcalItem;html+=`<li><span>${al.nome}</span><div style="display:flex;gap:8px;align-items:center"><span class="plano-qty">${qtd}g</span><span class="plano-badge">${kcalItem.toFixed(0)}kcal</span></div></li>`;}); html+=`</ul><div style="font-size:12px;color:#7a8a7c;margin-top:8px">Total aprox.: ${kcalRef.toFixed(0)} kcal</div></div>`;}
-  document.getElementById('plano-content').innerHTML=html; document.getElementById('plano-resultado').style.display='block'; document.getElementById('meta-kcal').textContent=metaKcal; document.getElementById('meta-prot').textContent=metaProt; msg.className=''; msg.textContent='';
+  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value)||2000;
+  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value)||120;
+  const refeicoes = parseInt(document.getElementById('pl-refeicoes').value)||5;
+  const objetivo = document.getElementById('pl-objetivo').value;
+
+  // Contar frequência de cada alimento no recordatório
+  const freq = {};
+  recordatorioItems.forEach(item => {
+    if (item.alimento_id) freq[item.alimento_id] = (freq[item.alimento_id]||0) + 1;
+  });
+
+  // Ordenar alimentos por frequência de consumo
+  let fonteDados = alimentosCadastrados
+    .map(a => ({ ...a, _freq: freq[a.id] || 0 }))
+    .sort((a, b) => b._freq - a._freq)
+    .slice(0, 12);
+
+  // Se não tem histórico, usa todos os alimentos cadastrados
+  if (!Object.keys(freq).length) fonteDados = alimentosCadastrados.slice(0, 12);
+
+  const temHistorico = Object.keys(freq).length > 0;
+  const refeicaoNomes = ['Café da Manhã','Lanche da Manhã','Almoço','Lanche da Tarde','Jantar','Ceia'];
+  const kcalPorRef = Math.round(metaKcal / refeicoes);
+
+  let html = `<div style="margin-bottom:16px;padding:16px;background:var(--creme);border-radius:8px;font-size:13px">
+    <strong>Objetivo:</strong> ${objetivo==='deficit'?'🔻 Déficit Calórico':objetivo==='superavit'?'🔺 Superávit':' ⚖️ Manutenção'} &nbsp;|&nbsp;
+    <strong>Meta:</strong> ${metaKcal} kcal &nbsp;|&nbsp;
+    <strong>Proteína:</strong> ${metaProt}g &nbsp;|&nbsp;
+    <strong>Refeições:</strong> ${refeicoes}x/dia
+  </div>`;
+
+  if (temHistorico) {
+    html += `<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#166534">
+      ✅ Plano gerado com base nos <strong>${Object.keys(freq).length} alimentos</strong> mais consumidos no seu recordatório.
+    </div>`;
+  } else {
+    html += `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#92400e">
+      ⚠️ Sem histórico no Recordatório — plano gerado com alimentos cadastrados. Registre sua alimentação para um plano personalizado!
+    </div>`;
+  }
+
+  for (let r = 0; r < refeicoes; r++) {
+    // Distribuir alimentos por refeição (principais nas refeições maiores)
+    const isReficaoPrincipal = r === 2 || r === 4; // almoço e jantar
+    const numItens = isReficaoPrincipal ? Math.min(4, fonteDados.length) : Math.min(2, fonteDados.length);
+    const offset = (r * 2) % Math.max(1, fonteDados.length);
+    const itensRef = [];
+    for (let i = 0; i < numItens; i++) {
+      itensRef.push(fonteDados[(offset + i) % fonteDados.length]);
+    }
+
+    html += `<div style="background:#fff;border:1px solid #e8efe8;border-radius:10px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h4 style="margin:0;font-size:14px;color:#1a2e1f">${refeicaoNomes[r]||`Refeição ${r+1}`}</h4>
+        <span style="font-size:12px;color:#7a8a7c;background:#f1f5f1;padding:3px 10px;border-radius:20px">~${kcalPorRef} kcal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">`;
+
+    let kcalRef = 0;
+    itensRef.forEach(al => {
+      if (!al) return;
+      const qtd = isReficaoPrincipal ? (al.gramas_unidade ? Math.round(al.gramas_unidade * 2) : 150) : (al.gramas_unidade || 50);
+      const kcalItem = (al.kcal_100g || 0) * qtd / 100;
+      const protItem = (al.proteina_100g || 0) * qtd / 100;
+      kcalRef += kcalItem;
+      const freqLabel = freq[al.id] ? `<span style="font-size:10px;color:#2d6a4f;background:#f0fdf4;padding:1px 6px;border-radius:10px;margin-left:4px">${freq[al.id]}x no histórico</span>` : '';
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px">
+        <span style="font-size:13px;color:#1a2e1f;font-weight:500">${al.nome}${freqLabel}</span>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+          <span style="font-size:12px;color:#7a8a7c">${qtd}${al.unidade_medida||'g'}</span>
+          <span style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
+          <span style="font-size:11px;color:#7a8a7c">${protItem.toFixed(1)}g prot</span>
+        </div>
+      </div>`;
+    });
+
+    html += `</div>
+      <div style="font-size:12px;color:#7a8a7c;margin-top:10px;text-align:right">Total aprox.: <strong>${kcalRef.toFixed(0)} kcal</strong></div>
+    </div>`;
+  }
+
+  document.getElementById('plano-content').innerHTML = html;
+  document.getElementById('plano-resultado').style.display = 'block';
+  document.getElementById('meta-kcal').textContent = metaKcal;
+  document.getElementById('meta-prot').textContent = metaProt;
+  msg.className = ''; msg.textContent = '';
 }
 
 function exportarExcel() {
@@ -1917,8 +2018,8 @@ function calcularMetasManual() {
   const ativ     = document.getElementById('mt-atividade').value;
   const objetivo = document.getElementById('mt-objetivo').value;
 
-  const fator = {sedentario:1.2, leve:1.375, moderado:1.55, ativo:1.725, extremo:1.9};
-  const fat = fator[ativ] || 1.55;
+  const fator = {nenhum:1.0, sedentario:1.2, leve:1.375, moderado:1.55, ativo:1.725, extremo:1.9};
+  const fat = fator[ativ] || 1.2;
 
   // TMB Harris-Benedict
   let tmb;
@@ -1973,11 +2074,16 @@ function calcularMetasManual() {
 
     let obs = `📌 Déficit pela dieta: ${deficitDieta} kcal/dia`;
     if (gastoExercicioDia > 0) obs += ` | Exercício: ~${gastoExercicioDia} kcal/dia (${freq}x/semana)`;
+    if (ativ === 'nenhum') obs += `<br>⚠️ Sem atividade física o processo é mais lento. Pequenas caminhadas já fazem diferença!`;
     obs += `<br>⚠️ Estimativa teórica. Resultados variam conforme adesão, metabolismo e outros fatores.`;
     document.getElementById('mt-res-obs').innerHTML = obs;
     estEl.style.display = 'block';
+
+    // Guardar para sincronizar com o Resumo do Dia ao aplicar
+    window._estimativaMeta = { deficitTotal, diferenca: diferenca.toFixed(1), semanas, meses, obs, gastoExercicioDia, deficitDieta, ativ };
   } else {
     estEl.style.display = 'none';
+    window._estimativaMeta = null;
   }
 }
 
@@ -1993,6 +2099,20 @@ function aplicarMetas() {
   document.getElementById('limite-sodio').textContent = sodio;
   document.getElementById('pl-meta-kcal').value = kcal;
   document.getElementById('pl-meta-prot').value = prot;
+
+  // Sincronizar estimativa de tempo no Resumo do Dia
+  const est = window._estimativaMeta;
+  const recEst = document.getElementById('rec-estimativa');
+  if (est && recEst) {
+    document.getElementById('rec-est-deficit').textContent   = est.deficitTotal;
+    document.getElementById('rec-est-diferenca').textContent = est.diferenca;
+    document.getElementById('rec-est-semanas').textContent   = est.semanas;
+    document.getElementById('rec-est-meses').textContent     = est.meses;
+    document.getElementById('rec-est-obs').innerHTML         = est.obs;
+    recEst.style.display = 'block';
+  } else if (recEst) {
+    recEst.style.display = 'none';
+  }
 
   const msg = document.getElementById('mt-msg');
   msg.className = 'msg success';
