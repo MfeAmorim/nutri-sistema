@@ -689,8 +689,8 @@
             <select id="mt-objetivo">
               <option value="manutencao">Manutenção do Peso</option>
               <option value="perda">Perda de Peso (-500 kcal)</option>
-              <option value="perda_rapida">Perda Rápida (-1000 kcal)</option>
-              <option value="ganho">Ganho de Massa (+300 kcal)</option>
+              <option value="perda_rapida">Perda Rápida (-750 kcal)</option>
+              <option value="ganho">Ganho de Massa (+450 kcal)</option>
             </select>
           </div>
           <div class="field"><label>Nível de Atividade</label>
@@ -2577,9 +2577,12 @@ function calcularMetasManual() {
   const minKcal = sexo === 'Masculino' ? 1600 : 1400;
   const metaKcal = Math.max(minKcal, metaKcalBase);
 
-  // Proteína por objetivo: ganho de massa exige mais (2.0-2.2g/kg)
-  const fatorProt = {manutencao:1.6, perda:1.8, perda_rapida:2.0, ganho:2.0};
-  const metaProt = Math.round(peso * (fatorProt[objetivo] || 1.8));
+  // Proteína: no ganho de massa usa o peso desejado (construir o corpo que quer ter)
+  // nos outros objetivos usa o peso atual
+  const pesoDesejadoProt = parseFloat(document.getElementById('mt-peso-desejado').value);
+  const pesoProt = (objetivo === 'ganho' && pesoDesejadoProt > peso) ? pesoDesejadoProt : peso;
+  const fatorProt = {manutencao:1.6, perda:1.8, perda_rapida:2.0, ganho:1.75};
+  const metaProt = Math.round(pesoProt * (fatorProt[objetivo] || 1.8));
 
   // Carboidrato: 45-50% das kcal (mais carb para ganho de massa)
   const percCarb = objetivo === 'ganho' ? 0.50 : 0.45;
