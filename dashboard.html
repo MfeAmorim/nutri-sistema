@@ -622,8 +622,16 @@
 
         <!-- Exercícios -->
         <hr class="form-divider">
-        <div style="font-size:13px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px">🏃 Exercícios Praticados (opcional)</div>
-        <p class="subtitle" style="margin-bottom:16px">Selecione os exercícios que o paciente pratica para incluir no cálculo do tempo estimado para atingir a meta.</p>
+        <!-- Frase elegante -->
+        <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #86efac;border-radius:12px;padding:14px 18px;margin:20px 0 16px;display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:20px;line-height:1.2">🏃</span>
+          <div>
+            <div style="font-weight:700;color:#166534;font-size:14px;margin-bottom:3px">Cada passo conta</div>
+            <div style="font-size:13px;color:#15803d;line-height:1.6">A atividade física potencializa os resultados da alimentação saudável. Quanto mais ativa for a rotina, menor o tempo para alcançar o peso ideal. 💚</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">🏋️ Exercícios Praticados (opcional)</div>
+        <p class="subtitle" style="margin-bottom:16px">Selecione os exercícios para incluir no cálculo do tempo estimado.</p>
         <div id="mt-exercicios" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px">
           <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:10px;border:1.5px solid #e8efe8;border-radius:8px;background:#f8fdf8">
             <input type="checkbox" value="caminhada" data-kcal="280" style="accent-color:var(--verde)"> 🚶 Caminhada (30min/dia, 280 kcal/h)
@@ -860,17 +868,26 @@
         <!-- TOTAIS -->
         <div id="rec-aviso-nao-encontrados" style="display:none;margin-top:16px;padding:12px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:13px;color:#92400e;line-height:1.6"></div>
 
-        <div class="totals-box" id="rec-totais" style="display:none;margin-top:20px">
-          <div class="total-item">
+        <!-- Label do dia sendo exibido -->
+        <div id="totais-label" style="font-size:13px;font-weight:600;color:#2d6a4f;margin-top:20px;margin-bottom:6px"></div>
+
+        <div class="totals-box" id="rec-totais" style="display:none">
+          <div class="total-item" style="position:relative">
             <h4>Calorias</h4>
-            <div class="val" id="tot-kcal">0</div>
-            <div class="meta">Meta: <span id="meta-kcal">2000</span> kcal</div>
+            <div style="display:flex;align-items:baseline;gap:8px">
+              <div class="val" id="tot-kcal">0</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45);white-space:nowrap">/ <span id="meta-kcal">2000</span> kcal</div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">Meta diária</div>
             <div class="falta">Falta: <span id="falta-kcal">2000</span> kcal</div>
           </div>
           <div class="total-item">
             <h4>Proteína</h4>
-            <div class="val" id="tot-prot">0g</div>
-            <div class="meta">Meta: <span id="meta-prot">120</span>g</div>
+            <div style="display:flex;align-items:baseline;gap:8px">
+              <div class="val" id="tot-prot">0g</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.45);white-space:nowrap">/ <span id="meta-prot">120</span>g</div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.8px;margin-top:2px">Meta diária</div>
             <div class="falta">Falta: <span id="falta-prot">120</span>g</div>
           </div>
           <div class="total-item">
@@ -1323,7 +1340,22 @@ function renderizarRecordatorio() {
 
   tbody.innerHTML = html;
 
-  atualizarTotais(itensFiltrados);
+  // Resumo do dia: sem filtro → mostra só o último dia registrado
+  const filtroAtivo2 = _filtroIni || _filtroFim;
+  if (filtroAtivo2 || itensFiltrados.length === 0) {
+    atualizarTotais(itensFiltrados);
+    const labelEl = document.getElementById('totais-label');
+    if (labelEl) labelEl.textContent = filtroAtivo2 ? 'Período filtrado' : '';
+  } else {
+    // último dia
+    const diasOrdenados = Object.keys(diasMap).sort();
+    const ultimoDia = diasOrdenados[diasOrdenados.length - 1];
+    const itensUltimoDia = diasMap[ultimoDia] || [];
+    const dataFmtUltimo = ultimoDia !== 'sem-data' ? new Date(ultimoDia + 'T12:00:00').toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'}) : '—';
+    const labelEl = document.getElementById('totais-label');
+    if (labelEl) labelEl.textContent = `📅 ${dataFmtUltimo}`;
+    atualizarTotais(itensUltimoDia);
+  }
 
 }
 
@@ -1953,14 +1985,25 @@ function gerarPlano() {
     </div>`;
   }
 
+  // Separar alimentos leves para café da manhã
+  const palavrasLeves = ['pão','café','iogurte','fruta','banana','maçã','mamão','tapioca','mingau','aveia','granola','leite','ovo','queijo','mel','geleia'];
+  const alimentosLeves = fonteDados.filter(a => palavrasLeves.some(p => a.nome.toLowerCase().includes(p)));
+  const alimentosPesados = fonteDados.filter(a => !palavrasLeves.some(p => a.nome.toLowerCase().includes(p)));
+
   for (let r = 0; r < refeicoes; r++) {
-    // Distribuir alimentos por refeição (principais nas refeições maiores)
+    const isCafe = r === 0;
     const isReficaoPrincipal = r === 2 || r === 4; // almoço e jantar
     const numItens = isReficaoPrincipal ? Math.min(4, fonteDados.length) : Math.min(2, fonteDados.length);
-    const offset = (r * 2) % Math.max(1, fonteDados.length);
-    const itensRef = [];
-    for (let i = 0; i < numItens; i++) {
-      itensRef.push(fonteDados[(offset + i) % fonteDados.length]);
+
+    let itensRef = [];
+    if (isCafe) {
+      // Café da manhã: priorizar alimentos leves
+      const fonteCafe = alimentosLeves.length >= 2 ? alimentosLeves : (alimentosCadastrados.filter(a => palavrasLeves.some(p => a.nome.toLowerCase().includes(p))).length >= 2 ? alimentosCadastrados.filter(a => palavrasLeves.some(p => a.nome.toLowerCase().includes(p))) : fonteDados);
+      for (let i = 0; i < Math.min(2, fonteCafe.length); i++) itensRef.push(fonteCafe[i]);
+    } else {
+      const fonteBase = isReficaoPrincipal ? (alimentosPesados.length >= 2 ? alimentosPesados : fonteDados) : fonteDados;
+      const offset = (r * 2) % Math.max(1, fonteBase.length);
+      for (let i = 0; i < numItens; i++) itensRef.push(fonteBase[(offset + i) % fonteBase.length]);
     }
 
     html += `<div style="background:#fff;border:1px solid #e8efe8;border-radius:10px;padding:16px;margin-bottom:12px">
