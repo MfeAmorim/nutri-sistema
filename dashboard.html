@@ -2566,10 +2566,24 @@ function calcularMetasManual() {
   else                      tmb = 10*peso + 6.25*altura - 5*idade - 161;
 
   const get = Math.round(tmb * fat);
-  const ajuste = {manutencao:0, perda:-500, perda_rapida:-1000, ganho:300};
-  const metaKcal = Math.max(1200, get + (ajuste[objetivo] || 0));
-  const metaProt = Math.round(peso * 1.8);
-  const metaCarb = Math.round((metaKcal * 0.45) / 4);
+
+  // Ajuste calórico por objetivo
+  // Perda: -500 kcal/dia = ~0,5kg/semana (seguro e sustentável)
+  // Perda rápida: -750 kcal/dia (máximo recomendado sem perder massa)
+  // Ganho: +400 a +500 kcal acima do GET para hipertrofia eficiente
+  const ajuste = {manutencao:0, perda:-500, perda_rapida:-750, ganho:450};
+  const metaKcalBase = get + (ajuste[objetivo] || 0);
+  // Mínimo seguro: 1400 para mulheres, 1600 para homens
+  const minKcal = sexo === 'Masculino' ? 1600 : 1400;
+  const metaKcal = Math.max(minKcal, metaKcalBase);
+
+  // Proteína por objetivo: ganho de massa exige mais (2.0-2.2g/kg)
+  const fatorProt = {manutencao:1.6, perda:1.8, perda_rapida:2.0, ganho:2.0};
+  const metaProt = Math.round(peso * (fatorProt[objetivo] || 1.8));
+
+  // Carboidrato: 45-50% das kcal (mais carb para ganho de massa)
+  const percCarb = objetivo === 'ganho' ? 0.50 : 0.45;
+  const metaCarb = Math.round((metaKcal * percCarb) / 4);
 
   document.getElementById('mt-res-get').textContent  = get;
   document.getElementById('mt-res-kcal').textContent = metaKcal;
