@@ -299,6 +299,23 @@
       .home-card { padding: 14px; }
       .home-card-icon { font-size: 26px; }
       .perfil-header { flex-direction: column; text-align: center; }
+
+      /* Plano Alimentar — mobile */
+      #pl-abas-nav { gap: 4px; padding-bottom: 8px; }
+      .pl-aba-btn { padding: 7px 10px; font-size: 11px; border-radius: 6px 6px 0 0; }
+      .pl-filtro-btn { padding: 5px 10px; font-size: 11px; }
+      #pl-alimentos-grid { grid-template-columns: repeat(2, 1fr) !important; max-height: 280px; }
+      .pl-alimento-card { padding: 8px 6px; }
+      .pl-alimento-card .pl-al-nome { font-size: 11px; }
+      .pl-alimento-card .pl-al-info { font-size: 10px; }
+      .pl-alimento-card .pl-al-check { font-size: 14px; }
+
+      /* Resultado do plano — itens da refeição em coluna no mobile */
+      #plano-content div[style*="justify-content:space-between"] { flex-direction: column; align-items: flex-start !important; gap: 6px; }
+      #plano-content div[style*="gap:8px"][style*="flex-shrink:0"] { flex-wrap: wrap; }
+
+      /* Resumo do plano — grid menor */
+      #plano-content div[style*="grid-template-columns:repeat(auto-fill"] { grid-template-columns: repeat(2, 1fr) !important; }
     }
   </style>
 </head>
@@ -1017,7 +1034,7 @@
         <div class="msg" id="msg-plano"></div>
 
         <!-- Metas -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:20px">
           <div class="field"><label>🔥 Meta Calórica (kcal/dia)</label><input type="number" id="pl-meta-kcal" placeholder="Ex: 2800"></div>
           <div class="field"><label>💪 Meta de Proteína (g/dia)</label><input type="number" id="pl-meta-prot" placeholder="Ex: 140"></div>
           <div class="field"><label>Número de Refeições</label>
@@ -2359,18 +2376,21 @@ function gerarPlano() {
       protRef  += protItem;
       kcalTotal += kcalItem;
       protTotal += protItem;
-      planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: al.nome, qtd, unidade: al.unidade_medida||'g', totalG, kcal: kcalItem, prot: protItem });
+      const unidLabel = discreto ? (al.unidade_medida || 'unidade') : 'g';
+      planoDados.push({ refeicao: REFEICAO_NOMES[r], nome: al.nome, qtd: discreto ? qtd : totalG, unidade: unidLabel, totalG, kcal: kcalItem, prot: protItem });
+      const itemId = `plano-item-${r}-${al.id}`;
 
-      const unidLabel = discreto
-        ? `${qtd} ${al.unidade_medida || 'unidade'}${qtd > 1 ? 's' : ''}`
-        : `${totalG}g`;
-
-      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px">
-        <span style="font-size:13px;color:#1a2e1f;font-weight:500">${al.nome}</span>
-        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
-          <span style="font-size:12px;color:#555;font-weight:600">${unidLabel}</span>
-          <span style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
-          <span style="font-size:11px;color:#2d6a4f">${protItem.toFixed(1)}g prot</span>
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f8fdf8;border-radius:8px;gap:8px" id="${itemId}-row">
+        <span style="font-size:13px;color:#1a2e1f;font-weight:500;flex:1">${al.nome}</span>
+        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:4px;background:#fff;border:1.5px solid #d1fae5;border-radius:8px;padding:2px 6px">
+            <button onclick="ajustarQtdPlano('${itemId}',${al.gramas_unidade||100},${kcal100},${prot100},'${unidLabel}',${discreto?1:5},-1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">−</button>
+            <span id="${itemId}-qtd" style="font-size:13px;font-weight:700;color:#1a2e1f;min-width:28px;text-align:center">${discreto ? qtd : totalG}</span>
+            <span style="font-size:11px;color:#7a8a7c">${unidLabel}</span>
+            <button onclick="ajustarQtdPlano('${itemId}',${al.gramas_unidade||100},${kcal100},${prot100},'${unidLabel}',${discreto?1:5},+1)" style="background:none;border:none;font-size:16px;cursor:pointer;color:#2d6a4f;padding:0 2px;line-height:1">+</button>
+          </div>
+          <span id="${itemId}-kcal" style="font-size:12px;font-weight:700;color:#2d6a4f;background:#dcfce7;padding:2px 8px;border-radius:10px">${kcalItem.toFixed(0)} kcal</span>
+          <span id="${itemId}-prot" style="font-size:11px;color:#2d6a4f">${protItem.toFixed(1)}g prot</span>
         </div>
       </div>`;
     });
@@ -2390,31 +2410,30 @@ function gerarPlano() {
   const corProt = diffProt !== null && Math.abs(diffProt) < 10 ? '#2d6a4f' : '#ef4444';
 
   html += `<div style="background:#f0fdf4;border:2px solid #74c69d;border-radius:12px;padding:18px;margin-top:8px">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#2d6a4f;margin-bottom:14px">📊 Resumo do Plano</div>
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#2d6a4f;margin-bottom:14px">📊 Resumo do Plano <span style="font-weight:400;color:#7a8a7c;text-transform:none;font-size:11px">(atualiza ao ajustar as quantidades ↑↓)</span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px">
       <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
         <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Total Kcal</div>
-        <div style="font-size:24px;font-weight:700;color:#1a2e1f">${kcalTotal.toFixed(0)}</div>
+        <div id="resumo-total-kcal" style="font-size:24px;font-weight:700;color:#1a2e1f">${kcalTotal.toFixed(0)}</div>
         <div style="font-size:11px;color:#7a8a7c">meta: ${metaKcal}</div>
       </div>
       <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
         <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Diferença</div>
-        <div style="font-size:24px;font-weight:700;color:${corKcal}">${diffKcal >= 0 ? '+' : ''}${diffKcal.toFixed(0)}</div>
+        <div id="resumo-diff-kcal" style="font-size:24px;font-weight:700;color:${corKcal}">${diffKcal >= 0 ? '+' : ''}${diffKcal.toFixed(0)}</div>
         <div style="font-size:11px;color:#7a8a7c">kcal</div>
       </div>
       ${metaProt ? `
       <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
         <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Proteína</div>
-        <div style="font-size:24px;font-weight:700;color:#1a2e1f">${protTotal.toFixed(0)}g</div>
+        <div id="resumo-total-prot" style="font-size:24px;font-weight:700;color:#1a2e1f">${protTotal.toFixed(0)}g</div>
         <div style="font-size:11px;color:#7a8a7c">meta: ${metaProt}g</div>
       </div>
       <div style="text-align:center;background:#fff;border-radius:8px;padding:10px">
-        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Dif. Prot.</div>
-        <div style="font-size:24px;font-weight:700;color:${corProt}">${diffProt >= 0 ? '+' : ''}${diffProt.toFixed(0)}g</div>
+        <div style="font-size:11px;color:#7a8a7c;margin-bottom:4px">Dif. Proteína</div>
+        <div id="resumo-diff-prot" style="font-size:24px;font-weight:700;color:${corProt}">${diffProt >= 0 ? '+' : ''}${diffProt.toFixed(0)}g</div>
         <div style="font-size:11px;color:#7a8a7c">proteína</div>
       </div>` : ''}
     </div>
-    ${Math.abs(diffKcal) > 100 ? `<div style="margin-top:10px;font-size:12px;color:#92400e;background:#fffbeb;padding:8px 12px;border-radius:6px">⚠️ A diferença de ${Math.abs(diffKcal).toFixed(0)} kcal ocorre porque os alimentos selecionados têm unidades discretas (ex: 1 ovo, 1 pão). Para ajustar, adicione um alimento medido em gramas em alguma refeição.</div>` : ''}
   </div>`;
 
   window._planoDados = planoDados;
@@ -2423,7 +2442,69 @@ function gerarPlano() {
   document.getElementById('plano-resultado').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-function exportarPlanoExcel() { const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Refeição','Alimento','Quantidade (g)','Kcal Estimada']]),'Plano Alimentar'); XLSX.writeFile(wb,'plano-alimentar.xlsx'); }
+// ── Ajuste manual de quantidade no resultado do plano ──────────────────
+function ajustarQtdPlano(itemId, gramasUnidade, kcal100, prot100, unidade, passo, delta) {
+  const qtdEl  = document.getElementById(itemId + '-qtd');
+  const kcalEl = document.getElementById(itemId + '-kcal');
+  const protEl = document.getElementById(itemId + '-prot');
+  if (!qtdEl) return;
+
+  let qtdAtual = parseFloat(qtdEl.textContent) || 1;
+  qtdAtual = Math.max(passo, qtdAtual + delta * passo);
+  qtdEl.textContent = qtdAtual;
+
+  // Recalcular kcal e prot com base na nova quantidade
+  const totalG = qtdAtual * gramasUnidade;
+  const novaKcal = (kcal100 * totalG) / 100;
+  const novaProt = (prot100 * totalG) / 100;
+
+  kcalEl.textContent = novaKcal.toFixed(0) + ' kcal';
+  protEl.textContent = novaProt.toFixed(1) + 'g prot';
+
+  // Atualizar totais de todas as refeições
+  recalcularTotaisPlano();
+}
+
+function recalcularTotaisPlano() {
+  // Somar todos os kcal e prot dos itens visíveis
+  let kcalGrand = 0, protGrand = 0;
+  document.querySelectorAll('[id$="-kcal"]').forEach(el => {
+    if (el.id.startsWith('plano-item-')) {
+      kcalGrand += parseFloat(el.textContent) || 0;
+    }
+  });
+  document.querySelectorAll('[id$="-prot"]').forEach(el => {
+    if (el.id.startsWith('plano-item-')) {
+      protGrand += parseFloat(el.textContent) || 0;
+    }
+  });
+
+  const metaKcal = parseFloat(document.getElementById('pl-meta-kcal').value) || 0;
+  const metaProt = parseFloat(document.getElementById('pl-meta-prot').value) || 0;
+  const diffKcal = metaKcal - kcalGrand;
+  const diffProt = metaProt ? metaProt - protGrand : null;
+  const corKcal  = Math.abs(diffKcal) < 100 ? '#2d6a4f' : '#ef4444';
+  const corProt  = diffProt !== null && Math.abs(diffProt) < 10 ? '#2d6a4f' : '#ef4444';
+
+  // Atualizar cards de resumo se existirem
+  const resumoKcal = document.getElementById('resumo-total-kcal');
+  const resumoDiff = document.getElementById('resumo-diff-kcal');
+  const resumoProt = document.getElementById('resumo-total-prot');
+  const resumoDiffP = document.getElementById('resumo-diff-prot');
+  if (resumoKcal) resumoKcal.textContent = kcalGrand.toFixed(0);
+  if (resumoDiff) { resumoDiff.textContent = (diffKcal >= 0 ? '+' : '') + diffKcal.toFixed(0); resumoDiff.style.color = corKcal; }
+  if (resumoProt) resumoProt.textContent = protGrand.toFixed(0) + 'g';
+  if (resumoDiffP) { resumoDiffP.textContent = (diffProt >= 0 ? '+' : '') + (diffProt||0).toFixed(0) + 'g'; resumoDiffP.style.color = corProt; }
+}
+
+function exportarPlanoExcel() {
+  if (!window._planoDados || !window._planoDados.length) { alert('Gere o plano primeiro.'); return; }
+  const wb = XLSX.utils.book_new();
+  const rows = [['Refeição','Alimento','Quantidade','Unidade','Kcal','Proteína (g)']];
+  window._planoDados.forEach(d => rows.push([d.refeicao, d.nome, d.qtd, d.unidade, d.kcal.toFixed(0), d.prot.toFixed(1)]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'Plano Alimentar');
+  XLSX.writeFile(wb, 'plano-alimentar.xlsx');
+}
 
 function gerarPlanoPDFDoc() {
   const { jsPDF } = window.jspdf;
@@ -2441,59 +2522,107 @@ function gerarPlanoPDFDoc() {
   y = 36;
 
   // Meta
-  const metaKcal = document.getElementById('pl-meta-kcal').value || document.getElementById('meta-kcal').textContent || '2000';
-  const metaProt = document.getElementById('pl-meta-prot').value || document.getElementById('meta-prot').textContent || '120';
+  const metaKcal = document.getElementById('pl-meta-kcal').value || '2000';
+  const metaProt = document.getElementById('pl-meta-prot').value || '0';
   doc.setFillColor(240,253,244); doc.roundedRect(ML, y, PW, 14, 3, 3, 'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...TX);
   doc.text(`Meta Calórica: ${metaKcal} kcal/dia   |   Meta de Proteína: ${metaProt}g/dia`, ML+4, y+9);
   y += 20;
 
-  // Conteúdo do plano
-  const planoEl = document.getElementById('plano-content');
-  if (!planoEl || !planoEl.textContent.trim()) {
+  if (!window._planoDados || !window._planoDados.length) {
     doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(...TX);
     doc.text('Nenhum plano gerado ainda.', ML, y);
     return doc;
   }
 
-  // Extrair refeições do HTML
-  const refeicoes = planoEl.querySelectorAll('div[style*="border:1px solid"]');
-  refeicoes.forEach(ref => {
-    const titulo = ref.querySelector('h4');
-    const itens = ref.querySelectorAll('div[style*="background:#f8fdf8"]');
-    const totalEl = ref.querySelector('div[style*="text-align:right"]');
+  // Agrupar por refeição
+  const grupos = {};
+  window._planoDados.forEach(d => {
+    if (!grupos[d.refeicao]) grupos[d.refeicao] = [];
+    grupos[d.refeicao].push(d);
+  });
 
-    if (!titulo) return;
-    if (y > 260) { doc.addPage(); y = 14; }
+  // Ler qtd ajustada do DOM (pode ter sido editada pelo usuário com +/-)
+  const getQtdAtual = (refeicao, nome) => {
+    const rows = document.querySelectorAll('[id^="plano-item-"][id$="-row"]');
+    for (const row of rows) {
+      const nomeEl = row.querySelector('span');
+      if (nomeEl && nomeEl.textContent.trim() === nome) {
+        const qtdEl = row.querySelector('[id$="-qtd"]');
+        const kcalEl = row.querySelector('[id$="-kcal"]');
+        const protEl = row.querySelector('[id$="-prot"]');
+        return {
+          qtd:  qtdEl  ? qtdEl.textContent.trim()  : '—',
+          kcal: kcalEl ? kcalEl.textContent.trim()  : '—',
+          prot: protEl ? protEl.textContent.trim()  : '—',
+        };
+      }
+    }
+    return { qtd: '—', kcal: '—', prot: '—' };
+  };
+
+  Object.entries(grupos).forEach(([refeicao, itens]) => {
+    if (y > 255) { doc.addPage(); y = 14; }
 
     // Cabeçalho da refeição
     doc.setFillColor(...VE); doc.roundedRect(ML, y, PW, 10, 2, 2, 'F');
     doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BR);
-    doc.text(titulo.textContent.trim(), ML+4, y+7);
-    y += 13;
+    doc.text(refeicao, ML+4, y+7);
+    y += 14;
 
-    itens.forEach(item => {
+    // Cabeçalho da tabela
+    doc.setFillColor(240,253,244); doc.rect(ML, y-4, PW, 8, 'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...TX);
+    doc.text('Alimento', ML+2, y+1);
+    doc.text('Quantidade', ML+90, y+1);
+    doc.text('Kcal', ML+130, y+1);
+    doc.text('Proteína', ML+155, y+1);
+    y += 8;
+
+    itens.forEach((d, idx) => {
       if (y > 270) { doc.addPage(); y = 14; }
-      const spans = item.querySelectorAll('span');
-      const nome = spans[0] ? spans[0].textContent.replace(/\d+x no histórico/,'').trim() : '';
-      const qtd  = spans[1] ? spans[1].textContent.trim() : '';
-      const kcal = spans[2] ? spans[2].textContent.trim() : '';
-      const prot = spans[3] ? spans[3].textContent.trim() : '';
+      const atual = getQtdAtual(d.refeicao, d.nome);
+
+      // Zebra
+      if (idx % 2 === 0) { doc.setFillColor(248,253,248); doc.rect(ML, y-4, PW, 8, 'F'); }
 
       doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...TX);
-      doc.text(`• ${nome}`, ML+4, y);
-      doc.setTextColor(100,130,100);
-      doc.text(`${qtd}  ${kcal}  ${prot}`, ML+80, y);
-      y += 7;
+      const nomeStr = d.nome.length > 35 ? d.nome.substring(0,33)+'…' : d.nome;
+      doc.text(nomeStr, ML+2, y+1);
+
+      // Quantidade com unidade real (colher, unidade, g, etc)
+      const qtdStr = `${atual.qtd} ${d.unidade}`;
+      doc.setFont('helvetica','bold'); doc.setTextColor(45,106,79);
+      doc.text(qtdStr, ML+90, y+1);
+
+      doc.setFont('helvetica','normal'); doc.setTextColor(...TX);
+      doc.text(atual.kcal, ML+130, y+1);
+      doc.text(atual.prot, ML+155, y+1);
+      y += 9;
     });
 
-    if (totalEl) {
-      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,106,79);
-      doc.text(totalEl.textContent.trim(), ML+4, y);
-      y += 4;
-    }
-    y += 6;
+    // Total da refeição
+    const kcalRef = itens.reduce((s,d) => {
+      const atual = getQtdAtual(d.refeicao, d.nome);
+      return s + (parseFloat(atual.kcal) || 0);
+    }, 0);
+    const protRef = itens.reduce((s,d) => {
+      const atual = getQtdAtual(d.refeicao, d.nome);
+      return s + (parseFloat(atual.prot) || 0);
+    }, 0);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(74,106,79);
+    doc.text(`Total: ${kcalRef.toFixed(0)} kcal  |  ${protRef.toFixed(1)}g proteína`, ML+90, y+1);
+    y += 10;
   });
+
+  // Resumo final
+  if (y > 250) { doc.addPage(); y = 14; }
+  doc.setFillColor(240,253,244); doc.roundedRect(ML, y, PW, 16, 3, 3, 'F');
+  const totalKcal = document.getElementById('resumo-total-kcal')?.textContent || '—';
+  const totalProt = document.getElementById('resumo-total-prot')?.textContent || '—';
+  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...TX);
+  doc.text(`Total do Plano: ${totalKcal} kcal  |  Proteína: ${totalProt}`, ML+4, y+10);
+  y += 22;
 
   // Rodapé
   doc.setFillColor(...VE); doc.rect(0,287,210,10,'F');
