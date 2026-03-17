@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde Coletiva — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #1d4ed8; --vermelho: #dc2626; --roxo: #7c3aed;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); } .prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); } .prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); } .prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(29,78,216,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-icon.teal { background: rgba(20,184,166,0.1); }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; margin-left: auto; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 5px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.info-box { background: #eff6ff; border-left: 4px solid var(--azul); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.info-box p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 9px 12px; border-bottom: 1px solid #e8f0e8; vertical-align: top; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin: 2px 3px 2px 0; }
+.tag-green { background: #dcfce7; color: #15803d; }
+.tag-red { background: #fee2e2; color: #dc2626; }
+.tag-orange { background: #ffedd5; color: #c2410c; }
+.tag-blue { background: #dbeafe; color: #1d4ed8; }
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+.tag-teal { background: #ccfbf1; color: #0f766e; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-red { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-ok { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-err { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-prox { background: var(--escuro); color: #fff; }
+.btn-prox:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-prox:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; transform: none; }
+.btn-reinic { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reinic:hover { background: #e5e7eb; }
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.res-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+.erradas-section { text-align: left; max-width: 600px; margin: 0 auto 24px; }
+.erradas-titulo { font-size: 14px; font-weight: 800; color: var(--escuro); margin-bottom: 12px; }
+.errada-item { background: #fff5f5; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.errada-num { font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; margin-bottom: 4px; }
+.errada-enunciado { font-size: 13px; color: var(--escuro); font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+.errada-gabarito { font-size: 12px; color: #15803d; font-weight: 700; }
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Saúde Coletiva</div>
+    <div class="badge">1º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo', this)">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz', this)">✏️ Questões (25)</div>
+</div>
+
+<!-- ═══════════════ RESUMO ═══════════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🏥</div>
+    <div>
+      <div class="hero-tag">1º Módulo · Nutrição · Unicesumar</div>
+      <h1>Saúde Coletiva</h1>
+      <p>Autoras: Dra. Marcela Demitto Furtado e Dra. Raquel Gusmão Oliveira<br>5 unidades · 152 páginas · Conteúdo organizado por relevância para o nutricionista</p>
+    </div>
+  </div>
+
+  <!-- ── ALTA ── -->
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Base do SUS e da prática profissional em saúde pública</div>
+  </div>
+
+  <!-- 1. SUS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🏛️</div>
+      <div class="card-titulo">
+        <h3>Sistema Único de Saúde (SUS) — Princípios e Diretrizes</h3>
+        <p>Unidade 2 · História da Saúde Pública no Brasil</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é o SUS?</h4>
+      <p>O SUS é o Sistema Único de Saúde, criado pela <strong>Constituição Federal de 1988</strong> (arts. 196 a 200) e regulamentado pelas Leis Orgânicas da Saúde: <strong>Lei 8.080/1990</strong> (organização e funcionamento) e <strong>Lei 8.142/1990</strong> (participação social e financiamento). É considerado um dos maiores sistemas públicos de saúde do mundo.</p>
+
+      <h4>Princípios Doutrinários (filosóficos)</h4>
+      <table class="tabela">
+        <tr><th>Princípio</th><th>Significado</th></tr>
+        <tr><td><strong>Universalidade</strong></td><td>Saúde é direito de todos os cidadãos brasileiros, sem qualquer discriminação</td></tr>
+        <tr><td><strong>Integralidade</strong></td><td>Atenção ao indivíduo como um todo — promoção, prevenção, cura e reabilitação</td></tr>
+        <tr><td><strong>Equidade</strong></td><td>Tratar desigualmente os desiguais — dar mais a quem precisa mais</td></tr>
+      </table>
+
+      <h4>Princípios Organizacionais (operativos)</h4>
+      <table class="tabela">
+        <tr><th>Princípio</th><th>Significado</th></tr>
+        <tr><td><strong>Regionalização</strong></td><td>Organização dos serviços por base territorial, respeitando divisões político-administrativas</td></tr>
+        <tr><td><strong>Hierarquização</strong></td><td>Organização em níveis crescentes de complexidade (atenção básica → média → alta)</td></tr>
+        <tr><td><strong>Descentralização</strong></td><td>Distribuição de responsabilidades entre União, Estados e Municípios — ênfase na municipalização</td></tr>
+        <tr><td><strong>Resolubilidade</strong></td><td>Capacidade de resolver problemas de saúde até o nível de competência do serviço</td></tr>
+        <tr><td><strong>Participação social</strong></td><td>Valorização da comunidade nas decisões — Conselhos e Conferências de Saúde</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete:</strong> Princípios doutrinários = <strong>UIE</strong> (Universalidade, Integralidade, Equidade). Princípios organizacionais = <strong>RHDRD</strong> (Regionalização, Hierarquização, Descentralização, Resolubilidade, participação social).</p>
+      </div>
+
+      <h4>Níveis de Atenção à Saúde</h4>
+      <ul>
+        <li><span class="tag tag-green">Atenção Básica</span> Porta de entrada preferencial — UBS, ESF, NASF. Ações de promoção, prevenção e tratamento de baixa complexidade</li>
+        <li><span class="tag tag-orange">Média Complexidade</span> Ambulatórios especializados, UPA, exames diagnósticos</li>
+        <li><span class="tag tag-red">Alta Complexidade</span> Hospitais, UTI, transplantes, oncologia</li>
+      </ul>
+
+      <h4>Histórico Pré-SUS (resumo)</h4>
+      <ul>
+        <li><strong>Até 1930:</strong> saúde como "caso de polícia" — campanhismo sanitário (Oswaldo Cruz)</li>
+        <li><strong>1930–1964:</strong> modelo previdenciário — IAPs (Institutos de Aposentadoria e Pensão) — saúde só para trabalhadores formais</li>
+        <li><strong>1964–1985:</strong> INAMPS — centralização, modelo curativo e privatizante</li>
+        <li><strong>1986:</strong> 8ª Conferência Nacional de Saúde — marco da Reforma Sanitária e base para o SUS</li>
+        <li><strong>1988:</strong> Constituição Federal — saúde como direito universal</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 2. CONCEITO SAÚDE-DOENÇA + DSS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🔍</div>
+      <div class="card-titulo">
+        <h3>Conceito de Saúde-Doença e Determinantes Sociais</h3>
+        <p>Unidade 1 · Perspectiva Atualizada</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Evolução do Conceito de Saúde</h4>
+      <ul>
+        <li><strong>Conceito negativo (antigo):</strong> saúde = ausência de doença</li>
+        <li><strong>OMS (1948):</strong> "Estado de completo bem-estar físico, mental e social, e não apenas a ausência de doença" — conceito ampliado mas criticado por ser utópico</li>
+        <li><strong>8ª CNS (1986):</strong> saúde como resultado das condições de vida — alimentação, moradia, emprego, educação, lazer, acesso aos serviços de saúde</li>
+        <li><strong>Conceito atual:</strong> saúde como processo dinâmico, influenciado por fatores biológicos, sociais, econômicos, culturais e ambientais</li>
+      </ul>
+
+      <h4>Modelos Explicativos do Processo Saúde-Doença</h4>
+      <table class="tabela">
+        <tr><th>Modelo</th><th>Características</th></tr>
+        <tr><td><strong>Biologicista / Biomédico</strong></td><td>Foco no agente causador, no hospedeiro e no ambiente. Visão mecanicista — corpo como máquina. Base: Tríade Ecológica (agente-hospedeiro-ambiente)</td></tr>
+        <tr><td><strong>Social / Determinação Social</strong></td><td>Saúde como produto das condições de vida. Considera fatores históricos, econômicos e culturais. Base: determinantes sociais da saúde (DSS)</td></tr>
+        <tr><td><strong>Promoção à Saúde</strong></td><td>Carta de Ottawa (1986) — empoderamento individual e coletivo, autonomia, ambientes saudáveis</td></tr>
+      </table>
+
+      <h4>Determinantes Sociais da Saúde (DSS) — Modelo de Dahlgren e Whitehead</h4>
+      <p>Os DSS são organizados em camadas concêntricas, do individual ao macro:</p>
+      <ul>
+        <li><strong>Camada 1 — Individual:</strong> idade, sexo, herança genética (não modificáveis)</li>
+        <li><strong>Camada 2 — Comportamento e estilo de vida:</strong> alimentação, atividade física, tabagismo, uso de álcool</li>
+        <li><strong>Camada 3 — Redes sociais e comunitárias:</strong> apoio social, comunidade, capital social</li>
+        <li><strong>Camada 4 — Condições de vida e trabalho:</strong> moradia, saneamento, emprego, educação, alimentação</li>
+        <li><strong>Camada 5 — Macro — condições socioeconômicas:</strong> políticas econômicas, urbanização, produção de alimentos</li>
+      </ul>
+
+      <div class="info-box">
+        <p>🥗 <strong>Nutrição e DSS:</strong> O padrão alimentar é determinante social modificável. A transição nutricional brasileira — saída do padrão de cereais/feijão para alimentos ultraprocessados — está diretamente ligada a doenças crônicas não transmissíveis (DCNT) como obesidade, diabetes e hipertensão.</p>
+      </div>
+
+      <h4>Transição Epidemiológica no Brasil</h4>
+      <p>Mudança no perfil de morbimortalidade: redução das doenças infecciosas e aumento das DCNT (cardiovasculares, câncer, diabetes). O Brasil vive uma "dupla carga de doenças" — ainda tem alta prevalência de doenças infecciosas enquanto as DCNT crescem.</p>
+    </div>
+  </div>
+
+  <!-- 3. POLÍTICAS PÚBLICAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">📋</div>
+      <div class="card-titulo">
+        <h3>Políticas Públicas de Saúde — Mulher, Criança, Adulto e Idoso</h3>
+        <p>Unidade 4 · Principais programas e políticas nacionais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Saúde da Mulher</h4>
+      <ul>
+        <li><strong>PAISM (1983):</strong> Programa de Assistência Integral à Saúde da Mulher — primeiro programa a considerar a mulher além da reprodução</li>
+        <li><strong>PNAISM (2004):</strong> Política Nacional de Atenção Integral à Saúde da Mulher — amplia para todas as fases da vida e inclui violência de gênero</li>
+        <li><strong>Rede Cegonha (2011):</strong> assistência ao pré-natal, parto, puerpério e saúde da criança até 24 meses</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Nutrição e Saúde da Mulher:</strong> O nutricionista atua no pré-natal (suplementação de ácido fólico, ferro, DHA), no combate à anemia ferropriva (principal deficiência em gestantes) e na promoção do aleitamento materno.</p>
+      </div>
+
+      <h4>Saúde da Criança</h4>
+      <ul>
+        <li><strong>PAISC (1984):</strong> Programa de Assistência Integral à Saúde da Criança</li>
+        <li><strong>PNAISC (2015):</strong> Política Nacional de Atenção Integral à Saúde da Criança — eixos: aleitamento materno, alimentação saudável, vigilância do crescimento e desenvolvimento</li>
+        <li><strong>Caderneta de Saúde da Criança:</strong> instrumento de monitoramento do crescimento e desenvolvimento</li>
+      </ul>
+
+      <h4>Saúde do Adulto e Idoso</h4>
+      <ul>
+        <li><strong>HIPERDIA:</strong> sistema de cadastramento e acompanhamento de hipertensos e diabéticos na atenção básica</li>
+        <li><strong>PNI (Política Nacional do Idoso — Lei 8.842/1994):</strong> garantia de direitos aos maiores de 60 anos</li>
+        <li><strong>Estatuto do Idoso (Lei 10.741/2003):</strong> direitos fundamentais da pessoa idosa</li>
+        <li><strong>PNSPI (2006):</strong> Política Nacional de Saúde da Pessoa Idosa — envelhecimento ativo e saudável</li>
+      </ul>
+
+      <h4>Populações Vulneráveis</h4>
+      <ul>
+        <li><strong>Saúde Indígena:</strong> SESAI — Secretaria Especial de Saúde Indígena</li>
+        <li><strong>População em situação de rua:</strong> Consultório na Rua</li>
+        <li><strong>LGBTQIA+:</strong> Política Nacional de Saúde Integral de LGBT (2011)</li>
+        <li><strong>Negros:</strong> Política Nacional de Saúde Integral da População Negra (2009)</li>
+      </ul>
+
+      <h4>Saúde Mental</h4>
+      <ul>
+        <li><strong>Reforma Psiquiátrica (Lei 10.216/2001):</strong> desinstitucionalização e reinserção social</li>
+        <li><strong>CAPS:</strong> Centro de Atenção Psicossocial — substitui os manicômios</li>
+        <li><strong>RAPS:</strong> Rede de Atenção Psicossocial</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── MÉDIA ── -->
+  <div class="prioridade prio-media" style="margin-top: 16px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Ferramentas de gestão e vigilância em saúde</div>
+  </div>
+
+  <!-- 4. VIGILÂNCIA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">🔎</div>
+      <div class="card-titulo">
+        <h3>Vigilância em Saúde e Sistemas de Informação</h3>
+        <p>Unidade 3 · Epidemiologia, indicadores e notificação compulsória</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Tipos de Vigilância em Saúde</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Foco</th><th>Exemplo</th></tr>
+        <tr><td><strong>Epidemiológica</strong></td><td>Doenças e agravos de notificação</td><td>SINAN — dengue, tuberculose</td></tr>
+        <tr><td><strong>Sanitária</strong></td><td>Riscos à saúde — alimentos, medicamentos, ambientes</td><td>ANVISA, vigilância de alimentos</td></tr>
+        <tr><td><strong>Ambiental</strong></td><td>Qualidade da água, ar, solo</td><td>VIGIAGUA</td></tr>
+        <tr><td><strong>Saúde do Trabalhador</strong></td><td>Riscos e doenças ocupacionais</td><td>CEREST</td></tr>
+        <tr><td><strong>Nutricional</strong></td><td>Estado nutricional da população</td><td>SISVAN, PNAN</td></tr>
+      </table>
+
+      <h4>Notificação Compulsória — Portaria 204/2016</h4>
+      <p>Doenças de notificação imediata (≤ 24h): dengue (óbitos), sarampo, febre amarela, cólera, meningite, botulismo, poliomielite, hantavírus, entre outros.</p>
+      <p>Doenças de notificação semanal: dengue (casos), HIV, hepatites virais, sífilis, tuberculose, hanseníase, leishmaniose.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Para o nutricionista:</strong> O SISVAN (Sistema de Vigilância Alimentar e Nutricional) é o principal sistema de informação da área. Monitora o estado nutricional e o consumo alimentar de crianças, adolescentes, gestantes e idosos atendidos na atenção básica.</p>
+      </div>
+
+      <h4>Principais Indicadores de Saúde</h4>
+      <table class="tabela">
+        <tr><th>Indicador</th><th>Definição</th></tr>
+        <tr><td><strong>Taxa de Mortalidade Infantil (TMI)</strong></td><td>Nº de óbitos de menores de 1 ano / Nº de nascidos vivos × 1.000</td></tr>
+        <tr><td><strong>Expectativa de Vida ao Nascer</strong></td><td>Nº médio de anos que uma pessoa viverá ao nascer</td></tr>
+        <tr><td><strong>Taxa de Prevalência</strong></td><td>Proporção de casos existentes de uma doença em determinado momento</td></tr>
+        <tr><td><strong>Taxa de Incidência</strong></td><td>Nº de casos novos de uma doença em um período</td></tr>
+        <tr><td><strong>Coeficiente de Mortalidade</strong></td><td>Nº de óbitos por causa específica / População × 100.000</td></tr>
+      </table>
+
+      <h4>Sistemas de Informação em Saúde</h4>
+      <ul>
+        <li><span class="tag tag-blue">SINAN</span> Sistema de Informação de Agravos de Notificação</li>
+        <li><span class="tag tag-blue">SIM</span> Sistema de Informação sobre Mortalidade</li>
+        <li><span class="tag tag-blue">SINASC</span> Sistema de Informação sobre Nascidos Vivos</li>
+        <li><span class="tag tag-blue">SIHSUS</span> Sistema de Informações Hospitalares</li>
+        <li><span class="tag tag-green">SISVAN</span> Sistema de Vigilância Alimentar e Nutricional</li>
+        <li><span class="tag tag-green">SIAB/e-SUS</span> Sistema de Informação da Atenção Básica</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. PNH -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon teal">🤝</div>
+      <div class="card-titulo">
+        <h3>Política Nacional de Humanização (PNH)</h3>
+        <p>Unidade 5 · HumanizaSUS — princípios, diretrizes e dispositivos</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é a PNH?</h4>
+      <p>Criada em 2003, a Política Nacional de Humanização (HumanizaSUS) é uma política transversal do SUS que busca qualificar as práticas de saúde, valorizando os sujeitos envolvidos no processo — usuários, trabalhadores e gestores.</p>
+
+      <h4>Princípios da PNH</h4>
+      <ul>
+        <li><strong>Transversalidade:</strong> atravessa todas as políticas e programas do SUS</li>
+        <li><strong>Indissociabilidade entre atenção e gestão</strong></li>
+        <li><strong>Protagonismo dos sujeitos:</strong> autonomia e protagonismo dos trabalhadores e usuários</li>
+      </ul>
+
+      <h4>Diretrizes da PNH</h4>
+      <table class="tabela">
+        <tr><th>Diretriz</th><th>Definição</th></tr>
+        <tr><td><strong>Acolhimento</strong></td><td>Escuta qualificada, criação de vínculo, acesso a partir da necessidade do usuário. NÃO é triagem.</td></tr>
+        <tr><td><strong>Clínica Ampliada</strong></td><td>Visão integral do sujeito — além do patológico</td></tr>
+        <tr><td><strong>Cogestão</strong></td><td>Inclusão de trabalhadores e usuários nas decisões</td></tr>
+        <tr><td><strong>Valorização do Trabalhador</strong></td><td>Reconhecimento da importância do trabalhador na mudança do modelo assistencial</td></tr>
+        <tr><td><strong>Defesa dos Direitos do Usuário</strong></td><td>Carta dos Direitos dos Usuários do SUS</td></tr>
+      </table>
+
+      <h4>Dispositivos (ferramentas práticas)</h4>
+      <ul>
+        <li><strong>Acolhimento com Classificação de Risco (ACR)</strong></li>
+        <li><strong>Projeto Terapêutico Singular (PTS)</strong> — plano individualizado para casos complexos</li>
+        <li><strong>Visita aberta e direito ao acompanhante</strong></li>
+        <li><strong>Ouvidorias e sistemas de escuta</strong></li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Segurança do Paciente (RDC 36/2013):</strong> Institucionalização dos Núcleos de Segurança do Paciente (NSP) em serviços de saúde. Metas internacionais: identificação correta do paciente, higiene das mãos, prevenção de quedas e úlceras por pressão.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COMPLEMENTAR ── -->
+  <div class="prioridade prio-baixa" style="margin-top: 16px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Complementar — Contexto histórico e modelos assistenciais</div>
+  </div>
+
+  <!-- 6. REDES DE ATENÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🕸️</div>
+      <div class="card-titulo">
+        <h3>Redes de Atenção à Saúde (RAS) e Pactos pela Saúde</h3>
+        <p>Unidade 2 · Organização do SUS pós-2006</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Redes de Atenção à Saúde (RAS)</h4>
+      <p>Modelo de organização do SUS que substitui a lógica hierárquica piramidal por uma rede de serviços integrados com a atenção básica como coordenadora do cuidado. Componentes: atenção básica (centro), pontos de atenção secundária e terciária, sistemas logísticos (regulação, transporte, prontuário) e de governança.</p>
+
+      <h4>Pactos pela Saúde (2006)</h4>
+      <ul>
+        <li><strong>Pacto pela Vida:</strong> prioridades assistenciais definidas (saúde do idoso, câncer de colo e mama, mortalidade infantil e materna, doenças emergentes)</li>
+        <li><strong>Pacto em Defesa do SUS:</strong> reafirmação dos princípios constitucionais do SUS</li>
+        <li><strong>Pacto de Gestão:</strong> definição de responsabilidades de cada ente federativo</li>
+      </ul>
+
+      <h4>Estratégia de Saúde da Família (ESF)</h4>
+      <p>Principal estratégia de reorientação do modelo assistencial na atenção básica. A equipe mínima é composta por: médico, enfermeiro, auxiliar/técnico de enfermagem e agentes comunitários de saúde (ACS). O NASF (Núcleo Ampliado de Saúde da Família) apoia as equipes — inclui o nutricionista.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Nutricionista no NASF:</strong> O nutricionista integra o NASF e atua em suporte às equipes de Saúde da Família, realizando ações de educação alimentar e nutricional, atendimento compartilhado, matriciamento e vigilância nutricional (SISVAN).</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Saúde Coletiva</h2>
+    <p>Teste seu conhecimento sobre os tópicos mais importantes do módulo</p>
+    <div class="chips">
+      <div class="chip chip-green" id="chipAcertos">✓ 0 acertos</div>
+      <div class="chip chip-red" id="chipErros">✗ 0 erros</div>
+      <div class="chip chip-total" id="chipTotal">0 / 25</div>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-text">Questão <span id="qAtualSpan">1</span> de 25</div>
+  </div>
+
+  <div id="questaoContainer"></div>
+
+  <div id="resultadoFinal" style="display:none">
+    <div class="resultado">
+      <div class="resultado-emoji" id="resEmoji">🎉</div>
+      <h2 id="resTitulo">Simulado Concluído!</h2>
+      <p id="resSub">Confira seu desempenho</p>
+      <div class="res-stats">
+        <div class="r-stat verde"><div class="r-stat-val" id="resAcertos">0</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val" id="resErros">0</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val" id="resTaxa">0%</div><div class="r-stat-label">Taxa de acerto</div></div>
+      </div>
+      <button class="btn-nav btn-prox" onclick="reiniciar()" style="margin:0 auto;display:flex">🔄 Refazer Simulado</button>
+    </div>
+    <div class="erradas-section" id="erradasLista"></div>
+  </div>
+
+</div>
+
+<script>
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'quiz' && questoes.length > 0) renderCard(qAtual);
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.card-header').forEach(h => h.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open'); chevron.classList.add('open'); header.classList.add('open');
+    setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+}
+
+const questoes = [
+  {
+    tema: 'SUS — Princípios',
+    enunciado: 'Os princípios DOUTRINÁRIOS (filosóficos) do SUS, estabelecidos pela Lei 8.080/1990, são:',
+    opcoes: ['Regionalização, Hierarquização e Descentralização.','Universalidade, Integralidade e Equidade.','Universalidade, Resolutividade e Participação Social.','Equidade, Descentralização e Integralidade.'],
+    correta: 1,
+    gabarito: 'Os princípios doutrinários são UIE: Universalidade (saúde para todos), Integralidade (atenção ao todo) e Equidade (tratar desigualmente os desiguais — dar mais a quem precisa mais). Os organizacionais incluem regionalização, hierarquização, descentralização, resolubilidade e participação social.'
+  },
+  {
+    tema: 'SUS — Histórico',
+    enunciado: 'A 8ª Conferência Nacional de Saúde (1986) é considerada um marco histórico porque:',
+    opcoes: ['Criou o INAMPS e centralizou a saúde no governo federal.','Propôs a Reforma Sanitária e estabeleceu as bases conceituais para a criação do SUS.','Regulamentou o funcionamento dos hospitais privados conveniados.','Instituiu a Lei Orgânica da Saúde (Lei 8.080/1990).'],
+    correta: 1,
+    gabarito: 'A 8ª CNS foi o maior evento de participação social na saúde brasileira. Com a presença de trabalhadores, usuários e profissionais, propôs a Reforma Sanitária e os princípios que fundamentaram o SUS na Constituição de 1988. A Lei 8.080/1990 veio depois.'
+  },
+  {
+    tema: 'Conceito de Saúde',
+    enunciado: 'O conceito de saúde da OMS (1948) define saúde como:',
+    opcoes: ['Ausência de doenças físicas diagnosticadas clinicamente.','Estado de completo bem-estar físico, mental e social, não apenas ausência de doença.','Capacidade de trabalhar e produzir para a sociedade de forma contínua.','Equilíbrio entre fatores biológicos, psicológicos e ambientais sem interferência social.'],
+    correta: 1,
+    gabarito: 'A OMS (1948) ampliou o conceito para além da ausência de doenças, incluindo bem-estar físico, mental e social. Embora criticado por ser utópico ("completo bem-estar"), representou um avanço histórico. A 8ª CNS (1986) avançou mais, incluindo condições de vida como moradia, emprego e alimentação.'
+  },
+  {
+    tema: 'Determinantes Sociais',
+    enunciado: 'No modelo de Dahlgren e Whitehead, os determinantes sociais da saúde estão organizados em camadas. A camada mais PRÓXIMA do indivíduo, considerada não modificável, refere-se:',
+    opcoes: ['Às condições socioeconômicas, culturais e ambientais gerais.','Às condições de vida e trabalho (moradia, emprego, saneamento).','À idade, sexo e herança genética do indivíduo.','Aos estilos de vida e comportamentos individuais.'],
+    correta: 2,
+    gabarito: 'No modelo de Dahlgren e Whitehead, a camada central (mais próxima do indivíduo) é composta por fatores não modificáveis: idade, sexo e herança genética. As camadas seguintes incluem comportamento individual, redes sociais, condições de vida/trabalho e fatores macroeconômicos.'
+  },
+  {
+    tema: 'SUS — Princípios',
+    enunciado: 'O princípio da EQUIDADE no SUS significa que:',
+    opcoes: ['Todos devem receber o mesmo tratamento, sem distinção de qualquer natureza.','Os serviços de saúde devem ser organizados de forma regionalizada e hierarquizada.','Deve-se investir mais em quem mais precisa, reduzindo desigualdades em saúde.','A saúde é direito universal e todos os cidadãos têm acesso igualitário ao SUS.'],
+    correta: 2,
+    gabarito: 'Equidade ≠ igualdade. Equidade é tratar desigualmente os desiguais na medida de sua desigualdade — dar mais recursos e atenção a quem tem maior vulnerabilidade. Ex: gestantes, idosos e pessoas com doenças crônicas têm prioridade. Igualdade seria dar o mesmo a todos, o que pode aprofundar desigualdades.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'O SISVAN (Sistema de Vigilância Alimentar e Nutricional) tem como função principal:',
+    opcoes: ['Registrar notificações compulsórias de doenças infecciosas transmitidas por alimentos.','Monitorar o estado nutricional e o consumo alimentar da população atendida na atenção básica.','Fiscalizar estabelecimentos comerciais que produzem e comercializam alimentos.','Gerenciar a distribuição de suplementos alimentares para gestantes e crianças.'],
+    correta: 1,
+    gabarito: 'O SISVAN monitora o estado nutricional (peso, altura, IMC) e o consumo alimentar de crianças, adolescentes, gestantes, adultos e idosos atendidos na atenção básica do SUS. É a principal ferramenta de vigilância nutricional do nutricionista no NASF e na atenção básica.'
+  },
+  {
+    tema: 'Políticas Públicas',
+    enunciado: 'A Rede Cegonha, criada em 2011, tem como foco:',
+    opcoes: ['Assistência à saúde mental de mulheres em situação de vulnerabilidade.','Atendimento integral às mulheres com câncer de colo do útero e mama.','Assistência ao pré-natal, parto, puerpério e saúde da criança até 24 meses.','Programa de combate à mortalidade materna em regiões de extrema pobreza.'],
+    correta: 2,
+    gabarito: 'A Rede Cegonha (Portaria MS 1.459/2011) assegura às mulheres o direito ao planejamento reprodutivo, atenção ao pré-natal, parto humanizado, puerpério e cuidados à criança até 24 meses, incluindo aleitamento materno e acompanhamento do crescimento e desenvolvimento.'
+  },
+  {
+    tema: 'PNH',
+    enunciado: 'O ACOLHIMENTO, como diretriz da Política Nacional de Humanização (PNH), consiste em:',
+    opcoes: ['Procedimento de triagem que seleciona os pacientes conforme a gravidade antes de qualquer atendimento.','Escuta qualificada das necessidades do usuário, criação de vínculo e acesso a partir da necessidade real.','Visita domiciliar realizada pelo agente comunitário de saúde para cadastro de novas famílias.','Protocolo de atendimento preferencial a idosos, gestantes e pessoas com deficiência.'],
+    correta: 1,
+    gabarito: 'Acolhimento NÃO é triagem. É uma diretriz que muda a lógica do processo de trabalho: reconhecimento da legitimidade da necessidade do outro, escuta ativa e qualificada, criação de vínculo. Permite que quem tem maior vulnerabilidade seja atendido com prioridade, mas sem excluir ninguém.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'A Taxa de Mortalidade Infantil (TMI) é calculada por:',
+    opcoes: ['Nº de óbitos de menores de 5 anos / população total × 10.000','Nº de óbitos de menores de 1 ano / nº de nascidos vivos × 1.000','Nº de internações de crianças / nº de partos × 1.000','Nº de óbitos maternos / nº de nascidos vivos × 100.000'],
+    correta: 1,
+    gabarito: 'TMI = (Óbitos de menores de 1 ano / Nascidos vivos) × 1.000. É um dos principais indicadores de saúde de uma população, pois reflete condições de saneamento, nutrição, atenção ao pré-natal e qualidade dos serviços de saúde. O Brasil reduziu drasticamente a TMI nas últimas décadas.'
+  },
+  {
+    tema: 'SUS — Organização',
+    enunciado: 'A Lei 8.080/1990 e a Lei 8.142/1990 são denominadas Leis Orgânicas da Saúde. A Lei 8.142/1990 trata especificamente de:',
+    opcoes: ['Organização e funcionamento dos serviços do SUS.','Participação social no SUS e transferência de recursos financeiros entre esferas.','Regulamentação das Redes de Atenção à Saúde.','Criação do INAMPS e dos serviços de pronto-atendimento.'],
+    correta: 1,
+    gabarito: 'Lei 8.080/1990 = organização e funcionamento do SUS (competências, atribuições, financiamento). Lei 8.142/1990 = participação da comunidade na gestão do SUS (Conselhos e Conferências de Saúde) e transferência intergovernamental de recursos financeiros (FNS, FES, FMS).'
+  },
+  {
+    tema: 'Determinantes Sociais',
+    enunciado: 'A chamada "transição nutricional" brasileira caracteriza-se por:',
+    opcoes: ['Redução da prevalência de obesidade com aumento de doenças infecciosas.','Substituição do padrão alimentar tradicional (cereais, feijão) por alimentos ricos em gorduras, açúcares e ultraprocessados, aumentando DCNT.','Melhora generalizada do estado nutricional com erradicação da desnutrição infantil.','Aumento do consumo de frutas, legumes e verduras nas populações de baixa renda.'],
+    correta: 1,
+    gabarito: 'A transição nutricional brasileira envolve a substituição do padrão alimentar tradicional (cereais, feijão, raízes) por alimentos ultraprocessados ricos em gorduras hidrogenadas e açúcares. Isso contribui para o aumento de sobrepeso, obesidade e DCNT (diabetes, hipertensão, doenças cardiovasculares).'
+  },
+  {
+    tema: 'Políticas Públicas',
+    enunciado: 'O CAPS (Centro de Atenção Psicossocial) surgiu como resultado da:',
+    opcoes: ['Política Nacional de Humanização (PNH), em 2003.','Reforma Psiquiátrica brasileira (Lei 10.216/2001), como substituto ao modelo manicomial.','Política Nacional de Saúde Mental, que determinou a criação de hospitais psiquiátricos regionais.','Rede Cegonha, para atendimento de gestantes com transtornos mentais.'],
+    correta: 1,
+    gabarito: 'O CAPS é o principal serviço da Rede de Atenção Psicossocial (RAPS) e surgiu como estratégia de desinstitucionalização da Lei da Reforma Psiquiátrica (10.216/2001). Substitui a internação em manicômios por tratamento comunitário, garantindo reinserção social.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'Qual sistema de informação em saúde é utilizado para registrar ÓBITOS no Brasil?',
+    opcoes: ['SINAN — Sistema de Informação de Agravos de Notificação','SINASC — Sistema de Informação sobre Nascidos Vivos','SIM — Sistema de Informação sobre Mortalidade','SIHSUS — Sistema de Informações Hospitalares do SUS'],
+    correta: 2,
+    gabarito: 'SIM = mortalidade (óbitos). SINASC = nascidos vivos. SINAN = agravos de notificação compulsória. SIHSUS = internações hospitalares. O SIM é fundamental para calcular indicadores como coeficiente de mortalidade geral, mortalidade infantil e mortalidade por causas específicas.'
+  },
+  {
+    tema: 'SUS — Organização',
+    enunciado: 'O princípio da DESCENTRALIZAÇÃO no SUS, com ênfase na municipalização, significa que:',
+    opcoes: ['A gestão e execução dos serviços de saúde devem ser concentradas no governo federal.','Os municípios assumem papel crescente na prestação e gerenciamento dos serviços de saúde, aproximando as soluções dos problemas.','A saúde deve ser gerida exclusivamente pelos estados, sem participação dos municípios.','Os serviços de alta complexidade devem ser distribuídos igualmente entre todos os municípios.'],
+    correta: 1,
+    gabarito: 'A descentralização distribui responsabilidades entre as três esferas (federal, estadual e municipal), com ênfase na municipalização. O princípio é que quanto mais perto a solução estiver do problema, maiores as chances de êxito. Os municípios assumem a atenção básica e parte da média complexidade.'
+  },
+  {
+    tema: 'PNH',
+    enunciado: 'O Projeto Terapêutico Singular (PTS), dispositivo da PNH, é indicado para:',
+    opcoes: ['Casos simples de rotina na atenção básica que não exigem abordagem multiprofissional.','Casos complexos que demandam discussão multiprofissional e construção de um plano individualizado de cuidado.','Protocolos padronizados para patologias crônicas como hipertensão e diabetes.','Regulamentação de visitas de familiares em unidades de internação hospitalar.'],
+    correta: 1,
+    gabarito: 'O PTS é um conjunto de propostas de condutas terapêuticas articuladas para um sujeito individual ou coletivo, resultado de discussão multiprofissional. É indicado para casos complexos — vulnerabilidade social, comorbidades múltiplas, situações que exigem abordagem integral e personalizada.'
+  },
+  {
+    tema: 'Políticas Públicas',
+    enunciado: 'O nutricionista na Estratégia de Saúde da Família (ESF) atua vinculado ao:',
+    opcoes: ['CAPS — Centro de Atenção Psicossocial, como parte da equipe de saúde mental.','NASF — Núcleo Ampliado de Saúde da Família, em apoio às equipes de saúde da família.','UPA — Unidade de Pronto Atendimento, em triagem nutricional de emergência.','SAMU — Serviço de Atendimento Móvel de Urgência, em suporte nutricional intensivo.'],
+    correta: 1,
+    gabarito: 'O nutricionista integra o NASF (Núcleo Ampliado de Saúde da Família), equipe multiprofissional que apoia as equipes da ESF. Realiza: matriciamento, atendimento compartilhado, educação alimentar e nutricional, SISVAN e ações de promoção à saúde na atenção básica.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'Doenças de notificação IMEDIATA (até 24 horas) ao SINAN incluem:',
+    opcoes: ['HIV/AIDS, hanseníase e tuberculose.','Dengue (casos), sífilis e hepatites virais.','Febre amarela, sarampo, cólera e meningite.','Leishmaniose visceral, leptospirose e esquistossomose.'],
+    correta: 2,
+    gabarito: 'Notificação imediata (≤ 24h): doenças com alto potencial epidêmico ou de disseminação — febre amarela, sarampo, cólera, meningite, botulismo, poliomielite, hantavírus, dengue (óbitos), entre outros. Dengue (casos), tuberculose e hanseníase são de notificação semanal.'
+  },
+  {
+    tema: 'Conceito de Saúde',
+    enunciado: 'A Carta de Ottawa (1986), marco da promoção da saúde, define como pré-requisitos para a saúde:',
+    opcoes: ['Apenas acesso a serviços médicos de qualidade e medicamentos essenciais.','Paz, habitação, educação, alimentação, renda, ecossistema estável, recursos sustentáveis, justiça social e equidade.','Vacinação universal e controle de vetores de doenças transmissíveis.','Ausência de riscos ocupacionais e ambientais nos locais de trabalho.'],
+    correta: 1,
+    gabarito: 'A Carta de Ottawa elencou os pré-requisitos fundamentais para a saúde: paz, abrigo, educação, alimento, renda, ecossistema estável, recursos sustentáveis, justiça social e equidade. Reafirmou que saúde vai muito além do setor saúde — é produto de condições amplas de vida.'
+  },
+  {
+    tema: 'SUS — Histórico',
+    enunciado: 'O INAMPS (Instituto Nacional de Assistência Médica da Previdência Social), que antecedeu o SUS, tinha como característica central:',
+    opcoes: ['Universalidade do atendimento — qualquer cidadão poderia usar seus serviços.','Atendimento restrito aos trabalhadores com carteira assinada e contribuintes da previdência social.','Foco em ações preventivas e de promoção da saúde na comunidade.','Gestão descentralizada com forte participação dos municípios.'],
+    correta: 1,
+    gabarito: 'O INAMPS era excludente — atendia apenas trabalhadores formais (com carteira assinada). Quem não contribuía para a previdência era atendido pela Santa Casa ou pelo sistema privado. O SUS rompeu com isso ao garantir universalidade: saúde como direito de todos.'
+  },
+  {
+    tema: 'Políticas Públicas',
+    enunciado: 'O Estatuto do Idoso (Lei 10.741/2003) define como pessoa idosa aquela com idade igual ou superior a:',
+    opcoes: ['55 anos','60 anos','65 anos','70 anos'],
+    correta: 1,
+    gabarito: 'O Estatuto do Idoso (Lei 10.741/2003) define idoso como a pessoa com 60 anos ou mais. Garante prioridade no atendimento à saúde, transporte gratuito, proteção contra abandono e violência, entre outros direitos fundamentais.'
+  },
+  {
+    tema: 'SUS — Organização',
+    enunciado: 'Os Conselhos de Saúde, criados pela Lei 8.142/1990, têm composição paritária. Isso significa que:',
+    opcoes: ['São compostos exclusivamente por representantes do governo e gestores de saúde.','Os usuários representam 50% dos membros, e a outra metade é dividida entre trabalhadores e gestores/prestadores.','São compostos igualmente por médicos, enfermeiros e outros profissionais de saúde.','Todos os membros têm poder de veto individual sobre as decisões do conselho.'],
+    correta: 1,
+    gabarito: 'Os Conselhos de Saúde têm paridade: 50% de usuários + 25% de trabalhadores de saúde + 25% de gestores e prestadores de serviço. Essa composição garante que os usuários (a população) tenham poder de decisão. Os Conselhos deliberam sobre políticas de saúde e controlam o uso de recursos.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'A VIGILÂNCIA SANITÁRIA, área da vigilância em saúde, tem como responsabilidade principal:',
+    opcoes: ['Monitorar o perfil epidemiológico de doenças infecciosas e parasitárias.','Controlar riscos à saúde em alimentos, medicamentos, produtos, serviços e ambientes.','Acompanhar o estado nutricional da população por meio do SISVAN.','Investigar surtos e epidemias de doenças transmissíveis de notificação compulsória.'],
+    correta: 1,
+    gabarito: 'A Vigilância Sanitária (ANVISA) controla riscos à saúde em: alimentos, medicamentos, cosméticos, saneantes, produtos médicos, serviços de saúde e ambientes. Para o nutricionista, a vigilância sanitária de alimentos (RDC 216/2004 — boas práticas em serviços de alimentação) é especialmente relevante.'
+  },
+  {
+    tema: 'Políticas Públicas',
+    enunciado: 'O PAISM (Programa de Assistência Integral à Saúde da Mulher), criado em 1983, foi inovador porque:',
+    opcoes: ['Foi o primeiro programa a garantir o direito ao aborto legal no Brasil.','Considerou a mulher além da função reprodutiva, integrando ações educativas, preventivas e de promoção à saúde.','Criou os primeiros serviços de oncologia específicos para câncer de mama no SUS.','Estabeleceu a obrigatoriedade do pré-natal para todas as gestantes no serviço público.'],
+    correta: 1,
+    gabarito: 'O PAISM (1983) foi pioneiro ao ampliar o foco para além do materno-infantil, incorporando: saúde sexual e reprodutiva, ISTs, métodos contraceptivos, climatério, saúde mental e violência de gênero. Seguiu os princípios de descentralização e integralidade que depois embasariam o SUS.'
+  },
+  {
+    tema: 'PNH',
+    enunciado: 'A Política Nacional de Humanização (PNH/HumanizaSUS) tem como característica ser:',
+    opcoes: ['Uma política vertical e específica, voltada exclusivamente para hospitais de grande porte.','Uma política transversal que perpassa todos os níveis de atenção e todos os serviços do SUS.','Um programa de capacitação de profissionais de saúde em técnicas de comunicação.','Uma norma de segurança do paciente válida apenas para UTIs e serviços de alta complexidade.'],
+    correta: 1,
+    gabarito: 'A PNH é transversal — atravessa todas as políticas e programas do SUS, em todos os níveis de atenção (básica, média e alta complexidade). Não é um programa isolado, mas uma política que deve mudar o modelo de assistência e gestão em todos os serviços.'
+  },
+  {
+    tema: 'Determinantes Sociais',
+    enunciado: 'No contexto dos determinantes sociais da saúde, qual fator representa maior risco para mortalidade por câncer em países de baixa e média renda, segundo o livro?',
+    opcoes: ['Exposição a radiações ionizantes em exames diagnósticos.','Tabagismo — responsável por aproximadamente 18% das mortes por câncer.','Consumo excessivo de proteína animal.','Sedentarismo e falta de atividade física regular.'],
+    correta: 1,
+    gabarito: 'O tabagismo é responsável por ~18% das mortes por câncer em países de baixa e média renda. Em seguida: baixo consumo de frutas, legumes e verduras (~6%) e consumo de álcool (~5%). Esses são fatores modificáveis de estilo de vida — diretamente relacionados à atuação do nutricionista.'
+  },
+  {
+    tema: 'Vigilância em Saúde',
+    enunciado: 'A diferença entre PREVALÊNCIA e INCIDÊNCIA de uma doença é:',
+    opcoes: ['Prevalência mede casos graves; incidência mede casos leves de uma doença.','Prevalência é o total de casos existentes em um momento; incidência são os casos NOVOS em um período.','Incidência considera toda a história da doença; prevalência, apenas os casos recentes.','São termos sinônimos, utilizados de forma intercambiável na epidemiologia.'],
+    correta: 1,
+    gabarito: 'Prevalência = todos os casos existentes (novos + antigos) em um determinado momento — fotografia da doença. Incidência = casos NOVOS surgidos em um período — velocidade com que novos casos surgem. Ex: diabetes tem alta prevalência (muitos vivem com a doença); uma epidemia de dengue tem alta incidência (muitos casos novos por semana).'
+  }
+];
+
+let qAtual = 0, acertos = 0, erros = 0, respondidas = {};
+
+function renderCard(idx) {
+  const q = questoes[idx];
+  if (!q) return;
+  const jr = respondidas[idx];
+  document.getElementById('progressBar').style.width = Math.round((idx / questoes.length) * 100) + '%';
+  document.getElementById('qAtualSpan').textContent = idx + 1;
+
+  const opcoesHtml = q.opcoes.map((op, i) => {
+    let cls = 'opcao-btn';
+    if (jr !== undefined) {
+      if (i === q.correta) cls += ' correta';
+      else if (i === jr && jr !== q.correta) cls += ' incorreta';
+    }
+    return `<button class="${cls}" onclick="responder(${idx},${i})" ${jr !== undefined ? 'disabled' : ''}>
+      <div class="opcao-letra">${['A','B','C','D'][i]}</div><span>${op}</span>
+    </button>`;
+  }).join('');
+
+  const gabHtml = jr !== undefined
+    ? `<div class="q-gabarito ${jr === q.correta ? 'show-ok' : 'show-err'}">${jr === q.correta ? '✅ Correto! ' : '❌ Incorreto. '} ${q.gabarito}</div>`
+    : '';
+
+  const ehUltima = idx === questoes.length - 1;
+  document.getElementById('questaoContainer').innerHTML = `
+    <div class="questao-card${jr !== undefined ? (jr === q.correta ? ' acertou' : ' errou') : ''}">
+      <div class="q-meta">
+        <div class="q-num">Questão ${String(idx+1).padStart(2,'0')}</div>
+        <div class="q-tema">${q.tema}</div>
+      </div>
+      <div class="q-enunciado">${q.enunciado}</div>
+      ${opcoesHtml}${gabHtml}
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-nav btn-reinic" onclick="reiniciar()">🔄 Reiniciar</button>
+      ${ehUltima && jr !== undefined
+        ? `<button class="btn-nav btn-prox" onclick="mostrarResultado()">🏁 Ver Resultado →</button>`
+        : `<button class="btn-nav btn-prox" onclick="proxima()" ${jr === undefined ? 'disabled' : ''}>Próxima →</button>`}
+    </div>`;
+}
+
+function responder(idx, escolhida) {
+  if (respondidas[idx] !== undefined) return;
+  respondidas[idx] = escolhida;
+  if (escolhida === questoes[idx].correta) { acertos++; document.getElementById('chipAcertos').textContent = `✓ ${acertos} acertos`; }
+  else { erros++; document.getElementById('chipErros').textContent = `✗ ${erros} erros`; }
+  document.getElementById('chipTotal').textContent = `${acertos + erros} / ${questoes.length}`;
+  renderCard(idx);
+}
+
+function proxima() {
+  if (qAtual < questoes.length - 1) { qAtual++; renderCard(qAtual); document.getElementById('questaoContainer').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+
+function mostrarResultado() {
+  document.getElementById('questaoContainer').style.display = 'none';
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  document.getElementById('resAcertos').textContent = acertos;
+  document.getElementById('resErros').textContent = erros;
+  document.getElementById('resTaxa').textContent = taxa + '%';
+  document.getElementById('resTitulo').textContent = taxa >= 80 ? 'Excelente!' : taxa >= 60 ? 'Bom Desempenho!' : 'Continue Estudando!';
+  document.getElementById('resSub').textContent = taxa >= 80 ? 'Você domina Saúde Coletiva! 🎉' : 'Revise os tópicos que errou no Resumo.';
+  document.getElementById('resEmoji').textContent = taxa >= 80 ? '🎉' : taxa >= 60 ? '👍' : '📖';
+  const erradas = Object.entries(respondidas).filter(([i,r]) => r !== questoes[i].correta);
+  if (erradas.length > 0) {
+    document.getElementById('erradasLista').innerHTML =
+      `<div class="erradas-titulo">📋 Questões para revisar (${erradas.length})</div>` +
+      erradas.map(([i,r]) => `<div class="errada-item">
+        <div class="errada-num">Questão ${parseInt(i)+1} · ${questoes[i].tema}</div>
+        <div class="errada-enunciado">${questoes[i].enunciado}</div>
+        <div class="errada-gabarito">✅ ${['A','B','C','D'][questoes[i].correta]}) ${questoes[i].opcoes[questoes[i].correta]}</div>
+      </div>`).join('');
+  }
+  document.getElementById('resultadoFinal').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+}
+
+function reiniciar() {
+  qAtual = 0; acertos = 0; erros = 0; respondidas = {};
+  document.getElementById('chipAcertos').textContent = '✓ 0 acertos';
+  document.getElementById('chipErros').textContent = '✗ 0 erros';
+  document.getElementById('chipTotal').textContent = `0 / ${questoes.length}`;
+  document.getElementById('resultadoFinal').style.display = 'none';
+  document.getElementById('questaoContainer').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  renderCard(0);
+}
+
+renderCard(0);
+</script>
+</body>
+</html>

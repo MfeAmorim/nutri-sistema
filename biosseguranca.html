@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biossegurança e Bioética — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+/* TOPBAR */
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+/* TABS NAV */
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+/* PANELS */
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* HERO */
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+/* PRIORIDADE HEADER */
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+/* CARD CONTEÚDO */
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 2000px; padding: 20px 24px 24px; }
+
+/* CONTEÚDO INTERNO */
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+.tag-pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin: 2px 3px 2px 0; }
+.tag-green { background: #dcfce7; color: #15803d; }
+.tag-red { background: #fee2e2; color: #dc2626; }
+.tag-orange { background: #ffedd5; color: #c2410c; }
+.tag-blue { background: #dbeafe; color: #1d4ed8; }
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+
+/* ─── QUIZ ─── */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+/* RESULTADO FINAL */
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+.erradas-section { text-align: left; max-width: 600px; margin: 0 auto 24px; }
+.erradas-titulo { font-size: 14px; font-weight: 800; color: var(--escuro); margin-bottom: 12px; }
+.errada-item { background: #fff5f5; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.errada-num { font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; margin-bottom: 4px; }
+.errada-enunciado { font-size: 13px; color: var(--escuro); font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+.errada-gabarito { font-size: 12px; color: #15803d; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Biossegurança e Bioética</div>
+    <div class="badge">1º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🔬</div>
+    <div>
+      <div class="hero-tag">1º Módulo · Nutrição · Unicesumar</div>
+      <h1>Biossegurança e Bioética</h1>
+      <p>Conteúdo organizado por relevância para o nutricionista.<br>5 unidades · 208 páginas · Autores: Mateus, Paludo e Amaro</p>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE ALTA ── -->
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Diretamente cobrado em provas e na prática clínica</div>
+  </div>
+
+  <!-- 1. EPI -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🧤</div>
+      <div class="card-titulo">
+        <h3>Equipamentos de Proteção Individual e Coletiva (EPI/EPC)</h3>
+        <p>Unidade 1 · Biossegurança nos Serviços de Saúde</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que são EPIs?</h4>
+      <p>Equipamentos de Proteção Individual são dispositivos ou produtos de uso individual com o objetivo de proteger o trabalhador dos riscos presentes no ambiente laboral. São obrigatórios quando não é possível eliminar ou reduzir os riscos por meios técnicos coletivos.</p>
+
+      <h4>Principais EPIs para o Nutricionista</h4>
+      <table class="tabela">
+        <tr><th>EPI</th><th>Função</th><th>Quando usar</th></tr>
+        <tr><td>Jaleco/Avental</td><td>Proteção contra respingos e contaminação</td><td>Em laboratórios, clínicas, UAN</td></tr>
+        <tr><td>Luvas de procedimento</td><td>Barreira contra agentes biológicos e químicos</td><td>Manipulação de amostras, alimentos</td></tr>
+        <tr><td>Máscara cirúrgica / N95</td><td>Proteção das vias respiratórias</td><td>Ambiente hospitalar, pandemia</td></tr>
+        <tr><td>Óculos de proteção</td><td>Proteção ocular contra respingos</td><td>Laboratório, manipulação química</td></tr>
+        <tr><td>Calçado fechado antiderrapante</td><td>Prevenção de quedas e acidentes</td><td>UAN, laboratórios</td></tr>
+        <tr><td>Touca / protetor capilar</td><td>Higiene alimentar e pessoal</td><td>Manipulação de alimentos (RDC 275)</td></tr>
+      </table>
+
+      <h4>Regras de Ouro sobre EPIs</h4>
+      <ul>
+        <li><strong>Jaleco ou avental NÃO deve</strong> ser usado fora da área laboratorial (biblioteca, refeitório, escritório)</li>
+        <li><strong>Luvas</strong> de procedimento são para atividades laborais — nunca tocar objetos de uso comum com elas</li>
+        <li><strong>Higiene das mãos</strong> deve ocorrer ANTES e APÓS o uso de luvas</li>
+        <li>EPIs precisam estar em boas condições — rasgados ou vencidos devem ser substituídos imediatamente</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Importante para provas:</strong> O nutricionista em Unidade de Alimentação e Nutrição (UAN) deve usar touca, jaleco, luvas e máscara durante a manipulação de alimentos, conforme RDC 275/2002 da ANVISA.</p>
+      </div>
+
+      <h4>EPCs — Equipamentos de Proteção Coletiva</h4>
+      <p>Protegem todos os trabalhadores do ambiente. Exemplos: cabine de segurança biológica, sistema de ventilação, chuveiro de emergência, lava-olhos, extintores de incêndio e sinalização de segurança.</p>
+    </div>
+  </div>
+
+  <!-- 2. TRANSMISSÃO DE DOENÇAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🦠</div>
+      <div class="card-titulo">
+        <h3>Transmissão de Doenças e Controle de Infecções</h3>
+        <p>Unidade 4 · Medidas de Higiene e Contenção</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Cadeia Epidemiológica</h4>
+      <p>A transmissão de doenças ocorre por uma cadeia de eventos: <strong>Agente etiológico → Reservatório → Porta de saída → Via de transmissão → Porta de entrada → Hospedeiro suscetível</strong>. Quebrar qualquer elo desta cadeia interrompe a transmissão.</p>
+
+      <h4>Vias de Transmissão</h4>
+      <ul>
+        <li><strong>Contato direto:</strong> toque com pessoa infectada (ex: herpes, sarna)</li>
+        <li><strong>Contato indireto:</strong> objetos contaminados — fômites (ex: utensílios, superfícies)</li>
+        <li><strong>Gotículas:</strong> partículas >5μm expelidas ao falar/tossir, percorrem até 1 metro (ex: gripe, COVID-19)</li>
+        <li><strong>Aerossóis:</strong> partículas &lt;5μm, permanecem suspensas por horas (ex: tuberculose, sarampo)</li>
+        <li><strong>Veículo comum:</strong> água, alimentos contaminados (ex: hepatite A, salmonela)</li>
+        <li><strong>Vetor:</strong> insetos e artrópodes (ex: dengue pelo Aedes aegypti)</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Para o nutricionista:</strong> A transmissão via veículo comum (alimentos/água) é a mais relevante na área de Nutrição. Bactérias como Salmonella sp., E. coli e Staphylococcus aureus são as principais causadoras de doenças transmitidas por alimentos (DTA).</p>
+      </div>
+
+      <h4>Precauções Padrão (Universal)</h4>
+      <p>Devem ser adotadas com TODOS os pacientes, independentemente do diagnóstico:</p>
+      <ul>
+        <li>Higienização das mãos (principal medida de controle)</li>
+        <li>Uso de EPIs conforme risco de exposição</li>
+        <li>Descarte correto de materiais perfurocortantes</li>
+        <li>Higienização de superfícies e equipamentos</li>
+      </ul>
+
+      <h4>Higiene das Mãos — 5 Momentos (OMS)</h4>
+      <ol>
+        <li>Antes de tocar o paciente</li>
+        <li>Antes de procedimento limpo/asséptico</li>
+        <li>Após risco de exposição a fluidos corporais</li>
+        <li>Após tocar o paciente</li>
+        <li>Após tocar as áreas próximas ao paciente</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 3. ESTERILIZAÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🧼</div>
+      <div class="card-titulo">
+        <h3>Esterilização, Desinfecção e Limpeza</h3>
+        <p>Unidade 4 · Processos de eliminação de microrganismos</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Hierarquia dos Processos</h4>
+      <p>Da menor para a maior eficácia na eliminação de microrganismos:</p>
+
+      <table class="tabela">
+        <tr><th>Processo</th><th>O que elimina</th><th>Exemplo</th></tr>
+        <tr><td><strong>Limpeza</strong></td><td>Sujidade visível, reduz carga microbiana</td><td>Água + sabão, detergente</td></tr>
+        <tr><td><strong>Desinfecção</strong></td><td>Maioria dos patógenos (exceto esporos)</td><td>Álcool 70%, hipoclorito, glutaraldeído</td></tr>
+        <tr><td><strong>Esterilização</strong></td><td>TODOS os microrganismos + esporos</td><td>Autoclave, óxido de etileno</td></tr>
+      </table>
+
+      <h4>Classificação de Artigos (Spaulding)</h4>
+      <ul>
+        <li><span class="tag-pill tag-red">Críticos</span> Entram em tecido estéril ou vascular → <strong>esterilização obrigatória</strong> (ex: bisturis, cateteres)</li>
+        <li><span class="tag-pill tag-orange">Semicríticos</span> Contato com mucosas íntegras → desinfecção de alto nível (ex: endoscópios)</li>
+        <li><span class="tag-pill tag-green">Não críticos</span> Contato com pele íntegra → limpeza + desinfecção de baixo nível (ex: estetoscópio, cadeiras)</li>
+      </ul>
+
+      <h4>Métodos de Esterilização</h4>
+      <ul>
+        <li><strong>Autoclave (calor úmido):</strong> 121°C/30min ou 134°C/5min — método mais utilizado e confiável</li>
+        <li><strong>Estufa (calor seco):</strong> 160°C/120min ou 170°C/60min — para materiais que não suportam umidade</li>
+        <li><strong>Óxido de etileno:</strong> materiais termossensíveis (plásticos, borrachas)</li>
+        <li><strong>Radiação UV:</strong> desinfecção de superfícies e ar</li>
+      </ul>
+
+      <h4>Principais Desinfetantes</h4>
+      <table class="tabela">
+        <tr><th>Desinfetante</th><th>Concentração</th><th>Uso principal</th></tr>
+        <tr><td>Álcool etílico</td><td>70%</td><td>Superfícies, pele, artigos não críticos</td></tr>
+        <tr><td>Hipoclorito de sódio</td><td>0,5% – 1%</td><td>Superfícies, utensílios domésticos e de cozinha</td></tr>
+        <tr><td>Glutaraldeído</td><td>2%</td><td>Artigos semicríticos termossensíveis</td></tr>
+        <tr><td>Ácido peracético</td><td>0,2 – 0,35%</td><td>Rápida ação, artigos semicríticos</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>O álcool 70% é o mais indicado</strong> para o cotidiano do nutricionista (balcões, equipamentos de cozinha, superfícies). O hipoclorito é obrigatório na higienização de hortifrutigranjeiros (200 ppm por 15 min).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. BIOÉTICA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">⚖️</div>
+      <div class="card-titulo">
+        <h3>Bioética e sua Aplicabilidade na Área da Saúde</h3>
+        <p>Unidade 4 · Princípios éticos na prática profissional</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Bioética?</h4>
+      <p>Bioética é o estudo sistemático das questões morais e éticas que surgem no contexto das ciências biológicas e da saúde. O termo foi cunhado por <strong>Van Rensselaer Potter</strong> em 1971, que a definiu como a "ciência da sobrevivência".</p>
+
+      <h4>Os 4 Princípios da Bioética (Beauchamp e Childress)</h4>
+      <table class="tabela">
+        <tr><th>Princípio</th><th>Definição</th><th>Exemplo na Nutrição</th></tr>
+        <tr><td><strong>Autonomia</strong></td><td>Respeito à decisão do paciente sobre seu próprio corpo e saúde</td><td>Respeitar a recusa do paciente a seguir a dieta prescrita</td></tr>
+        <tr><td><strong>Beneficência</strong></td><td>Agir em benefício do paciente, promovendo seu bem-estar</td><td>Prescrever dieta adequada às condições clínicas</td></tr>
+        <tr><td><strong>Não maleficência</strong></td><td>Não causar dano desnecessário ao paciente</td><td>Evitar dietas restritivas sem indicação clínica</td></tr>
+        <tr><td><strong>Justiça</strong></td><td>Distribuição equitativa dos benefícios e riscos</td><td>Atender todos os pacientes sem discriminação</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete:</strong> <strong>A-B-NM-J</strong> — Autonomia, Beneficência, Não Maleficência, Justiça. Esses 4 princípios foram estabelecidos no <em>Relatório Belmont</em> (1979) e sistematizados por Beauchamp e Childress.</p>
+      </div>
+
+      <h4>Sigilo Profissional e Ética no CFN</h4>
+      <p>O Código de Ética do Nutricionista (CFN) determina que o profissional deve manter sigilo sobre informações obtidas no exercício profissional, salvo em situações previstas em lei. O respeito à autonomia do paciente e o combate a qualquer forma de discriminação são pilares do exercício ético.</p>
+
+      <h4>Bioética e Pesquisa</h4>
+      <p>Pesquisas com seres humanos no Brasil são regulamentadas pela <strong>Resolução CNS nº 466/2012</strong>, que exige: Termo de Consentimento Livre e Esclarecido (TCLE), aprovação por Comitê de Ética em Pesquisa (CEP) e preservação da dignidade dos participantes.</p>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE MÉDIA ── -->
+  <div class="prioridade prio-media" style="margin-top: 16px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Base teórica essencial para a formação</div>
+  </div>
+
+  <!-- 5. RISCOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">⚠️</div>
+      <div class="card-titulo">
+        <h3>Riscos Ocupacionais nos Serviços de Saúde</h3>
+        <p>Unidade 2 · Riscos Físicos, Químicos, Biológicos, Ergonômicos e Psicossociais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Classificação dos Riscos (NR-9 / Mapa de Riscos)</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Cor (Mapa)</th><th>Exemplos</th></tr>
+        <tr><td><strong>Físicos</strong></td><td><span class="tag-pill tag-orange">Verde</span></td><td>Ruído, calor, frio, radiações, umidade, vibração</td></tr>
+        <tr><td><strong>Químicos</strong></td><td><span class="tag-pill tag-red">Vermelho</span></td><td>Poeiras, gases, vapores, fumos, substâncias químicas</td></tr>
+        <tr><td><strong>Biológicos</strong></td><td><span class="tag-pill tag-blue">Marrom</span></td><td>Vírus, bactérias, fungos, parasitas, bacilos</td></tr>
+        <tr><td><strong>Ergonômicos</strong></td><td><span class="tag-pill tag-purple">Amarelo</span></td><td>Esforço físico, postura incorreta, trabalho noturno, LER</td></tr>
+        <tr><td><strong>Acidentes</strong></td><td><span class="tag-pill" style="background:#fce7f3;color:#9d174d">Azul</span></td><td>Equipamentos sem proteção, instalações elétricas, incêndio</td></tr>
+      </table>
+
+      <h4>Classificação de Agentes Biológicos (Classes de Risco)</h4>
+      <ul>
+        <li><span class="tag-pill tag-green">Classe 1</span> Baixo risco — não causam doenças em adultos saudáveis (ex: Lactobacillus sp.)</li>
+        <li><span class="tag-pill tag-orange">Classe 2</span> Risco moderado — causam infecções, com tratamento disponível (ex: Staphylococcus aureus, HIV)</li>
+        <li><span class="tag-pill tag-red">Classe 3</span> Alto risco individual — doença grave, risco de disseminação limitado (ex: Mycobacterium tuberculosis)</li>
+        <li><span class="tag-pill" style="background:#1f2937;color:#fff">Classe 4</span> Risco grave — sem tratamento disponível, alto risco de disseminação (ex: vírus Ebola)</li>
+      </ul>
+
+      <h4>Riscos Específicos ao Nutricionista</h4>
+      <ul>
+        <li><strong>UAN (Unidade de Alimentação e Nutrição):</strong> calor excessivo, ruído de equipamentos, risco de queimaduras, LER por esforço repetitivo</li>
+        <li><strong>Ambiente hospitalar:</strong> exposição a agentes biológicos de classe 2 e 3, estresse psicossocial</li>
+        <li><strong>Laboratório de bromatologia:</strong> reagentes químicos, vidraria, substâncias corrosivas</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6. RESÍDUOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🗑️</div>
+      <div class="card-titulo">
+        <h3>Gerenciamento de Resíduos de Serviços de Saúde (RSS)</h3>
+        <p>Unidade 5 · PGRSS e Legislação</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Classificação dos RSS (RDC ANVISA 222/2018 + CONAMA 358/2005)</h4>
+      <table class="tabela">
+        <tr><th>Grupo</th><th>Tipo</th><th>Descarte</th></tr>
+        <tr><td><strong>Grupo A</strong></td><td>Resíduos biológicos (sangue, culturas, tecidos)</td><td>Saco branco leitoso</td></tr>
+        <tr><td><strong>Grupo B</strong></td><td>Resíduos químicos (medicamentos, reagentes, saneantes)</td><td>Saco laranja + símbolo químico</td></tr>
+        <tr><td><strong>Grupo C</strong></td><td>Resíduos radioativos</td><td>Símbolo de radioatividade</td></tr>
+        <tr><td><strong>Grupo D</strong></td><td>Resíduos comuns (similares ao doméstico)</td><td>Saco preto ou cinza</td></tr>
+        <tr><td><strong>Grupo E</strong></td><td>Perfurocortantes (agulhas, bisturis, ampolas)</td><td>Caixa rígida amarela (descarpak)</td></tr>
+      </table>
+
+      <div class="alerta">
+        <p>⚠️ <strong>PGRSS — Plano de Gerenciamento de Resíduos de Serviços de Saúde:</strong> É OBRIGATÓRIO para todos os estabelecimentos de saúde. Define responsabilidades, procedimentos, metas e ações para o correto manejo dos RSS em todas as etapas: geração, segregação, acondicionamento, identificação, transporte, armazenamento, tratamento e disposição final.</p>
+      </div>
+
+      <h4>Etapas do Manejo dos RSS</h4>
+      <ol>
+        <li><strong>Segregação:</strong> separação na fonte geradora — etapa mais importante</li>
+        <li><strong>Acondicionamento:</strong> embalagem adequada ao grupo</li>
+        <li><strong>Identificação:</strong> símbolos e rótulos padronizados</li>
+        <li><strong>Transporte interno:</strong> carro coletor específico</li>
+        <li><strong>Armazenamento temporário e externo</strong></li>
+        <li><strong>Tratamento:</strong> autoclave, incineração, micro-ondas</li>
+        <li><strong>Disposição final:</strong> aterro sanitário ou industrial</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE BAIXA ── -->
+  <div class="prioridade prio-baixa" style="margin-top: 16px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Complementar — Contexto e fundamentação teórica</div>
+  </div>
+
+  <!-- 7. NÍVEIS BIOSSEGURANÇA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🏗️</div>
+      <div class="card-titulo">
+        <h3>Níveis de Biossegurança em Laboratórios (NB)</h3>
+        <p>Unidade 3 · Especificidades da Rotina Laboratorial</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Os 4 Níveis de Biossegurança</h4>
+      <table class="tabela">
+        <tr><th>Nível</th><th>Agentes</th><th>Infraestrutura</th></tr>
+        <tr><td><strong>NB-1</strong></td><td>Classe de risco 1 — baixo risco</td><td>Bancada básica, EPI padrão</td></tr>
+        <tr><td><strong>NB-2</strong></td><td>Classe de risco 2 — risco moderado</td><td>Cabine de segurança biológica Classe II</td></tr>
+        <tr><td><strong>NB-3</strong></td><td>Classe de risco 3 — alto risco</td><td>Pressão negativa, acesso restrito</td></tr>
+        <tr><td><strong>NB-4</strong></td><td>Classe de risco 4 — risco extremo</td><td>Traje pressurizado, isolamento total</td></tr>
+      </table>
+
+      <h4>Mapa de Risco</h4>
+      <p>Representação gráfica dos riscos existentes nos locais de trabalho. É elaborado pelos próprios trabalhadores com apoio da CIPA (Comissão Interna de Prevenção de Acidentes). Usa círculos de cores e tamanhos diferentes para indicar tipo e intensidade do risco.</p>
+    </div>
+  </div>
+
+  <!-- 8. HISTÓRICO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">📜</div>
+      <div class="card-titulo">
+        <h3>Histórico e Conceito de Biossegurança</h3>
+        <p>Unidade 1 · Introdução e legislação brasileira</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Conceito</h4>
+      <p>Biossegurança é o conjunto de ações voltadas à prevenção, minimização ou eliminação de riscos inerentes às atividades de pesquisa, produção, ensino, desenvolvimento tecnológico e prestação de serviços, visando à saúde do homem, dos animais, a preservação do meio ambiente e a qualidade dos resultados dessas atividades.</p>
+
+      <h4>Marco Histórico</h4>
+      <ul>
+        <li><strong>1970:</strong> início da construção do conceito moderno de biossegurança (Califórnia, EUA)</li>
+        <li><strong>1997:</strong> criação da Comissão de Biossegurança em Saúde (CBS) no Ministério da Saúde do Brasil</li>
+        <li><strong>2005:</strong> Lei de Biossegurança brasileira (Lei nº 11.105/2005) — trata de células-tronco embrionárias e transgênicos</li>
+      </ul>
+
+      <h4>Duas Vertentes no Brasil</h4>
+      <ul>
+        <li><strong>Vertente técnica:</strong> normas e procedimentos para proteção humana e ambiental nos laboratórios</li>
+        <li><strong>Vertente legislativa:</strong> Lei 11.105/2005 — regulamenta pesquisa genética e OGMs</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Biossegurança e Bioética</h2>
+    <p>Teste seu conhecimento sobre os tópicos mais importantes para o nutricionista</p>
+    <div class="chips">
+      <div class="chip chip-green" id="chipAcertos">✓ 0 acertos</div>
+      <div class="chip chip-orange" id="chipErros">✗ 0 erros</div>
+      <div class="chip chip-total" id="chipTotal">0 / 25</div>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-text">Questão <span id="qAtualSpan">1</span> de 25</div>
+  </div>
+
+  <div id="questaoContainer"></div>
+
+  <div id="resultadoFinal" style="display:none">
+    <div class="resultado">
+      <div class="resultado-emoji" id="resEmoji">🎉</div>
+      <h2 id="resTitulo">Simulado Concluído!</h2>
+      <p id="resSub">Confira seu desempenho</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val" id="resAcertos">0</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val" id="resErros">0</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val" id="resTaxa">0%</div><div class="r-stat-label">Taxa de acerto</div></div>
+      </div>
+      <button class="btn-nav btn-proximo" onclick="reiniciar()" style="margin:0 auto;display:flex">🔄 Refazer Simulado</button>
+    </div>
+    <div class="erradas-section" id="erradasLista"></div>
+  </div>
+
+</div>
+
+<script>
+// ── TABS ──
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name === 'quiz' && questoes.length > 0 && !respondidas[0]) renderCard(qAtual);
+}
+
+// ── RESUMO: toggle cards ──
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  // Fecha todos
+  document.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.card-header').forEach(h => h.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    chevron.classList.add('open');
+    header.classList.add('open');
+    setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+}
+
+// ── QUIZ ──
+const questoes = [
+  {
+    tema: 'EPI/EPC',
+    enunciado: 'Quanto ao uso de Equipamentos de Proteção Individual (EPI) em laboratórios e clínicas de nutrição, é CORRETO afirmar:',
+    opcoes: [
+      'O jaleco pode ser usado em refeitórios e bibliotecas, pois não há risco de contaminação nesses locais.',
+      'As luvas de procedimento devem ser descartadas imediatamente após o contato com materiais contaminados, e as mãos higienizadas em seguida.',
+      'A higiene das mãos é dispensável quando se utiliza luvas de procedimento.',
+      'O uso de calçado aberto é permitido desde que o nutricionista use luvas e jaleco.'
+    ],
+    correta: 1,
+    gabarito: 'As luvas protegem, mas não dispensam a higiene das mãos. O jaleco NÃO deve ser usado fora da área laboratorial. Calçados fechados e antiderrapantes são obrigatórios.'
+  },
+  {
+    tema: 'Bioética',
+    enunciado: 'Os quatro princípios fundamentais da Bioética, sistematizados por Beauchamp e Childress, são:',
+    opcoes: [
+      'Beneficência, Caridade, Solidariedade e Autonomia.',
+      'Autonomia, Beneficência, Não maleficência e Justiça.',
+      'Legalidade, Moralidade, Beneficência e Equidade.',
+      'Autonomia, Fidelidade, Veracidade e Não maleficência.'
+    ],
+    correta: 1,
+    gabarito: 'Os 4 princípios são: Autonomia (respeito à decisão do paciente), Beneficência (agir em benefício do paciente), Não maleficência (não causar dano) e Justiça (equidade). Macete: A-B-NM-J.'
+  },
+  {
+    tema: 'Esterilização',
+    enunciado: 'Na Classificação de Spaulding, artigos que entram em contato com tecido estéril ou sistema vascular são denominados:',
+    opcoes: [
+      'Não críticos',
+      'Semicríticos',
+      'Críticos',
+      'Intermediários'
+    ],
+    correta: 2,
+    gabarito: 'Artigos críticos são os que penetram em tecidos estéreis ou no sistema vascular e exigem esterilização obrigatória (bisturis, cateteres, agulhas). Artigos semicríticos contatam mucosas; não críticos contatam pele íntegra.'
+  },
+  {
+    tema: 'Transmissão de Doenças',
+    enunciado: 'A transmissão de doenças por aerossóis (partículas <5 μm) difere da transmissão por gotículas porque:',
+    opcoes: [
+      'Os aerossóis só se transmitem por contato direto com o doente.',
+      'As gotículas permanecem suspensas no ar por horas, enquanto os aerossóis caem rapidamente.',
+      'Os aerossóis permanecem suspensos no ar por horas e podem infectar pessoas a grandes distâncias.',
+      'Ambas as formas de transmissão são idênticas, diferindo apenas no tamanho das partículas.'
+    ],
+    correta: 2,
+    gabarito: 'Aerossóis (partículas <5μm) permanecem suspensos no ar por longo período e podem percorrer grandes distâncias (ex: tuberculose, sarampo). Gotículas (>5μm) caem rapidamente e alcançam até 1 metro.'
+  },
+  {
+    tema: 'EPI/EPC',
+    enunciado: 'Na Unidade de Alimentação e Nutrição (UAN), qual combinação de EPIs é obrigatória para o nutricionista durante a manipulação de alimentos, conforme a RDC 275/2002?',
+    opcoes: [
+      'Apenas jaleco e máscara.',
+      'Touca, jaleco, luvas e máscara.',
+      'Óculos de proteção, jaleco e calçado fechado.',
+      'Apenas touca e luvas de borracha.'
+    ],
+    correta: 1,
+    gabarito: 'A RDC 275/2002 (ANVISA) exige: touca (proteção capilar), jaleco, luvas e máscara na manipulação de alimentos para garantir a higiene e segurança alimentar.'
+  },
+  {
+    tema: 'Resíduos RSS',
+    enunciado: 'Segundo a classificação dos Resíduos de Serviços de Saúde (RDC 222/2018), agulhas, bisturis e ampolas de vidro pertencem ao:',
+    opcoes: [
+      'Grupo A — resíduos biológicos',
+      'Grupo B — resíduos químicos',
+      'Grupo D — resíduos comuns',
+      'Grupo E — resíduos perfurocortantes'
+    ],
+    correta: 3,
+    gabarito: 'O Grupo E engloba materiais perfurocortantes ou escarificantes: agulhas, bisturis, ampolas de vidro, lancetas, etc. Devem ser descartados em caixas rígidas amarelas (descarpak) até ¾ da capacidade.'
+  },
+  {
+    tema: 'Bioética',
+    enunciado: 'O princípio da AUTONOMIA na bioética aplicada à nutrição significa que o nutricionista deve:',
+    opcoes: [
+      'Impor o tratamento dietético que considera mais eficaz, independentemente da vontade do paciente.',
+      'Respeitar a decisão do paciente sobre seu próprio corpo e tratamento nutricional, mesmo que discorde.',
+      'Agir sempre em benefício do paciente, independentemente de sua opinião.',
+      'Distribuir os benefícios do atendimento de forma igual para todos os pacientes.'
+    ],
+    correta: 1,
+    gabarito: 'Autonomia é o direito do paciente de tomar decisões sobre seu próprio corpo e saúde. O nutricionista deve orientar, informar e respeitar a decisão final do paciente, mesmo que contrarie a prescrição ideal do profissional.'
+  },
+  {
+    tema: 'Esterilização',
+    enunciado: 'O método de esterilização mais utilizado na área da saúde, considerado padrão-ouro por ser seguro, eficaz e de baixo custo, é:',
+    opcoes: [
+      'Óxido de etileno (ETO)',
+      'Radiação UV',
+      'Autoclave (calor úmido sob pressão)',
+      'Estufa (calor seco)'
+    ],
+    correta: 2,
+    gabarito: 'A autoclave (calor úmido sob pressão) é o método mais utilizado: 121°C por 30 min ou 134°C por 5 min. É eficaz, de baixo custo e sem resíduos tóxicos. O ETO é usado para termossensíveis; a estufa, para materiais que não toleram umidade.'
+  },
+  {
+    tema: 'Riscos Ocupacionais',
+    enunciado: 'De acordo com o Mapa de Risco, qual cor representa os riscos BIOLÓGICOS?',
+    opcoes: [
+      'Verde',
+      'Vermelho',
+      'Marrom',
+      'Amarelo'
+    ],
+    correta: 2,
+    gabarito: 'No Mapa de Risco: Verde = físicos, Vermelho = químicos, Marrom = biológicos, Amarelo = ergonômicos, Azul = de acidentes. O tamanho do círculo representa a intensidade do risco.'
+  },
+  {
+    tema: 'Transmissão de Doenças',
+    enunciado: 'A higienização das mãos é considerada a principal medida de prevenção e controle de infecções. Segundo a OMS, quantos são os "5 momentos" para higiene das mãos no ambiente hospitalar?',
+    opcoes: [
+      'Apenas antes e após cada procedimento (2 momentos)',
+      'Antes do contato com o paciente, antes de procedimento asséptico, após risco de exposição, após tocar o paciente e após tocar áreas do paciente (5 momentos)',
+      'Sempre que o profissional entrar ou sair do quarto do paciente (2 momentos)',
+      'A cada 30 minutos durante o plantão (intervalos regulares)'
+    ],
+    correta: 1,
+    gabarito: 'A OMS define 5 momentos: (1) antes de tocar o paciente, (2) antes de procedimento limpo/asséptico, (3) após risco de exposição a fluidos, (4) após tocar o paciente, (5) após tocar áreas próximas ao paciente.'
+  },
+  {
+    tema: 'Resíduos RSS',
+    enunciado: 'O Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS) é:',
+    opcoes: [
+      'Opcional para clínicas de pequeno porte, sendo obrigatório apenas para hospitais.',
+      'Obrigatório para todos os estabelecimentos de saúde, definindo responsabilidades e procedimentos para o manejo correto dos RSS.',
+      'Um documento apenas de registro histórico, sem obrigações práticas imediatas.',
+      'Exigido somente quando o estabelecimento gera resíduos do Grupo A (biológicos).'
+    ],
+    correta: 1,
+    gabarito: 'O PGRSS é OBRIGATÓRIO para todos os estabelecimentos de saúde, independentemente do porte. Define responsabilidades, procedimentos e metas para todas as etapas do manejo dos RSS, desde a geração até a disposição final.'
+  },
+  {
+    tema: 'Biossegurança — Conceito',
+    enunciado: 'A Lei de Biossegurança brasileira (Lei nº 11.105/2005) trata especificamente de:',
+    opcoes: [
+      'Normas de higiene para manipulação de alimentos em serviços de saúde.',
+      'Estudos científicos envolvendo células-tronco embrionárias e o plantio de sementes transgênicas (OGMs).',
+      'Regulamentação do uso de EPIs em ambientes hospitalares.',
+      'Criação do PGRSS e normas de descarte de resíduos hospitalares.'
+    ],
+    correta: 1,
+    gabarito: 'A Lei 11.105/2005 trata das duas vertentes da biossegurança legislativa no Brasil: pesquisa com células-tronco embrionárias e plantio/comercialização de organismos geneticamente modificados (transgênicos/OGMs).'
+  },
+  {
+    tema: 'Riscos Ocupacionais',
+    enunciado: 'Na classificação dos agentes biológicos por classes de risco, o vírus Ebola — sem tratamento disponível e com alto risco de disseminação — pertence à:',
+    opcoes: [
+      'Classe de risco 1',
+      'Classe de risco 2',
+      'Classe de risco 3',
+      'Classe de risco 4'
+    ],
+    correta: 3,
+    gabarito: 'Classe 4: agentes com risco grave, sem tratamento disponível e com alto potencial de disseminação. Requerem laboratórios de nível NB-4 com trajes pressurizados e isolamento total. Ex: vírus Ebola, vírus Marburg.'
+  },
+  {
+    tema: 'Esterilização',
+    enunciado: 'Para higienização de hortifrutigranjeiros (frutas, legumes e verduras) que serão consumidos crus, a ANVISA recomenda imersão em solução de hipoclorito de sódio a:',
+    opcoes: [
+      '10 ppm por 5 minutos',
+      '200 ppm por 15 minutos',
+      '500 ppm por 30 minutos',
+      '70% de álcool por 2 minutos'
+    ],
+    correta: 1,
+    gabarito: 'A ANVISA (RDC 216/2004) recomenda imersão em solução de hipoclorito de sódio a 200 ppm por 15 minutos para higienização de hortifrutigranjeiros que serão consumidos crus. O álcool não é indicado para alimentos.'
+  },
+  {
+    tema: 'Bioética',
+    enunciado: 'Pesquisas científicas envolvendo seres humanos no Brasil são obrigatoriamente regulamentadas pela:',
+    opcoes: [
+      'Lei de Biossegurança (Lei 11.105/2005)',
+      'Resolução CNS nº 466/2012, que exige TCLE e aprovação pelo CEP',
+      'RDC 222/2018 da ANVISA',
+      'NR-32 do Ministério do Trabalho'
+    ],
+    correta: 1,
+    gabarito: 'A Resolução CNS 466/2012 regulamenta pesquisas com seres humanos no Brasil, exigindo: Termo de Consentimento Livre e Esclarecido (TCLE), aprovação por Comitê de Ética em Pesquisa (CEP) e preservação da dignidade dos participantes.'
+  },
+  {
+    tema: 'EPI/EPC',
+    enunciado: 'Cabines de segurança biológica, sistemas de ventilação com pressão negativa e lava-olhos são exemplos de:',
+    opcoes: [
+      'Equipamentos de Proteção Individual (EPI)',
+      'Equipamentos de Proteção Coletiva (EPC)',
+      'Equipamentos de diagnóstico laboratorial',
+      'Barreiras primárias de biossegurança apenas'
+    ],
+    correta: 1,
+    gabarito: 'EPCs protegem coletivamente todos os trabalhadores do ambiente, ao contrário dos EPIs que protegem individualmente. Cabines de segurança biológica, sistemas de ventilação, chuveiros de emergência e lava-olhos são EPCs.'
+  },
+  {
+    tema: 'Resíduos RSS',
+    enunciado: 'Resíduos químicos gerados em laboratórios — como medicamentos vencidos, reagentes e saneantes — são classificados como RSS do:',
+    opcoes: [
+      'Grupo A',
+      'Grupo B',
+      'Grupo D',
+      'Grupo E'
+    ],
+    correta: 1,
+    gabarito: 'Grupo B abrange resíduos com características de periculosidade química: medicamentos, reagentes, saneantes, desinfetantes, resíduos contendo metais pesados. Devem ser acondicionados em embalagens com símbolo de risco químico.'
+  },
+  {
+    tema: 'Transmissão de Doenças',
+    enunciado: 'As Precauções Padrão (Universal) na área da saúde devem ser adotadas:',
+    opcoes: [
+      'Apenas com pacientes que apresentem diagnóstico confirmado de doença infecciosa.',
+      'Somente em ambientes de UTI e isolamento hospitalar.',
+      'Com TODOS os pacientes, independentemente do diagnóstico, em qualquer nível de atenção à saúde.',
+      'Apenas por profissionais da enfermagem — nutricionistas seguem normas específicas.'
+    ],
+    correta: 2,
+    gabarito: 'As Precauções Padrão (Universal) se aplicam a TODOS os pacientes, em TODOS os encontros de cuidado, independentemente do diagnóstico. Incluem: higiene das mãos, uso de EPIs conforme risco, descarte correto de perfurocortantes.'
+  },
+  {
+    tema: 'Biossegurança — Conceito',
+    enunciado: 'O Mapa de Risco de um ambiente de trabalho é elaborado por:',
+    opcoes: [
+      'Exclusivamente pela gerência e diretoria do estabelecimento.',
+      'Apenas pela equipe de segurança do trabalho, sem participação dos funcionários.',
+      'Pelos próprios trabalhadores com apoio da CIPA, representando os riscos por círculos coloridos.',
+      'Pelo Ministério do Trabalho após inspeção do local.'
+    ],
+    correta: 2,
+    gabarito: 'O Mapa de Risco é elaborado pelos trabalhadores com apoio da CIPA (Comissão Interna de Prevenção de Acidentes). Usa círculos de cores e tamanhos diferentes para indicar tipo e intensidade do risco em cada área do ambiente de trabalho.'
+  },
+  {
+    tema: 'Níveis de Biossegurança',
+    enunciado: 'Laboratórios de Nível de Biossegurança 3 (NB-3) são indicados para trabalhar com agentes de:',
+    opcoes: [
+      'Classe de risco 1 — baixo risco individual e coletivo.',
+      'Classe de risco 2 — risco moderado, com tratamento disponível.',
+      'Classe de risco 3 — alto risco individual, risco de disseminação limitado.',
+      'Classe de risco 4 — risco grave, sem tratamento disponível.'
+    ],
+    correta: 2,
+    gabarito: 'NB-3 é para agentes de Classe 3 (ex: Mycobacterium tuberculosis). Requer: pressão negativa, acesso restrito, ventilação especial, uso de EPR (proteção respiratória). NB-4 é para Classe 4 (Ebola, Marburg) com trajes pressurizados.'
+  },
+  {
+    tema: 'Esterilização',
+    enunciado: 'Um endoscópio, que entra em contato com mucosas íntegras, é classificado como artigo semicrítico. O processo mínimo recomendado para sua reprocessamento é:',
+    opcoes: [
+      'Apenas limpeza com água e sabão.',
+      'Esterilização por autoclave.',
+      'Desinfecção de alto nível (ex: glutaraldeído 2% ou ácido peracético).',
+      'Desinfecção de baixo nível com álcool 70%.'
+    ],
+    correta: 2,
+    gabarito: 'Artigos semicríticos (contato com mucosas) requerem no mínimo desinfecção de alto nível, que elimina todos os microrganismos exceto alguns esporos. O glutaraldeído 2% e o ácido peracético são os agentes mais utilizados para endoscópios.'
+  },
+  {
+    tema: 'Riscos Ocupacionais',
+    enunciado: 'O profissional nutricionista em UAN está mais exposto a qual combinação de riscos ocupacionais?',
+    opcoes: [
+      'Riscos biológicos de classe 4 e riscos químicos com reagentes cancerígenos.',
+      'Riscos físicos (calor, ruído), ergonômicos (postura, LER) e riscos de acidentes (queimaduras, cortes).',
+      'Apenas riscos psicossociais por pressão de trabalho.',
+      'Riscos radioativos por exposição a equipamentos de diagnóstico.'
+    ],
+    correta: 1,
+    gabarito: 'Na UAN, os principais riscos são: físicos (calor excessivo dos fornos e chapas, ruído de equipamentos), ergonômicos (postura, esforço repetitivo, LER) e de acidentes (queimaduras, cortes por facas e equipamentos de corte).'
+  },
+  {
+    tema: 'Bioética',
+    enunciado: 'O sigilo profissional do nutricionista, previsto no Código de Ética do CFN, determina que informações obtidas no exercício profissional:',
+    opcoes: [
+      'Podem ser divulgadas livremente entre colegas de equipe de saúde.',
+      'Devem ser mantidas em sigilo, podendo ser reveladas apenas nas situações expressamente previstas em lei.',
+      'Podem ser compartilhadas com familiares do paciente sem restrições.',
+      'Não precisam de sigilo quando o paciente é menor de idade.'
+    ],
+    correta: 1,
+    gabarito: 'O sigilo profissional é dever ético e legal do nutricionista. Informações obtidas no atendimento só podem ser reveladas em situações previstas em lei (ex: notificação compulsória de doenças, determinação judicial), preservando sempre a dignidade do paciente.'
+  },
+  {
+    tema: 'Resíduos RSS',
+    enunciado: 'Na etapa de SEGREGAÇÃO dos resíduos de serviços de saúde, o correto é:',
+    opcoes: [
+      'Misturar todos os resíduos em um único saco e fazer a separação posteriormente no armazenamento externo.',
+      'Separar os resíduos na fonte geradora, no momento de sua produção, conforme o grupo ao qual pertencem.',
+      'Fazer a separação apenas para resíduos do Grupo A (biológicos) e Grupo E (perfurocortantes).',
+      'Delegar a segregação à equipe de limpeza durante a coleta interna.'
+    ],
+    correta: 1,
+    gabarito: 'A segregação é a etapa mais importante do manejo dos RSS e deve ocorrer NA FONTE GERADORA, no momento da produção do resíduo. A mistura inadequada contamina resíduos comuns e aumenta os custos de tratamento.'
+  },
+  {
+    tema: 'EPI/EPC',
+    enunciado: 'De acordo com as Boas Práticas em Biossegurança, ao ocorrer um acidente laboratorial (ex: derramamento de material biológico), o profissional deve:',
+    opcoes: [
+      'Continuar o trabalho e registrar o acidente apenas no final do expediente.',
+      'Ignorar o incidente se o volume derramado for pequeno.',
+      'Documentar e comunicar o acidente imediatamente à chefia, realizar os procedimentos de contenção e buscar atendimento médico se necessário.',
+      'Limpar o local sozinho com papel toalha e não comunicar para não causar alarme desnecessário.'
+    ],
+    correta: 2,
+    gabarito: 'Todo acidente deve ser: (1) comunicado imediatamente à chefia, (2) documentado, (3) manejado com os procedimentos de contenção adequados e (4) o profissional deve buscar atendimento médico se houve exposição. A documentação permite análise para prevenção futura.'
+  }
+];
+
+let qAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = {};
+
+function renderCard(idx) {
+  const q = questoes[idx];
+  if (!q) return;
+  const jr = respondidas[idx];
+  document.getElementById('progressBar').style.width = Math.round((idx / questoes.length) * 100) + '%';
+  document.getElementById('qAtualSpan').textContent = idx + 1;
+
+  const opcoesHtml = q.opcoes.map((op, i) => {
+    let cls = 'opcao-btn';
+    if (jr !== undefined) {
+      if (i === q.correta) cls += ' correta';
+      else if (i === jr && jr !== q.correta) cls += ' incorreta';
+    }
+    return `<button class="${cls}" onclick="responder(${idx},${i})" ${jr !== undefined ? 'disabled' : ''}>
+      <div class="opcao-letra">${['A','B','C','D'][i]}</div><span>${op}</span>
+    </button>`;
+  }).join('');
+
+  let gabHtml = '';
+  if (jr !== undefined) {
+    const ok = jr === q.correta;
+    gabHtml = `<div class="q-gabarito ${ok ? 'show-acertou' : 'show-errou'}">${ok ? '✅ Correto! ' : '❌ Incorreto. '} ${q.gabarito}</div>`;
+  }
+
+  const ehUltima = idx === questoes.length - 1;
+  document.getElementById('questaoContainer').innerHTML = `
+    <div class="questao-card${jr !== undefined ? (jr === q.correta ? ' acertou' : ' errou') : ''}">
+      <div class="q-meta">
+        <div class="q-num">Questão ${String(idx+1).padStart(2,'0')}</div>
+        <div class="q-tema">${q.tema}</div>
+      </div>
+      <div class="q-enunciado">${q.enunciado}</div>
+      ${opcoesHtml}
+      ${gabHtml}
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-nav btn-reiniciar" onclick="reiniciar()">🔄 Reiniciar</button>
+      ${ehUltima && jr !== undefined
+        ? `<button class="btn-nav btn-proximo" onclick="mostrarResultado()">🏁 Ver Resultado →</button>`
+        : `<button class="btn-nav btn-proximo" onclick="proxima()" ${jr === undefined ? 'disabled' : ''}>Próxima →</button>`
+      }
+    </div>`;
+}
+
+function responder(idx, escolhida) {
+  if (respondidas[idx] !== undefined) return;
+  respondidas[idx] = escolhida;
+  if (escolhida === questoes[idx].correta) {
+    acertos++;
+    document.getElementById('chipAcertos').textContent = `✓ ${acertos} acertos`;
+  } else {
+    erros++;
+    document.getElementById('chipErros').textContent = `✗ ${erros} erros`;
+  }
+  document.getElementById('chipTotal').textContent = `${acertos + erros} / ${questoes.length}`;
+  renderCard(idx);
+}
+
+function proxima() {
+  if (qAtual < questoes.length - 1) {
+    qAtual++;
+    renderCard(qAtual);
+    document.getElementById('questaoContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function mostrarResultado() {
+  document.getElementById('questaoContainer').style.display = 'none';
+  document.querySelector('.quiz-nav') && (document.querySelector('.quiz-nav').style.display = 'none');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  document.getElementById('resAcertos').textContent = acertos;
+  document.getElementById('resErros').textContent = erros;
+  document.getElementById('resTaxa').textContent = taxa + '%';
+  document.getElementById('resTitulo').textContent = taxa >= 80 ? 'Excelente Resultado!' : taxa >= 60 ? 'Bom Desempenho!' : 'Continue Estudando!';
+  document.getElementById('resSub').textContent = taxa >= 80 ? 'Você domina o conteúdo de Biossegurança e Bioética! 🎉' : taxa >= 60 ? 'Revise os tópicos que errou e tente novamente.' : 'Volte ao Resumo e refaça as questões.';
+  document.getElementById('resEmoji').textContent = taxa >= 80 ? '🎉' : taxa >= 60 ? '👍' : '📖';
+
+  // Listar erradas
+  const erradas = Object.entries(respondidas).filter(([i, r]) => r !== questoes[i].correta);
+  if (erradas.length > 0) {
+    document.getElementById('erradasLista').innerHTML =
+      `<div class="erradas-titulo">📋 Questões para revisar (${erradas.length})</div>` +
+      erradas.map(([i, r]) => `
+        <div class="errada-item">
+          <div class="errada-num">Questão ${parseInt(i)+1} · ${questoes[i].tema}</div>
+          <div class="errada-enunciado">${questoes[i].enunciado}</div>
+          <div class="errada-gabarito">✅ Resposta correta: ${['A','B','C','D'][questoes[i].correta]}) ${questoes[i].opcoes[questoes[i].correta]}</div>
+        </div>`).join('');
+  }
+  document.getElementById('resultadoFinal').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+}
+
+function reiniciar() {
+  qAtual = 0; acertos = 0; erros = 0; respondidas = {};
+  document.getElementById('chipAcertos').textContent = '✓ 0 acertos';
+  document.getElementById('chipErros').textContent = '✗ 0 erros';
+  document.getElementById('chipTotal').textContent = `0 / ${questoes.length}`;
+  document.getElementById('resultadoFinal').style.display = 'none';
+  document.getElementById('questaoContainer').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  renderCard(0);
+}
+
+// Init
+renderCard(0);
+</script>
+</body>
+</html>
