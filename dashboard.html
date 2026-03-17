@@ -34,7 +34,7 @@
     .btn-logout:hover { background: rgba(220,38,38,0.15); color: #fca5a5; border-color: rgba(220,38,38,0.3); }
 
     /* MAIN */
-    .main { overflow-y: auto; }
+    .main { overflow-y: auto; min-width: 0; }
     .topbar { background: #fff; border-bottom: 1px solid #e8efe8; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
     .page-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--escuro); }
     .topbar-actions { display: flex; gap: 12px; align-items: center; }
@@ -2141,7 +2141,7 @@ function showTab(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
   if (tab) tab.classList.add('active');
-  const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA' };
+  const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
   if (name === 'plano') setTimeout(() => inicializarPlanoLinhas(), 100);
