@@ -174,8 +174,8 @@ async function fazerCadastro() {
     }
 
     msg.className = 'msg success';
-    msg.textContent = 'Conta criada! Verifique seu e-mail para confirmar o cadastro.';
-    setTimeout(() => window.location.href = 'termo.html', 2500);
+    msg.textContent = '✅ Conta criada com sucesso! Redirecionando...';
+    setTimeout(() => window.location.href = 'dashboard.html', 1500);
   } catch (e) {
     msg.className = 'msg error';
     msg.textContent = e.message.includes('already') ? 'Este e-mail já está cadastrado.' : e.message;

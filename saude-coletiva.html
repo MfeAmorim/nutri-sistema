@@ -143,7 +143,18 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
   .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
   .questao-card { padding: 20px; }
 }
-</style>
+
+    .btn-export-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .btn-export-pdf { background: #dc2626; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-pdf:hover { background: #b91c1c; transform: translateY(-1px); }
+    .btn-export-xls { background: #16a34a; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-xls:hover { background: #15803d; transform: translateY(-1px); }
+    .progress-salvo { font-size: 12px; color: #7a8a7c; text-align: center; margin-top: 8px; }
+    .banner-progresso { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
+    .banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  </style>
 </head>
 <body>
 
@@ -491,6 +502,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     <div class="progress-text">Questão <span id="qAtualSpan">1</span> de 25</div>
   </div>
 
+    <div id="bannerProgresso" class="banner-progresso" style="display:none">
+    <p>📌 Você tem progresso salvo neste simulado. Deseja continuar?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="continuarProgresso()">✅ Continuar</button>
+      <button onclick="descartarProgresso()" style="background:#dc2626">🗑️ Recomeçar</button>
+    </div>
+  </div>
   <div id="questaoContainer"></div>
 
   <div id="resultadoFinal" style="display:none">
@@ -504,6 +522,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
         <div class="r-stat dourado"><div class="r-stat-val" id="resTaxa">0%</div><div class="r-stat-label">Taxa de acerto</div></div>
       </div>
       <button class="btn-nav btn-prox" onclick="reiniciar()" style="margin:0 auto;display:flex">🔄 Refazer Simulado</button>
+      <div class="btn-export-group">
+        <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+        <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+      </div>
+      <p class="progress-salvo" id="textoSalvo"></p>
     </div>
     <div class="erradas-section" id="erradasLista"></div>
   </div>
@@ -762,6 +785,7 @@ function renderCard(idx) {
 function responder(idx, escolhida) {
   if (respondidas[idx] !== undefined) return;
   respondidas[idx] = escolhida;
+  salvarProgresso();
   if (escolhida === questoes[idx].correta) { acertos++; document.getElementById('chipAcertos').textContent = `✓ ${acertos} acertos`; }
   else { erros++; document.getElementById('chipErros').textContent = `✗ ${erros} erros`; }
   document.getElementById('chipTotal').textContent = `${acertos + erros} / ${questoes.length}`;
@@ -807,6 +831,152 @@ function reiniciar() {
 }
 
 renderCard(0);
+
+// ═══════════════════════════════════════════════
+// SALVAR PROGRESSO NO localStorage
+// ═══════════════════════════════════════════════
+const QUIZ_KEY = 'quiz_' + window.location.pathname.split('/').pop().replace('.html','');
+
+function salvarProgresso() {
+  try {
+    localStorage.setItem(QUIZ_KEY, JSON.stringify({
+      respondidas, acertos, erros,
+      qAtual: typeof qAtual !== 'undefined' ? qAtual : (typeof questaoAtual !== 'undefined' ? questaoAtual : 0),
+      salvoEm: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function carregarProgresso() {
+  try {
+    const salvo = localStorage.getItem(QUIZ_KEY);
+    if (!salvo) return false;
+    const d = JSON.parse(salvo);
+    // Só restaura se não terminou (respondidas não cobre tudo)
+    const totalResp = Array.isArray(d.respondidas) ? d.respondidas.filter(x => x !== undefined && x !== null).length
+                    : Object.keys(d.respondidas || {}).length;
+    if (totalResp === 0) return false;
+    return d;
+  } catch(e) { return false; }
+}
+
+function limparProgresso() {
+  try { localStorage.removeItem(QUIZ_KEY); } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════
+// EXPORTAR PDF
+// ═══════════════════════════════════════════════
+function exportarPDF() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+
+  // Determina quais foram respondidas e como
+  const respostasPDF = questoes.map((q, i) => {
+    let resp, certa;
+    if (Array.isArray(respondidas)) {
+      resp = respondidas[i]; certa = q.correta;
+    } else {
+      resp = respondidas[String(i)] !== undefined ? respondidas[String(i)] : respondidas[i];
+      certa = q.correta;
+    }
+    const acertou = resp === certa;
+    const letras = ['A','B','C','D'];
+    return { q, i, resp, certa, acertou, letras };
+  });
+
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Resultado — ${materia}</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px; color: #1a2e1f; }
+    h1 { color: #2d6a4f; font-size: 22px; margin-bottom: 4px; }
+    .sub { color: #7a8a7c; font-size: 13px; margin-bottom: 24px; }
+    .stats { display: flex; gap: 20px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 20px; text-align: center; min-width: 100px; }
+    .stat-val { font-size: 28px; font-weight: 800; color: #2d6a4f; }
+    .stat-label { font-size: 11px; text-transform: uppercase; color: #7a8a7c; letter-spacing: 1px; }
+    .stat.err { background: #fff5f5; border-color: #fecaca; } .stat.err .stat-val { color: #dc2626; }
+    .stat.pct { background: #fefce8; border-color: #fde68a; } .stat.pct .stat-val { color: #ca8a04; }
+    .questao { margin-bottom: 20px; padding: 16px; border-radius: 8px; border: 1px solid #e0ebe0; page-break-inside: avoid; }
+    .questao.acertou { background: #f0fdf4; border-color: #86efac; }
+    .questao.errou { background: #fff5f5; border-color: #fca5a5; }
+    .q-num { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #7a8a7c; margin-bottom: 6px; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2e1f; margin-bottom: 10px; line-height: 1.5; }
+    .q-resp { font-size: 13px; margin-bottom: 4px; }
+    .q-resp.certa { color: #16a34a; font-weight: 700; }
+    .q-resp.errada { color: #dc2626; font-weight: 700; text-decoration: line-through; }
+    .q-gabarito { font-size: 12px; color: #2d6a4f; background: #f0fdf4; border-radius: 6px; padding: 8px 12px; margin-top: 8px; line-height: 1.5; }
+    .rodape { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e0ebe0; font-size: 12px; color: #9ca3af; text-align: center; }
+    @media print { body { padding: 16px; } }
+  </style></head><body>
+  <h1>📊 Resultado do Simulado</h1>
+  <div class="sub">${materia} · ${data} às ${hora}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${acertos}</div><div class="stat-label">Acertos</div></div>
+    <div class="stat err"><div class="stat-val">${erros}</div><div class="stat-label">Erros</div></div>
+    <div class="stat pct"><div class="stat-val">${taxa}%</div><div class="stat-label">Aproveitamento</div></div>
+    <div class="stat"><div class="stat-val">${questoes.length}</div><div class="stat-label">Total</div></div>
+  </div>
+  ${respostasPDF.map(({q,i,resp,certa,acertou,letras}) => `
+    <div class="questao ${resp !== undefined ? (acertou ? 'acertou' : 'errou') : ''}">
+      <div class="q-num">Questão ${i+1} · ${q.tema} · ${resp !== undefined ? (acertou ? '✅ Correta' : '❌ Incorreta') : '⚪ Não respondida'}</div>
+      <div class="q-text">${q.enunciado}</div>
+      ${q.opcoes.map((op,oi) => `<div class="q-resp ${oi===certa ? 'certa' : (oi===resp && !acertou ? 'errada' : '')}">${letras[oi]}) ${op}</div>`).join('')}
+      <div class="q-gabarito">💬 ${q.gabarito}</div>
+    </div>`).join('')}
+  <div class="rodape">Nutri Amorim · Conhecimento na Prática · Gerado em ${data}</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 600);
+}
+
+// ═══════════════════════════════════════════════
+// EXPORTAR EXCEL (CSV)
+// ═══════════════════════════════════════════════
+function exportarExcel() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const letras = ['A','B','C','D'];
+
+  let csv = '\uFEFF'; // BOM para Excel reconhecer UTF-8
+  csv += `Matéria;${materia}\n`;
+  csv += `Data;${data}\n`;
+  csv += `Acertos;${acertos}\n`;
+  csv += `Erros;${erros}\n`;
+  csv += `Total;${questoes.length}\n`;
+  csv += `Aproveitamento;${taxa}%\n\n`;
+  csv += `Nº;Tema;Enunciado;Sua Resposta;Resposta Correta;Resultado;Gabarito\n`;
+
+  questoes.forEach((q, i) => {
+    let resp;
+    if (Array.isArray(respondidas)) {
+      resp = respondidas[i];
+    } else {
+      resp = respondidas[String(i)] !== undefined ? respondidas[String(i)] : respondidas[i];
+    }
+    const certa = q.correta;
+    const acertou = resp === certa;
+    const respostaTexto = resp !== undefined ? `${letras[resp]}) ${q.opcoes[resp]}` : 'Não respondida';
+    const certaTexto = `${letras[certa]}) ${q.opcoes[certa]}`;
+    const resultado = resp !== undefined ? (acertou ? 'Correta' : 'Incorreta') : 'Não respondida';
+    const enunciado = q.enunciado.replace(/;/g, ',').replace(/\n/g,'');
+    const gabarito = q.gabarito.replace(/;/g, ',').replace(/\n/g,'');
+    csv += `${i+1};"${q.tema}";"${enunciado}";"${respostaTexto}";"${certaTexto}";"${resultado}";"${gabarito}"\n`;
+  });
+
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resultado_${materia.toLowerCase().replace(/\s+/g,'_')}_${data.replace(/\//g,'-')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 </script>
 </body>
 </html>
