@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produção do Conhecimento Científico — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Produção do Conhecimento Científico</div>
+    <div class="badge">3º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🔭</div>
+    <div>
+      <div class="hero-tag">3º Módulo · Nutrição · Unicesumar</div>
+      <h1>Produção do Conhecimento Científico, Tecnológico e Disrupção</h1>
+      <p>Conteúdo organizado por relevância para o nutricionista.<br>6 unidades · 284 páginas · Autores: Ribeiro, Suhr, Silva, Grasel e Daros</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Base para TCC, artigos científicos e atuação profissional</div>
+  </div>
+
+  <!-- 1. TIPOS DE CONHECIMENTO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🧠</div>
+      <div class="card-titulo">
+        <h3>Tipos de Conhecimento</h3>
+        <p>Unidade 2 · Mito, senso comum, filosofia, arte e ciência</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Os 5 Tipos de Conhecimento</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Característica principal</th><th>Exemplo</th></tr>
+        <tr><td><strong>Mito</strong></td><td>Explica o real afastando o medo do desconhecido; coletivo; origina rituais; não precisa de comprovação</td><td>Mitos gregos, lendas, crenças populares</td></tr>
+        <tr><td><strong>Senso Comum</strong></td><td>Conhecimento cotidiano; aprendido na experiência prática; não sistemático</td><td>"Comer cenoura melhora a visão"</td></tr>
+        <tr><td><strong>Filosofia</strong></td><td>Usa a razão e a dúvida para ir além das aparências; questiona o status quo; não exige experimentação</td><td>Ética, lógica, epistemologia</td></tr>
+        <tr><td><strong>Arte</strong></td><td>Campo simbólico e sensível; interpreta e desafia a realidade; atinge os sentidos e não necessariamente a lógica</td><td>Pintura, música, literatura</td></tr>
+        <tr><td><strong>Ciência</strong></td><td>Método rigoroso e sistemático; baseado em evidências; replicável; busca relações de causa e efeito</td><td>Pesquisas nutricionais, ensaios clínicos</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Para provas:</strong> O mito é uma manifestação <em>coletiva</em> — precisa que um grupo o afirme. A filosofia usa a razão, mas sem necessidade de experimentação. A ciência se distingue pelo <strong>método científico rigoroso, replicável e baseado em evidências</strong>. Na atualidade, a ciência e a tecnologia são as formas de conhecimento que mais impactam a vida em sociedade.</p>
+      </div>
+
+      <h4>Técnica × Tecnologia × Ciência</h4>
+      <ul>
+        <li><strong>Técnica:</strong> conhecimento empírico baseado na experiência e tentativa e erro; "saber fazer" sem necessidade de fundamentação teórica. Ex: técnica de culinária.</li>
+        <li><strong>Tecnologia:</strong> aplicação prática do conhecimento científico para criar instrumentos, métodos e processos que reduzem esforço ou tempo. Ex: software de cálculo nutricional.</li>
+        <li><strong>Ciência:</strong> busca compreender como o mundo funciona; produz conhecimento por meio do método científico; desmonta a realidade para explicá-la.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 2. MÉTODO CIENTÍFICO E PESQUISA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔬</div>
+      <div class="card-titulo">
+        <h3>Método Científico e Estrutura da Pesquisa</h3>
+        <p>Unidades 4 e 5 · Como elaborar um trabalho científico</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Etapas da Pesquisa Científica</h4>
+      <ol>
+        <li><strong>Tema:</strong> assunto amplo de interesse do pesquisador</li>
+        <li><strong>Problema de pesquisa:</strong> pergunta específica e ainda sem resposta; sempre em formato interrogativo. Ex: "Qual o impacto da dieta mediterrânea na glicemia de diabéticos tipo 2?"</li>
+        <li><strong>Hipótese:</strong> resposta prévia (provisória) ao problema, a ser confirmada ou refutada. Ex: "A dieta mediterrânea reduz a glicemia em diabéticos tipo 2."</li>
+        <li><strong>Objetivos:</strong> o que a pesquisa pretende alcançar
+          <ul>
+            <li><strong>Objetivo geral:</strong> descrição ampla da intencionalidade da pesquisa (verbo no infinitivo)</li>
+            <li><strong>Objetivos específicos:</strong> desdobramentos do objetivo geral (tópicos, verbos no infinitivo)</li>
+          </ul>
+        </li>
+        <li><strong>Justificativa:</strong> relevância do tema para a sociedade, para a ciência e para o pesquisador (caráter prático, pessoal e acadêmico)</li>
+        <li><strong>Revisão de literatura / Referencial teórico:</strong> diálogo com autores e conceitos que sustentam a pesquisa</li>
+        <li><strong>Metodologia:</strong> como a pesquisa será feita — tipo, método, instrumentos de coleta, análise</li>
+        <li><strong>Coleta e análise de dados</strong></li>
+        <li><strong>Conclusão:</strong> resposta ao problema de pesquisa, confirmando ou refutando as hipóteses</li>
+        <li><strong>Referências:</strong> todas as obras citadas, conforme normas ABNT</li>
+      </ol>
+
+      <h4>Pesquisa Qualitativa vs Quantitativa</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Foco</th><th>Dados</th><th>Exemplos em Nutrição</th></tr>
+        <tr><td><strong>Qualitativa</strong></td><td>Significados, comportamentos, subjetividade</td><td>Descritivos, categorias, discursos</td><td>Percepção de pacientes sobre alimentação saudável</td></tr>
+        <tr><td><strong>Quantitativa</strong></td><td>Mensuração, estatística, grandes amostras</td><td>Números, percentuais, testes estatísticos</td><td>Prevalência de obesidade em uma população</td></tr>
+        <tr><td><strong>Mista</strong></td><td>Combina as duas abordagens</td><td>Ambos</td><td>Avaliação de intervenção nutricional + experiência dos participantes</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Verbos para objetivos — dica ABNT:</strong> Objetivo geral usa verbos mais amplos: <em>analisar, investigar, compreender, avaliar, descrever</em>. Objetivos específicos usam verbos mais operacionais: <em>identificar, levantar, comparar, classificar, verificar, relacionar</em>. Todos no infinitivo.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. APRENDIZAGEM E NEUROPLASTICIDADE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🧬</div>
+      <div class="card-titulo">
+        <h3>Aprendizagem, Neuroplasticidade e Alta Performance Cognitiva</h3>
+        <p>Unidades 1 e 2 · Teorias clássicas e estratégias para estudar melhor</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Teorias Clássicas da Aprendizagem</h4>
+      <table class="tabela">
+        <tr><th>Teórico</th><th>Teoria</th><th>Ideia central</th></tr>
+        <tr><td><strong>Skinner / Watson / Pavlov</strong></td><td>Behaviorismo</td><td>Aprendizagem por estímulo-resposta; reforços positivos (repetição do comportamento) e negativos (remoção). Aprender = mudança de comportamento.</td></tr>
+        <tr><td><strong>Piaget</strong></td><td>Construtivismo</td><td>O ser humano aprende pela assimilação (incorporar ao que já sabe) e acomodação (modificar estruturas mentais). O conflito cognitivo gera desenvolvimento.</td></tr>
+        <tr><td><strong>Wallon</strong></td><td>Psicogenética</td><td>Aprender envolve aspectos afetivos, cognitivos e motores integrados. A linguagem é essencial ao desenvolvimento.</td></tr>
+        <tr><td><strong>Vigotsky</strong></td><td>Sociointeracionismo</td><td>A aprendizagem impulsiona o desenvolvimento (não o contrário). O aprendizado ocorre na interação social e é mediado por signos/linguagem.</td></tr>
+      </table>
+
+      <h4>Neuroplasticidade</h4>
+      <p>É a capacidade do cérebro de mudar sua estrutura e função em resposta a novas experiências e aprendizagens ao longo da vida. Quanto mais o cérebro é desafiado, mais conexões neurais (sinapses) são formadas. A hipótese de que nascemos e morremos com o mesmo número de neurônios já foi refutada — o cérebro pode crescer funcionalmente com o aprendizado.</p>
+
+      <h4>Mentalidade Fixa vs Mentalidade de Crescimento (Carol Dweck)</h4>
+      <ul>
+        <li><strong>Mentalidade fixa:</strong> acredita que talentos e habilidades são imutáveis; evita desafios por medo de falhar; enxerga o erro como fracasso definitivo.</li>
+        <li><strong>Mentalidade de crescimento:</strong> acredita que habilidades podem ser desenvolvidas com esforço; enxerga o erro como parte do aprendizado; busca desafios como oportunidades.</li>
+      </ul>
+
+      <h4>8 Estratégias de Superaprendizagem</h4>
+      <ol>
+        <li><strong>Skimming:</strong> "passar os olhos" no texto rapidamente para criar expectativa mental antes da leitura aprofundada</li>
+        <li><strong>Grifos inteligentes:</strong> destacar apenas ideias-chave — não grifar tudo; usar cores diferentes por assunto</li>
+        <li><strong>Marginálias:</strong> anotações nas margens do texto conectando ideias; usado por Isaac Newton e Darwin</li>
+        <li><strong>Recordar ativamente:</strong> após ler, fechar o texto e tentar lembrar as ideias principais em voz alta ou por escrito</li>
+        <li><strong>Resolução de exercícios:</strong> confirma o entendimento e expõe o que precisa ser reforçado</li>
+        <li><strong>Fichamento:</strong> fichas de leitura (resumo + interpretação) e fichas bibliográficas (dados da obra)</li>
+        <li><strong>Paleta de cores com artigo científico:</strong> colorir partes do artigo (título, autores, resumo, introdução, conclusão) para aprender a estrutura científica</li>
+        <li><strong>Mapas mentais e sketchnotes:</strong> organizar informações visualmente, conectando conceitos</li>
+      </ol>
+
+      <div class="destaque">
+        <p>💡 <strong>INPUT vs OUTPUT:</strong> O aprendizado eficiente exige os dois movimentos. Input = absorver informação (ler, ouvir, assistir). Output = usar a informação (explicar, resolver, debater, escrever). Só o input (leitura passiva) cria ilusão de fluência — sem output, o conhecimento não se consolida.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. CIÊNCIA, TECNOLOGIA E SOCIEDADE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">⚙️</div>
+      <div class="card-titulo">
+        <h3>Ciência, Tecnologia e Sociedade — Disrupção</h3>
+        <p>Unidade 3 · Revoluções industriais, disrupção e impactos sociais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Ciclo de Produção do Conhecimento</h4>
+      <p>Necessidade humana → Pesquisa científica → Conhecimento/Tecnologia → Modifica a vida humana → Gera novas necessidades → (ciclo contínuo)</p>
+      <p>Esse ciclo é acelerado pelo capitalismo, que investiu na ciência como forma de obter vantagens competitivas na produção.</p>
+
+      <h4>Revoluções Industriais — Disrupções Históricas</h4>
+      <table class="tabela">
+        <tr><th>Revolução</th><th>Período</th><th>Base tecnológica</th><th>Impacto</th></tr>
+        <tr><td><strong>1ª</strong></td><td>Século XVIII</td><td>Máquina a vapor, carvão, mecanização</td><td>De agrária para industrial; êxodo rural</td></tr>
+        <tr><td><strong>2ª</strong></td><td>Século XIX</td><td>Eletricidade, petróleo, linha de montagem</td><td>Produção em massa; novos hábitos de vida</td></tr>
+        <tr><td><strong>3ª</strong></td><td>Século XX</td><td>Informática, computadores, automação</td><td>Chips em todos os equipamentos; internet</td></tr>
+        <tr><td><strong>4ª</strong></td><td>Hoje</td><td>IoT (Internet das Coisas), Big Data, IA</td><td>Produção inteligente; novas profissões; desemprego tecnológico</td></tr>
+      </table>
+
+      <h4>O que é Disrupção?</h4>
+      <p>Uma descoberta ou tecnologia é <strong>disruptiva</strong> quando altera permanentemente o modo de vida, deslocando uma forma de pensar ou fazer já estabelecida. Exemplo clássico: o domínio do fogo mudou completamente o modo de vida humano. Na atualidade, a internet e a inteligência artificial são exemplos de tecnologias disruptivas.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Tecnologia não é neutra:</strong> A tecnologia serve aos objetivos propostos pelo ser humano sob determinadas relações sociais. O relógio ponto surgiu para controlar horas de trabalho assalariado no capitalismo — em outro sistema, não faria sentido. Da mesma forma, o desenvolvimento científico-tecnológico não beneficia automaticamente toda a população — é preciso democratizar o acesso.</p>
+      </div>
+
+      <h4>Tecnologias Sociais</h4>
+      <p>Tecnologias que buscam resolver problemas sociais e melhorar a qualidade de vida da população, especialmente dos mais vulneráveis. Exemplos: cisternas de baixo custo em regiões de seca, aplicativos de monitoramento de rios em áreas de risco, programas de inclusão digital, assistência técnica a agricultores familiares, <strong>cursos de alimentação saudável para comunidades</strong>.</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media" style="margin-top:32px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Importante para produção acadêmica e compreensão do sistema científico</div>
+  </div>
+
+  <!-- 5. SISTEMA NACIONAL DE C,T&I E PROPRIEDADE INTELECTUAL -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🏛️</div>
+      <div class="card-titulo">
+        <h3>Sistema Nacional de C,T&I e Propriedade Intelectual</h3>
+        <p>Unidade 4 · SNCTI, INPI, patentes, incubadoras e startups</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Sistema Nacional de Ciência, Tecnologia e Inovação (SNCTI)</h4>
+      <p>Conjunto de instituições e mecanismos que organizam e financiam a pesquisa e inovação no Brasil. Inclui: universidades, institutos de pesquisa, agências de fomento (CNPq, CAPES, FAPs estaduais), empresas e governo.</p>
+
+      <h4>Principais Fontes de Financiamento à Pesquisa</h4>
+      <ul>
+        <li><strong>CNPq</strong> (Conselho Nacional de Desenvolvimento Científico e Tecnológico) — bolsas e editais</li>
+        <li><strong>CAPES</strong> — fomento à pós-graduação</li>
+        <li><strong>FAPs estaduais</strong> (ex: FAPESP, FAPEMIG, FAPERJ) — financiamento estadual</li>
+        <li><strong>Incubadoras e aceleradoras</strong> — apoio a startups nascentes (espaço físico, orientação, rede)</li>
+      </ul>
+
+      <h4>Propriedade Intelectual — INPI</h4>
+      <p>O Instituto Nacional da Propriedade Industrial (INPI) é o órgão responsável pelo registro de invenções no Brasil. Tipos de proteção:</p>
+      <ul>
+        <li><strong>Patente:</strong> protege invenções (produto ou processo) por tempo determinado (20 anos para invenção)</li>
+        <li><strong>Marca:</strong> protege sinais distintivos de produtos/serviços</li>
+        <li><strong>Software (programa de computador):</strong> registrado no INPI como direito autoral</li>
+        <li><strong>Direito autoral:</strong> protege obras literárias, artísticas e científicas</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Incubadora vs Startup:</strong> Startup é uma empresa nascente de base tecnológica em busca de um modelo de negócio escalável. Incubadora é o ambiente que apoia a startup no seu desenvolvimento inicial (espaço físico, mentorias, conexões) — geralmente vinculada a universidades. A incubadora <strong>não</strong> tem participação financeira nos lucros da startup.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. PUBLICAÇÃO E TRABALHO CIENTÍFICO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">📄</div>
+      <div class="card-titulo">
+        <h3>Tipos de Trabalho Científico e Publicação</h3>
+        <p>Unidade 5 · Artigo, TCC, monografia, dissertação, tese e ABNT</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Tipos de Produção Científica Acadêmica</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Nível</th><th>Característica</th></tr>
+        <tr><td><strong>Artigo científico</strong></td><td>Qualquer</td><td>Texto curto e objetivo com estrutura padrão; publicado em revistas/periódicos científicos</td></tr>
+        <tr><td><strong>TCC / Monografia</strong></td><td>Graduação / Especialização</td><td>Trabalho de conclusão; aprofundamento em um tema; orientado por professor</td></tr>
+        <tr><td><strong>Dissertação</strong></td><td>Mestrado</td><td>Pesquisa original ou revisão aprofundada; defesa perante banca</td></tr>
+        <tr><td><strong>Tese</strong></td><td>Doutorado</td><td>Pesquisa original que contribui com novo conhecimento à ciência; defesa perante banca</td></tr>
+      </table>
+
+      <h4>Estrutura Básica de um Artigo Científico</h4>
+      <ol>
+        <li>Título</li>
+        <li>Autores e filiação institucional</li>
+        <li>Resumo (Abstract) + Palavras-chave</li>
+        <li>Introdução (problema, justificativa, objetivos)</li>
+        <li>Desenvolvimento / Revisão de literatura / Metodologia</li>
+        <li>Resultados e Discussão</li>
+        <li>Conclusão / Considerações finais</li>
+        <li>Referências (normas ABNT)</li>
+      </ol>
+
+      <h4>Bases de Dados Científicos</h4>
+      <ul>
+        <li><strong>PubMed / MEDLINE:</strong> maior base de dados de ciências da saúde; em inglês</li>
+        <li><strong>SciELO:</strong> principal base de periódicos científicos da América Latina</li>
+        <li><strong>CAPES Periódicos:</strong> acesso gratuito para estudantes de universidades públicas e privadas conveniadas</li>
+        <li><strong>Google Scholar:</strong> motor de busca acadêmico; amplo mas menos rigoroso na filtragem</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Revisão sistemática e metanálise</strong> são os tipos de estudos com maior nível de evidência científica. Elas sintetizam e analisam estatisticamente múltiplos estudos sobre um mesmo tema. São a base da Nutrição Baseada em Evidências (NBE) e as mais recomendadas para embasar condutas clínicas e políticas de saúde.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Produção do Conhecimento Científico</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">🧠 Tipos de Conhecimento</span>
+      <span class="chip chip-green">🔬 Método Científico</span>
+      <span class="chip chip-orange">⚙️ Ciência, Tecnologia e Disrupção</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const questoes = [
+  {
+    tema: 'Tipos de Conhecimento',
+    enunciado: 'Qual tipo de conhecimento se caracteriza por ser coletivo, não exigir comprovação e ter origem no desejo de explicar o desconhecido, gerando rituais?',
+    opcoes: ['Senso comum', 'Filosofia', 'Mito', 'Ciência'],
+    correta: 2,
+    gabarito: 'O mito é uma forma de explicar o real afastando o medo ante o desconhecido. É uma manifestação coletiva — precisa que um grupo o afirme e mantenha. Não exige comprovação e está mais ligado ao desejo de que as coisas aconteçam de determinado modo, dando origem a rituais.'
+  },
+  {
+    tema: 'Tipos de Conhecimento',
+    enunciado: 'A ciência se distingue das demais formas de conhecimento principalmente porque:',
+    opcoes: [
+      'É criada por gênios isolados em laboratórios, sem influência social.',
+      'Utiliza método rigoroso, baseado em evidências e replicável por outros pesquisadores, para compreender relações de causa e efeito.',
+      'Não pode ser questionada após publicada, sendo considerada verdade absoluta.',
+      'Depende exclusivamente da intuição e da experiência pessoal do pesquisador.'
+    ],
+    correta: 1,
+    gabarito: 'A ciência se distingue pelo método científico rigoroso: parte de um problema, formula hipóteses, coleta e analisa dados de forma sistemática, e seus resultados podem ser replicados por outros pesquisadores. Diferente do senso comum (empírico, não sistemático) e da filosofia (razão sem necessidade de experimentação).'
+  },
+  {
+    tema: 'Tipos de Conhecimento',
+    enunciado: 'Sobre a distinção entre técnica, tecnologia e ciência, é CORRETO afirmar:',
+    opcoes: [
+      'Técnica e tecnologia são sinônimos; ciência é apenas uma forma teórica de conhecimento sem aplicação prática.',
+      'Ciência objetiva compreender o mundo; tecnologia é a aplicação do conhecimento científico para criar instrumentos e métodos úteis; técnica é o saber fazer empírico, sem necessidade de fundamentação teórica.',
+      'Tecnologia se refere exclusivamente a equipamentos digitais e de informática.',
+      'A ciência sempre antecede a técnica — nunca é possível ter técnica sem base científica.'
+    ],
+    correta: 1,
+    gabarito: 'Ciência: compreender o mundo (produz conhecimento). Tecnologia: aplicar o conhecimento científico na criação de instrumentos/métodos (saber teórico aplicado praticamente — Chauí). Técnica: conhecimento empírico baseado em experiência e tentativa-e-erro, sem necessidade de fundamentação científica. Ex: técnicas culinárias ancestrais existiram antes da ciência dos alimentos.'
+  },
+  {
+    tema: 'Aprendizagem',
+    enunciado: 'Para o behaviorismo (Skinner, Watson, Pavlov), a aprendizagem é definida como:',
+    opcoes: [
+      'Um processo interno de construção de esquemas mentais a partir da interação com o ambiente.',
+      'Uma mudança de comportamento como reação a estímulos externos; experiências agradáveis (reforço positivo) favorecem a repetição e as desagradáveis (reforço negativo) favorecem a remoção do comportamento.',
+      'Um processo mediado pela linguagem e pela interação social que impulsiona o desenvolvimento cognitivo.',
+      'Um processo afetivo-cognitivo que envolve o organismo como um todo, incluindo emoções e motricidade.'
+    ],
+    correta: 1,
+    gabarito: 'O behaviorismo foca nos comportamentos observáveis: a aprendizagem é uma resposta a estímulos externos. Reforços positivos (experiências agradáveis) levam à repetição do comportamento; reforços negativos favorecem a eliminação de comportamentos indesejados. Não considera o mundo interno (pensamentos, emoções).'
+  },
+  {
+    tema: 'Aprendizagem',
+    enunciado: 'Segundo Piaget, o mecanismo pelo qual uma criança incorpora uma nova experiência aos esquemas mentais já existentes é chamado de:',
+    opcoes: ['Acomodação', 'Assimilação', 'Equilibração', 'Zona de desenvolvimento proximal'],
+    correta: 1,
+    gabarito: 'Assimilação = incorporar novas experiências aos esquemas mentais já existentes. Acomodação = modificar os esquemas existentes a partir das novas experiências. A equilibração é o resultado (novo equilíbrio mais elaborado). Zona de desenvolvimento proximal é conceito de Vigotsky, não Piaget.'
+  },
+  {
+    tema: 'Aprendizagem',
+    enunciado: 'Para Vigotsky, a relação entre aprendizagem e desenvolvimento é:',
+    opcoes: [
+      'O desenvolvimento precede a aprendizagem — só aprende quem já atingiu o estágio cognitivo necessário.',
+      'São independentes — não há relação direta entre aprendizagem e desenvolvimento.',
+      'A aprendizagem impulsiona o desenvolvimento, ocorrendo na interação social e mediada pela linguagem.',
+      'O desenvolvimento é determinado exclusivamente por fatores biológicos, e a aprendizagem adapta-se a ele.'
+    ],
+    correta: 2,
+    gabarito: 'Vigotsky inverte a lógica de Piaget: é a aprendizagem que impulsiona o desenvolvimento, e não o contrário. A aprendizagem ocorre na relação social, mediada por signos (especialmente a linguagem). Sem interação com o outro e com a cultura, as funções psicológicas superiores não se desenvolvem.'
+  },
+  {
+    tema: 'Neuroplasticidade',
+    enunciado: 'A neuroplasticidade é relevante para os estudos universitários porque:',
+    opcoes: [
+      'Indica que a capacidade cerebral é fixada geneticamente e não pode ser alterada.',
+      'Demonstra que o cérebro pode aprender e se adaptar ao longo da vida, criando novas conexões neurais com o aprendizado e o desafio cognitivo.',
+      'Prova que assistir videoaulas passivamente é suficiente para consolidar o conhecimento.',
+      'Mostra que apenas jovens até 25 anos podem desenvolver novas habilidades cognitivas.'
+    ],
+    correta: 1,
+    gabarito: 'A neuroplasticidade é a capacidade do cérebro de mudar sua estrutura e função em resposta a novas experiências. Quanto mais o cérebro é desafiado, mais conexões neurais (sinapses) se formam e se fortalecem. A hipótese de que nascemos e morremos com os mesmos neurônios foi refutada — o aprendizado ativo expande as redes neurais.'
+  },
+  {
+    tema: 'Alta Performance Cognitiva',
+    enunciado: 'A estratégia de "recordar ativamente" (active recall) é eficaz para o aprendizado porque:',
+    opcoes: [
+      'Consiste em reler o texto várias vezes para reforçar a memorização por repetição passiva.',
+      'Força o cérebro a recuperar a informação da memória sem consultar o material, criando conexões neurais mais fortes do que a leitura passiva.',
+      'É útil apenas para conteúdos matemáticos e científicos exatos.',
+      'Equivale a fazer resumos escritos, que são sempre mais eficazes que outras estratégias.'
+    ],
+    correta: 1,
+    gabarito: 'O "recordar ativamente" consiste em, após ler um trecho, fechar o material e tentar lembrar as ideias principais (em voz alta, por escrito ou mentalmente). Isso cria um OUTPUT, não apenas um INPUT. A reitura passiva cria ilusão de fluência — você reconhece o conteúdo mas não consegue reproduzi-lo sem o texto à frente.'
+  },
+  {
+    tema: 'Alta Performance Cognitiva',
+    enunciado: 'A diferença entre mentalidade fixa e mentalidade de crescimento (Carol Dweck) é que:',
+    opcoes: [
+      'A mentalidade fixa acredita que habilidades são imutáveis e evita desafios; a de crescimento acredita que esforço e dedicação desenvolvem capacidades.',
+      'A mentalidade de crescimento é exclusiva de pessoas com alto QI; a fixa é característica de quem tem dificuldade de aprendizado.',
+      'Ambas levam ao mesmo resultado de aprendizagem — a diferença é apenas estilística.',
+      'A mentalidade fixa é mais eficiente para profissões técnicas; a de crescimento, para artes e humanidades.'
+    ],
+    correta: 0,
+    gabarito: 'Mentalidade fixa: acredita que talento e habilidade são imutáveis, que "se nasce sendo bom ou ruim" em algo. Evita desafios por medo de fracassar. Mentalidade de crescimento: acredita que habilidades se desenvolvem com esforço e persistência. Enxerga o erro como parte do processo. A mentalidade de crescimento está associada a maior aprendizado e resiliência.'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'O problema de pesquisa científica deve sempre ser formulado como:',
+    opcoes: [
+      'Uma afirmação sobre o que o pesquisador acredita ser verdade.',
+      'Uma pergunta específica, ainda sem resposta, sobre a relação entre variáveis ou fenômenos que pode ser investigada com método adequado.',
+      'Uma lista de objetivos que o pesquisador pretende alcançar ao longo da pesquisa.',
+      'Um resumo do que já foi estudado sobre o tema — o estado da arte.'
+    ],
+    correta: 1,
+    gabarito: 'O problema de pesquisa é sempre em formato interrogativo. Deve ser algo que "ainda não tem solução" — uma questão que a pesquisa buscará responder. Deve ser claro, direto, de fácil compreensão e possível de ser respondido com método científico adequado. Ex: "Qual o impacto da dieta mediterrânea na pressão arterial de hipertensos?"'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'A hipótese em uma pesquisa científica é:',
+    opcoes: [
+      'A conclusão definitiva da pesquisa, já confirmada antes do início do estudo.',
+      'Uma resposta provisória ao problema de pesquisa, a ser confirmada ou refutada ao longo do estudo.',
+      'Sinônimo de objetivo geral da pesquisa.',
+      'Uma afirmação que não precisa ser testada, pois é baseada em experiência prática do pesquisador.'
+    ],
+    correta: 1,
+    gabarito: 'A hipótese é uma resposta prévia e provisória ao problema de pesquisa, baseada no conhecimento já existente sobre o tema. Ela orienta a pesquisa, mas pode ser confirmada ou refutada pelos dados coletados. Toda hipótese apresentada deve ser pesquisada e concluída como verdadeira ou falsa ao final do estudo.'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'Qual a diferença entre objetivo GERAL e objetivos ESPECÍFICOS em uma pesquisa científica?',
+    opcoes: [
+      'Objetivo geral descreve os métodos usados; os específicos descrevem os resultados esperados.',
+      'Objetivo geral apresenta a intencionalidade ampla da pesquisa; os específicos são desdobramentos operacionais para atingi-lo.',
+      'Objetivos específicos são mais importantes que o geral e devem ser escritos primeiro.',
+      'Objetivo geral e específicos são sinônimos e podem ser usados de forma intercambiável.'
+    ],
+    correta: 1,
+    gabarito: 'Objetivo geral: descrição ampla da intencionalidade da pesquisa (o que ela quer alcançar como um todo). Objetivos específicos: desdobramentos do objetivo geral em ações investigativas menores e mais operacionais. Ambos são escritos com verbos no infinitivo. Os específicos são os "passos" para alcançar o geral.'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'A justificativa de uma pesquisa científica deve apresentar:',
+    opcoes: [
+      'Exclusivamente os dados bibliográficos das obras que serão usadas.',
+      'A metodologia detalhada que será utilizada para coletar os dados.',
+      'A relevância e importância do tema para a sociedade, para a ciência e para o pesquisador, justificando por que essa pesquisa deve ser realizada.',
+      'Os resultados esperados e as conclusões preliminares do estudo.'
+    ],
+    correta: 2,
+    gabarito: 'A justificativa apresenta os MOTIVOS que tornam a pesquisa relevante. Inclui: motivos práticos (impacto social), pessoais (trajetória do pesquisador) e acadêmicos (nível — graduação, pós). O mais importante é demonstrar a relevância para o meio social e para o avanço do conhecimento na área.'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'A revisão de literatura (ou referencial teórico) em uma pesquisa científica consiste em:',
+    opcoes: [
+      'Uma lista de referências bibliográficas ao final do trabalho, seguindo normas ABNT.',
+      'Uma transcrição de trechos de livros e artigos sobre o tema, sem interpretação do pesquisador.',
+      'Um diálogo do pesquisador com autores e conceitos-chave que sustentam seu olhar investigativo, apresentando sua interpretação sobre o que foi lido.',
+      'O capítulo em que o pesquisador descreve os métodos e instrumentos de coleta de dados.'
+    ],
+    correta: 2,
+    gabarito: 'A revisão de literatura não é cópia — é diálogo. O pesquisador seleciona obras relevantes, lê, interpreta e apresenta ao leitor por que esses autores e conceitos são importantes para a pesquisa. É o momento de mostrar o "estado da arte" do tema e como a pesquisa se insere nesse contexto. Usa citações diretas e indiretas com base nas normas ABNT.'
+  },
+  {
+    tema: 'Pesquisa Qualitativa e Quantitativa',
+    enunciado: 'Uma nutricionista deseja compreender como mães de baixa renda percebem e decidem sobre a alimentação de seus filhos pequenos. O tipo de pesquisa mais adequado é:',
+    opcoes: [
+      'Quantitativa, pois permite medir a frequência de consumo alimentar em grande amostra.',
+      'Qualitativa, pois investiga significados, comportamentos e subjetividade de um grupo específico.',
+      'Experimental, pois é necessário controlar variáveis para garantir a validade dos resultados.',
+      'Bibliográfica, pois a revisão da literatura é suficiente para responder à questão.'
+    ],
+    correta: 1,
+    gabarito: 'A pesquisa qualitativa é ideal para investigar significados, comportamentos, percepções e subjetividades. Trabalha com análise de conteúdo, discursos e categorias, em vez de números e estatísticas. Para compreender como as mães percebem e decidem sobre alimentação, a abordagem qualitativa (entrevistas, grupos focais) é a mais adequada.'
+  },
+  {
+    tema: 'Disrupção',
+    enunciado: 'Uma tecnologia é considerada "disruptiva" quando:',
+    opcoes: [
+      'É cara e acessível apenas a uma pequena parcela da população.',
+      'Altera permanentemente o modo de vida, deslocando uma forma de pensar ou fazer já estabelecida.',
+      'Apenas melhora levemente uma tecnologia anterior, sem causar grandes mudanças.',
+      'É desenvolvida exclusivamente por grandes corporações transnacionais.'
+    ],
+    correta: 1,
+    gabarito: 'Disrupção = mudança permanente e profunda no modo de vida, que desloca formas anteriores de fazer as coisas. Exemplos: domínio do fogo (tudo mudou para os humanos pré-históricos), internet, smartphone. Na nutrição, o surgimento de alimentos ultraprocessados foi disruptivo nos padrões alimentares globais, gerando novas doenças crônicas.'
+  },
+  {
+    tema: 'Revoluções Industriais',
+    enunciado: 'A 4ª Revolução Industrial, em curso atualmente, tem como principal característica:',
+    opcoes: [
+      'A mecanização e o uso da máquina a vapor na produção industrial.',
+      'A produção em massa com base em eletricidade e linha de montagem.',
+      'A automação da produção com base em computadores e tecnologia da informação.',
+      'A produção inteligente incorporando Internet das Coisas (IoT), Big Data e inteligência artificial.'
+    ],
+    correta: 3,
+    gabarito: '4ª Revolução Industrial (hoje): IoT, Big Data, IA, sistemas ciberfísicos. 1ª: máquina a vapor, carvão (séc. XVIII). 2ª: eletricidade, petróleo, linha de montagem (séc. XIX). 3ª: computadores, informática, automação (séc. XX). Cada revolução foi disruptiva e alterou profundamente o trabalho humano e a vida em sociedade.'
+  },
+  {
+    tema: 'Ciência e Sociedade',
+    enunciado: 'A afirmação de que "a tecnologia não é neutra" significa que:',
+    opcoes: [
+      'A tecnologia é sempre prejudicial para a sociedade e deve ser evitada.',
+      'A tecnologia é criada com finalidades humanas específicas, sob determinadas relações sociais, e serve aos interesses de quem a cria e controla.',
+      'A tecnologia beneficia igualmente todas as camadas da sociedade.',
+      'Apenas cientistas neutros e sem interesse político devem desenvolver tecnologias.'
+    ],
+    correta: 1,
+    gabarito: 'A tecnologia não é neutra: ela é criada por humanos, sob determinadas relações sociais, com finalidades específicas. O relógio ponto foi criado para controlar trabalhadores assalariados no capitalismo. Bombas atômicas foram criadas para a guerra. A dieta industrializada foi criada para gerar lucro. Quem cria, controla e tem acesso à tecnologia importa.'
+  },
+  {
+    tema: 'SNCTI e Propriedade Intelectual',
+    enunciado: 'O Instituto Nacional da Propriedade Industrial (INPI) é responsável por:',
+    opcoes: [
+      'Financiar pesquisas básicas em universidades públicas por meio de editais.',
+      'Registrar e proteger invenções, marcas, softwares e outros ativos de propriedade intelectual no Brasil.',
+      'Certificar o grau de inovação de startups para fins de captação de investimentos.',
+      'Fiscalizar laboratórios e empresas farmacêuticas quanto às boas práticas de fabricação.'
+    ],
+    correta: 1,
+    gabarito: 'O INPI é o órgão federal que registra e concede proteção à propriedade intelectual no Brasil: patentes (invenções), marcas, softwares (direito autoral), desenhos industriais, indicações geográficas. O registro garante ao inventor o direito exclusivo de explorar comercialmente a invenção por tempo determinado (geralmente 20 anos para patentes).'
+  },
+  {
+    tema: 'SNCTI e Propriedade Intelectual',
+    enunciado: 'As incubadoras de empresas têm como principal objetivo:',
+    opcoes: [
+      'Adquirir participação financeira em startups em troca do apoio oferecido.',
+      'Apoiar empresas nascentes de base inovadora oferecendo espaço físico, mentoria e conexões, geralmente vinculadas a universidades e institutos de pesquisa.',
+      'Exclusivamente financiar pesquisas básicas sem aplicação comercial imediata.',
+      'Substituir as agências de fomento governamentais no financiamento à pesquisa.'
+    ],
+    correta: 1,
+    gabarito: 'Incubadoras apoiam startups em seus estágios iniciais com infraestrutura física, orientação administrativa, acesso a redes de contatos e mentoria. Geralmente ligadas a universidades e centros de pesquisa. NÃO têm o objetivo de participação financeira nos lucros — essa seria função de aceleradoras ou investidores de risco (venture capital).'
+  },
+  {
+    tema: 'Trabalho Científico',
+    enunciado: 'A ordem hierárquica correta dos trabalhos científicos acadêmicos, do mais simples ao mais complexo, é:',
+    opcoes: [
+      'Tese → Dissertação → TCC/Monografia → Artigo científico',
+      'Artigo científico → TCC/Monografia → Dissertação (mestrado) → Tese (doutorado)',
+      'Monografia → Tese → Artigo → Dissertação',
+      'Todos têm o mesmo nível de exigência — diferem apenas no formato.'
+    ],
+    correta: 1,
+    gabarito: 'Hierarquia: Artigo (qualquer nível) → TCC/Monografia (graduação/especialização) → Dissertação (mestrado) → Tese (doutorado). A tese de doutorado exige contribuição original e inédita ao campo científico — é o nível mais elevado. A dissertação pode ser uma revisão aprofundada ou pesquisa original. O TCC é o primeiro trabalho científico sistemático da vida acadêmica.'
+  },
+  {
+    tema: 'Trabalho Científico',
+    enunciado: 'O fichamento de leitura é uma estratégia acadêmica que consiste em:',
+    opcoes: [
+      'Copiar integralmente trechos de livros para uso posterior como citações diretas.',
+      'Criar registros organizados com resumo do conteúdo lido, ideias-chave, citações relevantes e interpretações do pesquisador, facilitando consulta futura.',
+      'Listar apenas os dados bibliográficos das obras lidas, seguindo as normas ABNT.',
+      'Um tipo específico de resumo destinado exclusivamente à disciplina de metodologia científica.'
+    ],
+    correta: 1,
+    gabarito: 'Fichamento de leitura: registra resumo + interpretação do conteúdo lido. Ficha bibliográfica: registra os dados da obra (título, autor, editora, ano, página). O fichamento permite consultar rapidamente o material sem precisar reler a obra completa, além de auxiliar na escrita do referencial teórico, pois já contém a interpretação do pesquisador sobre o que foi lido.'
+  },
+  {
+    tema: 'Tipos de Conhecimento',
+    enunciado: 'A arte se diferencia das demais formas de conhecimento porque:',
+    opcoes: [
+      'É uma forma de pura descontração sem intencionalidade ou reflexão sobre a realidade.',
+      'Utiliza método experimental rigoroso para comprovar hipóteses sobre a realidade.',
+      'Se situa no campo simbólico e sensível, interpretando e desafiando a realidade, atingindo os sentidos e não necessariamente a lógica ou o intelecto.',
+      'É criada por profissionais com formação científica específica, diferindo do senso comum pela sua sistematização.'
+    ],
+    correta: 2,
+    gabarito: 'A arte é uma forma de relação do ser humano com a realidade que questiona, interpreta e desafia o mundo por meio do simbólico — atinge os sentidos, as emoções, a imaginação. Diferente da ciência (que usa lógica e método) e da filosofia (que usa a razão argumentativa), a arte não precisa ser lógica para comunicar algo verdadeiro.'
+  },
+  {
+    tema: 'Aprendizagem no Século XXI',
+    enunciado: 'O conceito de "lifelong learning" (aprendizagem ao longo da vida) é especialmente relevante na atualidade porque:',
+    opcoes: [
+      'A maioria das profissões exige apenas formação inicial e não precisa de atualização constante.',
+      'O desenvolvimento científico-tecnológico é tão acelerado que os conhecimentos se tornam obsoletos rapidamente, exigindo aprendizado contínuo para manter-se relevante profissionalmente.',
+      'Apenas profissionais da área da saúde precisam atualizar conhecimentos após a formação.',
+      'O ensino superior oferece todo o conhecimento necessário para a vida profissional sem necessidade de complementação.'
+    ],
+    correta: 1,
+    gabarito: 'Na 4ª Revolução Industrial, o conhecimento e as tecnologias evoluem em ritmo acelerado. Profissões surgem e desaparecem rapidamente. O "lifelong learning" — aprendizado ao longo de toda a vida — tornou-se uma necessidade fundamental para qualquer profissional, incluindo o nutricionista, que precisa se atualizar constantemente com novas pesquisas e evidências científicas.'
+  },
+  {
+    tema: 'Ciência e Sociedade',
+    enunciado: 'As tecnologias sociais se diferenciam das demais tecnologias porque:',
+    opcoes: [
+      'São exclusivamente digitais e dependem de conectividade à internet para funcionar.',
+      'São desenvolvidas apenas por governos, sem participação da sociedade civil.',
+      'Visam resolver problemas sociais e melhorar a qualidade de vida de populações vulneráveis, podendo ser processos, métodos ou objetos sem necessidade de alta tecnologia.',
+      'São sempre mais caras que outras tecnologias, pois exigem pesquisa científica avançada.'
+    ],
+    correta: 2,
+    gabarito: 'Tecnologias sociais focam na inclusão e melhoria da qualidade de vida de populações vulneráveis. Não precisam ser "de ponta" — podem ser métodos, processos ou objetos simples. Exemplos: cisternas de baixo custo para regiões de seca, programas de alimentação saudável para comunidades carentes, aplicativos de monitoramento de rios. O nutricionista pode ser um desenvolvedor de tecnologias sociais!'
+  },
+  {
+    tema: 'Método Científico',
+    enunciado: 'A metodologia de uma pesquisa científica deve apresentar:',
+    opcoes: [
+      'Apenas a listagem das referências bibliográficas usadas no estudo.',
+      'Somente o tipo de pesquisa (qualitativa ou quantitativa), sem detalhar instrumentos ou procedimentos.',
+      'O tipo de pesquisa, o método, os instrumentos de coleta de dados, o cenário e os participantes, os critérios de seleção e os procedimentos de análise — em suma, o "como" a pesquisa será realizada.',
+      'As conclusões preliminares e as hipóteses confirmadas antes da coleta de dados.'
+    ],
+    correta: 2,
+    gabarito: 'A metodologia é a "alma da pesquisa": descreve detalhadamente COMO a pesquisa será realizada. Inclui: tipo (qualitativa/quantitativa/mista), método (estudo de caso, etnografia, pesquisa-ação, documental, etc.), instrumentos (entrevista, questionário, observação), cenário, participantes/objeto de estudo, critérios de seleção e procedimentos de análise. Sem boa metodologia, os resultados perdem validade científica.'
+  }
+];
+
+let questaoAtual = 0, acertos = 0, erros = 0, respondidas = [];
+
+function renderQuestao(idx) {
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('quiz-container');
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'questao-card-' + idx;
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn" id="op-${idx}-${i}" onclick="responder(${idx}, ${i})">
+        <span class="opcao-letra">${letras[i]}</span><span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito" id="gabarito-${idx}">💬 ${q.gabarito}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function responder(idx, opcaoIdx) {
+  if (respondidas.includes(idx)) return;
+  respondidas.push(idx);
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('questao-card-' + idx);
+  const gabarito = document.getElementById('gabarito-' + idx);
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+  const selecionado = document.getElementById('op-' + idx + '-' + opcaoIdx);
+  if (opcaoIdx === q.correta) {
+    acertos++;
+    card.classList.add('acertou');
+    gabarito.className = 'q-gabarito show-acertou';
+    gabarito.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    erros++;
+    selecionado.classList.add('incorreta');
+    card.classList.add('errou');
+    gabarito.className = 'q-gabarito show-errou';
+    gabarito.innerHTML = '❌ Incorreto. Resposta correta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = false;
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  if (questaoAtual < questoes.length) renderQuestao(questaoAtual);
+  else mostrarResultado();
+}
+
+function atualizarProgresso() {
+  const pct = (respondidas.length / questoes.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas.length + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const pct = Math.round((acertos / questoes.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  let msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Você completou todas as questões de Produção do Conhecimento Científico.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = [];
+  renderQuestao(0); atualizarProgresso();
+}
+
+renderQuestao(0);
+</script>
+</body>
+</html>
