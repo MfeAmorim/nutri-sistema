@@ -1400,7 +1400,7 @@ async function init() {
   await carregarMetasSalvas();
   carregarNotificacoesSalvas();
   await carregarArquivosFichas();
-  calcularMetas();
+  if (typeof calcularMetasManual === "function") calcularMetasManual();
   gerarTabelaSintomas();
 }
 
@@ -2233,8 +2233,11 @@ async function carregarFotoSobre(event) {
 async function carregarFotoSobreSalva() {
   try {
     const { data: urlData } = window._sb.storage.from(SOBRE_BUCKET).getPublicUrl(SOBRE_PATH);
-    if (urlData?.publicUrl) { const res = await fetch(urlData.publicUrl,{method:'HEAD'}); if (res.ok) _exibirFotoSobre(urlData.publicUrl+'?t='+Date.now()); }
-  } catch(e) {}
+    if (urlData?.publicUrl) {
+      const res = await fetch(urlData.publicUrl, { method:'HEAD' }).catch(()=>null);
+      if (res && res.ok) _exibirFotoSobre(urlData.publicUrl+'?t='+Date.now());
+    }
+  } catch(e) { /* bucket ainda não criado, ignora */ }
 }
 function _exibirFotoSobre(url) {
   const img=document.getElementById('sobre-foto-img'); const emoji=document.getElementById('sobre-foto-emoji');
@@ -2329,7 +2332,7 @@ async function salvarProntuario() {
     document.getElementById('st-prontuario').textContent = '✓';
     renderizarProntuariosSalvos(document.getElementById('busca-pront').value);
     setMsg('msg success', '✅ Prontuário de ' + (resultado.nome || 'paciente') + ' salvo com sucesso!');
-    calcularMetas();
+    if (typeof calcularMetasManual === "function") calcularMetasManual();
   } catch(e) { setMsg('msg error', '❌ Erro ao salvar: ' + (e.message || e.details || JSON.stringify(e))); }
 }
 
