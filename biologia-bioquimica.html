@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biologia e Bioquímica Humana — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+/* TOPBAR */
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+/* TABS NAV */
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+/* PANELS */
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* HERO */
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+/* PRIORIDADE HEADER */
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+/* CARD CONTEÚDO */
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+/* CONTEÚDO INTERNO */
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+.tag-pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin: 2px 3px 2px 0; }
+.tag-green { background: #dcfce7; color: #15803d; }
+.tag-red { background: #fee2e2; color: #dc2626; }
+.tag-orange { background: #ffedd5; color: #c2410c; }
+.tag-blue { background: #dbeafe; color: #1d4ed8; }
+.tag-purple { background: #ede9fe; color: #6d28d9; }
+
+/* ─── QUIZ ─── */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+/* RESULTADO FINAL */
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+.erradas-section { text-align: left; max-width: 600px; margin: 0 auto 24px; }
+.erradas-titulo { font-size: 14px; font-weight: 800; color: var(--escuro); margin-bottom: 12px; }
+.errada-item { background: #fff5f5; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.errada-num { font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; margin-bottom: 4px; }
+.errada-enunciado { font-size: 13px; color: var(--escuro); font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+.errada-gabarito { font-size: 12px; color: #15803d; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Biologia e Bioquímica Humana</div>
+    <div class="badge">3º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🧬</div>
+    <div>
+      <div class="hero-tag">3º Módulo · Nutrição · Unicesumar</div>
+      <h1>Biologia e Bioquímica Humana</h1>
+      <p>Conteúdo organizado por relevância para o nutricionista.<br>5 unidades · 184 páginas · Autora: Dra. Marcia Cristina de Souza Lara Kamei</p>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE ALTA ── -->
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Base do metabolismo nutricional e diretamente cobrado em provas</div>
+  </div>
+
+  <!-- 1. BIOMOLÉCULAS: CARBOIDRATOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🍞</div>
+      <div class="card-titulo">
+        <h3>Carboidratos — Estrutura e Funções</h3>
+        <p>Unidade 1 · Caracterização Bioquímica das Células</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que são carboidratos?</h4>
+      <p>Carboidratos são compostos por carbono, hidrogênio e oxigênio, na proporção Cn(H₂O)n. São a <strong>principal fonte de energia para as células</strong> — todas as células do organismo trabalham preferencialmente com glicose, especialmente as células nervosas, que <em>só</em> conseguem utilizar glicose como combustível.</p>
+
+      <h4>Classificação dos Carboidratos</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Definição</th><th>Exemplos</th></tr>
+        <tr><td><strong>Monossacarídeos</strong></td><td>Forma mais simples; não podem ser hidrolisados</td><td>Glicose, frutose, galactose, ribose</td></tr>
+        <tr><td><strong>Dissacarídeos</strong></td><td>2 monossacarídeos unidos</td><td>Sacarose (glicose+frutose), lactose (glicose+galactose), maltose</td></tr>
+        <tr><td><strong>Polissacarídeos</strong></td><td>Muitos monossacarídeos unidos</td><td>Amido (reserva vegetal), glicogênio (reserva animal), celulose (estrutural)</td></tr>
+      </table>
+
+      <h4>Funções dos Carboidratos</h4>
+      <ul>
+        <li><strong>Energética (principal):</strong> fornecem ATP via glicólise e respiração celular</li>
+        <li><strong>Reconhecimento celular:</strong> formam glicoproteínas que atuam como receptores nas membranas e o glicocálice</li>
+        <li><strong>Estrutural:</strong> formam glicoproteínas da matriz extracelular, parede de células vegetais (celulose) e exoesqueleto de animais (quitina)</li>
+        <li><strong>Reserva de energia:</strong> glicogênio hepático e muscular em animais; amido em vegetais</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Para provas:</strong> Glicogênio é a reserva de glicose no organismo humano (fígado e músculo). A celulose é um polissacarídeo estrutural — não é digerida pelo organismo humano (fibra alimentar). Lactose = açúcar do leite (glicose + galactose).</p>
+      </div>
+
+      <h4>Dissacarídeos — Macete</h4>
+      <ul>
+        <li><strong>Sacarose</strong> = glicose + frutose → açúcar de mesa (cana)</li>
+        <li><strong>Lactose</strong> = glicose + galactose → leite</li>
+        <li><strong>Maltose</strong> = glicose + glicose → cereais maltados</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção clínica:</strong> A ingestão elevada de carboidratos simples leva ao aumento da glicemia e está diretamente relacionada ao diabetes tipo II e à obesidade. O nutricionista deve orientar a preferência por carboidratos complexos e fibras.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PROTEÍNAS E ENZIMAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🔵</div>
+      <div class="card-titulo">
+        <h3>Proteínas e Enzimas</h3>
+        <p>Unidade 1 · Estrutura, funções e desnaturação</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Funções das Proteínas</h4>
+      <ul>
+        <li><strong>Estrutural:</strong> formam músculo, ossos, dentes, pelos, cartilagens</li>
+        <li><strong>Contração muscular:</strong> actina e miosina</li>
+        <li><strong>Defesa imunológica:</strong> imunoglobulinas (anticorpos)</li>
+        <li><strong>Transporte:</strong> hemoglobina (O₂), albumina (ácidos graxos, medicamentos)</li>
+        <li><strong>Hormônios e neurotransmissores:</strong> insulina, glucagon (proteínas); cortisol (lipídio)</li>
+        <li><strong>Enzimática:</strong> catalisam todas as reações metabólicas do organismo</li>
+      </ul>
+
+      <h4>Estrutura dos Aminoácidos</h4>
+      <p>Proteínas são polímeros de aminoácidos unidos por <strong>ligações peptídicas</strong>. Existem <strong>20 tipos de aminoácidos</strong>, dos quais 9 são essenciais (não sintetizados pelo organismo — devem vir da dieta): histidina, isoleucina, leucina, lisina, metionina, fenilalanina, treonina, triptofano e valina.</p>
+
+      <h4>Estrutura Tridimensional das Proteínas</h4>
+      <table class="tabela">
+        <tr><th>Estrutura</th><th>O que é</th><th>Ligação que mantém</th></tr>
+        <tr><td>Primária</td><td>Sequência linear de aminoácidos</td><td>Ligação peptídica (covalente — forte)</td></tr>
+        <tr><td>Secundária</td><td>α-hélice ou folha β-pregueada</td><td>Pontes de hidrogênio</td></tr>
+        <tr><td>Terciária</td><td>Dobramento globular da proteína</td><td>Pontes de H, dissulfeto, hidrofóbicas</td></tr>
+        <tr><td>Quaternária</td><td>Associação de 2+ cadeias polipeptídicas</td><td>Pontes de hidrogênio</td></tr>
+      </table>
+
+      <h4>Desnaturação Proteica</h4>
+      <p>A estrutura primária só é desfeita por enzimas. As demais (secundária, terciária, quaternária) são mantidas por ligações fracas e podem ser desfeitas por:</p>
+      <ul>
+        <li><strong>Altas temperaturas</strong> (desnaturação pelo calor)</li>
+        <li><strong>pH extremo</strong> (muito ácido ou muito básico)</li>
+        <li><strong>Detergentes e solventes orgânicos</strong></li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Aplicação clínica:</strong> A desnaturação proteica explica por que cozinhar alimentos muda sua textura e digestibilidade. Proteínas desnaturadas perdem sua atividade biológica. Isto é a base do processo de cozimento dos ovos, por exemplo.</p>
+      </div>
+
+      <h4>Enzimas — Catalisadores Biológicos</h4>
+      <p>Enzimas são proteínas que catalisam todas as reações metabólicas, aumentando a velocidade das reações sem serem consumidas. Cada enzima tem alta especificidade pelo seu <strong>substrato</strong> (encaixe no sítio ativo — "chave-fechadura").</p>
+
+      <h4>Coenzimas — Relação com Vitaminas</h4>
+      <p>Muitas coenzimas são derivadas de <strong>vitaminas do complexo B</strong>:</p>
+      <ul>
+        <li><strong>NAD⁺/NADH</strong> → derivado da Vitamina B3 (Niacina)</li>
+        <li><strong>FAD/FADH₂</strong> → derivado da Vitamina B2 (Riboflavina)</li>
+        <li><strong>Coenzima A (CoA)</strong> → derivada do ácido pantotênico (B5)</li>
+        <li><strong>Tiamina pirofosfato (TPP)</strong> → derivada da Vitamina B1 (Tiamina)</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Importância nutricional:</strong> A deficiência de vitaminas do complexo B compromete diretamente a função enzimática e o metabolismo energético. Isso justifica a importância dessas vitaminas na dieta.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. LIPÍDIOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">🥑</div>
+      <div class="card-titulo">
+        <h3>Lipídios — Estrutura e Funções</h3>
+        <p>Unidade 1 · Ácidos graxos, triglicerídeos e fosfolipídios</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que são Lipídios?</h4>
+      <p>Lipídios são compostos caracterizados pela <strong>baixa solubilidade em água</strong> (hidrofóbicos). Formam um grupo muito variável em estrutura e função. Os principais componentes são os ácidos graxos.</p>
+
+      <h4>Ácidos Graxos — Saturados vs Insaturados</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Ligações entre C</th><th>Estado físico</th><th>Fontes</th></tr>
+        <tr><td><strong>Saturados</strong></td><td>Apenas ligações simples (C–C)</td><td>Sólido à temp. ambiente</td><td>Gordura animal, óleo de coco/palma</td></tr>
+        <tr><td><strong>Monoinsaturados</strong></td><td>1 dupla ligação (C=C)</td><td>Líquido à temp. ambiente</td><td>Azeite, abacate, castanhas</td></tr>
+        <tr><td><strong>Poli-insaturados</strong></td><td>2 ou mais duplas ligações</td><td>Líquido à temp. ambiente</td><td>Peixes (ômega-3), óleos vegetais</td></tr>
+      </table>
+
+      <h4>Classificação dos Lipídios por Função</h4>
+      <ul>
+        <li><strong>Lipídios de reserva energética (triglicerídeos/triacilgliceróis):</strong> glicerol + 3 ácidos graxos. Armazenados nos adipócitos. São os lipídios mais energéticos (9 kcal/g).</li>
+        <li><strong>Lipídios estruturais (fosfolipídios):</strong> formam todas as membranas celulares. São moléculas <em>anfipáticas</em> — têm região hidrofílica (cabeça polar) e caudas hidrofóbicas (ácidos graxos).</li>
+        <li><strong>Lipídios funcionais:</strong> colesterol (precursor de hormônios esteroides, ácidos biliares e vitamina D), eicosanoides (prostaglandinas, leucotrienos).</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Para provas e clínica:</strong> Triglicerídeos = triacilgliceróis = principal forma de reserva energética no organismo. Fosfolipídios = componente estrutural de todas as membranas celulares. O colesterol é precursor de hormônios esteroides (cortisol, testosterona, estrogênio) e da vitamina D.</p>
+      </div>
+
+      <h4>Lipase Hormônio-Sensível</h4>
+      <p>A mobilização dos triglicerídeos das células adiposas é iniciada pela <strong>lipase hormônio-sensível</strong>, ativada por hormônios (glucagon, adrenalina) e inibida pela insulina. Ela cliva o triglicerídeo, liberando glicerol e ácidos graxos para serem utilizados como fonte de energia.</p>
+    </div>
+  </div>
+
+  <!-- 4. METABOLISMO ENERGÉTICO - GLICÓLISE E RESPIRAÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">⚡</div>
+      <div class="card-titulo">
+        <h3>Metabolismo Energético — Glicólise e Respiração Celular</h3>
+        <p>Unidade 4 · Via aeróbica e anaeróbica de degradação da glicose</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>ATP — A "Moeda Energética" da Célula</h4>
+      <p>O <strong>ATP (adenosina trifosfato)</strong> é a principal molécula de armazenamento temporário de energia nas células. A energia está armazenada nas ligações dos grupamentos fosfato. A dinâmica ATP ⇌ ADP + Pi é contínua nas células.</p>
+
+      <h4>Vias de Degradação da Glicose</h4>
+      <table class="tabela">
+        <tr><th>Via</th><th>Local</th><th>Precisa de O₂?</th><th>Saldo de ATP</th></tr>
+        <tr><td><strong>Anaeróbica (Fermentação)</strong></td><td>Citoplasma</td><td>Não</td><td>2 ATP (por glicose)</td></tr>
+        <tr><td><strong>Aeróbica (Respiração celular)</strong></td><td>Citoplasma + Mitocôndria</td><td>Sim</td><td>~36–38 ATP (por glicose)</td></tr>
+      </table>
+
+      <h4>Etapas da Via Aeróbica</h4>
+      <ol>
+        <li><strong>Glicólise</strong> — no citoplasma: glicose (6C) → 2 piruvato (3C) + 2 ATP + 2 NADH</li>
+        <li><strong>Formação de Acetil-CoA</strong> — na mitocôndria: piruvato → Acetil-CoA (2C) + CO₂ + NADH</li>
+        <li><strong>Ciclo do Ácido Cítrico (Ciclo de Krebs)</strong> — na matriz mitocondrial: Acetil-CoA entra no ciclo → CO₂ + NADH + FADH₂ + GTP</li>
+        <li><strong>Cadeia Transportadora de Elétrons</strong> — na membrana interna mitocondrial: NADH e FADH₂ são oxidados; O₂ é o aceptor final de elétrons → H₂O</li>
+        <li><strong>Fosforilação Oxidativa</strong> — síntese de ATP pela ATP-sintase usando o gradiente de prótons</li>
+      </ol>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete para provas:</strong> GLICÓLISE → Acetil-CoA → KREBS → CADEIA → ATP. A mitocôndria é o local das etapas 2, 3, 4 e 5. A glicólise ocorre no citoplasma. O CO₂ liberado vai para os pulmões; H₂O é produto final da respiração celular.</p>
+      </div>
+
+      <h4>Via Anaeróbica — Fermentação Lática</h4>
+      <p>Em células como eritrócitos e em músculo sob exercício intenso, o piruvato é convertido em <strong>lactato</strong> (ácido lático) sem participação de O₂. Isso regenera NAD⁺ para que a glicólise continue, mas produz apenas 2 ATP por glicose. O lactato muscular é transportado ao fígado (Ciclo de Cori) para ser reconvertido em glicose.</p>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE MÉDIA ── -->
+  <div class="prioridade prio-media" style="margin-top: 32px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Importante para compreensão clínica e metabólica</div>
+  </div>
+
+  <!-- 5. DEGRADAÇÃO DE LIPÍDIOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">🔥</div>
+      <div class="card-titulo">
+        <h3>Degradação de Lipídios — Beta-oxidação</h3>
+        <p>Unidade 5 · Metabolismo de triglicerídeos e ácidos graxos</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Por que usar lipídios como energia?</h4>
+      <p>Os lipídios são mais energéticos que carboidratos (~9 kcal/g vs ~4 kcal/g) porque contêm mais ligações C-H, que liberam mais elétrons ao serem oxidadas. São utilizados quando os estoques de carboidratos estão reduzidos ou esgotados.</p>
+
+      <h4>Etapas da Degradação de Triglicerídeos</h4>
+      <ol>
+        <li><strong>Lipólise:</strong> lipase hormônio-sensível cliva o triglicerídeo → glicerol + 3 ácidos graxos livres</li>
+        <li><strong>Ativação do ácido graxo:</strong> ácido graxo + CoA → Acil-CoA (gasta 2 ATP; ocorre na membrana externa da mitocôndria)</li>
+        <li><strong>Transporte para a matriz mitocondrial:</strong> mediado pela carnitina (carnitina-acil-transferase I e II). Sem carnitina, os ácidos graxos não entram na mitocôndria.</li>
+        <li><strong>β-oxidação (Ciclo de Lynen):</strong> ciclo de 4 reações que remove 2 carbonos por vez, gerando Acetil-CoA + NADH + FADH₂ a cada ciclo</li>
+        <li>Todo Acetil-CoA gerado entra no Ciclo de Krebs</li>
+      </ol>
+
+      <div class="destaque">
+        <p>💡 <strong>Importância clínica da Carnitina:</strong> A carnitina é essencial para o transporte de ácidos graxos para dentro da mitocôndria. Deficiência de carnitina compromete a β-oxidação e o aproveitamento energético de gorduras, causando fraqueza muscular e hipoglicemia. A carnitina pode ser sintetizada pelo organismo a partir de lisina e metionina (com vitamina C, B6 e ferro).</p>
+      </div>
+
+      <h4>Corpos Cetônicos</h4>
+      <p>Quando há excesso de Acetil-CoA (dieta muito gordurosa ou jejum prolongado com baixa disponibilidade de carboidratos), o fígado converte o Acetil-CoA em <strong>corpos cetônicos</strong> (acetoacetato, β-hidroxibutirato, acetona). Estes são exportados para outros tecidos como fonte de energia, inclusive o cérebro em situações de jejum prolongado. Em excesso, causam <strong>cetoacidose</strong> (como no diabetes tipo 1 descompensado).</p>
+    </div>
+  </div>
+
+  <!-- 6. GLICONEOGÊNESE E METABOLISMO DO GLICOGÊNIO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🔄</div>
+      <div class="card-titulo">
+        <h3>Gliconeogênese e Metabolismo do Glicogênio</h3>
+        <p>Unidade 5 · Regulação da glicemia e reservas energéticas</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Gliconeogênese — Síntese de Glicose</h4>
+      <p>É a via de <strong>síntese de nova glicose</strong> a partir de precursores não-glicídicos: lactato, glicerol, aminoácidos glicogênicos (alanina, glutamina). Ocorre principalmente no <strong>fígado</strong> e, em menor grau, nos rins.</p>
+
+      <p>Importância: mantém a glicemia durante o jejum prolongado para garantir glicose às células que dela dependem exclusivamente (neurônios, hemácias). É ativada pelo glucagon e cortisol e inibida pela insulina.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Cuidado com dietas hipocalóricas extremas:</strong> Em situações de privação severa de carboidratos, o organismo usa aminoácidos do músculo esquelético para gliconeogênese. Isso resulta em catabolismo proteico e perda de massa muscular — relevante para planejamento dietético.</p>
+      </div>
+
+      <h4>Metabolismo do Glicogênio</h4>
+      <table class="tabela">
+        <tr><th>Via</th><th>Processo</th><th>Hormônio regulador</th><th>Local</th></tr>
+        <tr><td><strong>Glicogenogênese</strong></td><td>Síntese de glicogênio a partir de glicose</td><td>Insulina (estimula)</td><td>Fígado e músculo</td></tr>
+        <tr><td><strong>Glicogenólise</strong></td><td>Degradação do glicogênio → glicose</td><td>Glucagon/adrenalina (estimulam)</td><td>Fígado (→ sangue); músculo (uso local)</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Diferença importante:</strong> O glicogênio hepático serve para manter a glicemia sanguínea (libera glicose para o sangue). O glicogênio muscular é usado apenas pelo próprio músculo durante a contração (não eleva a glicemia). O músculo não possui glicose-6-fosfatase.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. DEGRADAÇÃO DE PROTEÍNAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🧪</div>
+      <div class="card-titulo">
+        <h3>Degradação de Proteínas e Aminoácidos</h3>
+        <p>Unidade 5 · Catabolismo proteico e ciclo da ureia</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Quando o organismo degrada proteínas?</h4>
+      <p>Proteínas são degradadas para renovação celular e, em situações de privação energética (jejum prolongado, dieta pobre em carboidratos), os aminoácidos são utilizados para gliconeogênese ou como combustível direto.</p>
+
+      <h4>Destino do Grupo Amino (NH₂)</h4>
+      <p>Ao ser degradado, o aminoácido libera seu grupo amino (NH₂), que é tóxico. O organismo o descarta por duas vias:</p>
+      <ul>
+        <li><strong>Transaminação:</strong> o grupo amino é transferido para outra molécula (ex: α-cetoglutarato → glutamato)</li>
+        <li><strong>Desaminação oxidativa:</strong> liberação de amônia (NH₃)</li>
+        <li><strong>Ciclo da Ureia (fígado):</strong> a amônia é convertida em ureia — menos tóxica — que é excretada pelos rins na urina</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Relevância clínica:</strong> Em doenças hepáticas (hepatite, cirrose), o ciclo da ureia fica comprometido, levando ao acúmulo de amônia no sangue (<strong>hiperamonemia</strong>), que pode causar encefalopatia hepática. A dieta deve ser ajustada para reduzir a carga proteica nesses pacientes.</p>
+      </div>
+
+      <h4>Esqueleto Carbônico dos Aminoácidos</h4>
+      <p>Após a remoção do grupo amino, o esqueleto carbônico restante pode ser utilizado:</p>
+      <ul>
+        <li><strong>Aminoácidos glicogênicos:</strong> convertidos em precursores da gliconeogênese (piruvato, oxaloacetato, etc.) → Ex: alanina, glutamina, aspartato</li>
+        <li><strong>Aminoácidos cetogênicos:</strong> convertidos em Acetil-CoA → corpos cetônicos ou síntese de ácidos graxos → Ex: leucina, lisina</li>
+        <li><strong>Aminoácidos glicogênicos e cetogênicos:</strong> podem seguir ambas as vias → Ex: fenilalanina, tirosina</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── PRIORIDADE BAIXA ── -->
+  <div class="prioridade prio-baixa" style="margin-top: 32px;">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Baixa — Contexto estrutural e base celular</div>
+  </div>
+
+  <!-- 8. CÉLULA E MEMBRANAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔬</div>
+      <div class="card-titulo">
+        <h3>Célula Eucarionte e Membrana Plasmática</h3>
+        <p>Unidades 1 e 2 · Estrutura celular e transporte</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Células Procariontes vs Eucariontes</h4>
+      <table class="tabela">
+        <tr><th>Característica</th><th>Procarionte</th><th>Eucarionte</th></tr>
+        <tr><td>Núcleo verdadeiro</td><td>Não (nucleoide)</td><td>Sim (envoltório nuclear)</td></tr>
+        <tr><td>Organelas membranosas</td><td>Não</td><td>Sim</td></tr>
+        <tr><td>Exemplos</td><td>Bactérias</td><td>Células animais, vegetais, fungos</td></tr>
+      </table>
+
+      <h4>Mitocôndria — A Fábrica de ATP</h4>
+      <p>As mitocôndrias são organelas com <strong>duas membranas</strong>. A membrana interna se invagina formando as <strong>cristas mitocondriais</strong> (aumentam a superfície para produção de ATP). A <strong>matriz mitocondrial</strong> contém as enzimas do ciclo de Krebs e da β-oxidação.</p>
+      <ul>
+        <li>A quantidade de mitocôndrias numa célula é proporcional à sua demanda energética</li>
+        <li>Células musculares e hepatócitos são ricas em mitocôndrias</li>
+        <li>A membrana interna é impermeável — o transporte é altamente controlado</li>
+      </ul>
+
+      <h4>Transporte pela Membrana Plasmática</h4>
+      <ul>
+        <li><strong>Transporte passivo (difusão simples/facilitada):</strong> favor do gradiente; não gasta ATP — ex: O₂, CO₂, glicose (via GLUT)</li>
+        <li><strong>Transporte ativo:</strong> contra o gradiente; gasta ATP — ex: Bomba Na⁺/K⁺-ATPase</li>
+        <li><strong>Endocitose:</strong> células captam partículas grandes ou macromoléculas engolfando-as</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Para nutrição:</strong> Os transportadores GLUT (GLUT1-GLUT5) são fundamentais para a captação de glicose. O GLUT4 é insulino-dependente (músculo e adipócito) — na resistência à insulina, a captação de glicose fica comprometida, base fisiopatológica do diabetes tipo 2.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Biologia e Bioquímica Humana</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">🟢 Carboidratos, Lipídios, Proteínas</span>
+      <span class="chip chip-green">⚡ Metabolismo Energético</span>
+      <span class="chip chip-orange">🔬 Estrutura Celular</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+// ── NAVEGAÇÃO DE ABAS ──
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── CARDS COLAPSÁVEIS ──
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+// ── QUIZ ──
+const questoes = [
+  {
+    tema: 'Carboidratos',
+    enunciado: 'A glicose é considerada o carboidrato mais importante para o metabolismo humano porque:',
+    opcoes: [
+      'É o único carboidrato encontrado em alimentos de origem animal.',
+      'É o monossacarídeo preferencial de todas as células e o único utilizado por células nervosas.',
+      'Tem maior valor calórico que qualquer outro carboidrato.',
+      'É sintetizada exclusivamente pelo fígado a partir de aminoácidos.'
+    ],
+    correta: 1,
+    gabarito: 'A glicose é o combustível preferencial de todas as células. As células nervosas (neurônios) dependem exclusivamente da glicose como fonte de energia em condições normais, o que justifica a importância da manutenção da glicemia.'
+  },
+  {
+    tema: 'Carboidratos',
+    enunciado: 'A lactose, principal carboidrato do leite, é um dissacarídeo formado pela união de:',
+    opcoes: [
+      'Glicose + Frutose',
+      'Glicose + Glicose',
+      'Glicose + Galactose',
+      'Frutose + Galactose'
+    ],
+    correta: 2,
+    gabarito: 'Lactose = Glicose + Galactose. Macete: Sacarose = Glicose + Frutose (açúcar de mesa); Maltose = Glicose + Glicose (cereais); Lactose = Glicose + Galactose (leite). A intolerância à lactose ocorre por deficiência da enzima lactase.'
+  },
+  {
+    tema: 'Carboidratos',
+    enunciado: 'Sobre os polissacarídeos, é CORRETO afirmar:',
+    opcoes: [
+      'O glicogênio é a forma de reserva de glicose em vegetais e o amido é a forma de reserva em animais.',
+      'A celulose é digerida pelo organismo humano, fornecendo calorias como os demais carboidratos.',
+      'O glicogênio é a forma de reserva de glicose em animais; o amido é a reserva em vegetais; a celulose tem função estrutural.',
+      'Amido, glicogênio e celulose são formados por diferentes tipos de monossacarídeos.'
+    ],
+    correta: 2,
+    gabarito: 'Amido (reserva vegetal), glicogênio (reserva animal), celulose (função estrutural em vegetais) — os três são polissacarídeos formados por unidades de GLICOSE. A celulose não é digerida pelo ser humano (funciona como fibra alimentar insolúvel).'
+  },
+  {
+    tema: 'Proteínas',
+    enunciado: 'Qual das alternativas descreve CORRETAMENTE a estrutura quaternária de uma proteína?',
+    opcoes: [
+      'É a sequência linear de aminoácidos mantida por ligações peptídicas.',
+      'É o arranjo em α-hélice ou folha β-pregueada mantido por pontes de hidrogênio.',
+      'É o dobramento globular da cadeia, mantido por pontes de hidrogênio, pontes dissulfeto e interações hidrofóbicas.',
+      'É a associação de duas ou mais cadeias polipeptídicas formando uma proteína funcional.'
+    ],
+    correta: 3,
+    gabarito: 'Estrutura quaternária = associação de 2 ou mais cadeias polipeptídicas. Exemplo clássico: hemoglobina (4 cadeias). Primária = sequência de aa; Secundária = α-hélice/β-pregueada; Terciária = dobramento globular de uma cadeia.'
+  },
+  {
+    tema: 'Proteínas',
+    enunciado: 'A desnaturação proteica pode ser causada por todos os agentes abaixo, EXCETO:',
+    opcoes: [
+      'Altas temperaturas',
+      'pH extremamente ácido ou alcalino',
+      'Adição de NaCl em concentração fisiológica (0,9%)',
+      'Detergentes e solventes orgânicos polares'
+    ],
+    correta: 2,
+    gabarito: 'NaCl em concentração fisiológica (0,9%) não desnatura proteínas — é a solução salina usada em soro fisiológico. Os agentes desnaturantes são: alta temperatura, pH extremo, detergentes e solventes orgânicos. A desnaturação rompe ligações fracas (estruturas 2ª, 3ª e 4ª), mas não a ligação peptídica (estrutura 1ª).'
+  },
+  {
+    tema: 'Proteínas',
+    enunciado: 'As coenzimas NAD⁺ e FAD, essenciais para o metabolismo energético, são derivadas respectivamente das vitaminas:',
+    opcoes: [
+      'Vitamina C e Vitamina D',
+      'Vitamina B3 (Niacina) e Vitamina B2 (Riboflavina)',
+      'Vitamina B1 (Tiamina) e Vitamina B6 (Piridoxina)',
+      'Vitamina B12 e Ácido Fólico'
+    ],
+    correta: 1,
+    gabarito: 'NAD⁺/NADH é derivado da Niacina (B3); FAD/FADH₂ é derivado da Riboflavina (B2). Ambas são coenzimas transportadoras de elétrons fundamentais na glicólise, ciclo de Krebs e cadeia respiratória. Deficiência de B3 causa pelagra; de B2 causa queilite e glossite.'
+  },
+  {
+    tema: 'Lipídios',
+    enunciado: 'Um ácido graxo poli-insaturado é caracterizado por:',
+    opcoes: [
+      'Apresentar apenas ligações simples entre átomos de carbono.',
+      'Ser sólido à temperatura ambiente por ter maior ponto de fusão.',
+      'Apresentar duas ou mais duplas ligações entre átomos de carbono.',
+      'Ser encontrado apenas em gorduras de origem animal.'
+    ],
+    correta: 2,
+    gabarito: 'Poli-insaturado = 2 ou mais duplas ligações C=C. As duplas ligações criam "dobras" na cadeia, impedindo o empacotamento — por isso são líquidos à temperatura ambiente. Exemplos: ômega-3 (EPA, DHA em peixes) e ômega-6 (ácido linoleico em óleos vegetais).'
+  },
+  {
+    tema: 'Lipídios',
+    enunciado: 'Os fosfolipídios são classificados como moléculas anfipáticas porque:',
+    opcoes: [
+      'São solúveis apenas em água, diferentemente dos outros lipídios.',
+      'Possuem uma região hidrofílica (cabeça polar) e caudas hidrofóbicas (ácidos graxos).',
+      'São formados exclusivamente por ácidos graxos saturados.',
+      'Estão presentes apenas no plasma sanguíneo, não nas membranas celulares.'
+    ],
+    correta: 1,
+    gabarito: 'Anfipático = parte hidrofílica + parte hidrofóbica. Nos fosfolipídios: a cabeça (com fosfato e colina) é hidrofílica; as caudas de ácidos graxos são hidrofóbicas. Essa propriedade é essencial para a formação da bicamada lipídica das membranas celulares.'
+  },
+  {
+    tema: 'Lipídios',
+    enunciado: 'A lipase hormônio-sensível, responsável pela mobilização dos triglicerídeos nos adipócitos, é ATIVADA por:',
+    opcoes: [
+      'Insulina e leptina',
+      'Glucagon e adrenalina',
+      'Somatostatina e calcitonina',
+      'Aldosterona e cortisol apenas'
+    ],
+    correta: 1,
+    gabarito: 'A lipase hormônio-sensível é ativada por glucagon (jejum) e adrenalina (estresse/exercício) e INIBIDA pela insulina (estado pós-prandial). Isso explica por que a lipólise ocorre em situações de baixa insulina e por que a insulina promove acúmulo de gordura.'
+  },
+  {
+    tema: 'Metabolismo Energético',
+    enunciado: 'A glicólise é a via de degradação da glicose que ocorre no citoplasma. Qual é o produto final da glicólise?',
+    opcoes: [
+      'Acetil-CoA e CO₂',
+      'Piruvato (2 moléculas por glicose)',
+      'Ácido lático (exclusivamente)',
+      'Oxaloacetato e citrato'
+    ],
+    correta: 1,
+    gabarito: 'A glicólise degrada a glicose (6C) em 2 moléculas de piruvato (3C), com saldo de 2 ATP e 2 NADH. O piruvato pode seguir para: (a) formação de Acetil-CoA na mitocôndria (via aeróbica) ou (b) fermentação lática (via anaeróbica, produzindo lactato).'
+  },
+  {
+    tema: 'Metabolismo Energético',
+    enunciado: 'O ciclo do ácido cítrico (Ciclo de Krebs) ocorre na:',
+    opcoes: [
+      'Membrana plasmática da célula',
+      'Membrana externa da mitocôndria',
+      'Matriz mitocondrial',
+      'Retículo endoplasmático rugoso'
+    ],
+    correta: 2,
+    gabarito: 'O Ciclo de Krebs ocorre na matriz mitocondrial, onde estão as enzimas necessárias. A cadeia transportadora de elétrons (fosforilação oxidativa) ocorre na membrana interna da mitocôndria. A glicólise ocorre no citoplasma. Localização correta é fundamental para entender o metabolismo.'
+  },
+  {
+    tema: 'Metabolismo Energético',
+    enunciado: 'Comparando as vias aeróbica e anaeróbica de degradação da glicose, é CORRETO afirmar:',
+    opcoes: [
+      'A via anaeróbica produz mais ATP pois não depende de oxigênio.',
+      'A via aeróbica produz ~36-38 ATP por glicose, enquanto a anaeróbica produz apenas 2 ATP.',
+      'Ambas as vias produzem a mesma quantidade de ATP, diferindo apenas no local onde ocorrem.',
+      'A via anaeróbica é mais eficiente e utilizada preferencialmente por células musculares.'
+    ],
+    correta: 1,
+    gabarito: 'Via aeróbica: ~36-38 ATP/glicose (via completa com Krebs e cadeia respiratória). Via anaeróbica: apenas 2 ATP/glicose (somente glicólise). A via aeróbica é ~18x mais eficiente. A via anaeróbica é usada quando O₂ é insuficiente (ex: exercício intenso, hemácias).'
+  },
+  {
+    tema: 'Metabolismo Energético',
+    enunciado: 'O papel do oxigênio na respiração celular aeróbica é:',
+    opcoes: [
+      'Atuar como substrato no ciclo de Krebs, produzindo CO₂.',
+      'Ser o aceptor final de elétrons na cadeia transportadora de elétrons, formando H₂O.',
+      'Oxidar diretamente a glicose na glicólise.',
+      'Ativar a ATP-sintase por ligação direta à enzima.'
+    ],
+    correta: 1,
+    gabarito: 'O O₂ é o aceptor final de elétrons na cadeia transportadora de elétrons. Ele recebe os elétrons e prótons (H⁺) e forma H₂O. Por isso a respiração aeróbica depende obrigatoriamente de O₂. Sem O₂, a cadeia para e a produção de ATP cai drasticamente.'
+  },
+  {
+    tema: 'Beta-oxidação',
+    enunciado: 'Para que os ácidos graxos sejam degradados na β-oxidação, eles precisam ser transportados para a matriz mitocondrial. Esse transporte é mediado por:',
+    opcoes: [
+      'Albumina plasmática',
+      'Carnitina, pela ação da carnitina-acil-transferase',
+      'ATP-sintase, usando energia do gradiente de prótons',
+      'Difusão simples, pois a membrana interna é permeável a ácidos graxos'
+    ],
+    correta: 1,
+    gabarito: 'A carnitina é essencial para o transporte de acil-CoA da ativação do ácido graxo para a matriz mitocondrial, onde ocorrerá a β-oxidação. A membrana interna é impermeável a acil-CoA — sem carnitina, os ácidos graxos não podem ser oxidados. Deficiência de carnitina = falha na oxidação de gorduras.'
+  },
+  {
+    tema: 'Beta-oxidação',
+    enunciado: 'A β-oxidação dos ácidos graxos ocorre em ciclos repetitivos, nos quais a cada ciclo são produzidos:',
+    opcoes: [
+      'Uma molécula de glicose, NADH e FADH₂',
+      'Uma molécula de Acetil-CoA, NADH e FADH₂',
+      'Duas moléculas de piruvato e 2 ATP',
+      'CO₂, H₂O e ATP diretamente'
+    ],
+    correta: 1,
+    gabarito: 'A cada ciclo de β-oxidação são gerados: 1 Acetil-CoA + 1 NADH + 1 FADH₂, com redução de 2 carbonos do ácido graxo. O Acetil-CoA entra no Ciclo de Krebs; NADH e FADH₂ vão para a cadeia transportadora de elétrons. A β-oxidação é altamente rendosa energeticamente.'
+  },
+  {
+    tema: 'Gliconeogênese',
+    enunciado: 'A gliconeogênese é fundamental para a homeostase glicêmica durante o jejum porque:',
+    opcoes: [
+      'Converte glicose em glicogênio para armazenamento hepático.',
+      'Produz nova glicose a partir de precursores não-glicídicos (lactato, glicerol, aminoácidos) para manter a glicemia.',
+      'Degrada o glicogênio hepático para liberar glicose no sangue.',
+      'Converte ácidos graxos em glicose diretamente para os neurônios.'
+    ],
+    correta: 1,
+    gabarito: 'Gliconeogênese = síntese de glicose "do zero" a partir de: lactato (Ciclo de Cori), glicerol (da lipólise) e aminoácidos glicogênicos. Ocorre no fígado (principalmente) e rim. É essencial para manter a glicemia durante jejum prolongado e suprir células glicose-dependentes (neurônios, hemácias).'
+  },
+  {
+    tema: 'Gliconeogênese',
+    enunciado: 'Em relação ao metabolismo do glicogênio, qual afirmativa é CORRETA?',
+    opcoes: [
+      'O glicogênio muscular pode ser liberado como glicose para o sangue para manter a glicemia.',
+      'O glicogênio hepático serve para manter a glicemia sanguínea; o muscular é usado apenas pelo próprio músculo.',
+      'A síntese e degradação do glicogênio são estimuladas pelo mesmo hormônio.',
+      'O glicogênio é sintetizado somente no fígado, sendo depois transportado para o músculo.'
+    ],
+    correta: 1,
+    gabarito: 'Diferença crucial: glicogênio hepático → libera glicose para o SANGUE (regula glicemia). Glicogênio muscular → usado APENAS pelo músculo (não eleva a glicemia, pois o músculo não possui glicose-6-fosfatase). A síntese (glicogenogênese) é estimulada pela insulina; a degradação (glicogenólise) pelo glucagon/adrenalina.'
+  },
+  {
+    tema: 'Metabolismo Proteico',
+    enunciado: 'O Ciclo da Ureia é fundamental para o organismo humano porque:',
+    opcoes: [
+      'Converte ureia em aminoácidos essenciais para síntese proteica.',
+      'Transforma a amônia tóxica (produzida na degradação de aminoácidos) em ureia, menos tóxica, excretada na urina.',
+      'Sintetiza aminoácidos não-essenciais a partir do nitrogênio atmosférico.',
+      'Regula a absorção intestinal de proteínas da dieta.'
+    ],
+    correta: 1,
+    gabarito: 'O Ciclo da Ureia ocorre no fígado e converte NH₃ (amônia tóxica, liberada na degradação de aminoácidos) em ureia (menos tóxica), que é excretada pelos rins. Em doenças hepáticas graves, este ciclo falha → hiperamonemia → encefalopatia hepática. Relevante para dieta com restrição proteica em hepatopatas.'
+  },
+  {
+    tema: 'Metabolismo Proteico',
+    enunciado: 'Em jejum prolongado com baixa disponibilidade de carboidratos, o organismo utiliza aminoácidos para gliconeogênese. A principal fonte desses aminoácidos é:',
+    opcoes: [
+      'Proteínas plasmáticas (albumina)',
+      'Proteínas das células intestinais',
+      'Proteínas do tecido muscular esquelético',
+      'Proteínas do sistema imunológico'
+    ],
+    correta: 2,
+    gabarito: 'Em jejum, a principal fonte de aminoácidos para gliconeogênese é a proteólise (degradação) do músculo esquelético. Os aminoácidos mais utilizados são alanina e glutamina. Isso resulta em catabolismo e perda de massa muscular — muito relevante na avaliação nutricional de pacientes em jejum prolongado ou doenças críticas.'
+  },
+  {
+    tema: 'Estrutura Celular',
+    enunciado: 'A mitocôndria é a organela responsável pela produção de ATP. A membrana INTERNA da mitocôndria é importante porque:',
+    opcoes: [
+      'É permeável a todas as moléculas, facilitando o fluxo de metabólitos.',
+      'Forma as cristas mitocondriais, aumentando a superfície para a cadeia transportadora de elétrons e fosforilação oxidativa.',
+      'Contém as enzimas do Ciclo de Krebs em sua superfície externa.',
+      'É responsável pela importação de ácidos graxos para a mitocôndria sem necessidade de carnitina.'
+    ],
+    correta: 1,
+    gabarito: 'A membrana interna se invagina formando as cristas mitocondriais, que aumentam enormemente a superfície disponível para os complexos da cadeia respiratória e a ATP-sintase. A membrana interna é impermeável — o transporte é seletivo e controlado. A matriz mitocondrial contém as enzimas do Ciclo de Krebs.'
+  },
+  {
+    tema: 'Estrutura Celular',
+    enunciado: 'Os transportadores GLUT4 são importantes no contexto do diabetes tipo 2 porque:',
+    opcoes: [
+      'São transportadores independentes de insulina presentes em todos os tecidos.',
+      'São transportadores de glicose insulino-dependentes; na resistência à insulina, sua translocação para a membrana é prejudicada, reduzindo a captação de glicose.',
+      'São responsáveis pela captação de glicose pelos neurônios, que é independente de insulina.',
+      'Estão presentes apenas no intestino delgado, regulando a absorção de glicose da dieta.'
+    ],
+    correta: 1,
+    gabarito: 'GLUT4 é expresso em músculo esquelético, cardíaco e tecido adiposo. Ele só vai para a membrana plasmática quando a insulina se liga ao seu receptor → sinalização → translocação do GLUT4. Na resistência à insulina (DM2), essa sinalização está comprometida, reduzindo a captação de glicose nesses tecidos → hiperglicemia.'
+  },
+  {
+    tema: 'Corpos Cetônicos',
+    enunciado: 'Os corpos cetônicos são produzidos pelo fígado quando:',
+    opcoes: [
+      'Há excesso de carboidratos e a via glicolítica está saturada.',
+      'Há excesso de Acetil-CoA e baixa disponibilidade de oxaloacetato, geralmente em jejum prolongado ou dieta cetogênica.',
+      'A insulina estimula a lipase hormônio-sensível nos adipócitos.',
+      'O ciclo de Krebs está superativado pela alta disponibilidade de piruvato.'
+    ],
+    correta: 1,
+    gabarito: 'Corpos cetônicos se formam quando há excesso de Acetil-CoA (vindos da β-oxidação aumentada) e deficiência de oxaloacetato (que depende de carboidratos para ser formado). Isso ocorre em: jejum prolongado, dieta cetogênica e diabetes descompensado. Em excesso, levam à cetoacidose diabética (pH sanguíneo cai).'
+  },
+  {
+    tema: 'Proteínas',
+    enunciado: 'São considerados aminoácidos ESSENCIAIS para o ser humano adulto:',
+    opcoes: [
+      'Glicina, alanina, glutamato e asparagina.',
+      'Leucina, isoleucina, valina, lisina, metionina, fenilalanina, triptofano, treonina e histidina.',
+      'Todos os 20 aminoácidos, pois nenhum pode ser sintetizado pelo organismo.',
+      'Apenas leucina e lisina, pois os demais podem ser obtidos da dieta.'
+    ],
+    correta: 1,
+    gabarito: 'Os 9 aminoácidos essenciais (não sintetizados pelo organismo adulto) são: His, Ile, Leu, Lys, Met, Phe, Thr, Trp, Val. Macete: "HI LL MPTV" ou "Feliz Vaca Malhada Tira Leite Igual Ao Histórico". Devem ser ingeridos pela dieta diariamente para síntese proteica adequada.'
+  },
+  {
+    tema: 'Carboidratos',
+    enunciado: 'A celulose, apesar de ser formada por unidades de glicose, não fornece calorias ao ser humano porque:',
+    opcoes: [
+      'Tem valor calórico menor que 4 kcal/g, sendo desprezível.',
+      'O ser humano não produz a enzima celulase, necessária para quebrar as ligações β-1,4 da celulose.',
+      'A celulose é degradada pelo ácido clorídrico do estômago em vez de ser digerida.',
+      'A celulose só é encontrada em alimentos industrializados, não sendo absorvida.'
+    ],
+    correta: 1,
+    gabarito: 'A celulose tem ligações β-1,4-glicosídicas entre as unidades de glicose. O ser humano produz apenas amilase (que quebra ligações α-1,4 do amido). Sem celulase, a celulose não é digerida e passa pelo trato GI como fibra insolúvel — estimulando o peristaltismo e alimentando a microbiota intestinal.'
+  },
+  {
+    tema: 'Metabolismo Energético',
+    enunciado: 'Qual hormônio INIBE a gliconeogênese e a glicogenólise hepática, enquanto estimula a síntese de glicogênio e a captação de glicose pelas células?',
+    opcoes: [
+      'Glucagon',
+      'Adrenalina',
+      'Cortisol',
+      'Insulina'
+    ],
+    correta: 3,
+    gabarito: 'A insulina é o hormônio anabólico por excelência. Ela é liberada no estado pós-prandial (glicemia alta) e: estimula síntese de glicogênio, lipogênese e síntese proteica; inibe gliconeogênese, glicogenólise e lipólise. Glucagon e adrenalina têm efeitos opostos — são catabólicos e elevam a glicemia.'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = [];
+
+function renderQuestao(idx) {
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('quiz-container');
+
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'questao-card-' + idx;
+
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn" id="op-${idx}-${i}" onclick="responder(${idx}, ${i})">
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito" id="gabarito-${idx}">💬 ${q.gabarito}</div>
+  `;
+
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function responder(idx, opcaoIdx) {
+  if (respondidas.includes(idx)) return;
+  respondidas.push(idx);
+
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('questao-card-' + idx);
+  const gabarito = document.getElementById('gabarito-' + idx);
+
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+
+  const selecionado = document.getElementById('op-' + idx + '-' + opcaoIdx);
+  if (opcaoIdx === q.correta) {
+    acertos++;
+    card.classList.add('acertou');
+    gabarito.className = 'q-gabarito show-acertou';
+    gabarito.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    erros++;
+    selecionado.classList.add('incorreta');
+    card.classList.add('errou');
+    gabarito.className = 'q-gabarito show-errou';
+    gabarito.innerHTML = '❌ Incorreto. Resposta correta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = false;
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  if (questaoAtual < questoes.length) {
+    renderQuestao(questaoAtual);
+  } else {
+    mostrarResultado();
+  }
+}
+
+function atualizarProgresso() {
+  const pct = (respondidas.length / questoes.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas.length + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const pct = Math.round((acertos / questoes.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  let msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Você completou todas as questões de Biologia e Bioquímica Humana.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0;
+  acertos = 0;
+  erros = 0;
+  respondidas = [];
+  renderQuestao(0);
+  atualizarProgresso();
+}
+
+// ── INIT ──
+renderQuestao(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bioestatística e Epidemiologia — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Bioestatística e Epidemiologia</div>
+    <div class="badge">2º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">📊</div>
+    <div>
+      <div class="hero-tag">2º Módulo · Nutrição · Unicesumar</div>
+      <h1>Bioestatística e Epidemiologia</h1>
+      <p>Conteúdo organizado por relevância para o nutricionista.<br>9 unidades · 328 páginas · Autoras: Dra. Izabel Demarchi e Me. Renata Chatalov</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Diretamente cobrado em provas e aplicado na prática em saúde</div>
+  </div>
+
+  <!-- 1. PREVALÊNCIA E INCIDÊNCIA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">📈</div>
+      <div class="card-titulo">
+        <h3>Prevalência e Incidência</h3>
+        <p>Unidade 7 · Medidas de Frequência — os dois indicadores mais cobrados</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Prevalência — "A Fotografia"</h4>
+      <p>A prevalência mede o <strong>número de casos existentes (novos + antigos)</strong> de uma doença numa população em um determinado período. É uma medida <strong>estática e retrospectiva</strong> — como uma fotografia da situação da doença.</p>
+
+      <p><strong>Fórmula:</strong> Prevalência = (Nº de casos existentes / Nº de pessoas na população) × 10ⁿ</p>
+
+      <table class="tabela">
+        <tr><th>Característica</th><th>Prevalência</th></tr>
+        <tr><td>Conta</td><td>Casos novos + antigos</td></tr>
+        <tr><td>Temporalidade</td><td>Retrospectiva (passado + presente)</td></tr>
+        <tr><td>Analogia</td><td>"Fotografia" — estática</td></tr>
+        <tr><td>Ideal para</td><td>Doenças crônicas (DM, HAS, HIV, artrite)</td></tr>
+        <tr><td>É medida de risco?</td><td>Não — não infere causalidade</td></tr>
+        <tr><td>Aplicação</td><td>Planejamento de serviços de saúde</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Exemplo:</strong> Em um município com 2.000 habitantes, existem 200 casos de diabetes mellitus (novos + antigos). Prevalência = (200/2.000) × 100 = <strong>10%</strong> de diabetes naquele período.</p>
+      </div>
+
+      <h4>Incidência — "O Filme"</h4>
+      <p>A incidência mede o <strong>número de casos NOVOS</strong> de uma doença em uma população que estava saudável (sob risco) em determinado período. É uma medida <strong>dinâmica, prospectiva e de risco</strong> — como um filme.</p>
+
+      <p><strong>Fórmula:</strong> Incidência = (Nº de casos NOVOS / Nº de pessoas sob risco) × 10ⁿ</p>
+
+      <table class="tabela">
+        <tr><th>Característica</th><th>Incidência</th></tr>
+        <tr><td>Conta</td><td>Apenas casos NOVOS</td></tr>
+        <tr><td>Temporalidade</td><td>Prospectiva (presente e futuro)</td></tr>
+        <tr><td>Analogia</td><td>"Filme" — dinâmica</td></tr>
+        <tr><td>Ideal para</td><td>Doenças agudas (dengue, gripe, infecções)</td></tr>
+        <tr><td>É medida de risco?</td><td><strong>Sim</strong> — mede o risco de adoecer</td></tr>
+        <tr><td>Aplicação</td><td>Avaliação de vacinas, surtos, fatores de risco</td></tr>
+      </table>
+
+      <h4>Relação entre Prevalência e Incidência</h4>
+      <p><strong>Prevalência = Incidência × Duração média da doença</strong></p>
+      <p>Quanto maior a duração de uma doença, maior será sua prevalência em relação à incidência. Por isso doenças crônicas têm prevalência muito maior que incidência.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção ao denominador:</strong> No cálculo da incidência, o denominador é a população SAUDÁVEL (sob risco). Quem já está doente não entra no denominador. Ex: para calcular incidência de câncer de colo uterino, mulheres histerectomizadas NÃO entram no denominador.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ODDS RATIO E RISCO RELATIVO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">⚖️</div>
+      <div class="card-titulo">
+        <h3>Medidas de Associação — OR e RR</h3>
+        <p>Unidade 7 · Odds Ratio, Risco Relativo e Razão de Prevalência</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Tabela 2×2 (Tabela de Contingência)</h4>
+      <p>Base para todos os cálculos de associação. Sempre coloque: exposição nas linhas, desfecho (doença) nas colunas.</p>
+      <table class="tabela">
+        <tr><th>Exposição</th><th>Doente (Sim)</th><th>Não Doente (Não)</th><th>Total</th></tr>
+        <tr><td>Exposto (Sim)</td><td><strong>A</strong></td><td><strong>B</strong></td><td>A+B</td></tr>
+        <tr><td>Não Exposto (Não)</td><td><strong>C</strong></td><td><strong>D</strong></td><td>C+D</td></tr>
+        <tr><td>Total</td><td>A+C</td><td>B+D</td><td>N</td></tr>
+      </table>
+
+      <h4>Odds Ratio (OR) — Estudos Retrospectivos</h4>
+      <p>Usado em estudos <strong>caso-controle e transversais</strong> (retrospectivos). Estima a probabilidade/chance de desenvolver uma doença quando exposto a um fator de risco.</p>
+      <p><strong>Fórmula: OR = (A × D) / (B × C)</strong></p>
+
+      <h4>Risco Relativo (RR) — Estudos Prospectivos</h4>
+      <p>Usado em estudos de <strong>coorte e ensaios clínicos</strong> (prospectivos). Mede o <strong>risco real</strong> de desenvolver a doença — infere causalidade.</p>
+      <p><strong>Fórmula: RR = (A/A+B) ÷ (C/C+D)</strong></p>
+
+      <h4>Como Interpretar OR e RR</h4>
+      <table class="tabela">
+        <tr><th>Resultado</th><th>Interpretação</th></tr>
+        <tr><td><strong>OR ou RR &gt; 1</strong></td><td>Fator de RISCO — expostos têm mais chance de adoecer</td></tr>
+        <tr><td><strong>OR ou RR = 1</strong></td><td>Sem associação — expostos e não expostos têm o mesmo risco</td></tr>
+        <tr><td><strong>OR ou RR &lt; 1</strong></td><td>Fator de PROTEÇÃO — expostos têm menos chance de adoecer</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete de interpretação:</strong> OR = 7 → fumantes têm 7x mais chance de câncer de pulmão que não-fumantes. Para OR &lt; 1, use: (1 – OR) × 100% = redução de risco. Ex: OR = 0,11 → 89% menos chance de desenvolver a doença nos expostos.</p>
+      </div>
+
+      <h4>Qual medida usar em cada estudo?</h4>
+      <table class="tabela">
+        <tr><th>Tipo de Estudo</th><th>Temporalidade</th><th>Medida de Associação</th></tr>
+        <tr><td>Caso-controle</td><td>Retrospectivo</td><td>Odds Ratio (OR)</td></tr>
+        <tr><td>Transversal</td><td>Retrospectivo</td><td>OR ou Razão de Prevalência (RP)</td></tr>
+        <tr><td>Coorte</td><td>Prospectivo</td><td><strong>Risco Relativo (RR)</strong></td></tr>
+        <tr><td>Ensaio Clínico</td><td>Prospectivo + Experimental</td><td>RR, Risco Atribuível</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. DESENHOS DE ESTUDOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔬</div>
+      <div class="card-titulo">
+        <h3>Principais Desenhos de Estudos Epidemiológicos</h3>
+        <p>Unidade 8 · Transversal, Caso-Controle, Coorte e Ensaio Clínico</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Estudos Observacionais vs Experimentais</h4>
+      <ul>
+        <li><strong>Observacionais:</strong> pesquisador apenas observa — não interfere na saúde do indivíduo. Incluem: transversal, caso-controle, coorte.</li>
+        <li><strong>Experimentais:</strong> pesquisador interfere na saúde — testa medicamento, vacina, intervenção. Inclui: ensaio clínico randomizado (padrão-ouro).</li>
+      </ul>
+
+      <table class="tabela">
+        <tr><th>Estudo</th><th>Temporalidade</th><th>O que faz</th><th>Vantagem</th><th>Limitação</th></tr>
+        <tr><td><strong>Transversal</strong></td><td>Retrospectivo</td><td>Mede prevalência e exposição no mesmo momento ("fotografia")</td><td>Rápido, barato</td><td>Não infere causalidade</td></tr>
+        <tr><td><strong>Caso-Controle</strong></td><td>Retrospectivo</td><td>Compara doentes (casos) com não-doentes (controles) e busca exposições passadas</td><td>Bom para doenças raras</td><td>Viés de memória</td></tr>
+        <tr><td><strong>Coorte</strong></td><td>Prospectivo</td><td>Acompanha pessoas saudáveis expostas e não-expostas ao longo do tempo</td><td>Infere causalidade; calcula RR real</td><td>Caro, demorado</td></tr>
+        <tr><td><strong>Ensaio Clínico</strong></td><td>Prospectivo + Experimental</td><td>Testa intervenção (vacina, dieta, medicamento) com grupo controle</td><td>Padrão-ouro; maior nível de evidência</td><td>Ético, caro</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Hierarquia de evidências:</strong> Revisão sistemática/metanálise &gt; Ensaio clínico randomizado &gt; Coorte &gt; Caso-controle &gt; Transversal &gt; Relato de caso. O ensaio clínico randomizado (ECR) é o padrão-ouro para testar intervenções terapêuticas — base da medicina e nutrição baseada em evidências.</p>
+      </div>
+
+      <h4>Estudo de Framingham — Exemplo Clássico de Coorte</h4>
+      <p>O Framingham Heart Study (1949) acompanhou 5.127 pessoas saudáveis por mais de 30 anos e demonstrou que os fatores de risco para doença cardiovascular incluem: pressão arterial elevada, colesterol sérico alto, tabagismo, intolerância à glicose e hipertrofia ventricular. É um dos estudos epidemiológicos mais citados da história da saúde.</p>
+    </div>
+  </div>
+
+  <!-- 4. INDICADORES DE SAÚDE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">🏥</div>
+      <div class="card-titulo">
+        <h3>Indicadores de Saúde e Vigilância Epidemiológica</h3>
+        <p>Unidade 6 · Morbidade, mortalidade, coeficientes e vigilância</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que são Indicadores de Saúde?</h4>
+      <p>São medidas que sintetizam informações sobre a situação de saúde de uma população. Devem ter: cálculo simples, dados acessíveis, ampla cobertura, baixo custo e reprodutibilidade.</p>
+
+      <h4>Principais Indicadores</h4>
+      <table class="tabela">
+        <tr><th>Indicador</th><th>Fórmula simplificada</th><th>Uso</th></tr>
+        <tr><td><strong>Morbidade</strong></td><td>Nº doentes / população × 10ⁿ</td><td>Frequência de doenças</td></tr>
+        <tr><td><strong>Mortalidade geral</strong></td><td>Nº óbitos / população × 10ⁿ</td><td>Situação geral de saúde</td></tr>
+        <tr><td><strong>Mortalidade infantil</strong></td><td>Óbitos &lt;1 ano / nascidos vivos × 1.000</td><td>Padrão de saúde materno-infantil</td></tr>
+        <tr><td><strong>Mortalidade materna</strong></td><td>Óbitos maternos / nascidos vivos × 10ⁿ</td><td>Qualidade da atenção obstétrica</td></tr>
+        <tr><td><strong>Taxa de letalidade</strong></td><td>Óbitos por doença X / total doentes com X</td><td>Gravidade da doença</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Mortalidade infantil sempre é multiplicada por 1.000 nascidos vivos</strong> — é um padrão universal. É considerada um dos melhores indicadores do nível de desenvolvimento socioeconômico de um país.</p>
+      </div>
+
+      <h4>Vigilância Epidemiológica (VE)</h4>
+      <p>Conjunto de ações que proporcionam o conhecimento, a detecção ou prevenção de qualquer mudança nos fatores determinantes e condicionantes de saúde individual ou coletiva (Lei 8.080/1990). Seus componentes incluem: vigilância de doenças transmissíveis, doenças e agravos não-transmissíveis, saúde do trabalhador, vigilância ambiental e sanitária.</p>
+
+      <h4>SINAN — Sistema de Notificação</h4>
+      <p>O SINAN (Sistema de Informação de Agravos de Notificação) é a principal base de dados da Vigilância Epidemiológica no Brasil. Registra casos de doenças de notificação compulsória (dengue, tuberculose, hepatites, HIV etc.). A notificação compulsória é obrigatória para todos os profissionais de saúde.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Doenças emergentes vs reemergentes:</strong> Emergentes = agentes até então desconhecidos ou que se expandem para novas áreas (ex: HIV, COVID-19). Reemergentes = doenças controladas que voltam a ocorrer (ex: cólera, dengue). O nutricionista deve conhecer esses conceitos para atuar na vigilância alimentar e nutricional.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. HISTÓRIA NATURAL DA DOENÇA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🔄</div>
+      <div class="card-titulo">
+        <h3>História Natural das Doenças e Prevenção</h3>
+        <p>Unidade 5 · Processo saúde-doença, tríade ecológica e níveis de prevenção</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>História Natural das Doenças (HND)</h4>
+      <p>Conjunto de processos que interagem levando ao dano à saúde, desde os primeiros estímulos até os efeitos finais (invalidez, sequelas, recuperação ou morte). Divide-se em dois períodos:</p>
+      <ul>
+        <li><strong>Período pré-patogênico:</strong> indivíduo ainda não tem a doença, mas existe exposição a fatores de risco. Foco: <strong>promoção da saúde e proteção específica</strong> (prevenção primária).</li>
+        <li><strong>Período patogênico:</strong> doença instalada. Divide-se em fase pré-clínica (sem sintomas — "base do iceberg"), fase clínica (sintomas aparentes — "ponta do iceberg") e fase residual (sequelas/cronicidade).</li>
+      </ul>
+
+      <h4>Níveis de Prevenção</h4>
+      <table class="tabela">
+        <tr><th>Nível</th><th>Período</th><th>Ação</th><th>Exemplos</th></tr>
+        <tr><td><strong>Primária</strong></td><td>Pré-patogênico</td><td>Promoção da saúde e proteção específica</td><td>Vacinação, educação alimentar, saneamento</td></tr>
+        <tr><td><strong>Secundária</strong></td><td>Patogênico precoce</td><td>Diagnóstico precoce e tratamento imediato</td><td>Rastreamento (screening), exames preventivos</td></tr>
+        <tr><td><strong>Terciária</strong></td><td>Patogênico tardio/residual</td><td>Reabilitação e limitação da invalidez</td><td>Fisioterapia, reabilitação nutricional</td></tr>
+      </table>
+
+      <h4>Tríade Ecológica</h4>
+      <p>Modelo multicausal mais usado em Epidemiologia. Representa três elementos em equilíbrio:</p>
+      <ul>
+        <li><strong>Hospedeiro:</strong> características do ser humano (genética, idade, sexo, imunidade, hábitos alimentares)</li>
+        <li><strong>Agente:</strong> fator causador da doença (biológico, químico, físico, nutricional)</li>
+        <li><strong>Meio ambiente:</strong> físico (clima, geografia), biológico (vetores, reservatórios) e social (renda, educação, saneamento)</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Definição de saúde pela OMS (1948):</strong> "Saúde é um completo estado de bem-estar físico, mental e social, e não meramente a ausência de doença." A Constituição Federal de 1988 ampliou isso, reconhecendo saúde como direito de todos e dever do Estado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media" style="margin-top:32px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Importante para interpretação de pesquisas e análise de dados em saúde</div>
+  </div>
+
+  <!-- 6. BIOESTATÍSTICA BÁSICA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🧮</div>
+      <div class="card-titulo">
+        <h3>Medidas de Posição e Dispersão</h3>
+        <p>Unidades 1 e 3 · Média, mediana, moda, variância e desvio padrão</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Tipos de Variáveis</h4>
+      <table class="tabela">
+        <tr><th>Variável</th><th>Tipo</th><th>Exemplo</th></tr>
+        <tr><td>Qualitativa nominal</td><td>Atributo sem ordem</td><td>Sexo, raça, tipo sanguíneo</td></tr>
+        <tr><td>Qualitativa ordinal</td><td>Atributo com ordem/hierarquia</td><td>Grau de obesidade (I, II, III)</td></tr>
+        <tr><td>Quantitativa discreta</td><td>Contagem (números inteiros)</td><td>Nº de filhos, nº de refeições/dia</td></tr>
+        <tr><td>Quantitativa contínua</td><td>Medições (podem ter decimais)</td><td>Peso, altura, IMC, glicemia</td></tr>
+      </table>
+
+      <h4>Medidas de Posição (Tendência Central)</h4>
+      <ul>
+        <li><strong>Média (x̄):</strong> soma de todos os valores ÷ nº de valores. Sensível a valores extremos (outliers).</li>
+        <li><strong>Mediana:</strong> valor central quando os dados estão ordenados. Mais robusta para dados assimétricos.</li>
+        <li><strong>Moda:</strong> valor que aparece com maior frequência. Pode haver mais de uma moda (bimodal).</li>
+      </ul>
+
+      <h4>Medidas de Dispersão</h4>
+      <ul>
+        <li><strong>Amplitude total:</strong> valor máximo − valor mínimo. Simples, mas afetada por outliers.</li>
+        <li><strong>Variância (S²):</strong> média dos quadrados dos desvios em relação à média.</li>
+        <li><strong>Desvio padrão (S ou DP):</strong> raiz quadrada da variância. Indica o quanto os dados se afastam da média. Quanto maior o DP, mais dispersos os dados.</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Aplicação em nutrição:</strong> Ao analisar dados de consumo alimentar de uma população, o desvio padrão indica a variabilidade do consumo. Uma distribuição com baixo DP indica que a população tem padrão alimentar homogêneo; alto DP indica grande variação entre os indivíduos.</p>
+      </div>
+
+      <h4>Inferência Estatística</h4>
+      <p>Permite extrapolar os achados de uma amostra para a população. Ferramentas principais:</p>
+      <ul>
+        <li><strong>Intervalo de confiança (IC):</strong> faixa de valores onde o parâmetro populacional provavelmente se encontra. IC de 95% é o padrão em saúde (valor de p = 0,05).</li>
+        <li><strong>Teste de hipóteses:</strong> H₀ (hipótese nula) = não há diferença/associação; H₁ (alternativa) = há diferença/associação. Se p &lt; 0,05 → rejeita H₀ → resultado estatisticamente significativo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 7. EPIDEMIOLOGIA - CONCEITO E HISTÓRIA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🌍</div>
+      <div class="card-titulo">
+        <h3>Epidemiologia — Conceito, História e Aplicações</h3>
+        <p>Unidade 5 · John Snow, fundamentos e aplicações para nutrição</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Epidemiologia?</h4>
+      <p>Ciência que estuda o processo saúde-enfermidade na sociedade, analisando a distribuição populacional e os fatores determinantes do risco de doenças, agravos e eventos associados à saúde, propondo medidas específicas de prevenção, controle ou erradicação e subsidiando a tomada de decisão no planejamento e gestão em saúde.</p>
+
+      <h4>John Snow — Pai da Epidemiologia</h4>
+      <p>Em 1854, durante epidemia de cólera em Londres, Snow mapeou os casos e identificou que a contaminação vinha de um poço na Broad Street. Sem conhecimento do agente causador, usou apenas observação e análise espacial para provar a transmissão hídrica — marco do método epidemiológico moderno. A taxa de mortalidade era quase 14 vezes maior em áreas abastecidas por água contaminada.</p>
+
+      <h4>Aplicações da Epidemiologia</h4>
+      <ul>
+        <li><strong>Diagnóstico da situação de saúde:</strong> identificar os problemas de saúde que afetam uma população</li>
+        <li><strong>Identificação etiológica:</strong> descobrir causas e fatores de risco das doenças</li>
+        <li><strong>Planejamento de serviços:</strong> alocar recursos e organizar serviços de saúde com base em dados</li>
+        <li><strong>Avaliação de programas e políticas públicas:</strong> medir eficácia, efetividade e eficiência</li>
+        <li><strong>Medicina baseada em evidências:</strong> usar evidências científicas para decisões clínicas</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Aplicação para o Nutricionista:</strong> A Epidemiologia Nutricional permite identificar padrões alimentares associados a doenças crônicas (DM2, obesidade, doenças cardiovasculares), subsidiar políticas de alimentação e nutrição (como o Guia Alimentar para a População Brasileira) e avaliar intervenções nutricionais em saúde coletiva.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Bioestatística e Epidemiologia</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">📈 Prevalência e Incidência</span>
+      <span class="chip chip-green">⚖️ OR e Risco Relativo</span>
+      <span class="chip chip-orange">🔬 Desenhos de Estudos</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const questoes = [
+  {
+    tema: 'Prevalência',
+    enunciado: 'A prevalência é definida como a medida epidemiológica que:',
+    opcoes: [
+      'Conta apenas os casos NOVOS de uma doença em determinado período.',
+      'Mede o número de casos existentes (novos + antigos) de uma doença numa população em determinado período.',
+      'Avalia a velocidade com que novos casos surgem numa população.',
+      'É usada exclusivamente para doenças agudas de curta duração.'
+    ],
+    correta: 1,
+    gabarito: 'Prevalência = casos existentes (novos + antigos) / população × 10ⁿ. É uma medida estática (fotografia) e retrospectiva. Ideal para doenças crônicas (DM, HAS, HIV). A incidência é que conta apenas os casos novos.'
+  },
+  {
+    tema: 'Prevalência',
+    enunciado: 'Em um município com 10.000 habitantes, foram registrados 500 casos de hipertensão arterial sistêmica (novos e antigos) em 2024. A prevalência de HAS nesse município é:',
+    opcoes: [
+      '0,05 casos por habitante',
+      '5% (ou 50 casos por 1.000 habitantes)',
+      '500 casos por 100 habitantes',
+      '5.000 casos por 100.000 habitantes'
+    ],
+    correta: 1,
+    gabarito: 'Prevalência = (500/10.000) × 100 = 5%. Ou multiplicando por 1.000: (500/10.000) × 1.000 = 50 casos por 1.000 habitantes. As duas formas estão corretas e expressam o mesmo valor.'
+  },
+  {
+    tema: 'Incidência',
+    enunciado: 'A incidência é considerada uma "medida de risco" porque:',
+    opcoes: [
+      'Conta os casos antigos e novos da doença, refletindo toda a história da doença.',
+      'Mede a probabilidade de que pessoas saudáveis (sob risco) desenvolvam a doença em determinado período.',
+      'É calculada a partir de dados retrospectivos (do passado).',
+      'É usada exclusivamente em estudos do tipo caso-controle.'
+    ],
+    correta: 1,
+    gabarito: 'A incidência mede a transição de saudável para doente — ou seja, o risco de adoecer. Diferentemente da prevalência, que é estática, a incidência é dinâmica (prospectiva) e só conta casos NOVOS em pessoas que estavam saudáveis (sob risco) no início do período.'
+  },
+  {
+    tema: 'Prevalência vs Incidência',
+    enunciado: 'Qual das seguintes medidas é mais adequada para avaliar a frequência de diabetes mellitus tipo 2 em uma população, considerando sua natureza crônica e longa duração?',
+    opcoes: [
+      'Incidência, pois é a medida de risco mais adequada para qualquer doença.',
+      'Prevalência, pois conta todos os casos existentes (novos e antigos) e reflete o peso da doença crônica na comunidade.',
+      'Taxa de letalidade, pois é a mais utilizada para doenças metabólicas.',
+      'Risco atribuível, pois mensura a diferença entre grupos expostos e não expostos.'
+    ],
+    correta: 1,
+    gabarito: 'Para doenças crônicas de longa duração (DM, HAS, HIV, artrite), a PREVALÊNCIA é a medida mais adequada, pois os casos se acumulam ao longo do tempo. A incidência é ideal para doenças agudas (dengue, gripe), onde os casos não persistem. Prevalência = incidência × duração da doença.'
+  },
+  {
+    tema: 'Prevalência vs Incidência',
+    enunciado: 'Sobre a relação entre prevalência e incidência, é CORRETO afirmar:',
+    opcoes: [
+      'Prevalência é sempre maior que incidência para qualquer tipo de doença.',
+      'Prevalência = Incidência × Duração da doença. Para doenças crônicas, a prevalência tende a ser muito maior que a incidência.',
+      'A prevalência e a incidência são equivalentes quando a doença tem alta taxa de cura.',
+      'A incidência é sempre maior que a prevalência em doenças infecciosas.'
+    ],
+    correta: 1,
+    gabarito: 'Prevalência = Incidência × Duração média da doença. Para doenças crônicas (longa duração), a prevalência acumula casos ao longo dos anos, tornando-se muito maior que a incidência. Para doenças agudas de curta duração (dengue, gripe), prevalência e incidência são mais próximas.'
+  },
+  {
+    tema: 'Odds Ratio',
+    enunciado: 'Em um estudo caso-controle sobre obesidade e câncer colorretal, a tabela 2×2 mostrou: A=80, B=40, C=20, D=60. O Odds Ratio (OR) é:',
+    opcoes: [
+      'OR = 4 (fator de risco)',
+      'OR = 6 (fator de risco)',
+      'OR = 0,25 (fator de proteção)',
+      'OR = 1 (sem associação)'
+    ],
+    correta: 1,
+    gabarito: 'OR = (A×D)/(B×C) = (80×60)/(40×20) = 4.800/800 = 6. OR > 1 indica fator de risco. Portanto, pessoas com obesidade têm 6 vezes mais chance de desenvolver câncer colorretal em relação às não-obesas (nos dados hipotéticos).'
+  },
+  {
+    tema: 'Odds Ratio',
+    enunciado: 'Em um estudo transversal sobre atividade física e hipertensão, o OR encontrado foi 0,30. A interpretação CORRETA é:',
+    opcoes: [
+      'Pessoas que praticam atividade física têm 30% mais chance de desenvolver hipertensão.',
+      'Não há associação entre atividade física e hipertensão.',
+      'A atividade física é um fator de proteção: pessoas ativas têm 70% menos chance de desenvolver hipertensão.',
+      'Pessoas sedentárias têm 0,3 vezes menos chance de desenvolver hipertensão.'
+    ],
+    correta: 2,
+    gabarito: 'OR < 1 indica fator de PROTEÇÃO. Para interpretar: (1 – 0,30) × 100% = 70% menos chance de desenvolver hipertensão nos praticantes de atividade física. Nunca diga "0,3 vezes mais chance" para OR < 1 — a frase não faz sentido. Use sempre a transformação 1 – OR.'
+  },
+  {
+    tema: 'Risco Relativo',
+    enunciado: 'O Risco Relativo (RR) difere do Odds Ratio (OR) porque:',
+    opcoes: [
+      'O RR é calculado em estudos retrospectivos, enquanto o OR é calculado em estudos prospectivos.',
+      'O RR mede o risco real e infere causalidade (estudos prospectivos); o OR é uma estimativa de risco (estudos retrospectivos).',
+      'O RR utiliza a tabela 2×2 e o OR não.',
+      'O OR é sempre maior que o RR para o mesmo conjunto de dados.'
+    ],
+    correta: 1,
+    gabarito: 'RR é usado em estudos PROSPECTIVOS (coorte e ensaio clínico) e mede o risco real — pode inferir causalidade. OR é usado em estudos RETROSPECTIVOS (caso-controle e transversal) e é uma estimativa do risco — não infere causalidade, apenas sugere associação. Estudos prospectivos têm maior credibilidade científica.'
+  },
+  {
+    tema: 'Risco Relativo',
+    enunciado: 'Um estudo de coorte acompanhou 1.000 pessoas durante 5 anos. Das 400 expostas ao fator X, 80 desenvolveram a doença Y. Das 600 não-expostas, 60 desenvolveram Y. O RR é:',
+    opcoes: [
+      'RR = 1 (sem associação)',
+      'RR = 2 (fator de risco)',
+      'RR = 0,5 (fator de proteção)',
+      'RR = 3 (fator de risco)'
+    ],
+    correta: 1,
+    gabarito: 'Incidência nos expostos = 80/400 = 0,20. Incidência nos não-expostos = 60/600 = 0,10. RR = 0,20/0,10 = 2. Portanto, expostos ao fator X têm 2 vezes mais risco de desenvolver a doença Y em relação aos não-expostos. Como RR > 1, o fator X é um fator de risco.'
+  },
+  {
+    tema: 'Desenhos de Estudos',
+    enunciado: 'Um pesquisador deseja investigar se o consumo excessivo de sódio está associado à hipertensão arterial. Ele seleciona 200 pacientes com hipertensão (casos) e 200 sem hipertensão (controles) e investiga o consumo de sódio passado. Qual é o desenho de estudo utilizado?',
+    opcoes: [
+      'Estudo de Coorte',
+      'Ensaio Clínico Randomizado',
+      'Estudo Caso-Controle',
+      'Estudo Transversal'
+    ],
+    correta: 2,
+    gabarito: 'Estudo Caso-Controle: parte do EFEITO (doença) e volta ao passado para investigar a EXPOSIÇÃO. Características: retrospectivo, compara casos (doentes) com controles (não-doentes), usa OR como medida de associação. Ideal para doenças raras ou quando não é ético expor pessoas ao fator de risco.'
+  },
+  {
+    tema: 'Desenhos de Estudos',
+    enunciado: 'O ensaio clínico randomizado (ECR) é considerado o padrão-ouro dos estudos epidemiológicos porque:',
+    opcoes: [
+      'É o mais barato e rápido de executar.',
+      'Permite analisar dados retrospectivos com maior precisão.',
+      'A randomização elimina os vieses de seleção, garantindo grupos comparáveis, permitindo inferir causalidade com alto nível de evidência.',
+      'Utiliza apenas dados populacionais do IBGE, garantindo representatividade nacional.'
+    ],
+    correta: 2,
+    gabarito: 'No ECR, os participantes são alocados aleatoriamente (randomização) em grupo intervenção e controle. Isso distribui igualmente os fatores de confusão entre os grupos, garantindo comparabilidade. É o único estudo que pode afirmar causalidade com alto grau de certeza. Base da Medicina e Nutrição Baseada em Evidências (MBE/NBE).'
+  },
+  {
+    tema: 'Desenhos de Estudos',
+    enunciado: 'Qual estudo epidemiológico acompanha grupos de pessoas saudáveis (expostas e não-expostas a um fator) ao longo do tempo, medindo a incidência de doenças?',
+    opcoes: [
+      'Estudo Transversal',
+      'Estudo Caso-Controle',
+      'Estudo de Coorte',
+      'Estudo Ecológico'
+    ],
+    correta: 2,
+    gabarito: 'Estudo de Coorte: parte da EXPOSIÇÃO e segue prospectivamente para observar o EFEITO (doença). Características: prospectivo, calcula incidência e RR real, infere causalidade. Mais caro e demorado. Exemplo clássico: Framingham Heart Study (1949), que durou mais de 30 anos.'
+  },
+  {
+    tema: 'Indicadores de Saúde',
+    enunciado: 'O coeficiente de mortalidade infantil é calculado como:',
+    opcoes: [
+      'Número de óbitos em menores de 5 anos / total de óbitos × 100',
+      'Número de óbitos em menores de 1 ano / número de nascidos vivos × 1.000',
+      'Número de óbitos em menores de 1 ano / população total × 10.000',
+      'Número de nascidos vivos / número de óbitos infantis × 1.000'
+    ],
+    correta: 1,
+    gabarito: 'Mortalidade infantil = (óbitos em menores de 1 ano / nascidos vivos) × 1.000. O multiplicador é SEMPRE 1.000 nascidos vivos — isso é padronizado internacionalmente. É um dos indicadores mais sensíveis do nível socioeconômico e da qualidade da atenção à saúde materno-infantil.'
+  },
+  {
+    tema: 'Indicadores de Saúde',
+    enunciado: 'A taxa de LETALIDADE difere da taxa de MORTALIDADE porque:',
+    opcoes: [
+      'Letalidade usa como denominador a população total; mortalidade usa apenas os doentes.',
+      'Letalidade usa como denominador o número de doentes; mortalidade usa a população total.',
+      'Letalidade mede apenas óbitos por causas externas; mortalidade mede todas as causas.',
+      'São sinônimos — ambas medem a mesma coisa.'
+    ],
+    correta: 1,
+    gabarito: 'Letalidade = óbitos por doença X / total de doentes com X. Mede a gravidade da doença (proporção de doentes que morrem). Mortalidade = óbitos por doença X / população total. Mede o impacto da doença na população. Ex: uma doença rara pode ter alta letalidade mas baixa mortalidade.'
+  },
+  {
+    tema: 'Vigilância Epidemiológica',
+    enunciado: 'O SINAN (Sistema de Informação de Agravos de Notificação) é:',
+    opcoes: [
+      'Um sistema de informação exclusivo para registrar casos de câncer no Brasil.',
+      'A principal base de dados da Vigilância Epidemiológica brasileira, que registra doenças de notificação compulsória.',
+      'Um sistema de informação hospitalar para registro de internações pelo SUS.',
+      'Um sistema de monitoramento da qualidade da água e do saneamento básico.'
+    ],
+    correta: 1,
+    gabarito: 'O SINAN registra casos de doenças e agravos de notificação compulsória (dengue, tuberculose, hepatites, HIV, COVID-19, etc.). A notificação é obrigação de todos os profissionais de saúde. O SIH (Sistema de Informações Hospitalares) é o sistema de internações; o SIM registra óbitos.'
+  },
+  {
+    tema: 'História Natural da Doença',
+    enunciado: 'A vacinação contra a gripe é um exemplo de prevenção:',
+    opcoes: [
+      'Terciária, pois reabilita pessoas que já tiveram a doença.',
+      'Secundária, pois detecta precocemente pessoas com gripe.',
+      'Primária, pois age antes do surgimento da doença, no período pré-patogênico.',
+      'Quaternária, pois evita excessos de medicalização.'
+    ],
+    correta: 2,
+    gabarito: 'Prevenção Primária age no período pré-patogênico, antes da doença se instalar. Exemplos: vacinação, educação alimentar, saneamento, promoção de atividade física. A prevenção secundária envolve diagnóstico precoce (rastreamento); a terciária, reabilitação de quem já adoeceu.'
+  },
+  {
+    tema: 'História Natural da Doença',
+    enunciado: 'A tríade ecológica em epidemiologia é composta por:',
+    opcoes: [
+      'Pessoa, Tempo e Lugar',
+      'Incidência, Prevalência e Mortalidade',
+      'Hospedeiro, Agente e Meio Ambiente',
+      'Prevenção Primária, Secundária e Terciária'
+    ],
+    correta: 2,
+    gabarito: 'A tríade ecológica (Hospedeiro + Agente + Meio Ambiente) é o modelo multicausal mais usado em Epidemiologia para identificar fatores de risco. A saúde reflete o equilíbrio entre esses três elementos; a doença resulta do desequilíbrio. Pessoa-Tempo-Lugar são as variáveis descritivas da epidemiologia.'
+  },
+  {
+    tema: 'Bioestatística',
+    enunciado: 'Em uma pesquisa sobre consumo calórico de 50 gestantes, a média foi 2.200 kcal/dia e o desvio padrão foi 800 kcal. Uma segunda pesquisa com 50 gestantes encontrou média de 2.200 kcal e desvio padrão de 200 kcal. O que se pode concluir?',
+    opcoes: [
+      'As duas populações têm o mesmo padrão alimentar, pois têm a mesma média.',
+      'A segunda população tem consumo calórico mais homogêneo (menos variado) entre as gestantes, enquanto a primeira tem maior variabilidade.',
+      'A primeira população tem consumo médio menor que a segunda.',
+      'O desvio padrão não interfere na interpretação do consumo alimentar.'
+    ],
+    correta: 1,
+    gabarito: 'Mesmo com a mesma média, o desvio padrão revela a dispersão dos dados. DP = 200 indica que a maioria das gestantes consome entre 2.000 e 2.400 kcal (população homogênea). DP = 800 indica grande variação no consumo entre as gestantes (algumas consomem muito pouco, outras muito). O DP é fundamental na análise nutricional de populações.'
+  },
+  {
+    tema: 'Bioestatística',
+    enunciado: 'Em um teste de hipóteses, o valor de p = 0,03 indica que:',
+    opcoes: [
+      'A hipótese nula (H₀) foi confirmada, não havendo diferença significativa.',
+      'O resultado é estatisticamente significativo, pois p < 0,05, levando à rejeição de H₀.',
+      'O resultado não é significativo, pois p deve ser maior que 0,05 para rejeitar H₀.',
+      'O intervalo de confiança não foi calculado corretamente.'
+    ],
+    correta: 1,
+    gabarito: 'Convenção em saúde: p < 0,05 → resultado estatisticamente significativo → rejeita H₀. p = 0,03 < 0,05 → rejeita H₀. Isso significa que a diferença encontrada tem menos de 3% de probabilidade de ser mero acaso. O IC de 95% corresponde ao limite de p = 0,05 (α = 5%).'
+  },
+  {
+    tema: 'Epidemiologia — Conceito',
+    enunciado: 'John Snow é considerado o "pai da Epidemiologia" porque:',
+    opcoes: [
+      'Foi o primeiro a descobrir o agente causador da cólera em laboratório.',
+      'Usou observação sistemática e análise espacial dos casos de cólera para provar a transmissão hídrica, sem conhecer o agente causador — criando o método epidemiológico.',
+      'Foi o primeiro a aplicar vacinas em larga escala contra doenças infecciosas na Inglaterra.',
+      'Desenvolveu as primeiras tabelas de mortalidade para o cálculo de seguros de vida.'
+    ],
+    correta: 1,
+    gabarito: 'Em 1854, Snow mapeou os casos de cólera em Londres e demonstrou que a transmissão era hídrica (pelo poço da Broad Street), sem saber que o agente era uma bactéria — isso só foi descoberto por Koch em 1884. Snow fundou o método epidemiológico moderno: observação, mapeamento e análise para identificar causas de doenças coletivas.'
+  },
+  {
+    tema: 'Prevalência vs Incidência',
+    enunciado: 'Para calcular a incidência de câncer de colo uterino em um município, o denominador CORRETO deve excluir:',
+    opcoes: [
+      'Mulheres acima de 60 anos, por serem consideradas fora do grupo de risco.',
+      'Homens, pois não possuem colo uterino, e mulheres histerectomizadas, pois não estão sob risco.',
+      'Mulheres que já realizaram exame preventivo, pois foram triadas.',
+      'Mulheres com menos de 25 anos, conforme protocolo do Ministério da Saúde.'
+    ],
+    correta: 1,
+    gabarito: 'No denominador da incidência, devem constar apenas pessoas COM POTENCIAL de desenvolver a doença. Para câncer de colo uterino: excluem-se homens (não têm colo uterino) e mulheres histerectomizadas (remoção do útero = sem risco). Incluir essas pessoas geraria um denominador artificialmente maior, subestimando a incidência real.'
+  },
+  {
+    tema: 'Desenhos de Estudos',
+    enunciado: 'Um nutricionista deseja verificar rapidamente se existe associação entre consumo de ultraprocessados e sobrepeso em adolescentes de uma escola, realizando avaliações em um único momento. Qual é o desenho de estudo mais adequado?',
+    opcoes: [
+      'Estudo de Coorte prospectivo',
+      'Ensaio Clínico Randomizado',
+      'Estudo Transversal',
+      'Estudo Caso-Controle'
+    ],
+    correta: 2,
+    gabarito: 'O Estudo Transversal avalia exposição e desfecho ao mesmo tempo (corte transversal — "fotografia"). É rápido, barato e ideal para diagnóstico de situação de saúde e verificação de prevalências. Limitação: não infere causalidade (não sabemos o que veio primeiro). Usa OR ou Razão de Prevalência como medida de associação.'
+  },
+  {
+    tema: 'Indicadores de Saúde',
+    enunciado: 'Segundo a OMS (1948), saúde é definida como:',
+    opcoes: [
+      'Ausência de doenças físicas detectáveis por exames laboratoriais.',
+      'Estado de completo bem-estar físico, mental e social, e não meramente a ausência de doença.',
+      'Capacidade funcional do indivíduo para realizar atividades de vida diária.',
+      'Resultado da interação equilibrada entre hospedeiro, agente e meio ambiente.'
+    ],
+    correta: 1,
+    gabarito: 'Definição clássica da OMS (1948): "Saúde é um completo estado de bem-estar físico, mental e social, e não meramente a ausência de doença." A Constituição Federal de 1988 ampliou isso, tornando a saúde um direito de todos e dever do Estado, incluindo determinantes como alimentação, moradia, saneamento, trabalho e educação.'
+  },
+  {
+    tema: 'Odds Ratio',
+    enunciado: 'Num estudo caso-controle sobre anemia ferropriva e baixo consumo de carnes (dados hipotéticos): A=150, B=50, C=50, D=150. O OR e sua interpretação são:',
+    opcoes: [
+      'OR = 1 — sem associação entre consumo de carnes e anemia.',
+      'OR = 9 — pessoas com baixo consumo de carnes têm 9 vezes mais chance de ter anemia.',
+      'OR = 0,11 — consumo de carne é fator de proteção para anemia.',
+      'OR = 3 — associação moderada entre anemia e baixo consumo de carnes.'
+    ],
+    correta: 1,
+    gabarito: 'OR = (A×D)/(B×C) = (150×150)/(50×50) = 22.500/2.500 = 9. OR = 9 > 1 → fator de RISCO. Pessoas com baixo consumo de carnes têm 9 vezes mais chance de ter anemia ferropriva em relação às que consomem adequadamente. Clinicamente relevante para prescrição dietética do nutricionista.'
+  },
+  {
+    tema: 'Bioestatística',
+    enunciado: 'Um estudo nutricional calculou o IMC de 100 crianças. A distribuição dos dados foi assimétrica, com muitos valores extremos (obesidade grau III). A medida de tendência central mais adequada para representar esse conjunto de dados é:',
+    opcoes: [
+      'Média aritmética, pois utiliza todos os valores.',
+      'Mediana, pois é menos afetada por valores extremos (outliers).',
+      'Moda, pois representa o valor mais frequente.',
+      'Desvio padrão, pois resume toda a dispersão dos dados.'
+    ],
+    correta: 1,
+    gabarito: 'Em distribuições assimétricas ou com outliers, a MEDIANA é a medida de tendência central mais robusta, pois não é afetada pelos valores extremos. A média seria puxada para cima pelos casos de obesidade grau III, distorcendo a representação. O desvio padrão é medida de dispersão, não de tendência central.'
+  },
+  {
+    tema: 'Desenhos de Estudos',
+    enunciado: 'Sobre a hierarquia de evidências em estudos epidemiológicos, a ordem CORRETA do maior para o menor nível de evidência é:',
+    opcoes: [
+      'Relato de caso → Transversal → Caso-Controle → Coorte → ECR → Revisão sistemática',
+      'Revisão sistemática/Metanálise → ECR → Coorte → Caso-Controle → Transversal → Relato de caso',
+      'ECR → Coorte → Caso-Controle → Revisão sistemática → Transversal → Relato de caso',
+      'Todos os estudos têm o mesmo nível de evidência, dependendo apenas da amostra.'
+    ],
+    correta: 1,
+    gabarito: 'Hierarquia (maior → menor evidência): Revisão sistemática/Metanálise > ECR > Coorte > Caso-Controle > Transversal > Relato de caso. A revisão sistemática sintetiza múltiplos ECRs, por isso está no topo. O ECR é o padrão-ouro individual. Essa hierarquia é fundamental para a Nutrição Baseada em Evidências (NBE).'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = [];
+
+function renderQuestao(idx) {
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('quiz-container');
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'questao-card-' + idx;
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn" id="op-${idx}-${i}" onclick="responder(${idx}, ${i})">
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito" id="gabarito-${idx}">💬 ${q.gabarito}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function responder(idx, opcaoIdx) {
+  if (respondidas.includes(idx)) return;
+  respondidas.push(idx);
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('questao-card-' + idx);
+  const gabarito = document.getElementById('gabarito-' + idx);
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+  const selecionado = document.getElementById('op-' + idx + '-' + opcaoIdx);
+  if (opcaoIdx === q.correta) {
+    acertos++;
+    card.classList.add('acertou');
+    gabarito.className = 'q-gabarito show-acertou';
+    gabarito.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    erros++;
+    selecionado.classList.add('incorreta');
+    card.classList.add('errou');
+    gabarito.className = 'q-gabarito show-errou';
+    gabarito.innerHTML = '❌ Incorreto. Resposta correta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = false;
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  if (questaoAtual < questoes.length) {
+    renderQuestao(questaoAtual);
+  } else {
+    mostrarResultado();
+  }
+}
+
+function atualizarProgresso() {
+  const pct = (respondidas.length / questoes.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas.length + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const pct = Math.round((acertos / questoes.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  let msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Você completou todas as questões de Bioestatística e Epidemiologia.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = [];
+  renderQuestao(0);
+  atualizarProgresso();
+}
+
+renderQuestao(0);
+</script>
+</body>
+</html>

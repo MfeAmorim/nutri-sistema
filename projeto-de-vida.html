@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto de Vida — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #1d4ed8; --vermelho: #dc2626; --roxo: #7c3aed;
+  --amarelo: #ca8a04;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.back-btn { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; flex-wrap: wrap; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); } .prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); } .prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); } .prio-baixa .prioridade-label { color: var(--verde-claro); }
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(29,78,216,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-icon.amarelo { background: rgba(202,138,4,0.1); }
+.card-icon.teal { background: rgba(15,118,110,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.45s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3500px; padding: 20px 24px 24px; }
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 5px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.info-box { background: #eff6ff; border-left: 4px solid var(--azul); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.info-box p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 9px 12px; border-bottom: 1px solid #e8f0e8; vertical-align: top; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+.smart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin: 14px 0; }
+.smart-card { background: var(--creme); border-radius: 12px; padding: 16px; border: 1px solid #e0ebe0; }
+.smart-letter { font-size: 28px; font-weight: 900; color: var(--verde); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 4px; }
+.smart-word { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.smart-desc { font-size: 11px; color: #7a8a7c; line-height: 1.4; }
+.roda-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 14px 0; }
+.roda-item { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+.roda-icon { font-size: 20px; flex-shrink: 0; }
+.roda-label { font-size: 13px; font-weight: 600; color: var(--escuro); }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-red { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.pb-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.pb-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.pb-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.q-num { background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.ok { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.err { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-prox { background: var(--escuro); color: #fff; }
+.btn-prox:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-prox:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; transform: none; }
+.btn-reinic { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reinic:hover { background: #e5e7eb; }
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado > p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.res-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+.erradas-section { text-align: left; max-width: 640px; margin: 0 auto 24px; }
+.erradas-titulo { font-size: 14px; font-weight: 800; color: var(--escuro); margin-bottom: 12px; }
+.errada-item { background: #fff5f5; border: 1px solid #fca5a5; border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.errada-num { font-size: 10px; font-weight: 800; color: #dc2626; text-transform: uppercase; margin-bottom: 4px; }
+.errada-enunciado { font-size: 13px; color: var(--escuro); font-weight: 600; margin-bottom: 4px; line-height: 1.5; }
+.errada-gabarito { font-size: 12px; color: #15803d; font-weight: 700; }
+@media (max-width: 640px) { .panel { padding: 20px 16px; } .hero { padding: 24px 20px; } .questao-card { padding: 20px; } .smart-grid { grid-template-columns: repeat(2,1fr); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="dashboard.html" class="back-btn">← Voltar</a>
+  <div class="divider"></div>
+  <div class="topbar-title" style="font-family:'Playfair Display',serif;color:#fff">Projeto de Vida</div>
+  <div class="badge">2º Módulo 2025</div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo',this)">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz',this)">✏️ Questões (25)</div>
+</div>
+
+<!-- ════════ RESUMO ════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🎯</div>
+    <div>
+      <div class="hero-tag">2º Módulo · Nutrição · Unicesumar</div>
+      <h1>Projeto de Vida</h1>
+      <p>Autores: Cláudia Muller, Filomena Mineto, Lisiane Wolff, Luciano Santana Pereira e Rodrigo Gualassi<br>5 unidades · 264 páginas · Conteúdo organizado por relevância para a vida acadêmica e profissional</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Fundamentos do planejamento pessoal e profissional</div>
+  </div>
+
+  <!-- 1. PROJETO DE VIDA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🌱</div>
+      <div class="card-titulo">
+        <h3>Projeto de Vida — Conceito, Importância e Autoconhecimento</h3>
+        <p>Unidade 1 · Assumindo o controle: minha vida, minha história</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Projeto de Vida?</h4>
+      <p>Projeto de Vida é a <strong>visualização antecipada da vida que se deseja ter</strong> e o processo de organizar metas, condutas e ações que possibilitem torná-la realidade. A palavra "projeto" vem do latim <em>proiectus</em> — conjunto de atividades coordenadas para a realização de um objetivo específico.</p>
+      <p>Não se trata apenas de uma lista de objetivos, mas de um conjunto de escolhas e caminhos pautados nos <strong>valores pessoais e prioridades</strong> que norteiam a vida de cada indivíduo.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Para o estudante universitário:</strong> construir um projeto de vida no início da jornada acadêmica ajuda a direcionar esforços, escolher áreas de interesse com maior clareza e tomar decisões com foco e propósito.</p>
+      </div>
+
+      <h4>Autoconhecimento — Base do Projeto de Vida</h4>
+      <p>Antes de planejar o futuro, é necessário conhecer o estado atual. Três perguntas fundamentais:</p>
+      <ul>
+        <li><strong>O que tenho:</strong> conquistas, recursos, relações, qualidades</li>
+        <li><strong>O que sinto:</strong> realizações, alegrias, satisfações que busca</li>
+        <li><strong>O que me impede:</strong> crenças limitantes, hábitos não produtivos, autossabotagem</li>
+      </ul>
+
+      <h4>Roda da Vida — As 8 Áreas</h4>
+      <p>Ferramenta de autoavaliação que mapeia o equilíbrio entre as diferentes dimensões da vida:</p>
+      <div class="roda-grid">
+        <div class="roda-item"><div class="roda-icon">💼</div><div class="roda-label">Carreira / Trabalho</div></div>
+        <div class="roda-item"><div class="roda-icon">💰</div><div class="roda-label">Financeiro</div></div>
+        <div class="roda-item"><div class="roda-icon">🏃</div><div class="roda-label">Saúde e Bem-estar</div></div>
+        <div class="roda-item"><div class="roda-icon">❤️</div><div class="roda-label">Relacionamentos</div></div>
+        <div class="roda-item"><div class="roda-icon">🎓</div><div class="roda-label">Crescimento Pessoal</div></div>
+        <div class="roda-item"><div class="roda-icon">🎉</div><div class="roda-label">Lazer e Diversão</div></div>
+        <div class="roda-item"><div class="roda-icon">🌿</div><div class="roda-label">Espiritualidade</div></div>
+        <div class="roda-item"><div class="roda-icon">🏠</div><div class="roda-label">Família</div></div>
+      </div>
+
+      <h4>Protagonismo e Autorresponsabilidade</h4>
+      <p>Ser protagonista da própria jornada significa <strong>assumir a responsabilidade pelos resultados</strong> — positivos e negativos. A autorresponsabilidade é o oposto da vitimização: em vez de culpar circunstâncias externas, o protagonista analisa o que pode fazer diferente e age.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Crenças Limitantes:</strong> são pensamentos automáticos que sabotam o desempenho. Ex: "não sou inteligente o suficiente", "não tenho sorte". Identificá-las é o primeiro passo para superá-las.</p>
+      </div>
+
+      <h4>Sucesso vs. Prosperidade</h4>
+      <p>O livro distingue os dois conceitos: <strong>sucesso</strong> é atingir metas e objetivos específicos (externo, mensurável); <strong>prosperidade</strong> é um estado amplo de bem-estar e realização em todas as áreas da vida — inclui saúde, relacionamentos, propósito e satisfação pessoal, não apenas conquistas materiais.</p>
+    </div>
+  </div>
+
+  <!-- 2. METAS SMART + PLANO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon amarelo">📊</div>
+      <div class="card-titulo">
+        <h3>Metas SMART e Plano Estratégico Pessoal</h3>
+        <p>Unidade 2 · Traçando o caminho — do estado atual ao estado desejado</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Estado Atual vs. Estado Desejado</h4>
+      <p>O planejamento começa com a identificação clara do <strong>gap</strong> entre onde estou (estado atual) e onde quero chegar (estado desejado). O espaço entre os dois estados é onde o trabalho acontece — acionando recursos pessoais: estratégias mentais, emoções, valores e comportamentos.</p>
+
+      <p>Quatro perguntas fundamentais para o projeto de vida (O'Connor, 2011):</p>
+      <ol>
+        <li><strong>Em direção a que estou indo?</strong> — o estado ou resultado desejado</li>
+        <li><strong>Por que estou indo?</strong> — os valores pessoais que me guiam</li>
+        <li><strong>Como chegar lá?</strong> — estratégias e ações</li>
+        <li><strong>E se algo der errado?</strong> — gerência de risco e plano de contingência</li>
+      </ol>
+
+      <h4>Metas SMART</h4>
+      <p>Metodologia para criar metas eficazes e realizáveis:</p>
+      <div class="smart-grid">
+        <div class="smart-card">
+          <div class="smart-letter">S</div>
+          <div class="smart-word">Specific</div>
+          <div class="smart-desc">Específica — clara e bem definida, sem ambiguidades</div>
+        </div>
+        <div class="smart-card">
+          <div class="smart-letter">M</div>
+          <div class="smart-word">Measurable</div>
+          <div class="smart-desc">Mensurável — com indicador de progresso concreto</div>
+        </div>
+        <div class="smart-card">
+          <div class="smart-letter">A</div>
+          <div class="smart-word">Achievable</div>
+          <div class="smart-desc">Atingível — desafiadora mas alcançável com esforço</div>
+        </div>
+        <div class="smart-card">
+          <div class="smart-letter">R</div>
+          <div class="smart-word">Relevant</div>
+          <div class="smart-desc">Relevante — alinhada com valores e propósito de vida</div>
+        </div>
+        <div class="smart-card">
+          <div class="smart-letter">T</div>
+          <div class="smart-word">Time-based</div>
+          <div class="smart-desc">Temporal — com prazo definido para ser alcançada</div>
+        </div>
+      </div>
+
+      <div class="destaque">
+        <p>💡 <strong>Exemplo de meta SMART para o nutricionista:</strong> "Concluir o estágio curricular obrigatório na área de nutrição clínica hospitalar até dezembro de 2026, cumprindo as 500 horas exigidas e obtendo avaliação mínima 8,0."</p>
+      </div>
+
+      <h4>Plano de Ação — Como Estruturar</h4>
+      <p>Após definir as metas SMART, o plano de ação detalha <strong>o que fazer, como fazer, quando fazer e quem é responsável</strong>. Elementos essenciais:</p>
+      <ul>
+        <li>Objetivo principal (meta SMART)</li>
+        <li>Ações específicas necessárias</li>
+        <li>Prazos para cada ação</li>
+        <li>Recursos necessários (tempo, dinheiro, conhecimento)</li>
+        <li>Indicadores de progresso</li>
+        <li>Plano de contingência (e se não funcionar?)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. FUTURO DO TRABALHO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🤖</div>
+      <div class="card-titulo">
+        <h3>Futuro do Trabalho — Indústria 4.0 e Competências Essenciais</h3>
+        <p>Unidade 3 · Olhando adiante — carreira sustentável na era digital</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Indústria 4.0 e o Impacto no Trabalho</h4>
+      <p>A Indústria 4.0 é marcada pela <strong>automação, inteligência artificial, robótica e digitalização</strong>. Profissões inteiras estão sendo transformadas ou extintas, enquanto novas surgem. O profissional que não se adapta corre o risco de ter sua função substituída por tecnologia.</p>
+
+      <h4>6 Atitudes para uma Carreira Sustentável (WEF, 2023)</h4>
+      <table class="tabela">
+        <tr><th>#</th><th>Atitude</th><th>O que significa na prática</th></tr>
+        <tr><td>1</td><td><strong>Aprender e adaptar constantemente</strong></td><td>Educação contínua, cursos, acompanhar tendências</td></tr>
+        <tr><td>2</td><td><strong>Desenvolver habilidades transversais</strong></td><td>Comunicação, pensamento crítico, resolução de problemas, adaptabilidade</td></tr>
+        <tr><td>3</td><td><strong>Networking e relacionamentos</strong></td><td>Construir rede de contatos, mentores, colegas de área</td></tr>
+        <tr><td>4</td><td><strong>Antecipar e abraçar mudanças</strong></td><td>Identificar tendências emergentes antes que se tornem obrigação</td></tr>
+        <tr><td>5</td><td><strong>Mentalidade empreendedora</strong></td><td>Assumir responsabilidade pelo próprio desenvolvimento, criar valor</td></tr>
+        <tr><td>6</td><td><strong>Preparar-se para a extinção</strong></td><td>Diversificar habilidades, ter plano B para a carreira</td></tr>
+      </table>
+
+      <h4>Hard Skills vs. Soft Skills</h4>
+      <table class="tabela">
+        <tr><th>Hard Skills</th><th>Soft Skills</th></tr>
+        <tr><td>Habilidades técnicas específicas da área</td><td>Habilidades comportamentais e interpessoais</td></tr>
+        <tr><td>Cálculo nutricional, avaliação nutricional, software de dietética</td><td>Comunicação, empatia, liderança, inteligência emocional</td></tr>
+        <tr><td>Adquiridas por educação formal e treinamento</td><td>Desenvolvidas pela experiência e autoconhecimento</td></tr>
+        <tr><td>Fáceis de mensurar e certificar</td><td>Difíceis de mensurar, altamente valorizadas pelo mercado</td></tr>
+      </table>
+
+      <div class="info-box">
+        <p>📌 <strong>Para o nutricionista na era digital:</strong> dominar ferramentas digitais (apps de dietética, telessaúde, SISVAN online), comunicação em redes sociais e educação alimentar digital são competências cada vez mais exigidas pelo mercado.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media" style="margin-top:16px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Construção de carreira e identidade profissional</div>
+  </div>
+
+  <!-- 4. PERSONAL BRANDING -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">✨</div>
+      <div class="card-titulo">
+        <h3>Personal Branding — Construindo sua Marca Pessoal</h3>
+        <p>Unidade 4 · Marketing pessoal, etiqueta profissional e presença digital</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Personal Branding?</h4>
+      <p>Personal Branding é o <strong>processo de construção e gestão da própria marca pessoal</strong> — a percepção que outras pessoas têm de você como profissional. Envolve sua reputação, valores, competências e como você se comunica e se apresenta ao mundo.</p>
+
+      <h4>Pilares da Marca Pessoal</h4>
+      <ul>
+        <li><strong>Identidade:</strong> quem você é — valores, propósito, diferenciais</li>
+        <li><strong>Presença digital:</strong> LinkedIn, Instagram profissional, portfólio online</li>
+        <li><strong>Comunicação:</strong> como você se expressa verbalmente e por escrito</li>
+        <li><strong>Reputação:</strong> o que as pessoas dizem de você quando você não está presente</li>
+        <li><strong>Network:</strong> as conexões que você constrói e mantém</li>
+      </ul>
+
+      <h4>Etiqueta Profissional</h4>
+      <p>Comportamentos que compõem a marca pessoal no ambiente profissional:</p>
+      <ul>
+        <li><strong>Pontualidade:</strong> respeito ao tempo alheio — chegar atrasado em entrevista ou reunião envia mensagem negativa</li>
+        <li><strong>Comunicação assertiva:</strong> clareza, objetividade, escuta ativa</li>
+        <li><strong>Apresentação pessoal:</strong> vestimenta adequada ao contexto profissional</li>
+        <li><strong>Compromisso:</strong> cumprir prazos e promessas</li>
+        <li><strong>Postura:</strong> linguagem corporal positiva, contato visual, firmeza</li>
+      </ul>
+
+      <h4>Etiqueta Digital</h4>
+      <ul>
+        <li>Separar perfil pessoal de perfil profissional nas redes</li>
+        <li>Cuidar do conteúdo publicado — recrutadores pesquisam candidatos online</li>
+        <li>Manter LinkedIn atualizado com conquistas, certificações e experiências</li>
+        <li>Responder mensagens profissionais com agilidade e cordialidade</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>LinkedIn para o nutricionista:</strong> publicar conteúdo educativo sobre nutrição, participar de grupos da área, conectar-se com profissionais do setor e registrar experiências de estágio aumenta significativamente as chances de empregabilidade.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. PROCESSOS SELETIVOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon teal">🏆</div>
+      <div class="card-titulo">
+        <h3>Processos Seletivos — Currículo, Entrevista e Empregabilidade</h3>
+        <p>Unidade 4 · Alcançando o próximo nível</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Currículo Eficaz</h4>
+      <p>O currículo é o primeiro filtro de um processo seletivo. Deve ser:</p>
+      <ul>
+        <li><strong>Objetivo e conciso:</strong> no máximo 2 páginas para iniciantes</li>
+        <li><strong>Adaptado à vaga:</strong> destacar experiências e habilidades relevantes para a posição</li>
+        <li><strong>Sem erros de português:</strong> erros gramaticais eliminam candidatos automaticamente</li>
+        <li><strong>Com resultados quantificados:</strong> "Reduzi em 30% o desperdício alimentar" impacta mais que "trabalhei com controle de desperdício"</li>
+        <li><strong>Foto profissional (opcional no Brasil):</strong> quando incluída, deve ser formal</li>
+      </ul>
+
+      <h4>Entrevista de Emprego — Preparação</h4>
+      <table class="tabela">
+        <tr><th>Antes</th><th>Durante</th><th>Depois</th></tr>
+        <tr><td>Pesquisar a empresa (missão, valores, produtos)</td><td>Chegar 15 min antes</td><td>Agradecer por e-mail em 24h</td></tr>
+        <tr><td>Preparar respostas para perguntas comuns</td><td>Manter postura e contato visual</td><td>Refletir sobre pontos de melhoria</td></tr>
+        <tr><td>Escolher roupa adequada ao ambiente</td><td>Ouvir antes de responder</td><td>Conectar no LinkedIn com o entrevistador</td></tr>
+        <tr><td>Revisar o próprio currículo</td><td>Exemplos concretos (método STAR)</td><td>Manter contato com a empresa</td></tr>
+      </table>
+
+      <h4>Método STAR para Responder Perguntas Comportamentais</h4>
+      <ul>
+        <li><strong>S — Situation:</strong> descreva a situação ou contexto</li>
+        <li><strong>T — Task:</strong> qual era sua responsabilidade/tarefa</li>
+        <li><strong>A — Action:</strong> quais ações você tomou</li>
+        <li><strong>R — Result:</strong> qual foi o resultado alcançado</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção:</strong> Recrutadores pesquisam candidatos nas redes sociais antes da entrevista. Conteúdo inadequado publicado pode eliminar um candidato mesmo antes do primeiro contato.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-baixa" style="margin-top:16px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Complementar — Alta performance e legado pessoal</div>
+  </div>
+
+  <!-- 6. LEGADO + ALTA PERFORMANCE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">🌟</div>
+      <div class="card-titulo">
+        <h3>Gerenciando o Legado — Alta Performance e Pausa Estratégica</h3>
+        <p>Unidade 5 · Evolução na jornada pessoal e profissional</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Legado?</h4>
+      <p>Legado é o <strong>impacto positivo que suas ações deixam nas pessoas ao seu redor</strong> e nas próximas gerações. Gerenciar o legado significa tomar decisões conscientes, alinhadas com os próprios valores, que constroem algo maior que o sucesso individual.</p>
+
+      <h4>Alta Performance Pessoal</h4>
+      <p>Alta performance não é trabalhar mais horas — é trabalhar com mais <strong>intenção, foco e disciplina</strong>. Características do profissional de alta performance:</p>
+      <ul>
+        <li>Clareza de propósito e metas definidas</li>
+        <li>Disciplina consistente — hábitos que sustentam os objetivos</li>
+        <li>Gestão de energia (não apenas de tempo)</li>
+        <li>Aprendizado contínuo com erros e acertos</li>
+        <li>Celebração das conquistas — reconhecer o progresso alimenta a motivação</li>
+      </ul>
+
+      <h4>Pausa Estratégica (Timeout)</h4>
+      <p>Parar periodicamente para <strong>avaliar o progresso, celebrar conquistas e recalcular a rota</strong> é uma prática de alta performance — não perda de tempo. Perguntas para a pausa estratégica:</p>
+      <ul>
+        <li>Onde estou em relação às minhas metas?</li>
+        <li>O que está funcionando? O que precisa mudar?</li>
+        <li>Quais conquistas posso celebrar?</li>
+        <li>Quais lições os erros me ensinaram?</li>
+        <li>Meu caminho ainda está alinhado com meu propósito?</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Para o estudante de nutrição:</strong> uma pausa estratégica ao final de cada semestre — avaliando notas, aprendizados, habilidades desenvolvidas e ajustando o plano de estudos — é prática de alta performance acadêmica.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════ QUIZ ════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Projeto de Vida</h2>
+    <p>25 questões sobre planejamento pessoal, carreira e desenvolvimento profissional</p>
+    <div class="chips">
+      <div class="chip chip-green" id="chipAcertos">✓ 0 acertos</div>
+      <div class="chip chip-red" id="chipErros">✗ 0 erros</div>
+      <div class="chip chip-total" id="chipTotal">0 / 25</div>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="pb-wrap"><div class="pb-fill" id="progressBar" style="width:0%"></div></div>
+    <div class="pb-text">Questão <span id="qAtualSpan">1</span> de 25</div>
+  </div>
+
+  <div id="questaoContainer"></div>
+
+  <div id="resultadoFinal" style="display:none">
+    <div class="resultado">
+      <div class="resultado-emoji" id="resEmoji">🎉</div>
+      <h2 id="resTitulo">Simulado Concluído!</h2>
+      <p id="resSub">Confira seu desempenho</p>
+      <div class="res-stats">
+        <div class="r-stat verde"><div class="r-stat-val" id="resAcertos">0</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val" id="resErros">0</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val" id="resTaxa">0%</div><div class="r-stat-label">Taxa de acerto</div></div>
+      </div>
+      <button class="btn-nav btn-prox" onclick="reiniciar()" style="margin:0 auto;display:flex">🔄 Refazer</button>
+    </div>
+    <div class="erradas-section" id="erradasLista"></div>
+  </div>
+</div>
+
+<script>
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'quiz') renderCard(qAtual);
+}
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const ch = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.card-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.card-header').forEach(h => h.classList.remove('open'));
+  if (!isOpen) { body.classList.add('open'); ch.classList.add('open'); header.classList.add('open'); setTimeout(() => header.scrollIntoView({ behavior:'smooth', block:'start' }), 50); }
+}
+
+const questoes = [
+  { tema:'Projeto de Vida', enunciado:'Projeto de Vida pode ser definido como:', opcoes:['Uma lista de objetivos financeiros a serem alcançados até a aposentadoria.','A visualização antecipada da vida que se deseja ter e o processo de organizar metas, condutas e ações para torná-la realidade.','Um documento formal elaborado por orientadores vocacionais para direcionar escolhas de carreira.','O planejamento exclusivo da vida profissional, sem considerar aspectos pessoais.'], correta:1, gabarito:'Projeto de Vida é a visualização antecipada da vida desejada e o processo de organizar metas, condutas e ações. Engloba dimensões pessoal e profissional, baseado nos valores e prioridades do indivíduo — não é apenas uma lista de objetivos ou restrito à carreira.' },
+  { tema:'Metas SMART', enunciado:'Na metodologia SMART, a letra "M" representa que a meta deve ser:', opcoes:['Motivacional — capaz de gerar entusiasmo e energia no indivíduo.','Mensurável — com indicadores concretos que permitam verificar o progresso.','Multidimensional — abrangendo diferentes áreas da vida simultaneamente.','Modular — dividida em etapas menores e sequenciais.'], correta:1, gabarito:'O "M" de SMART significa Measurable (Mensurável) — a meta deve ter indicadores concretos que permitam saber se e quando foi atingida. Ex: não "quero me formar bem", mas "quero ter CRA acima de 8,0 em todos os períodos".' },
+  { tema:'Autoconhecimento', enunciado:'As crenças limitantes, no contexto do projeto de vida, são:', opcoes:['Convicções religiosas que orientam as escolhas pessoais e profissionais.','Pensamentos automáticos negativos que sabotam o desempenho e impedem o alcance de objetivos.','Limitações físicas que precisam ser superadas por meio de tratamento médico.','Restrições impostas pelo mercado de trabalho às oportunidades disponíveis.'], correta:1, gabarito:'Crenças limitantes são pensamentos automáticos negativos sobre si mesmo — "não sou capaz", "não tenho sorte" — que sabotam o desempenho e impedem a realização dos objetivos. Identificá-las e ressignificá-las é parte fundamental do autoconhecimento.' },
+  { tema:'Roda da Vida', enunciado:'A Roda da Vida é utilizada no processo de projeto de vida para:', opcoes:['Calcular o tempo necessário para alcançar cada meta profissional.','Mapear o nível de satisfação e equilíbrio entre as diferentes áreas da vida.','Definir a sequência de atividades do plano de ação pessoal.','Avaliar apenas o desempenho acadêmico e profissional do indivíduo.'], correta:1, gabarito:'A Roda da Vida é uma ferramenta de autoavaliação que mapeia oito áreas (carreira, finanças, saúde, relacionamentos, desenvolvimento pessoal, lazer, espiritualidade e família), permitindo identificar desequilíbrios e priorizar ações de melhoria.' },
+  { tema:'Protagonismo', enunciado:'A autorresponsabilidade, como princípio do protagonismo pessoal, significa:', opcoes:['Culpar terceiros ou circunstâncias externas pelos resultados negativos da própria vida.','Assumir a responsabilidade pelos próprios resultados — positivos e negativos — e agir para mudar o que for necessário.','Delegar todas as decisões importantes para mentores e orientadores de carreira.','Esperar as condições ideais antes de iniciar qualquer ação rumo aos objetivos.'], correta:1, gabarito:'Autorresponsabilidade é o oposto da vitimização. O protagonista analisa o que está sob seu controle, aprende com os erros e age — não terceiriza os resultados. É um dos pilares fundamentais para o desenvolvimento do projeto de vida.' },
+  { tema:'Sucesso vs. Prosperidade', enunciado:'A diferença entre sucesso e prosperidade, conforme abordada no livro, é que:', opcoes:['São sinônimos — ambos se referem à conquista de metas financeiras e profissionais.','Sucesso é atingir metas específicas (externo e mensurável); prosperidade é um estado amplo de bem-estar e realização em todas as áreas da vida.','Prosperidade é exclusivamente financeira; sucesso é emocional e relacional.','Sucesso é coletivo; prosperidade é individual e não depende de outras pessoas.'], correta:1, gabarito:'Sucesso = atingir objetivos específicos, mensurável, frequentemente externo. Prosperidade = estado integral de bem-estar — saúde, relacionamentos, propósito, satisfação e realizações em todas as áreas da vida. Alguém pode ser bem-sucedido sem ser próspero.' },
+  { tema:'Metas SMART', enunciado:'Qual das alternativas representa uma meta SMART corretamente formulada?', opcoes:['"Quero ser um nutricionista reconhecido no futuro."','"Vou melhorar minha alimentação em breve."','"Concluir o curso de pós-graduação em Nutrição Clínica até dezembro de 2027, com aproveitamento mínimo de 80%."','"Pretendo um dia ter meu próprio consultório de nutrição."'], correta:2, gabarito:'A alternativa C é SMART: Específica (pós-graduação em Nutrição Clínica), Mensurável (80% de aproveitamento), Atingível (prazo viável), Relevante (carreira em nutrição) e Temporal (até dezembro de 2027). As demais são vagas, sem prazo ou indicador definido.' },
+  { tema:'Futuro do Trabalho', enunciado:'A Indústria 4.0 e a automação representam para os profissionais de saúde:', opcoes:['Uma ameaça sem precedentes que tornará todas as profissões de saúde obsoletas.','Um desafio de adaptação que exige aprendizado contínuo e desenvolvimento de novas competências digitais e transversais.','Uma oportunidade exclusiva para profissionais de tecnologia da informação.','Um fenômeno que afeta apenas trabalhadores da indústria manufatureira, sem impacto na saúde.'], correta:1, gabarito:'A Indústria 4.0 exige adaptação de todos os profissionais, incluindo os de saúde. Para o nutricionista: dominar ferramentas digitais (apps de dietética, telessaúde, SISVAN online), comunicação digital e atualização constante são competências cada vez mais exigidas.' },
+  { tema:'Competências', enunciado:'Habilidades transversais (soft skills), segundo o WEF (2023), são fundamentais para a carreira sustentável porque:', opcoes:['São mais fáceis de aprender e certificar do que as habilidades técnicas.','São valiosas em qualquer contexto profissional e ajudam a enfrentar mudanças — ao contrário das hard skills, que podem se tornar obsoletas.','Substituem completamente as habilidades técnicas no mercado de trabalho atual.','São exigidas apenas para cargos de liderança e gestão.'], correta:1, gabarito:'Soft skills (comunicação, pensamento crítico, adaptabilidade, inteligência emocional) são transversais — aplicáveis em qualquer área e resistentes à automação. As hard skills podem se tornar obsoletas com mudanças tecnológicas, mas as soft skills permanecem valiosas.' },
+  { tema:'Personal Branding', enunciado:'Personal Branding é definido como:', opcoes:['A criação de um logotipo e identidade visual para uso em cartões de visita e redes sociais.','O processo de construção e gestão da própria marca pessoal — a percepção que outras pessoas têm de você como profissional.','A estratégia de marketing de uma empresa para promover seus produtos e serviços.','A elaboração de um currículo profissional para processos seletivos.'], correta:1, gabarito:'Personal Branding vai muito além do visual. É a gestão estratégica de como você é percebido profissionalmente — envolve identidade, valores, comunicação, presença digital, reputação e networking. A marca pessoal é o que as pessoas dizem de você quando você não está presente.' },
+  { tema:'Estado Atual vs. Desejado', enunciado:'O "estado desejado" no planejamento pessoal difere de uma "tarefa" porque:', opcoes:['O estado desejado é de curto prazo; a tarefa é de longo prazo.','O estado desejado é AQUILO QUE VOCÊ QUER alcançar; a tarefa é O QUE VOCÊ FAZ para chegar lá.','São sinônimos no contexto do planejamento pessoal.','O estado desejado é coletivo; a tarefa é individual.'], correta:1, gabarito:'O estado desejado (resultado) é o QUÊ — onde você quer chegar. A tarefa é o COMO — as ações para chegar lá. Só realize tarefas quando tiver clareza do resultado que deseja alcançar, para não gastar energia sem direção.' },
+  { tema:'Futuro do Trabalho', enunciado:'Entre as 6 atitudes para uma carreira sustentável (WEF, 2023), "preparar-se para a extinção" significa:', opcoes:['Aceitar passivamente que sua profissão será extinta pela tecnologia.','Diversificar habilidades e ter um plano de contingência, pois mudanças tecnológicas podem tornar algumas funções obsoletas.','Abandonar a área de formação original para migrar para a tecnologia.','Evitar especializações para não ficar preso a uma única área.'], correta:1, gabarito:'Preparar-se para a extinção não é resignação — é proatividade. Significa acompanhar tendências, diversificar competências e ter um plano alternativo caso sua função seja transformada ou substituída pela automação. É a atitude mais estratégica diante das mudanças.' },
+  { tema:'Processos Seletivos', enunciado:'O método STAR, utilizado em entrevistas de emprego, estrutura respostas por meio de:', opcoes:['Strengths, Threats, Achievements e Results (forças, ameaças, conquistas e resultados).','Situation, Task, Action e Result (situação, tarefa, ação e resultado).','Skills, Training, Attitude e Resilience (habilidades, treinamento, atitude e resiliência).','Strategy, Timeline, Assessment e Review (estratégia, prazo, avaliação e revisão).'], correta:1, gabarito:'O método STAR organiza respostas para perguntas comportamentais: Situation (situação/contexto), Task (sua responsabilidade), Action (ações que você tomou) e Result (resultado alcançado). Permite dar respostas concretas, com exemplos reais, que convencem o entrevistador.' },
+  { tema:'Etiqueta Profissional', enunciado:'No contexto do personal branding e etiqueta profissional, chegar atrasado a uma entrevista de emprego:', opcoes:['É aceitável desde que o candidato ligue avisando o atraso com antecedência.','Demonstra falta de planejamento e desrespeito ao tempo do entrevistador, comprometendo a imagem do candidato.','Não interfere na avaliação, pois o que importa é o desempenho durante a entrevista.','É justificável em cidades grandes devido ao trânsito, sendo uma situação compreendida por recrutadores.'], correta:1, gabarito:'A pontualidade é parte da marca pessoal. Chegar atrasado — especialmente em uma entrevista para vaga de Gestão de Projetos, como no exemplo do livro — demonstra falta de planejamento e compromete a avaliação. Recrutadores observam comportamento desde o primeiro contato.' },
+  { tema:'Autoconhecimento', enunciado:'A "clareza de propósito" no projeto de vida contribui principalmente para:', opcoes:['Garantir o sucesso financeiro no menor tempo possível.','Manter a direção e firmeza nos momentos de dificuldade, sabendo por que se está seguindo determinado caminho.','Eliminar completamente os obstáculos e desafios na trajetória profissional.','Definir exatamente quais empregos o indivíduo deve aceitar ao longo da carreira.'], correta:1, gabarito:'A clareza de propósito funciona como âncora nos momentos difíceis — quando surgem obstáculos, quem tem propósito claro sabe POR QUE continua. Sem propósito, qualquer dificuldade pode levar à desistência. É o que mantém as pessoas firmes no caminho.' },
+  { tema:'Metas SMART', enunciado:'A letra "A" da metodologia SMART significa que a meta deve ser:', opcoes:['Ampla — abrangendo múltiplas dimensões da vida.','Atingível — desafiadora, mas alcançável com esforço realista.','Autônoma — definida sem influência de terceiros.','Anual — com prazo de um ano para ser concluída.'], correta:1, gabarito:'O "A" significa Achievable (Atingível/Alcançável). A meta deve ser desafiadora o suficiente para motivar, mas realista o suficiente para ser alcançada. Metas impossíveis geram frustração; metas fáceis demais não promovem crescimento.' },
+  { tema:'Plano Estratégico', enunciado:'Um plano de ação eficaz para o projeto de vida deve incluir, necessariamente:', opcoes:['Apenas os objetivos finais, sem detalhamento das etapas intermediárias.','Ações específicas, prazos definidos, recursos necessários, indicadores de progresso e plano de contingência.','Somente metas financeiras e profissionais, por serem as mais mensuráveis.','A validação e aprovação de familiares e amigos antes de ser colocado em prática.'], correta:1, gabarito:'Um plano de ação completo inclui: objetivo (meta SMART), ações específicas, prazos para cada ação, recursos necessários (tempo, dinheiro, conhecimento), indicadores de progresso e plano de contingência (o que fazer se não funcionar como planejado).' },
+  { tema:'Competências', enunciado:'Hard skills e soft skills diferem principalmente porque:', opcoes:['Hard skills são mais importantes que soft skills para o sucesso profissional.','Hard skills são habilidades técnicas específicas da área; soft skills são comportamentais e interpessoais — ambas são necessárias no mercado atual.','Soft skills podem ser facilmente substituídas por automação; hard skills não.','Hard skills são desenvolvidas pela experiência de vida; soft skills, por cursos formais.'], correta:1, gabarito:'Hard skills = habilidades técnicas (cálculo nutricional, software de dietética, avaliação nutricional) — aprendidas por formação formal. Soft skills = habilidades comportamentais (comunicação, empatia, liderança) — desenvolvidas pela experiência e autoconhecimento. O mercado exige ambas.' },
+  { tema:'Personal Branding', enunciado:'A presença digital profissional de um estudante de nutrição deve priorizar:', opcoes:['Quantidade de seguidores nas redes sociais, independentemente do tipo de conteúdo publicado.','Conteúdo educativo relevante para a área, perfil profissional atualizado e separação entre vida pessoal e profissional nas redes.','Exclusivamente a publicação de fotos e vídeos de receitas culinárias.','Evitar completamente as redes sociais para proteger a privacidade profissional.'], correta:1, gabarito:'A presença digital profissional deve ser estratégica: conteúdo educativo de qualidade na área de nutrição, LinkedIn atualizado com formação e experiências, separação entre perfil pessoal e profissional. Recrutadores pesquisam candidatos online antes mesmo da entrevista.' },
+  { tema:'Alta Performance', enunciado:'A "pausa estratégica" (timeout), abordada na unidade 5, é descrita como:', opcoes:['Um período de férias obrigatório para recuperação do esgotamento profissional.','Uma prática de alta performance: parar periodicamente para avaliar o progresso, celebrar conquistas e recalcular a rota em direção aos objetivos.','Uma técnica de meditação para controle do estresse no ambiente de trabalho.','Um intervalo de inatividade para aguardar melhores condições antes de agir.'], correta:1, gabarito:'A pausa estratégica não é perda de tempo — é prática de alta performance. Quem para para avaliar o que está funcionando, celebrar conquistas e ajustar o plano tem mais chances de alcançar seus objetivos do que quem age sem parar para refletir.' },
+  { tema:'Legado', enunciado:'Gerenciar o legado pessoal e profissional significa:', opcoes:['Acumular riqueza e patrimônio para deixar aos herdeiros.','Tomar decisões conscientes, alinhadas com os próprios valores, que constroem um impacto positivo nas pessoas ao redor e nas gerações futuras.','Registrar conquistas profissionais em um portfólio para consultas futuras.','Evitar erros e fracassos ao longo da trajetória profissional.'], correta:1, gabarito:'Legado é o impacto positivo que suas ações e escolhas deixam nas pessoas e no mundo. Gerenciá-lo significa viver e agir de forma intencional e alinhada com valores — construindo algo maior que o sucesso individual.' },
+  { tema:'Futuro do Trabalho', enunciado:'O networking, como uma das atitudes para carreira sustentável (WEF, 2023), é importante porque:', opcoes:['Garante automaticamente a contratação em qualquer empresa desejada.','Oferece oportunidades de aprendizado, crescimento e pode ser fundamental na busca por novos caminhos na carreira.','É relevante apenas para profissionais em cargos de liderança ou gestão.','Substitui a necessidade de qualificação técnica no mercado de trabalho.'], correta:1, gabarito:'Networking constrói capital relacional — conexões com colegas, mentores e líderes que ampliam as possibilidades de aprendizado, indicações e oportunidades. Não garante emprego, mas aumenta significativamente a empregabilidade e abre portas que a qualificação isolada não abre.' },
+  { tema:'Processos Seletivos', enunciado:'Um currículo eficaz para o mercado de trabalho atual deve:', opcoes:['Incluir todas as experiências de vida desde o ensino fundamental.','Ser adaptado à vaga, com resultados quantificados, sem erros e com no máximo 2 páginas para iniciantes.','Ter pelo menos 5 páginas para demonstrar toda a trajetória do candidato.','Incluir informações sobre vida pessoal, hobbie e situação familiar para humanizar o perfil.'], correta:1, gabarito:'O currículo é o primeiro filtro. Deve ser: objetivo (máx 2 páginas para iniciantes), adaptado à vaga (destacar o que é relevante para aquela posição), com resultados quantificados e sem erros de português. Informações pessoais desnecessárias não agregam valor.' },
+  { tema:'Autoconhecimento', enunciado:'Segundo o livro, a autodisciplina é essencial para o projeto de vida porque:', opcoes:['Elimina a necessidade de motivação externa para manter o foco nos objetivos.','Garante que as ações consistentes sejam mantidas mesmo na ausência de motivação imediata, sustentando o progresso a longo prazo.','É uma qualidade inata — ou se nasce com ela ou não se pode desenvolvê-la.','Substitui completamente o planejamento formal no alcance dos objetivos.'], correta:1, gabarito:'A motivação é instável — vem e vai. A autodisciplina é o que mantém as ações consistentes quando a motivação cai. Profissionais de alta performance sabem que o progresso sustentável depende de hábitos disciplinados, não de picos de entusiasmo.' },
+  { tema:'Metas SMART', enunciado:'A letra "R" de SMART indica que a meta deve ser "relevante". Isso significa que:', opcoes:['A meta deve gerar grande repercussão nas redes sociais e no círculo de amizades.','A meta deve estar alinhada com os valores pessoais, o propósito de vida e os objetivos maiores do indivíduo.','A meta deve ser financeiramente relevante — com retorno monetário significativo.','A meta precisa ser validada por outras pessoas para ser considerada relevante.'], correta:1, gabarito:'"Relevante" significa que a meta faz sentido para você — está alinhada com seus valores, seu propósito e seus objetivos maiores. Uma meta pode ser mensurável e atingível, mas se não for relevante para sua vida, não haverá motivação real para persegui-la.' }
+];
+
+let qAtual = 0, acertos = 0, erros = 0, respondidas = {};
+const letras = ['A','B','C','D'];
+
+function renderCard(idx) {
+  const q = questoes[idx];
+  if (!q) return;
+  const jr = respondidas[idx];
+  document.getElementById('progressBar').style.width = Math.round((idx / questoes.length) * 100) + '%';
+  document.getElementById('qAtualSpan').textContent = idx + 1;
+  const opcoesHtml = q.opcoes.map((op, i) => {
+    let cls = 'opcao-btn';
+    if (jr !== undefined) { if (i === q.correta) cls += ' correta'; else if (i === jr && jr !== q.correta) cls += ' incorreta'; }
+    return `<button class="${cls}" onclick="responder(${idx},${i})" ${jr !== undefined ? 'disabled' : ''}><div class="opcao-letra">${letras[i]}</div><span>${op}</span></button>`;
+  }).join('');
+  const gabHtml = jr !== undefined ? `<div class="q-gabarito ${jr === q.correta ? 'ok' : 'err'}">${jr === q.correta ? '✅ Correto! ' : '❌ Incorreto. '}${q.gabarito}</div>` : '';
+  const ehUltima = idx === questoes.length - 1;
+  document.getElementById('questaoContainer').innerHTML = `
+    <div class="questao-card${jr !== undefined ? (jr === q.correta ? ' acertou' : ' errou') : ''}">
+      <div class="q-meta"><div class="q-num">Questão ${String(idx+1).padStart(2,'0')}</div><div class="q-tema">${q.tema}</div></div>
+      <div class="q-enunciado">${q.enunciado}</div>
+      ${opcoesHtml}${gabHtml}
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-nav btn-reinic" onclick="reiniciar()">🔄 Reiniciar</button>
+      ${ehUltima && jr !== undefined ? `<button class="btn-nav btn-prox" onclick="mostrarResultado()">🏁 Ver Resultado →</button>` : `<button class="btn-nav btn-prox" onclick="proxima()" ${jr === undefined ? 'disabled' : ''}>Próxima →</button>`}
+    </div>`;
+}
+
+function responder(idx, escolhida) {
+  if (respondidas[idx] !== undefined) return;
+  respondidas[idx] = escolhida;
+  if (escolhida === questoes[idx].correta) { acertos++; document.getElementById('chipAcertos').textContent = `✓ ${acertos} acertos`; }
+  else { erros++; document.getElementById('chipErros').textContent = `✗ ${erros} erros`; }
+  document.getElementById('chipTotal').textContent = `${acertos + erros} / ${questoes.length}`;
+  renderCard(idx);
+}
+
+function proxima() {
+  if (qAtual < questoes.length - 1) { qAtual++; renderCard(qAtual); document.getElementById('questaoContainer').scrollIntoView({ behavior:'smooth', block:'start' }); }
+}
+
+function mostrarResultado() {
+  document.getElementById('questaoContainer').style.display = 'none';
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  document.getElementById('resAcertos').textContent = acertos;
+  document.getElementById('resErros').textContent = erros;
+  document.getElementById('resTaxa').textContent = taxa + '%';
+  document.getElementById('resTitulo').textContent = taxa >= 80 ? 'Excelente!' : taxa >= 60 ? 'Bom Desempenho!' : 'Continue Estudando!';
+  document.getElementById('resSub').textContent = taxa >= 80 ? 'Você domina Projeto de Vida! 🎉' : 'Revise os tópicos que errou no Resumo.';
+  document.getElementById('resEmoji').textContent = taxa >= 80 ? '🎉' : taxa >= 60 ? '👍' : '📖';
+  const erradas = Object.entries(respondidas).filter(([i,r]) => r !== questoes[i].correta);
+  if (erradas.length > 0) {
+    document.getElementById('erradasLista').innerHTML = `<div class="erradas-titulo">📋 Questões para revisar (${erradas.length})</div>` +
+      erradas.map(([i,r]) => `<div class="errada-item"><div class="errada-num">Questão ${parseInt(i)+1} · ${questoes[i].tema}</div><div class="errada-enunciado">${questoes[i].enunciado}</div><div class="errada-gabarito">✅ ${letras[questoes[i].correta]}) ${questoes[i].opcoes[questoes[i].correta]}</div></div>`).join('');
+  }
+  document.getElementById('resultadoFinal').style.display = 'block';
+  document.getElementById('progressBar').style.width = '100%';
+}
+
+function reiniciar() {
+  qAtual = 0; acertos = 0; erros = 0; respondidas = {};
+  document.getElementById('chipAcertos').textContent = '✓ 0 acertos';
+  document.getElementById('chipErros').textContent = '✗ 0 erros';
+  document.getElementById('chipTotal').textContent = `0 / ${questoes.length}`;
+  document.getElementById('resultadoFinal').style.display = 'none';
+  document.getElementById('questaoContainer').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  renderCard(0);
+}
+
+renderCard(0);
+</script>
+</body>
+</html>
