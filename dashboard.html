@@ -368,6 +368,7 @@
     <div class="nav-section">Estudos</div>
     <div class="nav-item" onclick="showTab('conhecimento')"><span class="nav-icon">📚</span> Conhecimento na Prática</div>
     <div class="nav-item" onclick="showTab('sobre')"><span class="nav-icon">🌿</span> Sobre Mim</div>
+    <div class="nav-item" id="nav-admin" style="display:none;border-left-color:#f59e0b" onclick="showTab('admin')"><span class="nav-icon">🛡️</span> Painel Admin</div>
   </div>
   <div class="sidebar-footer">
     <button class="btn-logout" onclick="logout()">Sair da Conta</button>
@@ -1203,12 +1204,13 @@
 
           <div style="background:var(--escuro);border-radius:20px;padding:40px 36px;margin-bottom:24px;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
             <div style="position:relative;flex-shrink:0">
-              <div id="sobre-foto-wrap" style="width:120px;height:120px;border-radius:50%;border:4px solid var(--verde-neon);overflow:hidden;background:var(--verde);display:flex;align-items:center;justify-content:center;font-size:48px;cursor:pointer" onclick="document.getElementById('sobre-foto-input').click()" title="Clique para trocar a foto">
+              <div id="sobre-foto-wrap" style="width:120px;height:120px;border-radius:50%;border:4px solid var(--verde-neon);overflow:hidden;background:var(--verde);display:flex;align-items:center;justify-content:center;font-size:48px;cursor:pointer" onclick="if(perfilData.is_admin) document.getElementById('sobre-foto-input').click()" title="Clique para trocar a foto (apenas admin)">
                 <img id="sobre-foto-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
                 <span id="sobre-foto-emoji">🌿</span>
               </div>
-              <div onclick="document.getElementById('sobre-foto-input').click()" style="position:absolute;bottom:4px;right:4px;width:28px;height:28px;background:var(--verde-neon);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer">📷</div>
+              <div id="sobre-foto-cam" onclick="if(perfilData.is_admin) document.getElementById('sobre-foto-input').click()" style="display:none;position:absolute;bottom:4px;right:4px;width:28px;height:28px;background:var(--verde-neon);border-radius:50%;align-items:center;justify-content:center;font-size:13px;cursor:pointer">📷</div>
               <input type="file" id="sobre-foto-input" accept="image/*" style="display:none" onchange="carregarFotoSobre(event)">
+              <div id="msg-sobre-foto" style="display:none;margin-top:8px;font-size:12px;color:var(--verde-neon);text-align:center;max-width:130px"></div>
             </div>
             <div style="flex:1;min-width:200px">
               <div style="font-size:11px;color:var(--verde-neon);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:6px">Nutricionista em Formação</div>
@@ -1244,6 +1246,48 @@
             <div style="font-size:40px">🌿</div>
           </div>
 
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ABA ADMIN ═══ -->
+    <div class="tab-content" id="tab-admin">
+      <div class="content">
+        <div style="max-width:900px;margin:0 auto">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;gap:16px">
+            <span style="font-size:36px">🛡️</span>
+            <div>
+              <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:22px;margin-bottom:4px">Painel Administrativo</h2>
+              <p style="color:rgba(255,255,255,0.5);font-size:13px">Acesso restrito — apenas o administrador do sistema vê esta página</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center">
+            <input id="admin-busca" type="text" placeholder="🔍 Buscar por nome ou e-mail..." oninput="filtrarUsuariosAdmin()"
+              style="flex:1;padding:11px 14px;border:1.5px solid #dde8de;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
+            <button onclick="carregarUsuariosAdmin()" style="background:var(--verde);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer">🔄 Atualizar</button>
+          </div>
+          <div id="admin-msg" style="display:none;padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px"></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+            <div class="stat-card verde"><div class="stat-icon">👥</div><div class="stat-val" id="admin-total">—</div><div class="stat-label">Usuários Cadastrados</div></div>
+            <div class="stat-card verde"><div class="stat-icon">✅</div><div class="stat-val" id="admin-ativos">—</div><div class="stat-label">Com Perfil Completo</div></div>
+            <div class="stat-card verde"><div class="stat-icon">📋</div><div class="stat-val" id="admin-pronts">—</div><div class="stat-label">Prontuários Salvos</div></div>
+          </div>
+          <div class="form-section">
+            <h3>👥 Todos os Usuários</h3>
+            <p class="subtitle">Clique em "Ver Dados" para visualizar as informações de qualquer usuário.</p>
+            <div class="table-wrap" id="admin-tabela-wrap">
+              <div class="empty-state"><div class="empty-icon">⏳</div><h4>Carregando usuários...</h4></div>
+            </div>
+          </div>
+          <div id="admin-user-painel" style="display:none">
+            <div style="background:#fff;border:2px solid var(--verde);border-radius:16px;padding:28px 32px;margin-top:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--escuro)" id="admin-user-titulo">Dados do Usuário</h3>
+                <button onclick="fecharPainelUser()" style="background:#f1f5f1;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px">✕ Fechar</button>
+              </div>
+              <div id="admin-user-dados" style="font-size:14px;color:var(--texto);line-height:1.9"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1308,6 +1352,15 @@ async function init() {
     if (p.avatar_url) {
       ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id => { const img = document.getElementById(id); if (img) { img.src = p.avatar_url; img.style.display='block'; } });
       ['sb-avatar-emoji','p-avatar-emoji','mobile-avatar-emoji'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
+    }
+
+    // ── ADMIN ──
+    if (p.is_admin) {
+      const navAdmin = document.getElementById('nav-admin');
+      if (navAdmin) navAdmin.style.display = 'flex';
+      // Mostra botão de câmera no Sobre
+      const cam = document.getElementById('sobre-foto-cam');
+      if (cam) cam.style.display = 'flex';
     }
   } else {
     // Fallback: mostra email se perfil não carregou
@@ -2142,24 +2195,59 @@ function coletarSintomas() { const sintomas = ["Vômito","Náusea","Mastigação
 function preencherSintomas(lista) { if (!lista) return; lista.forEach((item, i) => { const el = document.querySelector(`input[name="sint-${i}"][value="${item.resposta}"]`); if (el) el.checked = true; const obs = document.getElementById(`sint-${i}-obs`); if (obs) obs.value = item.obs || ""; }); }
 
 // ── FOTO SOBRE MIM ──
-function carregarFotoSobre(event) {
+// ── FOTO DO "SOBRE MIM" — Supabase Storage público ──
+// A foto fica em: public-assets/sobre_foto.jpg
+// Qualquer usuário logado vê; só o admin pode trocar.
+const SOBRE_FOTO_PATH = 'sobre_foto.jpg';
+const SOBRE_BUCKET    = 'public-assets';
+
+async function carregarFotoSobre(event) {
   const file = event.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('sobre-foto-img');
-    const emoji = document.getElementById('sobre-foto-emoji');
-    img.src = e.target.result; img.style.display = 'block'; emoji.style.display = 'none';
-    localStorage.setItem('nutri_sobre_foto', e.target.result);
-  };
-  reader.readAsDataURL(file);
+
+  // Só admin pode trocar a foto
+  if (!perfilData.is_admin) {
+    alert('Apenas o administrador pode alterar esta foto.');
+    event.target.value = '';
+    return;
+  }
+
+  const msgEl = document.getElementById('msg-sobre-foto');
+  if (msgEl) { msgEl.style.display = 'block'; msgEl.textContent = '⏳ Enviando foto...'; }
+
+  try {
+    const ext  = file.name.split('.').pop().toLowerCase() || 'jpg';
+    const path = SOBRE_FOTO_PATH;
+    const { error: upErr } = await window._sb.storage
+      .from(SOBRE_BUCKET)
+      .upload(path, file, { upsert: true, contentType: file.type || 'image/jpeg' });
+    if (upErr) throw upErr;
+
+    const { data: urlData } = window._sb.storage.from(SOBRE_BUCKET).getPublicUrl(path);
+    const url = urlData.publicUrl + '?t=' + Date.now();
+    _exibirFotoSobre(url);
+    if (msgEl) { msgEl.textContent = '✅ Foto atualizada para todos os usuários!'; setTimeout(() => { msgEl.style.display='none'; }, 3000); }
+  } catch(e) {
+    if (msgEl) { msgEl.textContent = '❌ Erro: ' + e.message; }
+    console.error('Erro ao enviar foto do Sobre:', e);
+  }
 }
-function carregarFotoSobreSalva() {
-  const salva = localStorage.getItem('nutri_sobre_foto');
-  if (!salva) return;
-  const img = document.getElementById('sobre-foto-img');
+
+async function carregarFotoSobreSalva() {
+  try {
+    const { data: urlData } = window._sb.storage.from(SOBRE_BUCKET).getPublicUrl(SOBRE_FOTO_PATH);
+    if (urlData?.publicUrl) {
+      // Testa se o arquivo existe com HEAD request
+      const res = await fetch(urlData.publicUrl, { method: 'HEAD' });
+      if (res.ok) _exibirFotoSobre(urlData.publicUrl + '?t=' + Date.now());
+    }
+  } catch(e) { /* sem foto ainda, usa emoji padrão */ }
+}
+
+function _exibirFotoSobre(url) {
+  const img   = document.getElementById('sobre-foto-img');
   const emoji = document.getElementById('sobre-foto-emoji');
-  if (img) { img.src = salva; img.style.display = 'block'; }
+  if (img)   { img.src = url; img.style.display = 'block'; }
   if (emoji) emoji.style.display = 'none';
 }
 
@@ -3230,6 +3318,169 @@ async function enviarMensagem(){
 async function logout(){await window._sb.auth.signOut();window.location.href='index.html';}
 init();
 carregarFotoSobreSalva();
+
+// ══════════════════════════════════════════
+// ── PAINEL ADMIN ──
+// ══════════════════════════════════════════
+let _todosUsuarios = [];
+
+async function carregarUsuariosAdmin() {
+  if (!perfilData.is_admin) return;
+  const wrap = document.getElementById('admin-tabela-wrap');
+  wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><h4>Carregando...</h4></div>';
+
+  try {
+    // Busca todos os perfis
+    const { data: perfis, error } = await window._sb
+      .from('perfis')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+
+    // Busca contagem de prontuários
+    const { data: pronts } = await window._sb
+      .from('prontuarios')
+      .select('user_id');
+
+    const contPronts = {};
+    (pronts || []).forEach(p => { contPronts[p.user_id] = (contPronts[p.user_id] || 0) + 1; });
+
+    _todosUsuarios = (perfis || []).map(p => ({ ...p, _num_pronts: contPronts[p.user_id] || 0 }));
+
+    // Atualiza cards de resumo
+    document.getElementById('admin-total').textContent   = _todosUsuarios.length;
+    document.getElementById('admin-ativos').textContent  = _todosUsuarios.filter(u => u.nome).length;
+    document.getElementById('admin-pronts').textContent  = Object.values(contPronts).reduce((a,b) => a+b, 0);
+
+    renderizarTabelaAdmin(_todosUsuarios);
+  } catch(e) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">❌</div><h4>Erro ao carregar: ${e.message}</h4></div>`;
+  }
+}
+
+function renderizarTabelaAdmin(lista) {
+  const wrap = document.getElementById('admin-tabela-wrap');
+  if (!lista.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div><h4>Nenhum usuário encontrado</h4></div>';
+    return;
+  }
+  wrap.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Prontuários</th>
+          <th>Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${lista.map(u => `
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                ${u.avatar_url
+                  ? `<img src="${u.avatar_url}" style="width:34px;height:34px;border-radius:50%;object-fit:cover">`
+                  : `<div style="width:34px;height:34px;border-radius:50%;background:var(--verde);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px">👤</div>`}
+                <div>
+                  <div style="font-weight:600;color:var(--escuro)">${u.nome ? u.nome+' '+(u.sobrenome||'') : '(sem nome)'}</div>
+                  ${u.is_admin ? '<span style="font-size:10px;background:#fef9c3;color:#854d0e;padding:2px 6px;border-radius:10px;font-weight:700">🛡️ ADMIN</span>' : ''}
+                </div>
+              </div>
+            </td>
+            <td style="color:#7a8a7c;font-size:13px">${u.email || '—'}</td>
+            <td style="font-size:13px">${u.telefone || '—'}</td>
+            <td style="text-align:center"><span style="background:#dcfce7;color:#166534;padding:3px 10px;border-radius:10px;font-size:12px;font-weight:600">${u._num_pronts}</span></td>
+            <td style="font-size:12px;color:#9ca3af">${u.created_at ? new Date(u.created_at).toLocaleDateString('pt-BR') : '—'}</td>
+            <td>
+              <button onclick="verDadosUsuario('${u.user_id}')"
+                style="background:var(--verde);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">
+                👁️ Ver Dados
+              </button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>`;
+}
+
+function filtrarUsuariosAdmin() {
+  const q = document.getElementById('admin-busca').value.toLowerCase();
+  if (!q) { renderizarTabelaAdmin(_todosUsuarios); return; }
+  const filtrado = _todosUsuarios.filter(u =>
+    (u.nome||'').toLowerCase().includes(q) ||
+    (u.sobrenome||'').toLowerCase().includes(q) ||
+    (u.email||'').toLowerCase().includes(q)
+  );
+  renderizarTabelaAdmin(filtrado);
+}
+
+async function verDadosUsuario(userId) {
+  const u = _todosUsuarios.find(x => x.user_id === userId);
+  if (!u) return;
+
+  // Busca prontuários do usuário
+  const { data: pronts } = await window._sb
+    .from('prontuarios')
+    .select('nome, nascimento, peso, altura, imc, objetivo, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  const nomeCompleto = [u.nome, u.sobrenome].filter(Boolean).join(' ') || '(sem nome)';
+  document.getElementById('admin-user-titulo').textContent = '👤 ' + nomeCompleto;
+
+  const prontsHtml = (pronts && pronts.length)
+    ? pronts.map(p => `
+        <tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f5f0">${p.nome || '—'}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f5f0;color:#7a8a7c">${p.nascimento ? new Date(p.nascimento).toLocaleDateString('pt-BR') : '—'}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f5f0">${p.peso ? p.peso+'kg' : '—'}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f5f0">${p.imc || '—'}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f5f0;font-size:12px;color:#9ca3af">${new Date(p.created_at).toLocaleDateString('pt-BR')}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="5" style="padding:16px;text-align:center;color:#9ca3af">Nenhum prontuário</td></tr>`;
+
+  document.getElementById('admin-user-dados').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">E-mail</span><br><strong>${u.email || '—'}</strong></div>
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">Telefone</span><br><strong>${u.telefone || '—'}</strong></div>
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">Nascimento</span><br><strong>${u.nascimento ? new Date(u.nascimento).toLocaleDateString('pt-BR') : '—'}</strong></div>
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">Objetivo</span><br><strong>${u.objetivo || '—'}</strong></div>
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">Cadastrado em</span><br><strong>${u.created_at ? new Date(u.created_at).toLocaleDateString('pt-BR') : '—'}</strong></div>
+      <div><span style="font-size:11px;color:#7a8a7c;text-transform:uppercase;letter-spacing:1px">Prontuários</span><br><strong>${u._num_pronts}</strong></div>
+    </div>
+    <h4 style="font-size:13px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">📋 Prontuários</h4>
+    <div style="overflow-x:auto;border-radius:8px;border:1px solid #e8efe8">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead>
+          <tr style="background:var(--escuro)">
+            <th style="padding:8px 12px;color:rgba(255,255,255,0.7);text-align:left;font-weight:500">Paciente</th>
+            <th style="padding:8px 12px;color:rgba(255,255,255,0.7);text-align:left;font-weight:500">Nasc.</th>
+            <th style="padding:8px 12px;color:rgba(255,255,255,0.7);text-align:left;font-weight:500">Peso</th>
+            <th style="padding:8px 12px;color:rgba(255,255,255,0.7);text-align:left;font-weight:500">IMC</th>
+            <th style="padding:8px 12px;color:rgba(255,255,255,0.7);text-align:left;font-weight:500">Data</th>
+          </tr>
+        </thead>
+        <tbody>${prontsHtml}</tbody>
+      </table>
+    </div>`;
+
+  document.getElementById('admin-user-painel').style.display = 'block';
+  document.getElementById('admin-user-painel').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function fecharPainelUser() {
+  document.getElementById('admin-user-painel').style.display = 'none';
+}
+
+// Carrega usuários quando entrar na aba admin
+const _showTabOriginal = showTab;
+showTab = function(name) {
+  _showTabOriginal(name);
+  if (name === 'admin' && perfilData.is_admin && !_todosUsuarios.length) carregarUsuariosAdmin();
+};
 </script>
 
 <!-- CROP MODAL -->
