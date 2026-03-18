@@ -2187,11 +2187,18 @@ async function salvarPerfil() {
   const msg = document.getElementById('msg-perfil');
   const dados = { nome: document.getElementById('p-nome').value.trim(), sobrenome: document.getElementById('p-sobrenome').value.trim(), telefone: document.getElementById('p-telefone').value, nascimento: document.getElementById('p-nascimento').value, objetivo: document.getElementById('p-objetivo').value };
   try {
-    await window._sb.from('perfis').upsert({ user_id: currentUser.id, email: currentUser.email, ...dados, termo_aceito: true });
-    msg.className = 'msg success'; msg.textContent = 'Perfil salvo com sucesso!';
-    document.getElementById('sb-nome').textContent = `${dados.nome} ${dados.sobrenome}`.trim();
+    const { error } = await window._sb.from('perfis').update(dados).eq('user_id', currentUser.id);
+    if (error) {
+      await window._sb.from('perfis').insert({ user_id: currentUser.id, email: currentUser.email, ...dados, termo_aceito: true });
+    }
+    const nomeCompleto = `${dados.nome} ${dados.sobrenome}`.trim();
+    msg.className = 'msg success'; msg.textContent = '✅ Perfil salvo com sucesso!';
+    document.getElementById('sb-nome').textContent = nomeCompleto || currentUser.email;
+    document.getElementById('p-nome-full').textContent = nomeCompleto || currentUser.email;
+    perfilData = { ...perfilData, ...dados };
   } catch(e) { msg.className = 'msg error'; msg.textContent = e.message; }
 }
+
 
 function preencherProntuario(d) {
   const m = { 'pr-nome':d.nome,'pr-nasc':d.nascimento,'pr-sexo':d.sexo,'pr-estado-civil':d.estado_civil,'pr-profissao':d.profissao,'pr-tel':d.telefone,'pr-email':d.email_paciente,'pr-endereco':d.endereco,'pr-bairro':d.bairro,'pr-familia':d.familia,'pr-motivo':d.motivo,'pr-obs-inicial':d.obs_inicial,'pr-compra-quem':d.compra_quem,'pr-compra-freq':d.compra_freq,'pr-prepara':d.prepara,'pr-come-com':d.come_com,'pr-cigarros':d.cigarros,'pr-peso':d.peso,'pr-altura':d.altura,'pr-imc':d.imc,'pr-peso-des':d.peso_desejado,'pr-c-braco':d.c_braco,'pr-c-peitoral':d.c_peitoral,'pr-c-cintura':d.c_cintura,'pr-circ-abd':d.circ_abdominal,'pr-c-quadril':d.c_quadril,'pr-c-coxa':d.c_coxa,'pr-c-panturrilha':d.c_panturrilha,'pr-c-pescoco':d.c_pescoco,'pr-cq':d.relacao_cq,'pr-dc-triceps':d.dc_triceps,'pr-dc-biceps':d.dc_biceps,'pr-dc-escapula':d.dc_escapula,'pr-dc-suprailiaca':d.dc_suprailiaca,'pr-dc-axmedia':d.dc_axmedia,'pr-dc-peitoral':d.dc_peitoral,'pr-dc-abdominal':d.dc_abdominal,'pr-dc-coxa':d.dc_coxa,'pr-dc-panturrilha':d.dc_panturrilha,'pr-gordura':d.perc_gordura,'pr-atividade':d.nivel_atividade,'pr-exercicio':d.tipo_exercicio,'pr-freq':d.freq_exercicio,'pr-pele':d.pele,'pr-cirurgias':d.cirurgias,'pr-intestino':d.intestino,'pr-fezes':d.fezes,'pr-diurese':d.diurese,'pr-patologia':d.patologias,'pr-medicamentos':d.medicamentos,'pr-alergias':d.alergias,'pr-refeicoes':d.num_refeicoes,'pr-apetite':d.apetite,'pr-gosta':d.alimentos_gosta,'pr-nao-gosta':d.alimentos_nao_gosta,'pr-agua':d.ingesta_agua,'pr-alcool':d.alcool,'pr-tabagismo':d.tabagismo,'pr-sono':d.sono,'pr-objetivo':d.objetivo,'pr-meta-peso':d.meta_peso,'pr-diag-problema':d.diag_problema,'pr-diag-etiologia':d.diag_etiologia,'pr-diag-sinais':d.diag_sinais,'pr-obs':d.observacoes,'pr-id':d.id||'' };
