@@ -2187,16 +2187,16 @@ async function salvarPerfil() {
   const msg = document.getElementById('msg-perfil');
   const dados = { nome: document.getElementById('p-nome').value.trim(), sobrenome: document.getElementById('p-sobrenome').value.trim(), telefone: document.getElementById('p-telefone').value, nascimento: document.getElementById('p-nascimento').value, objetivo: document.getElementById('p-objetivo').value };
   try {
-    const { error } = await window._sb.from('perfis').update(dados).eq('user_id', currentUser.id);
-    if (error) {
-      await window._sb.from('perfis').insert({ user_id: currentUser.id, email: currentUser.email, ...dados, termo_aceito: true });
-    }
+    const { error } = await window._sb
+      .from('perfis')
+      .upsert({ user_id: currentUser.id, email: currentUser.email, ...dados, termo_aceito: true }, { onConflict: 'user_id' });
+    if (error) throw error;
     const nomeCompleto = `${dados.nome} ${dados.sobrenome}`.trim();
     msg.className = 'msg success'; msg.textContent = '✅ Perfil salvo com sucesso!';
     document.getElementById('sb-nome').textContent = nomeCompleto || currentUser.email;
     document.getElementById('p-nome-full').textContent = nomeCompleto || currentUser.email;
     perfilData = { ...perfilData, ...dados };
-  } catch(e) { msg.className = 'msg error'; msg.textContent = e.message; }
+  } catch(e) { msg.className = 'msg error'; msg.textContent = '❌ Erro: ' + e.message; }
 }
 
 
