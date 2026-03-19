@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anatomia Humana — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+.btn-export-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.btn-export-pdf { background: #dc2626; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.btn-export-pdf:hover { background: #b91c1c; transform: translateY(-1px); }
+.btn-export-xls { background: #16a34a; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.btn-export-xls:hover { background: #15803d; transform: translateY(-1px); }
+.banner-progresso { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
+.banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Anatomia Humana — Módulo 4</div>
+    <div class="badge">4º Módulo 2025</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🧠</div>
+    <div>
+      <div class="hero-tag">4º Módulo · Nutrição · Unicesumar 2025</div>
+      <h1>Anatomia Humana — Sistema Neuroendócrino</h1>
+      <p>Unidade 4 · Sistema Nervoso + Sistema Endócrino · 48 páginas<br>Autora: Dra. Izabela Patricio Buss</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Diretamente cobrado em provas e essencial para clínica</div>
+  </div>
+
+  <!-- 1. SISTEMA NERVOSO - DIVISÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🧠</div>
+      <div class="card-titulo">
+        <h3>Organização do Sistema Nervoso</h3>
+        <p>Unidade 4 · Divisões, SNC e SNP — base de toda a neuroanatomia</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Visão Geral</h4>
+      <p>O sistema nervoso é responsável por <strong>captar, processar e responder às informações</strong> do ambiente interno e externo do organismo. Ele controla desde reflexos simples até funções cognitivas complexas como memória, linguagem e comportamento.</p>
+
+      <h4>Divisão do Sistema Nervoso</h4>
+      <table class="tabela">
+        <tr><th>Divisão</th><th>Componentes</th><th>Função Principal</th></tr>
+        <tr><td><strong>SNC</strong> — Sistema Nervoso Central</td><td>Encéfalo + Medula espinal</td><td>Processar e integrar informações</td></tr>
+        <tr><td><strong>SNP</strong> — Sistema Nervoso Periférico</td><td>Nervos cranianos e espinhais</td><td>Conduzir informações de/para o SNC</td></tr>
+        <tr><td><strong>SNA</strong> — Sistema Nervoso Autônomo</td><td>Simpático + Parassimpático + Entérico</td><td>Regular funções viscerais involuntárias</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete:</strong> SNC = dentro do crânio e da coluna. SNP = tudo fora. O SNA é parte do SNP, mas tem divisão própria por regular funções automáticas como digestão, FC e respiração.</p>
+      </div>
+
+      <h4>Sistema Nervoso Central (SNC)</h4>
+      <p>O SNC é formado pelo <strong>encéfalo</strong> (dentro do crânio) e pela <strong>medula espinal</strong> (dentro do canal vertebral). Ambos são protegidos pelas meninges (dura-máter, aracnoide e pia-máter) e pelo líquido cefalorraquidiano (LCR).</p>
+
+      <h4>Sistema Nervoso Periférico (SNP)</h4>
+      <p>Inclui os <strong>12 pares de nervos cranianos</strong> e os <strong>31 pares de nervos espinhais</strong>. Pode ser dividido em:</p>
+      <ul>
+        <li><strong>SNP Somático:</strong> controla músculos esqueléticos (voluntário)</li>
+        <li><strong>SNP Autônomo:</strong> controla vísceras, glândulas e músculo liso (involuntário)</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção:</strong> O Sistema Nervoso Entérico (SNE), localizado na parede do trato gastrointestinal, é considerado o "segundo cérebro". Ele regula autonomamente as funções digestivas e é muito cobrado em provas de nutrição.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MEDULA ESPINAL -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🦴</div>
+      <div class="card-titulo">
+        <h3>Medula Espinal</h3>
+        <p>Unidade 4 · Estrutura, segmentos e funções — condução e reflexos</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é a Medula Espinal?</h4>
+      <p>A medula espinal é um <strong>cilindro de tecido nervoso</strong> que se estende do bulbo até a segunda vértebra lombar (L2). Localiza-se dentro do <strong>canal vertebral</strong> e é protegida pelas vértebras e pelas meninges. Tem comprimento médio de 42–45 cm no adulto.</p>
+
+      <h4>Divisão em Segmentos</h4>
+      <table class="tabela">
+        <tr><th>Segmento</th><th>Nº de pares de nervos</th><th>Região</th></tr>
+        <tr><td>Cervical (C)</td><td>8 pares</td><td>Pescoço e membros superiores</td></tr>
+        <tr><td>Torácico (T)</td><td>12 pares</td><td>Tronco</td></tr>
+        <tr><td>Lombar (L)</td><td>5 pares</td><td>Abdome e parte dos membros inferiores</td></tr>
+        <tr><td>Sacral (S)</td><td>5 pares</td><td>Pelve e membros inferiores</td></tr>
+        <tr><td>Coccígeo (Co)</td><td>1 par</td><td>Região do cóccix</td></tr>
+      </table>
+
+      <h4>Funções da Medula</h4>
+      <ul>
+        <li><strong>Via de condução:</strong> transmite impulsos nervosos entre o corpo e o encéfalo (vias ascendentes = sensitivas; vias descendentes = motoras)</li>
+        <li><strong>Centro reflexo:</strong> integra arcos reflexos sem necessidade do encéfalo (reflexo patelar, retirada de membro)</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Substância cinzenta vs branca:</strong> Na medula, a substância cinzenta fica no centro (em formato de H ou borboleta) e a branca na periferia — ao contrário do encéfalo. A cinzenta contém corpos celulares dos neurônios; a branca, os axônios mielinizados.</p>
+      </div>
+
+      <h4>Plexos Nervosos Importantes</h4>
+      <ul>
+        <li><strong>Plexo braquial (C5–T1):</strong> inerva membros superiores</li>
+        <li><strong>Plexo lombar (L1–L4):</strong> inerva abdome inferior e coxa</li>
+        <li><strong>Plexo sacral (L4–S3):</strong> origina o nervo isquiático (ciático), o maior nervo do corpo</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. ENCÉFALO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🔬</div>
+      <div class="card-titulo">
+        <h3>Encéfalo — Estrutura e Funções</h3>
+        <p>Unidade 4 · Cérebro, cerebelo, tronco encefálico e lobos cerebrais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Divisões do Encéfalo</h4>
+      <table class="tabela">
+        <tr><th>Estrutura</th><th>Sub-regiões</th><th>Função Principal</th></tr>
+        <tr><td><strong>Cérebro</strong></td><td>Hemisférios + córtex + lobos</td><td>Funções cognitivas, motoras e sensitivas voluntárias</td></tr>
+        <tr><td><strong>Cerebelo</strong></td><td>Vermis + hemisférios cerebelares</td><td>Coordenação motora, equilíbrio e postura</td></tr>
+        <tr><td><strong>Tronco encefálico</strong></td><td>Mesencéfalo, ponte e bulbo</td><td>Funções vitais: respiração, FC, deglutição</td></tr>
+        <tr><td><strong>Diencéfalo</strong></td><td>Tálamo + hipotálamo</td><td>Relé sensorial e regulação autonômica/hormonal</td></tr>
+      </table>
+
+      <h4>Lobos Cerebrais e Suas Funções</h4>
+      <table class="tabela">
+        <tr><th>Lobo</th><th>Localização</th><th>Função</th></tr>
+        <tr><td><strong>Frontal</strong></td><td>Anterior</td><td>Planejamento, personalidade, linguagem (área de Broca), controle motor voluntário</td></tr>
+        <tr><td><strong>Parietal</strong></td><td>Superior posterior</td><td>Integração sensitiva, percepção tátil, propriocepção</td></tr>
+        <tr><td><strong>Temporal</strong></td><td>Lateral</td><td>Audição, memória, linguagem (área de Wernicke), olfato</td></tr>
+        <tr><td><strong>Occipital</strong></td><td>Posterior</td><td>Processamento visual</td></tr>
+        <tr><td><strong>Ínsula</strong></td><td>Profundo (coberto)</td><td>Paladar, dor visceral, regulação autonômica</td></tr>
+      </table>
+
+      <h4>Hipotálamo — O Grande Regulador</h4>
+      <p>O hipotálamo é uma estrutura do diencéfalo com papel central na <strong>interface entre os sistemas nervoso e endócrino</strong>. Ele regula:</p>
+      <ul>
+        <li>Temperatura corporal (termostato do corpo)</li>
+        <li>Fome e saciedade (núcleos arqueado e paraventricular)</li>
+        <li>Sede e osmolaridade</li>
+        <li>Ciclo sono-vigília</li>
+        <li>Liberação de hormônios pela hipófise (eixo hipotálamo-hipófise)</li>
+        <li>Comportamento sexual e emocional</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Importância para Nutrição:</strong> O hipotálamo é o principal centro regulador do apetite. Hormônios como leptina, grelina, insulina e GLP-1 atuam em núcleos hipotalâmicos para sinalizar fome ou saciedade. Disfunção hipotalâmica está diretamente relacionada à obesidade.</p>
+      </div>
+
+      <h4>Cerebelo</h4>
+      <p>O cerebelo ocupa a <strong>fossa craniana posterior</strong> e pesa cerca de 150g. Não inicia movimentos, mas os <strong>coordena, afina e corrige</strong>. Lesões causam ataxia (descoordenação), dismetria e disdiadococinesia.</p>
+
+      <h4>Tronco Encefálico</h4>
+      <p>Formado por mesencéfalo, ponte e bulbo. Contém os <strong>núcleos de 10 dos 12 nervos cranianos</strong> e centros vitais (respiratório, cardiovascular, da deglutição). Lesão no bulbo pode ser fatal.</p>
+    </div>
+  </div>
+
+  <!-- 4. NEURÔNIO E TECIDO NERVOSO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">⚡</div>
+      <div class="card-titulo">
+        <h3>Neurônio e Tecido Nervoso</h3>
+        <p>Unidade 4 · Tipos de neurônios, glia, sinapses e potencial de ação</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O Neurônio</h4>
+      <p>O neurônio é a <strong>unidade funcional do sistema nervoso</strong>. É uma célula altamente especializada, incapaz de se dividir, com longevidade muito alta. Composto por:</p>
+      <ul>
+        <li><strong>Corpo celular (soma):</strong> contém o núcleo e organelas</li>
+        <li><strong>Dendritos:</strong> prolongamentos curtos que recebem estímulos (entrada)</li>
+        <li><strong>Axônio:</strong> prolongamento longo que conduz o impulso para outras células (saída)</li>
+        <li><strong>Bainha de mielina:</strong> envolve o axônio, acelera a condução do impulso (nas fibras mielinizadas a velocidade pode chegar a 120 m/s)</li>
+      </ul>
+
+      <h4>Células da Glia (Neuróglia)</h4>
+      <table class="tabela">
+        <tr><th>Célula</th><th>Localização</th><th>Função</th></tr>
+        <tr><td>Astrócito</td><td>SNC</td><td>Suporte metabólico, barreira hematoencefálica, reparo</td></tr>
+        <tr><td>Oligodendrócito</td><td>SNC</td><td>Produz mielina no SNC (um cobre vários axônios)</td></tr>
+        <tr><td>Microglia</td><td>SNC</td><td>Imunidade cerebral, fagocitose de resíduos</td></tr>
+        <tr><td>Célula de Schwann</td><td>SNP</td><td>Produz mielina no SNP (uma cobre um único axônio)</td></tr>
+        <tr><td>Célula ependimária</td><td>SNC</td><td>Reveste ventrículos, produz LCR</td></tr>
+      </table>
+
+      <h4>Sinapse</h4>
+      <p>A sinapse é a <strong>junção funcional entre dois neurônios</strong> (ou entre neurônio e célula efetora). Na sinapse química, o neurônio pré-sináptico libera <strong>neurotransmissores</strong> na fenda sináptica, que se ligam a receptores pós-sinápticos.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Neurotransmissores importantes:</strong> Acetilcolina (sistema motor e parassimpático), Dopamina (recompensa, movimento), Serotonina (humor, sono, apetite), Noradrenalina (simpático, atenção), GABA (inibitório), Glutamato (excitatório principal). A serotonina tem papel fundamental na regulação do apetite e do humor — diretamente ligada à nutrição.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. SNA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">⚙️</div>
+      <div class="card-titulo">
+        <h3>Sistema Nervoso Autônomo (SNA)</h3>
+        <p>Unidade 4 · Simpático, parassimpático e entérico — regulação visceral</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Divisões do SNA</h4>
+      <table class="tabela">
+        <tr><th>Divisão</th><th>Ação geral</th><th>Mediador</th></tr>
+        <tr><td><strong>Simpático</strong></td><td>"Luta ou fuga" — prepara para ação</td><td>Noradrenalina (pós-ganglionar)</td></tr>
+        <tr><td><strong>Parassimpático</strong></td><td>"Repouso e digestão" — recuperação</td><td>Acetilcolina</td></tr>
+        <tr><td><strong>Entérico</strong></td><td>Regula autonomamente o TGI</td><td>Múltiplos (serotonina, acetilcolina, etc.)</td></tr>
+      </table>
+
+      <h4>Simpático — "Luta ou Fuga"</h4>
+      <p>Origem: colunas torácica e lombar da medula (T1–L2). Em situação de estresse ativa:</p>
+      <ul>
+        <li>Aumento da FC e da pressão arterial</li>
+        <li>Dilatação das pupilas e brônquios</li>
+        <li><strong>Inibição da digestão</strong> (reduz peristaltismo, fecha esfíncteres)</li>
+        <li>Liberação de glicose pelo fígado (glicogenólise)</li>
+        <li>Aumento do fluxo sanguíneo para músculos</li>
+      </ul>
+
+      <h4>Parassimpático — "Repouso e Digestão"</h4>
+      <p>Origem: tronco encefálico (nervos cranianos III, VII, IX, X) e medula sacral (S2–S4). O nervo vago (X par craniano) é o mais importante — inerva coração, pulmões e todo o TGI até o cólon transverso. Em repouso ativa:</p>
+      <ul>
+        <li>Redução da FC</li>
+        <li>Constrição das pupilas</li>
+        <li><strong>Estimulação da digestão</strong> (aumenta peristaltismo, estimula secreções gástricas e pancreáticas)</li>
+        <li>Contração da bexiga</li>
+      </ul>
+
+      <h4>Sistema Nervoso Entérico (SNE) — O "Segundo Cérebro"</h4>
+      <p>O SNE é formado por <strong>dois plexos nervosos</strong> na parede do trato gastrointestinal:</p>
+      <ul>
+        <li><strong>Plexo mioentérico (de Auerbach):</strong> controla a motilidade (peristaltismo)</li>
+        <li><strong>Plexo submucoso (de Meissner):</strong> controla secreções e absorção</li>
+      </ul>
+      <p>O SNE possui mais de <strong>100 milhões de neurônios</strong> — mais do que na medula espinal — e pode funcionar de forma independente do SNC. Produz cerca de <strong>90% da serotonina do organismo</strong>.</p>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Eixo intestino-cérebro:</strong> A comunicação bidirecional entre o TGI e o cérebro pelo nervo vago e pelo SNE é fundamental para entender como o estado emocional afeta a digestão (síndrome do intestino irritável, náuseas por ansiedade) e como a microbiota intestinal influencia o humor e o comportamento.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Sistema Endócrino: muito cobrado em provas de nutrição</div>
+  </div>
+
+  <!-- 6. SISTEMA ENDÓCRINO VISÃO GERAL -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🔬</div>
+      <div class="card-titulo">
+        <h3>Sistema Endócrino — Visão Geral e Glândulas</h3>
+        <p>Unidade 4 · Hormônios, glândulas e mecanismo de ação</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é o Sistema Endócrino?</h4>
+      <p>O sistema endócrino é formado por <strong>glândulas e células que secretam hormônios</strong> diretamente na corrente sanguínea. Os hormônios são mensageiros químicos que regulam metabolismo, crescimento, reprodução e homeostase.</p>
+
+      <h4>Principais Glândulas Endócrinas</h4>
+      <table class="tabela">
+        <tr><th>Glândula</th><th>Localização</th><th>Principais Hormônios</th></tr>
+        <tr><td><strong>Hipófise</strong></td><td>Base do crânio (sela túrcica)</td><td>GH, TSH, ACTH, FSH, LH, prolactina, ADH, ocitocina</td></tr>
+        <tr><td><strong>Tireoide</strong></td><td>Região anterior do pescoço</td><td>T3, T4 (tiroxina), calcitonina</td></tr>
+        <tr><td><strong>Paratireoide</strong></td><td>Face posterior da tireoide</td><td>PTH (paratormônio)</td></tr>
+        <tr><td><strong>Suprarrenal</strong></td><td>Polo superior dos rins</td><td>Cortisol, aldosterona, adrenalina, noradrenalina</td></tr>
+        <tr><td><strong>Pâncreas endócrino</strong></td><td>Retroperitônio abdominal</td><td>Insulina, glucagon, somatostatina</td></tr>
+        <tr><td><strong>Gônadas</strong></td><td>Pelve (ovários) / escroto (testículos)</td><td>Estrogênio, progesterona, testosterona</td></tr>
+        <tr><td><strong>Glândula pineal</strong></td><td>Epitálamo</td><td>Melatonina (ciclo circadiano)</td></tr>
+        <tr><td><strong>Timo</strong></td><td>Mediastino anterior</td><td>Timosina (maturação linfócitos T)</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Eixo Hipotálamo-Hipófise:</strong> O hipotálamo produz hormônios liberadores (ex.: TRH, CRH, GnRH) que estimulam ou inibem a hipófise. A hipófise produz hormônios trópicos (TSH, ACTH, FSH, LH) que atuam em glândulas-alvo. O feedback negativo fecha o loop de regulação.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. HIPÓFISE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">👑</div>
+      <div class="card-titulo">
+        <h3>Hipófise — A "Glândula Mestra"</h3>
+        <p>Unidade 4 · Adeno-hipófise, neuro-hipófise e eixo hipotálamo-hipófise</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Divisões da Hipófise</h4>
+      <table class="tabela">
+        <tr><th>Porção</th><th>Origem</th><th>Hormônios produzidos</th></tr>
+        <tr><td><strong>Adeno-hipófise</strong> (anterior)</td><td>Epitélio oral (bolsa de Rathke)</td><td>GH, TSH, ACTH, FSH, LH, Prolactina, MSH</td></tr>
+        <tr><td><strong>Neuro-hipófise</strong> (posterior)</td><td>Extensão do hipotálamo</td><td>ADH (vasopressina) e Ocitocina — produzidos no hipotálamo, armazenados aqui</td></tr>
+      </table>
+
+      <h4>Hormônios da Adeno-hipófise e Suas Funções</h4>
+      <ul>
+        <li><strong>GH (hormônio do crescimento):</strong> estimula crescimento dos ossos e músculos, mobiliza gordura, aumenta glicemia. Pico à noite durante sono profundo.</li>
+        <li><strong>TSH (tireoestimulante):</strong> estimula a tireoide a produzir T3 e T4</li>
+        <li><strong>ACTH (corticotrófico):</strong> estimula o córtex da suprarrenal a produzir cortisol</li>
+        <li><strong>FSH e LH (gonadotróficos):</strong> controlam função reprodutiva e produção de hormônios sexuais</li>
+        <li><strong>Prolactina:</strong> estimula produção de leite materno</li>
+      </ul>
+
+      <h4>Hormônios da Neuro-hipófise</h4>
+      <ul>
+        <li><strong>ADH (vasopressina):</strong> aumenta reabsorção de água nos rins (anti-diurético). Deficiência causa diabetes insipidus. Importante para hidratação e osmorregulação.</li>
+        <li><strong>Ocitocina:</strong> estimula contrações uterinas no parto e ejeção do leite na amamentação. Também relacionada a vínculos afetivos.</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>GH e Nutrição:</strong> O GH é anabólico e lipolítico — estimula síntese proteica e mobilização de gordura. Sua secreção é estimulada por jejum, exercício intenso e sono. É inibido por hiperglicemia (glicose alta bloqueia a liberação de GH — relevante para pacientes diabéticos).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. TIREOIDE -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🦋</div>
+      <div class="card-titulo">
+        <h3>Tireoide e Paratireoide</h3>
+        <p>Unidade 4 · T3, T4, calcitonina e PTH — metabolismo e cálcio</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Anatomia da Tireoide</h4>
+      <p>A tireoide tem formato de <strong>borboleta</strong>, localiza-se anteriormente à laringe e à traqueia. Pesa cerca de 20–30g no adulto e é formada por dois lobos unidos por um istmo. É a maior glândula endócrina do organismo.</p>
+
+      <h4>Hormônios da Tireoide</h4>
+      <table class="tabela">
+        <tr><th>Hormônio</th><th>Produção</th><th>Função</th></tr>
+        <tr><td><strong>T4 (tiroxina)</strong></td><td>90% da produção</td><td>Forma inativa — convertida em T3 nos tecidos</td></tr>
+        <tr><td><strong>T3 (tri-iodotironina)</strong></td><td>10% direto + conversão de T4</td><td>Forma ativa — regula metabolismo basal</td></tr>
+        <tr><td><strong>Calcitonina</strong></td><td>Células parafoliculares (C)</td><td>Reduz cálcio sérico (inibe osteoclastos)</td></tr>
+      </table>
+
+      <h4>Funções dos Hormônios Tireoidianos (T3/T4)</h4>
+      <ul>
+        <li>Aumentam o <strong>metabolismo basal</strong> (taxa metabólica de repouso)</li>
+        <li>Estimulam consumo de O₂ e produção de calor (termogênese)</li>
+        <li>Essenciais para o <strong>desenvolvimento cerebral fetal</strong> (hipotireoidismo na gravidez causa cretinismo)</li>
+        <li>Regulam síntese proteica, metabolismo de carboidratos e lipídios</li>
+        <li>Necessitam de <strong>iodo</strong> para sua síntese (deficiência de iodo → bócio)</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Iodo e Nutrição:</strong> A síntese de T3 e T4 requer iodo. A deficiência de iodo é a principal causa evitável de deficiência intelectual no mundo. No Brasil, a iodação do sal de cozinha é obrigatória para prevenir esta deficiência. A ingesta diária recomendada de iodo é de 150 µg/dia para adultos.</p>
+      </div>
+
+      <h4>Paratireoide e PTH</h4>
+      <p>As 4 glândulas paratireoides estão na face posterior da tireoide e produzem o <strong>PTH (paratormônio)</strong>. O PTH é o principal regulador do cálcio sérico:</p>
+      <ul>
+        <li>Aumenta reabsorção óssea de cálcio (ativa osteoclastos)</li>
+        <li>Aumenta reabsorção renal de cálcio e excreção de fósforo</li>
+        <li>Ativa vitamina D no rim (1,25-OH-D3), aumentando absorção intestinal de cálcio</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Calcitonina vs PTH:</strong> São antagonistas na regulação do cálcio. Hipercalcemia → calcitonina sobe e PTH cai. Hipocalcemia → PTH sobe e calcitonina cai. A vitamina D é o terceiro regulador — estimula absorção intestinal de cálcio, complementando o PTH.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. SUPRARRENAL -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">💥</div>
+      <div class="card-titulo">
+        <h3>Glândulas Suprarrenais</h3>
+        <p>Unidade 4 · Cortisol, aldosterona, adrenalina — resposta ao estresse</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Anatomia</h4>
+      <p>As glândulas suprarrenais (ou adrenais) ficam sobre o polo superior de cada rim. Cada glândula tem duas regiões funcionalmente distintas:</p>
+      <ul>
+        <li><strong>Córtex suprarrenal:</strong> parte externa, origem mesodérmica, produz hormônios esteroides</li>
+        <li><strong>Medula suprarrenal:</strong> parte interna, origem neuroectodérmica, produz catecolaminas</li>
+      </ul>
+
+      <h4>Hormônios do Córtex Suprarrenal</h4>
+      <table class="tabela">
+        <tr><th>Zona</th><th>Hormônio</th><th>Função</th></tr>
+        <tr><td>Zona glomerulosa</td><td><strong>Aldosterona</strong> (mineralocorticoide)</td><td>Retenção de Na⁺ e água, excreção de K⁺ — regula PA e volemia</td></tr>
+        <tr><td>Zona fasciculada</td><td><strong>Cortisol</strong> (glicocorticoide)</td><td>Resposta ao estresse, anti-inflamatório, eleva glicose, catabolismo proteico</td></tr>
+        <tr><td>Zona reticular</td><td><strong>DHEA</strong> (androgênio)</td><td>Precursor de hormônios sexuais</td></tr>
+      </table>
+
+      <h4>Cortisol — O Hormônio do Estresse</h4>
+      <p>O cortisol é liberado em resposta ao estresse físico e psicológico. Suas ações incluem:</p>
+      <ul>
+        <li><strong>Hiperglicemia:</strong> estimula gliconeogênese hepática e inibe captação de glicose periférica</li>
+        <li><strong>Catabolismo proteico:</strong> mobiliza aminoácidos dos músculos para gliconeogênese</li>
+        <li><strong>Lipólise central / lipogênese periférica:</strong> redistribuição de gordura (gordura visceral ↑)</li>
+        <li><strong>Anti-inflamatório:</strong> inibe fosfolipase A2, reduz prostaglandinas</li>
+        <li><strong>Imunossupressor</strong> em excesso crônico</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Hipercortisolismo (Síndrome de Cushing):</strong> Excesso de cortisol leva a obesidade central (acúmulo de gordura abdominal e cervical — "giba de búfalo"), hiperglicemia, hipertensão, osteoporose, fraqueza muscular e estrias violáceas. Muito cobrado em provas!</p>
+      </div>
+
+      <h4>Medula Suprarrenal — Adrenalina e Noradrenalina</h4>
+      <p>A medula produz <strong>adrenalina (~80%)</strong> e noradrenalina (~20%) em resposta à ativação simpática aguda. Seus efeitos são similares ao simpático: aumento de FC, pressão, glicose e broncodilatação.</p>
+    </div>
+  </div>
+
+  <!-- 10. PÂNCREAS ENDÓCRINO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🍬</div>
+      <div class="card-titulo">
+        <h3>Pâncreas Endócrino — Insulina e Glucagon</h3>
+        <p>Unidade 4 · Ilhotas de Langerhans e regulação da glicemia — MUITO cobrado</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Anatomia do Pâncreas</h4>
+      <p>O pâncreas é uma glândula mista (exócrina + endócrina), localizado no retroperitônio. A parte endócrina corresponde a apenas <strong>1–2% da massa pancreática</strong> e é formada pelas <strong>ilhotas de Langerhans</strong> (cerca de 1 milhão no pâncreas humano).</p>
+
+      <h4>Células das Ilhotas de Langerhans</h4>
+      <table class="tabela">
+        <tr><th>Célula</th><th>Hormônio</th><th>Função</th></tr>
+        <tr><td>Células β (beta) — 70%</td><td><strong>Insulina</strong></td><td>Reduz glicemia → entrada de glicose nas células</td></tr>
+        <tr><td>Células α (alfa) — 20%</td><td><strong>Glucagon</strong></td><td>Aumenta glicemia → glicogenólise e gliconeogênese hepática</td></tr>
+        <tr><td>Células δ (delta) — 5%</td><td><strong>Somatostatina</strong></td><td>Inibe insulina, glucagon e GH</td></tr>
+        <tr><td>Células PP — 5%</td><td><strong>Polipeptídeo pancreático</strong></td><td>Regula secreções digestivas</td></tr>
+      </table>
+
+      <h4>Insulina — O Hormônio Anabólico</h4>
+      <p>A insulina é secretada pelas células β em resposta à <strong>hiperglicemia pós-prandial</strong>. Suas ações:</p>
+      <ul>
+        <li>Aumenta captação de glicose por músculo e tecido adiposo (via receptor GLUT4)</li>
+        <li>Estimula glicogênese (armazenamento de glicose como glicogênio)</li>
+        <li>Estimula lipogênese (síntese de gordura)</li>
+        <li>Estimula síntese proteica (efeito anabólico)</li>
+        <li>Inibe glicogenólise, gliconeogênese e lipólise</li>
+      </ul>
+
+      <h4>Glucagon — O Hormônio Catabólico</h4>
+      <p>Secretado em resposta à <strong>hipoglicemia e ao jejum</strong>. Atua principalmente no fígado:</p>
+      <ul>
+        <li>Estimula glicogenólise (quebra do glicogênio → glicose)</li>
+        <li>Estimula gliconeogênese (síntese de glicose a partir de aminoácidos e glicerol)</li>
+        <li>Estimula cetogênese (produção de corpos cetônicos no jejum prolongado)</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Diabetes Mellitus e Nutrição:</strong> No DM1, as células β são destruídas (sem insulina). No DM2, há resistência à insulina + falência progressiva das células β. O nutricionista controla a glicemia pelo planejamento alimentar: índice glicêmico, carga glicêmica, distribuição de carboidratos nas refeições e adequação calórica.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Gônadas, pineal e integração neuroendócrina</div>
+  </div>
+
+  <!-- 11. GÔNADAS E PINEAL -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🔁</div>
+      <div class="card-titulo">
+        <h3>Gônadas, Timo e Glândula Pineal</h3>
+        <p>Unidade 4 · Hormônios sexuais, imunidade e ciclo circadiano</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Gônadas — Ovários e Testículos</h4>
+      <table class="tabela">
+        <tr><th>Glândula</th><th>Hormônios</th><th>Funções principais</th></tr>
+        <tr><td><strong>Ovários</strong></td><td>Estrogênio, progesterona, inibina</td><td>Ciclo menstrual, desenvolvimento feminino, gestação, saúde óssea</td></tr>
+        <tr><td><strong>Testículos</strong></td><td>Testosterona, inibina</td><td>Espermatogênese, desenvolvimento masculino, massa muscular, libido</td></tr>
+      </table>
+
+      <h4>Estrogênio e Saúde Óssea</h4>
+      <p>O estrogênio protege os ossos inibindo a atividade dos osteoclastos. Na menopausa, a queda do estrogênio leva a <strong>aumento da reabsorção óssea e risco de osteoporose</strong>. A nutrição adequada em cálcio e vitamina D é fundamental neste período.</p>
+
+      <h4>Glândula Pineal e Melatonina</h4>
+      <p>A glândula pineal (epífise) fica no epitálamo e produz <strong>melatonina</strong> — hormônio que regula o ciclo circadiano (ritmo sono-vigília). A melatonina é liberada no escuro e inibida pela luz. Possui ação antioxidante e imunomoduladora.</p>
+
+      <h4>Timo</h4>
+      <p>O timo é mais ativo na infância e involui após a puberdade. Produz <strong>timosinas</strong> que promovem a maturação dos linfócitos T — essenciais para imunidade celular. Sua involução está associada à redução da resposta imune com a idade.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Cronobiologia e Nutrição:</strong> O ciclo circadiano regula não só o sono, mas também o metabolismo. Comer em horários não condizentes com o ritmo biológico (trabalho noturno, jantar tardio) altera a sensibilidade à insulina e favorece ganho de peso. Conceito crescente na nutrição cronobiológica.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. INTEGRAÇÃO NEUROENDÓCRINA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔗</div>
+      <div class="card-titulo">
+        <h3>Integração Neuroendócrina e Aplicação Clínica</h3>
+        <p>Unidade 4 · Eixos hormonais, apetite, estresse e nutrição</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Regulação Hormonal do Apetite</h4>
+      <table class="tabela">
+        <tr><th>Hormônio</th><th>Origem</th><th>Efeito no apetite</th></tr>
+        <tr><td><strong>Leptina</strong></td><td>Tecido adiposo</td><td>Saciedade — sinaliza reserva energética para o hipotálamo</td></tr>
+        <tr><td><strong>Grelina</strong></td><td>Estômago (células oxínticas)</td><td>Fome — aumenta antes das refeições, cai após</td></tr>
+        <tr><td><strong>Insulina</strong></td><td>Pâncreas</td><td>Saciedade — atua no hipotálamo reduzindo apetite</td></tr>
+        <tr><td><strong>GLP-1</strong></td><td>Intestino delgado (células L)</td><td>Saciedade e redução do esvaziamento gástrico</td></tr>
+        <tr><td><strong>CCK</strong></td><td>Intestino delgado (células I)</td><td>Saciedade — estimula secreções pancreáticas e biliares</td></tr>
+        <tr><td><strong>Peptídeo YY</strong></td><td>Íleo e cólon</td><td>Saciedade pós-prandial</td></tr>
+        <tr><td><strong>Cortisol</strong></td><td>Suprarrenal</td><td>Aumenta apetite (especialmente por carboidratos e gordura)</td></tr>
+      </table>
+
+      <h4>Estresse Crônico e Ganho de Peso</h4>
+      <p>O estresse crônico eleva o cortisol de forma sustentada. Isso leva a:</p>
+      <ul>
+        <li>Aumento do apetite, especialmente por alimentos calóricos ("fome emocional")</li>
+        <li>Redistribuição da gordura para a região visceral (abdominal)</li>
+        <li>Resistência à insulina</li>
+        <li>Redução do GH e da testosterona (perda de massa muscular)</li>
+        <li>Disbiose intestinal (afeta eixo intestino-cérebro)</li>
+      </ul>
+
+      <h4>Eixos Hormonais Importantes para o Nutricionista</h4>
+      <ul>
+        <li><strong>Eixo Hipotálamo-Hipófise-Tireoide (HPT):</strong> regula metabolismo basal. Hipotireoidismo → ganho de peso, fadiga, constipação. Hipertireoidismo → perda de peso, taquicardia, diarreia.</li>
+        <li><strong>Eixo Hipotálamo-Hipófise-Adrenal (HPA):</strong> eixo do estresse. Ativação crônica → obesidade visceral, DM2, hipertensão.</li>
+        <li><strong>Eixo Intestino-Cérebro:</strong> microbiota → SNE → nervo vago → SNC → comportamento alimentar.</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Síndrome Metabólica:</strong> É a combinação de obesidade abdominal + hiperglicemia + dislipidemia + hipertensão. Envolve resistência à insulina, hipercortisolismo relativo e disfunção do eixo HPA. O nutricionista tem papel central no manejo desta condição.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Anatomia Humana Módulo 4</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">🧠 Sistema Nervoso</span>
+      <span class="chip chip-green">🔬 Sistema Endócrino</span>
+      <span class="chip chip-orange">⚙️ Integração Neuroendócrina</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+  <div id="bannerProgresso" class="banner-progresso" style="display:none">
+    <p>📌 Você tem progresso salvo neste simulado. Deseja continuar?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="continuarProgresso()">✅ Continuar</button>
+      <button onclick="descartarProgresso()" style="background:#dc2626">🗑️ Recomeçar</button>
+    </div>
+  </div>
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <div class="btn-export-group" style="justify-content:flex-end">
+      <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+      <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+    </div>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const STORAGE_KEY = 'quiz_anatomia_mod4_2025';
+
+const questoes = [
+  {
+    tema: 'Sistema Nervoso',
+    enunciado: 'Qual é a principal diferença entre o Sistema Nervoso Central (SNC) e o Sistema Nervoso Periférico (SNP)?',
+    opcoes: [
+      'O SNC é formado apenas pelo encéfalo; o SNP inclui a medula espinal.',
+      'O SNC é formado pelo encéfalo e medula espinal; o SNP inclui todos os nervos fora dessas estruturas.',
+      'O SNC controla apenas funções voluntárias; o SNP controla apenas funções involuntárias.',
+      'O SNC e o SNP têm exatamente as mesmas funções, diferindo apenas anatomicamente.'
+    ],
+    correta: 1,
+    gabarito: 'O SNC é composto pelo encéfalo + medula espinal (protegidos dentro do crânio e canal vertebral). O SNP inclui todos os nervos fora do SNC: 12 pares de nervos cranianos e 31 pares de nervos espinhais, além do sistema nervoso autônomo.'
+  },
+  {
+    tema: 'Medula Espinal',
+    enunciado: 'Um paciente sofre lesão no nível de C5. Quais seriam as consequências esperadas?',
+    opcoes: [
+      'Paralisia apenas dos membros inferiores, sem comprometimento dos superiores.',
+      'Comprometimento dos membros superiores e inferiores, com possível dificuldade respiratória.',
+      'Paralisia da região torácica apenas, sem comprometimento dos membros.',
+      'Afetaria apenas funções autonômicas, sem paralisia motora.'
+    ],
+    correta: 1,
+    gabarito: 'Lesão em C5 (segmento cervical 5) compromete o plexo braquial (C5–T1), afetando membros superiores. Como é acima de T1, também afeta os membros inferiores (tudo abaixo da lesão). Lesões acima de C4 podem comprometer o nervo frênico (C3-C5) e causar paralisia respiratória.'
+  },
+  {
+    tema: 'Encéfalo',
+    enunciado: 'O hipotálamo é fundamental para a regulação do apetite em nutrição. Qual das afirmações sobre sua função é CORRETA?',
+    opcoes: [
+      'O hipotálamo apenas regula a temperatura corporal, sem relação com fome e saciedade.',
+      'O hipotálamo processa sinais de hormônios como leptina e grelina, integrando informações de fome e saciedade.',
+      'O hipotálamo estimula o apetite apenas por via neuronal, sem interação com hormônios.',
+      'A regulação do apetite pelo hipotálamo ocorre exclusivamente pelo lobo frontal do córtex cerebral.'
+    ],
+    correta: 1,
+    gabarito: 'O hipotálamo é o centro integrador do apetite. Seus núcleos (especialmente arqueado e paraventricular) recebem sinais hormonais de leptina (saciedade), grelina (fome), insulina, GLP-1 e CCK. O núcleo arqueado contém neurônios NPY/AgRP (orexígenos) e POMC/CART (anorexígenos), que regulam o balanço energético.'
+  },
+  {
+    tema: 'Encéfalo',
+    enunciado: 'A área de Broca, responsável pela produção da linguagem, localiza-se em qual lobo cerebral?',
+    opcoes: [
+      'Lobo parietal esquerdo',
+      'Lobo occipital direito',
+      'Lobo frontal esquerdo',
+      'Lobo temporal direito'
+    ],
+    correta: 2,
+    gabarito: 'A área de Broca está no giro frontal inferior do lobo frontal esquerdo (em destros). É responsável pela expressão (produção) da linguagem. A área de Wernicke, no lobo temporal esquerdo, é responsável pela compreensão da linguagem. Lesão em Broca = afasia expressiva (paciente entende mas não fala). Lesão em Wernicke = afasia receptiva (fala fluente mas sem sentido).'
+  },
+  {
+    tema: 'Neurônio',
+    enunciado: 'A bainha de mielina tem papel fundamental na transmissão nervosa. Qual célula produz mielina no Sistema Nervoso Central (SNC)?',
+    opcoes: [
+      'Célula de Schwann',
+      'Astrócito',
+      'Microglia',
+      'Oligodendrócito'
+    ],
+    correta: 3,
+    gabarito: 'Os oligodendrócitos produzem mielina no SNC — cada um pode mielinizar vários axônios simultaneamente. No SNP, as células de Schwann produzem mielina — mas cada célula envolve apenas um axônio. A esclerose múltipla é uma doença desmielinizante do SNC, onde os oligodendrócitos são atacados pelo sistema imune.'
+  },
+  {
+    tema: 'SNA',
+    enunciado: 'Durante uma refeição, qual divisão do Sistema Nervoso Autônomo predomina e quais são seus efeitos sobre o trato gastrointestinal?',
+    opcoes: [
+      'Simpático — aumenta o peristaltismo e estimula secreções digestivas.',
+      'Parassimpático — aumenta o peristaltismo, estimula secreções gástricas e pancreáticas, e relaxa os esfíncteres.',
+      'Simpático — reduz a FC e aumenta o fluxo sanguíneo para o TGI.',
+      'Parassimpático — inibe a digestão para poupar energia durante a alimentação.'
+    ],
+    correta: 1,
+    gabarito: 'Durante a alimentação, o parassimpático ("repouso e digestão") predomina. O nervo vago estimula peristaltismo, secreção de ácido gástrico e enzimas pancreáticas, e abertura dos esfíncteres. O simpático tem efeito oposto: inibe a digestão, contrai esfíncteres e redireciona sangue para os músculos.'
+  },
+  {
+    tema: 'SNA',
+    enunciado: 'O Sistema Nervoso Entérico (SNE) é denominado "segundo cérebro" porque:',
+    opcoes: [
+      'Possui apenas 10 neurônios, número muito inferior ao da medula.',
+      'Controla exclusivamente funções cognitivas do intestino.',
+      'Contém mais de 100 milhões de neurônios e pode funcionar de forma independente do SNC, regulando motilidade e secreções digestivas.',
+      'É uma extensão direta do cérebro, conectado por nervos cranianos diretos.'
+    ],
+    correta: 2,
+    gabarito: 'O SNE possui mais de 100 milhões de neurônios (mais que a medula espinal) organizados em dois plexos: mioentérico (Auerbach, controla motilidade) e submucoso (Meissner, controla secreções). Pode funcionar autonomamente mesmo após secção do nervo vago. Produz 90% da serotonina do organismo, influenciando humor e comportamento.'
+  },
+  {
+    tema: 'Sistema Endócrino',
+    enunciado: 'O eixo hipotálamo-hipófise funciona por um mecanismo de feedback negativo. Qual a sequência correta para o eixo HPT (hipotálamo-hipófise-tireoide)?',
+    opcoes: [
+      'Hipófise → TSH → Hipotálamo → TRH → Tireoide → T3/T4',
+      'Hipotálamo → TRH → Hipófise → TSH → Tireoide → T3/T4 (que inibem hipotálamo e hipófise)',
+      'Tireoide → T3/T4 → Hipofise → TRH → Hipotálamo → TSH',
+      'Hipotálamo → TSH → Hipófise → TRH → Tireoide → T3/T4'
+    ],
+    correta: 1,
+    gabarito: 'O eixo HPT funciona assim: Hipotálamo libera TRH → Hipófise libera TSH → Tireoide produz T3 e T4 → T3/T4 altos inibem tanto o hipotálamo (menos TRH) quanto a hipófise (menos TSH) — feedback negativo. No hipotireoidismo, T3/T4 baixos → TSH alto (diagnóstico laboratorial).'
+  },
+  {
+    tema: 'Hipófise',
+    enunciado: 'O ADH (hormônio antidiurético) é produzido pelo hipotálamo e armazenado na neuro-hipófise. Qual é seu mecanismo de ação e quando é liberado?',
+    opcoes: [
+      'ADH promove excreção renal de água e é liberado quando a pressão arterial está alta.',
+      'ADH aumenta a reabsorção de água nos túbulos renais e é liberado em resposta à hiperosmolaridade plasmática ou hipovolemia.',
+      'ADH estimula a produção de urina concentrada inibindo os aquaporins renais.',
+      'ADH é liberado apenas em situações de hiperhidratação para reduzir o volume plasmático.'
+    ],
+    correta: 1,
+    gabarito: 'O ADH (vasopressina) age nos túbulos coletores renais, inserindo aquaporinas (canais de água) que aumentam a reabsorção de água → urina concentrada. É liberado quando osmorreceptores hipotalâmicos detectam hiperosmolaridade (plasma concentrado) ou quando barorreceptores detectam hipovolemia. Deficiência de ADH causa diabetes insipidus (poliúria + polidipsia sem glicosúria).'
+  },
+  {
+    tema: 'Hipófise',
+    enunciado: 'Qual hormônio hipofisário tem secreção estimulada pelo jejum e pelo exercício físico intenso, e é INIBIDO pela hiperglicemia?',
+    opcoes: [
+      'TSH (hormônio tireoestimulante)',
+      'ACTH (hormônio adrenocorticotrófico)',
+      'GH (hormônio do crescimento)',
+      'Prolactina'
+    ],
+    correta: 2,
+    gabarito: 'O GH (somatotrofina) é estimulado por jejum, exercício intenso, hipoglicemia, sono profundo e estresse. É inibido por hiperglicemia e IGF-1 (feedback). O GH promove crescimento ósseo e muscular (via IGF-1), lipólise (queima de gordura) e hiperglicemia (efeito diabetogênico). Por isso, pacientes com acromegalia (excesso de GH) frequentemente desenvolvem DM2.'
+  },
+  {
+    tema: 'Tireoide',
+    enunciado: 'Uma paciente de 35 anos apresenta ganho de peso, fadiga, intolerância ao frio, constipação e TSH elevado. O diagnóstico mais provável e a principal causa nutricional associada são:',
+    opcoes: [
+      'Hipertireoidismo — excesso de iodo na dieta.',
+      'Hipotireoidismo — deficiência de iodo (ou doença de Hashimoto), levando à queda de T3/T4 e elevação compensatória do TSH.',
+      'Síndrome de Cushing — deficiência de vitamina D.',
+      'Acromegalia — excesso de GH inibindo a produção de T3/T4.'
+    ],
+    correta: 1,
+    gabarito: 'TSH elevado + sintomas de queda metabólica = hipotireoidismo. O TSH alto é a resposta compensatória da hipófise à baixa de T3/T4 (feedback negativo quebrado). A principal causa nutricional é deficiência de iodo (necessário para síntese de T3/T4). A doença de Hashimoto (autoimune) é a causa mais comum nos países com iodação do sal. Tratamento: levotiroxina (T4 sintético) + dieta adequada em iodo, selênio e zinco.'
+  },
+  {
+    tema: 'Tireoide',
+    enunciado: 'A calcitonina e o PTH (paratormônio) regulam o cálcio sérico de forma antagônica. Qual é a relação correta entre eles?',
+    opcoes: [
+      'Calcitonina e PTH ambos aumentam o cálcio sérico por mecanismos diferentes.',
+      'Calcitonina reduz o cálcio sérico (inibe osteoclastos); PTH aumenta o cálcio sérico (ativa osteoclastos, reabsorção renal de Ca²⁺ e ativa vitamina D).',
+      'PTH reduz o cálcio sérico e calcitonina aumenta, sendo ambos produzidos pela tireoide.',
+      'Calcitonina é produzida pela paratireoide e PTH pela tireoide, com efeitos opostos sobre o fósforo.'
+    ],
+    correta: 1,
+    gabarito: 'Calcitonina (células C da tireoide): hipercalcemia → calcitonina ↑ → inibe osteoclastos → menos reabsorção óssea → Ca²⁺ sérico cai. PTH (paratireoide): hipocalcemia → PTH ↑ → ativa osteoclastos + reabsorção renal de Ca²⁺ + ativa 1-alfa-hidroxilase renal (ativa vitamina D) → absorção intestinal de Ca²⁺ aumenta → Ca²⁺ sérico sobe.'
+  },
+  {
+    tema: 'Suprarrenal',
+    enunciado: 'Qual é o principal glicocorticoide produzido pelo córtex suprarrenal e quais são suas ações sobre o metabolismo de carboidratos?',
+    opcoes: [
+      'Aldosterona — promove retenção de sódio e secreção de potássio.',
+      'Adrenalina — aumenta a FC e promove glicogenólise muscular.',
+      'Cortisol — estimula gliconeogênese hepática e inibe captação periférica de glicose, aumentando a glicemia.',
+      'DHEA — promove síntese proteica e reduz a glicemia após as refeições.'
+    ],
+    correta: 2,
+    gabarito: 'O cortisol é o principal glicocorticoide. Sobre o metabolismo: estimula gliconeogênese no fígado (usa aminoácidos vindos do catabolismo muscular), inibe captação de glicose pelo músculo e tecido adiposo (resistência à insulina), e estimula glicogenólise. Resultado: hiperglicemia. Por isso, uso crônico de corticoides pode causar DM esteroide. Também promove redistribuição de gordura para região central (obesidade centrípeta).'
+  },
+  {
+    tema: 'Suprarrenal',
+    enunciado: 'A Síndrome de Cushing é causada por hipercortisolismo crônico. Qual conjunto de sinais e sintomas é característico desta síndrome?',
+    opcoes: [
+      'Perda de peso, hipotensão, hipoglicemia e hiperpigmentação da pele.',
+      'Obesidade central, hipertensão, hiperglicemia, estrias violáceas, osteoporose e fraqueza muscular proximal.',
+      'Perda de peso, taquicardia, exoftalmia e intolerância ao calor.',
+      'Hipoglicemia, hipotensão postural, fadiga extrema e hiponatremia.'
+    ],
+    correta: 1,
+    gabarito: 'Síndrome de Cushing (excesso de cortisol): obesidade centrípeta (face de lua cheia, giba de búfalo, abdome protuberante), hipertensão (cortisol tem ação mineralocorticoide), hiperglicemia/DM, osteoporose (catabolismo ósseo), fraqueza muscular proximal (catabolismo proteico), estrias violáceas largas, pele fina, acne, e imunossupressão. CONTRASTE com Addison: deficiência de cortisol → hipotensão, hipoglicemia, hiperpigmentação.'
+  },
+  {
+    tema: 'Pâncreas Endócrino',
+    enunciado: 'As células beta das ilhotas de Langerhans produzem insulina. Quais são os principais estímulos para sua secreção?',
+    opcoes: [
+      'Hipoglicemia, jejum prolongado e atividade física intensa.',
+      'Hiperglicemia pós-prandial, aminoácidos (especialmente leucina e arginina), GLP-1 e CCK.',
+      'Adrenalina, glucagon e somatostatina.',
+      'Apenas a glicose sanguínea; aminoácidos e hormônios intestinais não influenciam a secreção de insulina.'
+    ],
+    correta: 1,
+    gabarito: 'Os principais estímulos para secreção de insulina são: hiperglicemia (principal), aminoácidos (especialmente leucina e arginina — por isso proteínas também estimulam insulina), GLP-1 e GIP (incretinas liberadas pelo intestino após refeição), CCK e estímulo vagal (parassimpático). A adrenalina INIBE a secreção de insulina (simpático prepara para fuga, não digestão). Glucagon e somatostatina também inibem via efeito parácrino local nas ilhotas.'
+  },
+  {
+    tema: 'Pâncreas Endócrino',
+    enunciado: 'No jejum prolongado, qual hormônio pancreático predomina e quais são seus efeitos metabólicos no fígado?',
+    opcoes: [
+      'Insulina — estimula glicogênese e lipogênese para armazenar energia.',
+      'Somatostatina — inibe tanto insulina quanto glucagon, mantendo a glicemia estável.',
+      'Glucagon — estimula glicogenólise e gliconeogênese hepática, elevando a glicemia; em jejum prolongado também estimula cetogênese.',
+      'Insulina — estimula gliconeogênese para fornecer glicose ao cérebro.'
+    ],
+    correta: 2,
+    gabarito: 'No jejum, a hipoglicemia estimula as células alfa a secretar glucagon. No fígado, o glucagon ativa: (1) glicogenólise — quebra do glicogênio hepático → glicose (dura ~4-6h de jejum); (2) gliconeogênese — síntese de glicose a partir de aminoácidos, glicerol e lactato (jejum prolongado); (3) cetogênese — produção de corpos cetônicos (acetoacetato, β-hidroxibutirato) a partir de ácidos graxos, especialmente em jejum >24h.'
+  },
+  {
+    tema: 'Pâncreas Endócrino',
+    enunciado: 'Qual é a principal diferença fisiopatológica entre o Diabetes Mellitus tipo 1 (DM1) e tipo 2 (DM2)?',
+    opcoes: [
+      'No DM1, há resistência à insulina; no DM2, há destruição autoimune das células beta.',
+      'No DM1, há destruição autoimune das células beta (ausência de insulina); no DM2, há resistência à insulina com falência progressiva das células beta.',
+      'O DM1 acomete exclusivamente adultos obesos; o DM2 acomete exclusivamente crianças magras.',
+      'Não há diferença fisiopatológica, apenas de tratamento: DM1 usa metformina e DM2 usa insulina.'
+    ],
+    correta: 1,
+    gabarito: 'DM1: destruição autoimune das células beta → produção de insulina praticamente zero → hiperglicemia → cetoacidose diabética (principal complicação aguda). Tratamento: insulinoterapia obrigatória. DM2: resistência periférica à insulina (músculo, fígado, adipócitos não respondem bem) + falência progressiva das células beta. Inicialmente compensado por hiperinsulinemia. Tratamento: mudança de estilo de vida, metformina, e insulina em fases avançadas.'
+  },
+  {
+    tema: 'Integração Neuroendócrina',
+    enunciado: 'A leptina é produzida pelo tecido adiposo e atua no hipotálamo sinalizando saciedade. Em indivíduos obesos com excesso de tecido adiposo, o que seria esperado em relação à leptina?',
+    opcoes: [
+      'Níveis muito baixos de leptina, causando fome constante por falta do sinal de saciedade.',
+      'Níveis elevados de leptina, mas com resistência hipotalâmica ao seu sinal (resistência à leptina), resultando em hiperfagia apesar dos altos níveis hormonais.',
+      'Níveis normais de leptina, pois a obesidade não altera sua produção.',
+      'Ausência total de leptina, já que as células adiposas deixam de produzi-la na obesidade.'
+    ],
+    correta: 1,
+    gabarito: 'Na obesidade, o tecido adiposo aumentado produz MAIS leptina — porém os receptores hipotalâmicos se tornam resistentes ao sinal (similar à resistência insulínica). O hipotálamo não detecta a mensagem de saciedade apesar dos altos níveis circulantes. Isso perpetua o ciclo de hiperfagia. A resistência à leptina é mediada por inflamação (IL-6, TNF-alfa) e excesso de ácidos graxos que prejudicam a sinalização do receptor.'
+  },
+  {
+    tema: 'Integração Neuroendócrina',
+    enunciado: 'O estresse crônico eleva o cortisol de forma sustentada. Qual dos seguintes efeitos NÃO está relacionado ao hipercortisolismo crônico?',
+    opcoes: [
+      'Aumento do apetite, especialmente por alimentos ricos em açúcar e gordura.',
+      'Acúmulo de gordura visceral e resistência à insulina.',
+      'Aumento da massa muscular por estimulação anabólica crônica do cortisol.',
+      'Disbiose intestinal por alteração do eixo intestino-cérebro e da microbiota.'
+    ],
+    correta: 2,
+    gabarito: 'O cortisol em excesso crônico é CATABÓLICO para músculos (mobiliza aminoácidos para gliconeogênese), NÃO anabólico. Os demais efeitos estão corretos: hipercortisolismo aumenta apetite (especialmente por carboidratos e gorduras processadas), promove gordura visceral, causa resistência à insulina e altera a microbiota intestinal. O exercício físico e o sono adequado são estratégias nutricionais e comportamentais para reduzir o cortisol basal.'
+  },
+  {
+    tema: 'Gônadas',
+    enunciado: 'Na menopausa, a queda do estrogênio tem impacto direto sobre o tecido ósseo. Qual é o mecanismo desta relação?',
+    opcoes: [
+      'O estrogênio estimula osteoclastos, então sua queda reduz a reabsorção óssea e protege os ossos.',
+      'O estrogênio inibe osteoclastos. Sua queda na menopausa desinibe os osteoclastos, aumentando a reabsorção óssea e o risco de osteoporose.',
+      'O estrogênio não tem relação direta com o metabolismo ósseo — a osteoporose pós-menopausa é causada apenas pela deficiência de cálcio.',
+      'O estrogênio estimula osteoblastos e sua queda aumenta a formação óssea como mecanismo compensatório.'
+    ],
+    correta: 1,
+    gabarito: 'O estrogênio inibe a diferenciação e atividade dos osteoclastos (células que reabsorvem osso). Na menopausa, a queda do estrogênio desinibe osteoclastos → reabsorção óssea acelera → perda de massa óssea → osteoporose. O nutricionista deve garantir ingestão adequada de cálcio (1200 mg/dia pós-menopausa), vitamina D (600–800 UI/dia) e proteína para preservar a massa óssea. Exercícios com impacto também são fundamentais.'
+  },
+  {
+    tema: 'Neurônio',
+    enunciado: 'A serotonina é um neurotransmissor produzido principalmente no intestino. Qual é sua relevância para a nutrição clínica?',
+    opcoes: [
+      'A serotonina não tem relação com nutrição — é exclusivamente um neurotransmissor do SNC relacionado ao humor.',
+      'Aproximadamente 90% da serotonina é produzida no TGI pelo SNE; ela regula motilidade intestinal, apetite, humor e sono. Sua síntese depende do aminoácido triptofano.',
+      'A serotonina é produzida exclusivamente no cérebro a partir de fenilalanina e não tem relação com a alimentação.',
+      'A serotonina intestinal age exclusivamente sobre receptores locais, sem efeito sistêmico sobre apetite ou humor.'
+    ],
+    correta: 1,
+    gabarito: 'Cerca de 90–95% da serotonina corporal é produzida pelas células enterocromafins do intestino. No TGI, regula peristaltismo e secreções. No SNC, regula humor, sono, comportamento alimentar e sensação de saciedade. Sua síntese depende de TRIPTOFANO (aminoácido essencial). Dietas ricas em triptofano (ovos, laticínios, leguminosas, banana) e carboidratos (que facilitam entrada do triptofano no cérebro) podem aumentar a síntese de serotonina cerebral.'
+  },
+  {
+    tema: 'Sistema Nervoso',
+    enunciado: 'O nervo vago (X par craniano) é fundamental para a digestão. Qual é seu papel no eixo intestino-cérebro?',
+    opcoes: [
+      'O nervo vago é exclusivamente motor — inerva músculos da deglutição, sem papel na regulação do TGI.',
+      'O nervo vago conduz informações sensoriais do TGI para o cérebro (90% das fibras são aferentes) e sinais motores do cérebro para o TGI, sendo a principal via do eixo intestino-cérebro.',
+      'O nervo vago atua apenas na regulação cardíaca, sem relação com o sistema digestório.',
+      'O nervo vago é exclusivamente simpático, inibindo a digestão durante situações de estresse.'
+    ],
+    correta: 1,
+    gabarito: 'O nervo vago é o principal componente do eixo intestino-cérebro. Curiosamente, 80–90% de suas fibras são AFERENTES (do intestino para o cérebro), transmitindo informações sobre o estado do TGI, microbiota e hormônios intestinais (GLP-1, grelina, CCK). Apenas 10–20% são eferentes (do cérebro para o TGI), regulando motilidade e secreções. A microbiota intestinal influencia o humor e comportamento em parte via nervo vago.'
+  },
+  {
+    tema: 'Suprarrenal',
+    enunciado: 'A aldosterona, mineralocorticoide produzido pela zona glomerulosa da suprarrenal, regula o equilíbrio eletrolítico. Qual é seu mecanismo de ação?',
+    opcoes: [
+      'Aldosterona promove excreção de sódio e retenção de potássio nos túbulos renais.',
+      'Aldosterona estimula a reabsorção de sódio (Na⁺) e água e a excreção de potássio (K⁺) e H⁺ nos túbulos renais distais e coletores, aumentando a pressão arterial.',
+      'Aldosterona age no fígado estimulando gliconeogênese, sem efeito direto nos rins.',
+      'Aldosterona é estimulada por hipercalemia e atua apenas no intestino, aumentando absorção de sódio.'
+    ],
+    correta: 1,
+    gabarito: 'A aldosterona age nos túbulos renais distais e coletores: aumenta reabsorção de Na⁺ (e água segue por osmose → maior volemia → maior PA) e excreção de K⁺ e H⁺. É estimulada pelo sistema renina-angiotensina-aldosterona (SRAA) em resposta à hipovolemia ou hipotensão. Hipercortisolismo (Cushing) pode simular hiperaldosteronismo. Excesso de aldosterona (Conn) → hipertensão + hipocalemia.'
+  },
+  {
+    tema: 'Sistema Endócrino',
+    enunciado: 'A melatonina produzida pela glândula pineal regula o ciclo circadiano. Qual é sua relação com a nutrição cronobiológica?',
+    opcoes: [
+      'A melatonina não tem relação com o metabolismo ou com hábitos alimentares.',
+      'A melatonina é liberada apenas durante o dia em resposta à luz solar, estimulando o apetite diurno.',
+      'A melatonina é liberada à noite (no escuro) e regula o metabolismo energético; comer em horários inadequados (como jantas tardias) pode alterar a sensibilidade à insulina e favorecer ganho de peso.',
+      'A melatonina estimula a liberação de insulina no período noturno, aumentando a captação de glicose durante o sono.'
+    ],
+    correta: 2,
+    gabarito: 'A melatonina é secretada à noite pela glândula pineal, inibida pela luz. Ela sincroniza relógios biológicos periféricos (fígado, pâncreas, tecido adiposo). Trabalho noturno, exposição à luz artificial à noite e alimentação em horários discordantes do ritmo circadiano (jantar tardio, comer à noite) alteram esses ritmos → pior controle glicêmico, maior ganho de peso e risco metabólico. Conceito fundamental da cronobiologia nutricional.'
+  },
+  {
+    tema: 'Integração Neuroendócrina',
+    enunciado: 'A síndrome metabólica é um conjunto de alterações clínicas e metabólicas interligadas. Quais dos seguintes critérios diagnósticos fazem parte da síndrome metabólica?',
+    opcoes: [
+      'Hipertensão arterial, hipoglicemia de jejum, baixo LDL e circunferência abdominal reduzida.',
+      'Obesidade abdominal (circunferência aumentada), hiperglicemia de jejum, dislipidemia (TG alto e HDL baixo) e hipertensão arterial.',
+      'Baixo peso corporal, hipotireoidismo, anemia e hipertensão.',
+      'DM1, hiperlipidemia familiar e pressão normal com obesidade periférica.'
+    ],
+    correta: 1,
+    gabarito: 'Os critérios da síndrome metabólica (IDF/NCEP-ATPIII) incluem: (1) circunferência abdominal aumentada (>88cm mulheres, >102cm homens), (2) glicemia de jejum ≥100 mg/dL ou DM2, (3) TG ≥150 mg/dL, (4) HDL baixo (<40 H / <50 M), (5) PA ≥130/85 mmHg. Necessário ≥3 critérios. O eixo HPA ativado cronicamente (cortisol alto), resistência à insulina e disfunção hipotalâmica são centrais na fisiopatologia. O nutricionista é essencial no tratamento.'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = {};
+
+function salvarProgresso() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ questaoAtual, acertos, erros, respondidas }));
+  } catch(e) {}
+}
+
+function carregarProgresso() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && data.respondidas && Object.keys(data.respondidas).length > 0) {
+        return data;
+      }
+    }
+  } catch(e) {}
+  return null;
+}
+
+function continuarProgresso() {
+  const saved = carregarProgresso();
+  if (saved) {
+    questaoAtual = saved.questaoAtual || 0;
+    acertos = saved.acertos || 0;
+    erros = saved.erros || 0;
+    respondidas = saved.respondidas || {};
+  }
+  document.getElementById('bannerProgresso').style.display = 'none';
+  renderizarQuestao();
+}
+
+function descartarProgresso() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  document.getElementById('bannerProgresso').style.display = 'none';
+  renderizarQuestao();
+}
+
+function iniciarQuiz() {
+  const saved = carregarProgresso();
+  if (saved) {
+    document.getElementById('bannerProgresso').style.display = 'flex';
+    renderizarQuestao();
+    Object.keys(saved.respondidas).forEach(i => {
+      const q = questoes[i];
+      const resp = saved.respondidas[i];
+    });
+  } else {
+    renderizarQuestao();
+  }
+}
+
+function renderizarQuestao() {
+  const container = document.getElementById('quiz-container');
+
+  if (questaoAtual >= questoes.length) {
+    mostrarResultado();
+    return;
+  }
+
+  const q = questoes[questaoAtual];
+  const jaRespondida = respondidas[questaoAtual] !== undefined;
+  const respostaDada = respondidas[questaoAtual];
+  const letras = ['A','B','C','D'];
+
+  const card = document.createElement('div');
+  card.className = 'questao-card' + (jaRespondida ? (respostaDada === q.correta ? ' acertou' : ' errou') : '');
+  card.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">📝 Questão ${questaoAtual + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn ${jaRespondida ? (i === q.correta ? 'correta' : (i === respostaDada ? 'incorreta' : '')) : ''}"
+        onclick="responder(${i})" ${jaRespondida ? 'disabled' : ''}>
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito ${jaRespondida ? (respostaDada === q.correta ? 'show-acertou' : 'show-errou') : ''}">
+      ${jaRespondida ? (respostaDada === q.correta ? '✅ Correto! ' : '❌ Incorreto. ') + q.gabarito : q.gabarito}
+    </div>
+  `;
+
+  container.innerHTML = '';
+  container.appendChild(card);
+
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = !jaRespondida;
+}
+
+function responder(indice) {
+  if (respondidas[questaoAtual] !== undefined) return;
+
+  const q = questoes[questaoAtual];
+  respondidas[questaoAtual] = indice;
+
+  if (indice === q.correta) {
+    acertos++;
+  } else {
+    erros++;
+  }
+
+  salvarProgresso();
+  renderizarQuestao();
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  salvarProgresso();
+  renderizarQuestao();
+  window.scrollTo({ top: document.getElementById('quiz-container').offsetTop - 80, behavior: 'smooth' });
+}
+
+function atualizarProgresso() {
+  const respondidas_count = Object.keys(respondidas).length;
+  const pct = Math.round((respondidas_count / questoes.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas_count + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const total = questoes.length;
+  const taxa = Math.round((acertos / total) * 100);
+  let emoji = '🏆';
+  let msg = 'Excelente! Você domina a matéria!';
+  if (taxa < 50) { emoji = '📚'; msg = 'Continue estudando! Revise os cards de resumo.'; }
+  else if (taxa < 70) { emoji = '💪'; msg = 'Bom progresso! Revise os tópicos errados.'; }
+  else if (taxa < 90) { emoji = '🌟'; msg = 'Muito bem! Quase lá — reforce os pontos perdidos.'; }
+
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Simulado de Anatomia Humana — Módulo 4 · Sistema Neuroendócrino</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${taxa}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+      <div class="btn-export-group">
+        <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+        <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+      </div>
+    </div>
+  `;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = {};
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  document.getElementById('btn-proximo').disabled = true;
+  renderizarQuestao();
+}
+
+function exportarPDF() {
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  const letras = ['A','B','C','D'];
+
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Resultado — Anatomia Humana Módulo 4</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px; color: #1a2e1f; }
+    h1 { color: #2d6a4f; font-size: 22px; margin-bottom: 4px; }
+    .sub { color: #7a8a7c; font-size: 13px; margin-bottom: 24px; }
+    .stats { display: flex; gap: 20px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 20px; text-align: center; min-width: 100px; }
+    .stat-val { font-size: 28px; font-weight: 800; color: #2d6a4f; }
+    .stat-label { font-size: 11px; text-transform: uppercase; color: #7a8a7c; letter-spacing: 1px; }
+    .stat.err { background: #fff5f5; border-color: #fecaca; } .stat.err .stat-val { color: #dc2626; }
+    .stat.pct { background: #fefce8; border-color: #fde68a; } .stat.pct .stat-val { color: #ca8a04; }
+    .questao { margin-bottom: 20px; padding: 16px; border-radius: 8px; border: 1px solid #e0ebe0; page-break-inside: avoid; }
+    .questao.acertou { background: #f0fdf4; border-color: #86efac; }
+    .questao.errou { background: #fff5f5; border-color: #fca5a5; }
+    .q-num { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #7a8a7c; margin-bottom: 6px; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2e1f; margin-bottom: 10px; line-height: 1.5; }
+    .q-resp { font-size: 13px; margin-bottom: 4px; }
+    .q-resp.certa { color: #16a34a; font-weight: 700; }
+    .q-resp.errada { color: #dc2626; font-weight: 700; text-decoration: line-through; }
+    .q-gabarito { font-size: 12px; color: #2d6a4f; background: #f0fdf4; border-radius: 6px; padding: 8px 12px; margin-top: 8px; line-height: 1.5; }
+    .rodape { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e0ebe0; font-size: 12px; color: #9ca3af; text-align: center; }
+    @media print { body { padding: 16px; } }
+  </style></head><body>
+  <h1>📊 Resultado do Simulado</h1>
+  <div class="sub">Anatomia Humana — Módulo 4 · Sistema Neuroendócrino · ${data} às ${hora}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${acertos}</div><div class="stat-label">Acertos</div></div>
+    <div class="stat err"><div class="stat-val">${erros}</div><div class="stat-label">Erros</div></div>
+    <div class="stat pct"><div class="stat-val">${taxa}%</div><div class="stat-label">Aproveitamento</div></div>
+    <div class="stat"><div class="stat-val">${questoes.length}</div><div class="stat-label">Total</div></div>
+  </div>
+  ${questoes.map((q, i) => {
+    const resp = respondidas[i];
+    const acertou = resp === q.correta;
+    return `
+    <div class="questao ${resp !== undefined ? (acertou ? 'acertou' : 'errou') : ''}">
+      <div class="q-num">Questão ${i+1} · ${q.tema} · ${resp !== undefined ? (acertou ? '✅ Correta' : '❌ Incorreta') : '⚪ Não respondida'}</div>
+      <div class="q-text">${q.enunciado}</div>
+      ${q.opcoes.map((op,oi) => `<div class="q-resp ${oi===q.correta ? 'certa' : (oi===resp && !acertou ? 'errada' : '')}">${letras[oi]}) ${op}</div>`).join('')}
+      <div class="q-gabarito">💬 ${q.gabarito}</div>
+    </div>`;
+  }).join('')}
+  <div class="rodape">Nutri Amorim · Anatomia Humana Módulo 4 · Gerado em ${data}</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 600);
+}
+
+function exportarExcel() {
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const letras = ['A','B','C','D'];
+
+  let csv = '\uFEFF';
+  csv += `Matéria;Anatomia Humana — Módulo 4\n`;
+  csv += `Data;${data}\n`;
+  csv += `Acertos;${acertos}\n`;
+  csv += `Erros;${erros}\n`;
+  csv += `Total;${questoes.length}\n`;
+  csv += `Aproveitamento;${taxa}%\n\n`;
+  csv += `Nº;Tema;Enunciado;Sua Resposta;Resposta Correta;Resultado;Gabarito\n`;
+
+  questoes.forEach((q, i) => {
+    const resp = respondidas[i];
+    const acertou = resp === q.correta;
+    const respostaTexto = resp !== undefined ? `${letras[resp]}) ${q.opcoes[resp]}` : 'Não respondida';
+    const certaTexto = `${letras[q.correta]}) ${q.opcoes[q.correta]}`;
+    const resultado = resp !== undefined ? (acertou ? 'Correta' : 'Incorreta') : 'Não respondida';
+    const enunciado = q.enunciado.replace(/;/g, ',').replace(/\n/g,'');
+    const gabarito = q.gabarito.replace(/;/g, ',').replace(/\n/g,'');
+    csv += `${i+1};"${q.tema}";"${enunciado}";"${respostaTexto}";"${certaTexto}";"${resultado}";"${gabarito}"\n`;
+  });
+
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resultado_anatomia_modulo4_${data.replace(/\//g,'-')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Inicializar
+iniciarQuiz();
+</script>
+</body>
+</html>
