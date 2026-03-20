@@ -249,11 +249,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
 </div>
 
 <div class="tabs-nav">
-  <div class="tab-btn active" onclick="showPanel('flashcards')">🃏 Flashcards</div>
-  <div class="tab-btn" onclick="showPanel('revisao')">📅 Revisão Espaçada</div>
-  <div class="tab-btn" onclick="showPanel('modo-estudo')">📝 Modo Estudo</div>
-  <div class="tab-btn" onclick="showPanel('simulado')">🎯 Simulado Geral</div>
-  <div class="tab-btn" onclick="showPanel('progresso')">📊 Meu Progresso</div>
+  <div class="tab-btn active" onclick="showPanel('flashcards', this)">🃏 Flashcards</div>
+  <div class="tab-btn" onclick="showPanel('revisao', this)">📅 Revisão Espaçada</div>
+  <div class="tab-btn" onclick="showPanel('modo-estudo', this)">📝 Modo Estudo</div>
+  <div class="tab-btn" onclick="showPanel('simulado', this)">🎯 Simulado Geral</div>
+  <div class="tab-btn" onclick="showPanel('progresso', this)">📊 Meu Progresso</div>
 </div>
 
 <!-- ══════ FLASHCARDS ══════ -->
@@ -489,6 +489,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     <span style="font-size:20px">⚠️</span>
     <div style="font-size:13px;color:#92400e">Os dados de progresso são baseados nos quizzes realizados nas páginas de cada matéria e nos simulados feitos aqui. Faça os quizzes para ver os dados aparecerem!</div>
   </div>
+
+  <div style="margin-top:20px;display:flex;justify-content:flex-end;">
+    <button class="btn-verde" onclick="exportarPDF()" style="display:flex;align-items:center;gap:8px;padding:13px 28px;font-size:15px;border-radius:12px;">
+      ⬇️ Baixar Relatório de Desempenho (PDF)
+    </button>
+  </div>
 </div>
 
 <script>
@@ -649,11 +655,11 @@ const MATERIAS = {
 // ═══════════════════════════════════════════════
 // NAVEGAÇÃO DE PAINÉIS
 // ═══════════════════════════════════════════════
-function showPanel(id) {
+function showPanel(id, el) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
   if (id === 'revisao') revRenderizar();
   if (id === 'progresso') progRenderizar();
 }
@@ -897,7 +903,6 @@ const MS_QUESTOES = {
     { tema:'PNH', enunciado:'A Política Nacional de Humanização (PNH) tem como princípios:', opcoes:['Privatização, eficiência e lucratividade dos serviços de saúde.','Acolhimento, vínculo, responsabilização e autonomia dos usuários e trabalhadores.','Centralização das decisões na gestão federal do SUS.','Priorização do atendimento hospitalar sobre a atenção básica.'], correta:1, gabarito:'PNH: humaniza práticas de saúde valorizando usuários e trabalhadores. Acolhimento (escuta qualificada), vínculo (continuidade do cuidado), responsabilização (corresponsabilidade) e autonomia.' },
   ],
   bioestatistica: [
-    { tema:'Prevalência vs Incidência',  bioestatistica: [
     { tema:'Prevalência vs Incidência', enunciado:'A diferença entre prevalência e incidência é:', opcoes:['São iguais para doenças crônicas.','Prevalência conta casos existentes (novos + antigos); incidência conta apenas casos NOVOS em pessoas saudáveis.','Incidência usa a população total; prevalência usa os doentes.','Prevalência é usada para doenças agudas; incidência para crônicas.'], correta:1, gabarito:'Prevalência = fotografia (todos os casos). Incidência = filme (só novos, em pessoas sob risco). Prevalência = Incidência × Duração.' },
     { tema:'Odds Ratio', enunciado:'O Odds Ratio (OR) é usado em:', opcoes:['Estudos prospectivos como coorte.','Estudos retrospectivos como caso-controle e transversal.','Apenas ensaios clínicos randomizados.','Revisões sistemáticas e metanálises.'], correta:1, gabarito:'OR: estudos retrospectivos (caso-controle, transversal). RR: estudos prospectivos (coorte, ensaio clínico). OR = (A×D)/(B×C).' },
     { tema:'Hierarquia de Evidências', enunciado:'A hierarquia de evidências do maior para o menor nível é:', opcoes:['Relato de caso → Transversal → Coorte → ECR → Revisão sistemática','Revisão sistemática → ECR → Coorte → Caso-Controle → Transversal → Relato de caso','ECR → Coorte → Revisão sistemática → Caso-Controle','Todos têm o mesmo nível dependendo da amostra.'], correta:1, gabarito:'Revisão sistemática/Metanálise > ECR > Coorte > Caso-Controle > Transversal > Relato de caso. Base da Nutrição Baseada em Evidências.' },
@@ -982,7 +987,6 @@ const SIM_QUESTOES = {
     { mat:'Saúde Coletiva', tema:'PNH', enunciado:'A Política Nacional de Humanização (PNH) tem como princípios:', opcoes:['Privatização, eficiência e lucratividade.','Acolhimento, vínculo, responsabilização e autonomia.','Centralização das decisões na gestão federal.','Priorização do atendimento hospitalar.'], correta:1, gabarito:'PNH humaniza práticas valorizando usuários e trabalhadores. Acolhimento = escuta qualificada. Vínculo = continuidade do cuidado. Responsabilização = corresponsabilidade. Autonomia = empoderamento do usuário.' },
   ],
   bioestatistica: [
-    { mat:'Bioestatística', tema:'Prevalência',  bioestatistica: [
     { mat:'Bioestatística', tema:'Prevalência', enunciado:'A prevalência é a medida epidemiológica que:', opcoes:['Conta apenas casos NOVOS.','Mede o número de casos existentes (novos + antigos) em determinado período.','Avalia a velocidade de surgimento de novos casos.','É usada exclusivamente para doenças agudas.'], correta:1, gabarito:'Prevalência = fotografia. Casos existentes (novos + antigos) / população × 10ⁿ. Ideal para doenças crônicas (DM, HAS).' },
     { mat:'Bioestatística', tema:'Risco Relativo', enunciado:'O Risco Relativo difere do Odds Ratio porque:', opcoes:['RR é calculado em estudos retrospectivos.','RR mede o risco real (estudos prospectivos) e pode inferir causalidade; OR é estimativa de risco (estudos retrospectivos).','RR usa tabela 2×2 e OR não.','OR é sempre maior que RR.'], correta:1, gabarito:'RR: prospectivos (coorte, ECR), causalidade. OR: retrospectivos (caso-controle, transversal), associação.' },
     { mat:'Bioestatística', tema:'Desenhos de Estudos', enunciado:'O ensaio clínico randomizado é padrão-ouro porque:', opcoes:['É o mais barato e rápido.','Permite analisar dados retrospectivos.','A randomização elimina vieses, garante grupos comparáveis e permite inferir causalidade com alto nível de evidência.','Usa dados do IBGE.'], correta:2, gabarito:'Randomização distribui igualmente os fatores de confusão. É o único estudo que pode afirmar causalidade com alta certeza.' },
@@ -1216,6 +1220,187 @@ function progRenderizar() {
     grid.appendChild(card);
   });
 }
+
+// ═══════════════════════════════════════════════
+// EXPORTAR PDF DE DESEMPENHO
+// ═══════════════════════════════════════════════
+function exportarPDF() {
+  // Coleta dados
+  let totalAcertos = 0, totalQuestoes = 0, totalSimulados = 0, melhorPct = 0;
+  const materiasDados = [];
+  const paraEstudar = [];
+  const emDia = [];
+
+  try {
+    const dados = JSON.parse(localStorage.getItem('nutri_progresso') || '{}');
+    if (dados.simulados) {
+      totalSimulados = dados.simulados.length;
+      dados.simulados.forEach(s => {
+        totalAcertos += s.acertos;
+        totalQuestoes += s.total;
+        if (s.pct > melhorPct) melhorPct = s.pct;
+      });
+    }
+    Object.entries(MATERIAS).forEach(([k, m]) => {
+      const s = revCalcularStatus(k);
+      if (s.status !== 'novo') {
+        totalAcertos += s.acertos;
+        totalQuestoes += s.total;
+      }
+      materiasDados.push({ key: k, m, s });
+      if (s.status === 'novo' || s.pct < 60) paraEstudar.push({ m, s });
+      else if (s.pct >= 80) emDia.push({ m, s });
+    });
+  } catch(e) {}
+
+  const mediaPct = totalQuestoes > 0 ? Math.round((totalAcertos / totalQuestoes) * 100) : 0;
+  const agora = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+
+  function barraHTML(pct, cor) {
+    return `<div style="background:#e5e7eb;border-radius:99px;height:10px;width:100%;margin:6px 0 4px 0;overflow:hidden;">
+      <div style="height:100%;width:${pct}%;background:${cor};border-radius:99px;"></div>
+    </div>`;
+  }
+
+  function corPorPct(pct) {
+    return pct >= 80 ? '#16a34a' : pct >= 60 ? '#ca8a04' : pct > 0 ? '#dc2626' : '#9ca3af';
+  }
+
+  function labelPorPct(pct, status) {
+    if (status === 'novo') return { texto: 'Não iniciado', cor: '#9ca3af', bg: '#f3f4f6' };
+    if (pct >= 80) return { texto: 'Ótimo', cor: '#15803d', bg: '#dcfce7' };
+    if (pct >= 60) return { texto: 'Regular', cor: '#92400e', bg: '#fef9c3' };
+    return { texto: 'Precisa estudar', cor: '#991b1b', bg: '#fee2e2' };
+  }
+
+  // Monta as linhas de matérias
+  let materiasHTML = '';
+  materiasDados.forEach(({ m, s }) => {
+    const cor = corPorPct(s.pct);
+    const badge = labelPorPct(s.pct, s.status);
+    const acertosTexto = s.status === 'novo' ? 'Nenhum quiz realizado' : `${s.acertos} acertos de ${s.total} questões`;
+    materiasHTML += `
+      <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:18px 20px;margin-bottom:14px;page-break-inside:avoid;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:22px;">${m.icon}</span>
+            <div>
+              <div style="font-weight:700;font-size:15px;color:#1a2e1f;">${m.nome}</div>
+              <div style="font-size:12px;color:#7a8a7c;">${m.modulo}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="background:${badge.bg};color:${badge.cor};font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;">${badge.texto}</span>
+            <span style="font-size:22px;font-weight:800;color:${cor};">${s.status === 'novo' ? '—' : s.pct + '%'}</span>
+          </div>
+        </div>
+        ${barraHTML(s.pct, cor)}
+        <div style="font-size:12px;color:#7a8a7c;margin-top:4px;">${acertosTexto}</div>
+      </div>`;
+  });
+
+  // Seção de recomendações
+  let recomHTML = '';
+  if (paraEstudar.length > 0) {
+    recomHTML += `<div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:14px;padding:18px 20px;margin-bottom:14px;page-break-inside:avoid;">
+      <div style="font-weight:700;font-size:14px;color:#991b1b;margin-bottom:10px;">🔴 Prioridade de Estudo — Requer Atenção</div>`;
+    paraEstudar.forEach(({ m, s }) => {
+      const motivo = s.status === 'novo' ? 'Ainda não iniciado' : `Aproveitamento de ${s.pct}% — abaixo de 60%`;
+      recomHTML += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #fecaca;">
+        <span>${m.icon}</span>
+        <span style="font-weight:600;font-size:13px;color:#1a2e1f;">${m.nome}</span>
+        <span style="font-size:12px;color:#7a8a7c;margin-left:auto;">${motivo}</span>
+      </div>`;
+    });
+    recomHTML += `</div>`;
+  }
+  if (emDia.length > 0) {
+    recomHTML += `<div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:18px 20px;margin-bottom:14px;page-break-inside:avoid;">
+      <div style="font-weight:700;font-size:14px;color:#15803d;margin-bottom:10px;">🟢 Matérias com Ótimo Desempenho</div>`;
+    emDia.forEach(({ m, s }) => {
+      recomHTML += `<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #bbf7d0;">
+        <span>${m.icon}</span>
+        <span style="font-weight:600;font-size:13px;color:#1a2e1f;">${m.nome}</span>
+        <span style="font-size:12px;color:#7a8a7c;margin-left:auto;">${s.pct}% de aproveitamento</span>
+      </div>`;
+    });
+    recomHTML += `</div>`;
+  }
+
+  const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Desempenho — Nutri Amorim</title>
+<style>
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; background:#f8f4ef; color:#2c3e2d; padding:32px; }
+  @media print {
+    body { background:#fff; padding:0; }
+    .no-print { display:none !important; }
+    @page { margin: 20mm 16mm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cabeçalho -->
+<div style="background:#1a2e1f;border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;">
+  <div>
+    <div style="font-size:11px;font-weight:700;color:#74c69d;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">NUTRI AMORIM — CENTRAL DE ESTUDOS</div>
+    <div style="font-size:24px;font-weight:800;color:#fff;">Relatório de Desempenho</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px;">Gerado em ${agora}</div>
+  </div>
+  <div style="font-size:52px;">📊</div>
+</div>
+
+<!-- Cards de resumo -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;">
+  <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:16px;text-align:center;">
+    <div style="font-size:26px;font-weight:800;color:#2563eb;">${totalQuestoes}</div>
+    <div style="font-size:11px;color:#7a8a7c;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Questões respondidas</div>
+  </div>
+  <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:16px;text-align:center;">
+    <div style="font-size:26px;font-weight:800;color:#16a34a;">${totalAcertos}</div>
+    <div style="font-size:11px;color:#7a8a7c;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Acertos totais</div>
+  </div>
+  <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:16px;text-align:center;">
+    <div style="font-size:26px;font-weight:800;color:#e07b39;">${mediaPct}%</div>
+    <div style="font-size:11px;color:#7a8a7c;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Aproveitamento médio</div>
+  </div>
+  <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:16px;text-align:center;">
+    <div style="font-size:26px;font-weight:800;color:#7c3aed;">${totalSimulados}</div>
+    <div style="font-size:11px;color:#7a8a7c;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Simulados realizados</div>
+  </div>
+</div>
+
+<!-- Recomendações -->
+<div style="font-family:Arial,sans-serif;font-size:17px;font-weight:800;color:#1a2e1f;margin-bottom:14px;">🎯 Análise e Recomendações</div>
+${recomHTML || '<div style="background:#f3f4f6;border-radius:12px;padding:16px;font-size:13px;color:#6b7280;text-align:center;">Realize os quizzes das matérias para gerar recomendações personalizadas.</div>'}
+
+<div style="font-family:Arial,sans-serif;font-size:17px;font-weight:800;color:#1a2e1f;margin:24px 0 14px;">📚 Desempenho por Matéria</div>
+${materiasHTML}
+
+<!-- Rodapé -->
+<div style="margin-top:28px;padding-top:16px;border-top:1px solid #e0ebe0;display:flex;justify-content:space-between;align-items:center;">
+  <div style="font-size:11px;color:#9ca3af;">Nutri Amorim — Central de Estudos</div>
+  <div style="font-size:11px;color:#9ca3af;">${agora}</div>
+</div>
+
+<div class="no-print" style="margin-top:24px;text-align:center;">
+  <button onclick="window.print()" style="background:#1a2e1f;color:#fff;border:none;padding:14px 36px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;">🖨️ Imprimir / Salvar como PDF</button>
+  <button onclick="window.close()" style="background:#f3f4f6;color:#374151;border:none;padding:14px 24px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-left:10px;">✕ Fechar</button>
+</div>
+
+</body>
+</html>`;
+
+  const janela = window.open('', '_blank', 'width=900,height=700');
+  janela.document.write(html);
+  janela.document.close();
+  setTimeout(() => janela.print(), 800);
+}
+
 </script>
 </body>
 </html>
