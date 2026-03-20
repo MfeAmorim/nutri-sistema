@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentalidade Criativa e Empreendedora — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+
+    .btn-export-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .btn-export-pdf { background: #dc2626; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-pdf:hover { background: #b91c1c; transform: translateY(-1px); }
+    .btn-export-xls { background: #16a34a; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-xls:hover { background: #15803d; transform: translateY(-1px); }
+    .progress-salvo { font-size: 12px; color: #7a8a7c; text-align: center; margin-top: 8px; }
+    .banner-progresso { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
+    .banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Mentalidade Criativa e Empreendedora</div>
+    <div class="badge">1º Módulo 2026</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">💡</div>
+    <div>
+      <div class="hero-tag">1º Módulo 2026 · Nutrição · Unicesumar</div>
+      <h1>Mentalidade Criativa e Empreendedora</h1>
+      <p>Conteúdo organizado por relevância para o estudante.<br>5 unidades · 264 páginas · Autores: Alba Zucco, Ciro Fernandes, Eduardo Blanco e outros.</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Diretamente cobrado em provas e aplicado na prática profissional</div>
+  </div>
+
+  <!-- 1. EMPREENDEDORISMO: CONCEITO E TIPOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🚀</div>
+      <div class="card-titulo">
+        <h3>Empreendedorismo — Conceito, Motivação e Tipos</h3>
+        <p>Unidade 1 · O que é empreender, motivação e os 5 tipos de empreendedorismo</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Empreendedorismo?</h4>
+      <p>O termo empreendedorismo tem origem no inglês <em>Entrepreneurship</em> — "pessoa que assume riscos e começa algo novo". Envolve a identificação e exploração de oportunidades de negócios, tomada de decisões e assunção de <strong>riscos calculados</strong>. Para Barreto (1998): <em>"empreendedorismo é a habilidade de criar e constituir algo a partir de muito pouco ou de quase nada."</em></p>
+
+      <h4>Empreendedor vs Empresário</h4>
+      <p>São conceitos distintos: o <strong>empreendedor</strong> busca inovação, cria algo novo, assume riscos. O <strong>empresário</strong> administra e gere um negócio já existente. Um pode se tornar o outro — mas nem sempre coincidem.</p>
+
+      <h4>Os 5 Tipos de Empreendedorismo</h4>
+      <table class="tabela">
+        <tr><th>Tipo</th><th>Característica principal</th><th>Exemplo</th></tr>
+        <tr><td><strong>Social</strong></td><td>Impacto positivo na sociedade; parceria entre comunidade, governo e setor privado</td><td>Rede Asta (apoio a mulheres artesãs)</td></tr>
+        <tr><td><strong>Corporativo</strong></td><td>Criação de novos negócios dentro de uma empresa já existente (intraempreendedorismo)</td><td>Novos produtos internos de grandes empresas</td></tr>
+        <tr><td><strong>Independente (Startup)</strong></td><td>Criação de nova empresa voltada a um público específico identificando oportunidade</td><td>Airbnb, iFood</td></tr>
+        <tr><td><strong>Por Oportunidade</strong></td><td>Motivado pela percepção de um nicho de mercado em potencial</td><td>Quem identifica tendência e age</td></tr>
+        <tr><td><strong>Por Necessidade</strong></td><td>Motivado pela ausência de emprego/renda — busca sobrevivência</td><td>MEI criado após demissão</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Motivação para empreender:</strong> Desejo de ter o próprio negócio, maior controle sobre a vida, aumento de renda, realização pessoal. A motivação é influenciada pelos valores pessoais e determina como o empreendedor reage a desafios e riscos.</p>
+      </div>
+
+      <h4>As 4 Funções Administrativas do Empreendedor</h4>
+      <ul>
+        <li><strong>Planejamento:</strong> definir objetivos e metas — base de tudo. "Planeje, planeje, planeje!"</li>
+        <li><strong>Organização:</strong> escolher recursos e definir o papel de cada colaborador</li>
+        <li><strong>Direção:</strong> conduzir a equipe em direção aos objetivos</li>
+        <li><strong>Controle:</strong> acompanhar atividades e resultados — monitorar, ajustar, redefinir</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção na prova:</strong> O risco deve ser identificado e calculado na fase de <strong>planejamento</strong> — não na fase de controle. Empreendedores por oportunidade têm maior taxa de sucesso que os por necessidade, pois se preparam com antecedência.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CRIATIVIDADE E EMPREENDEDORISMO CRIATIVO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🎨</div>
+      <div class="card-titulo">
+        <h3>Criatividade e Empreendedorismo Criativo</h3>
+        <p>Unidade 2 · Definição de criatividade, bloqueios, pensamento divergente e Design Thinking</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Criatividade?</h4>
+      <p>A criatividade <strong>não é um dom inato</strong> — é uma habilidade que pode ser desenvolvida e estimulada em qualquer pessoa. Segundo De Bono (1992), antigamente era vista como algo mágico e inato. Atualmente, sabe-se que pode ser treinada com práticas e ambiente propício à inovação.</p>
+      <p>Guilford (1959) identificou o <strong>pensamento divergente</strong> como o principal responsável pela geração de ideias criativas — capacidade de encontrar múltiplas soluções para um mesmo problema.</p>
+
+      <h4>Bloqueios da Criatividade</h4>
+      <ul>
+        <li>Falta de tempo para pensar e criar</li>
+        <li>Foco excessivo em cumprir prazos e metas</li>
+        <li>Medo do julgamento e do erro</li>
+        <li>Ambiente que não estimula a inovação</li>
+        <li>Hábitos mentais rígidos e pensamento fixo</li>
+      </ul>
+
+      <h4>Design Thinking — Metodologia de Inovação</h4>
+      <p>Metodologia centrada no usuário para criar soluções inovadoras. Seu objetivo principal é <strong>entender as necessidades dos usuários e criar soluções inovadoras e eficazes</strong> para atendê-las. Fases:</p>
+      <table class="tabela">
+        <tr><th>Fase</th><th>O que fazer</th></tr>
+        <tr><td><strong>1. Empatia</strong></td><td>Entender profundamente as necessidades reais do usuário</td></tr>
+        <tr><td><strong>2. Definição</strong></td><td>Definir claramente o problema a ser resolvido</td></tr>
+        <tr><td><strong>3. Ideação</strong></td><td>Gerar o maior número de ideias criativas sem julgamento</td></tr>
+        <tr><td><strong>4. Prototipagem</strong></td><td>Criar um protótipo simples e rápido para testar a solução</td></tr>
+        <tr><td><strong>5. Teste</strong></td><td>Testar com o usuário real, coletar feedback e iterar</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Empreendedorismo Criativo:</strong> Integra inovação e criatividade em todas as áreas da empresa — da concepção de ideias à entrega do produto/serviço ao cliente. Case clássico: Airbnb, que resolveu criativamente a desconfiança de hospedar em imóveis particulares por meio de avaliações de usuários e fotografias profissionais.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. TIPOS AVANÇADOS E OPORTUNIDADES DE MERCADO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔍</div>
+      <div class="card-titulo">
+        <h3>Oportunidades de Mercado e Tipos Avançados</h3>
+        <p>Unidade 3 · Startups, empreendedorismo feminino, verde, cooperativo e análise de oportunidades</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Como Identificar uma Oportunidade de Mercado?</h4>
+      <p>Segundo o Sebrae, a atenção permanente às <strong>tendências de mercado</strong> é o caminho. Perguntas essenciais: Que produtos os consumidores preferem? Quais são as lacunas entre problemas e soluções? Que valor os consumidores percebem?</p>
+
+      <h4>4 Elementos para Avaliar uma Oportunidade</h4>
+      <table class="tabela">
+        <tr><th>Elemento</th><th>O que analisar</th></tr>
+        <tr><td><strong>Crescimento</strong></td><td>A oportunidade se retroalimenta? Mantém a procura ao longo do tempo?</td></tr>
+        <tr><td><strong>Competitividade</strong></td><td>Existem concorrentes? Como o negócio se posicionará diante deles?</td></tr>
+        <tr><td><strong>Sustentabilidade</strong></td><td>O modelo evita desperdícios? Pode usar economia circular?</td></tr>
+        <tr><td><strong>Rentabilidade</strong></td><td>Qual o Retorno sobre Capital Investido (ROI/ROIC)?</td></tr>
+      </table>
+
+      <h4>Tipos Modernos de Empreendedorismo</h4>
+      <ul>
+        <li><strong>Startup:</strong> empresa escalável, inovadora, com alto potencial de crescimento e incerteza</li>
+        <li><strong>Empreendedorismo de Base Tecnológica:</strong> usa tecnologia como core do negócio</li>
+        <li><strong>Empreendedorismo Feminino:</strong> crescimento acelerado no Brasil — mulheres empreendendo com propósito</li>
+        <li><strong>Empreendedorismo Verde:</strong> negócios com foco em sustentabilidade e impacto ambiental positivo</li>
+        <li><strong>Empreendedorismo Cooperativo:</strong> modelo colaborativo de propriedade compartilhada</li>
+        <li><strong>Intraempreendedorismo:</strong> colaborador com "sentido de dono" dentro de empresa existente</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Empreendedor vs Sonhador:</strong> Um sonhador pode ter uma ideia fantástica, mas sem habilidades e conhecimentos para transformá-la em negócio organizado, jamais se tornará empreendedor. Ter uma boa ideia é apenas o começo — a execução e a gestão são determinantes para o sucesso.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MEI, SIMPLES NACIONAL E FORMALIZAÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">📋</div>
+      <div class="card-titulo">
+        <h3>MEI, Simples Nacional e Formalização do Negócio</h3>
+        <p>Unidade 3 · Do MEI ao Simples — passo a passo para alavancar seu negócio</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>MEI — Microempreendedor Individual</h4>
+      <p>Criado em 2008 pela Lei Complementar nº 128, o MEI tem como objetivo ajudar pessoas a abrirem seus negócios <strong>saindo da informalidade</strong>, sem enfrentar burocracias e custos elevados. Benefícios: CNPJ gratuito, acesso à Previdência Social, emissão de nota fiscal, conta bancária PJ.</p>
+
+      <h4>Simples Nacional</h4>
+      <p>Regime tributário criado pela Lei Complementar nº 123/2006 com dois objetivos principais: <strong>simplificar a arrecadação de impostos</strong> e <strong>incentivar empreendedores a formalizarem</strong> seus negócios. Reúne vários impostos em uma única guia mensal (DAS).</p>
+
+      <table class="tabela">
+        <tr><th>Categoria</th><th>Faturamento anual</th><th>Características</th></tr>
+        <tr><td><strong>MEI</strong></td><td>Até R$ 81.000</td><td>1 funcionário, tributação fixa mensal</td></tr>
+        <tr><td><strong>Microempresa (ME)</strong></td><td>Até R$ 360.000</td><td>Simples Nacional</td></tr>
+        <tr><td><strong>Empresa de Pequeno Porte (EPP)</strong></td><td>Até R$ 4,8 milhões</td><td>Simples Nacional</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Importância do MEI para a economia:</strong> Os microempreendedores são fundamentais pois geram empregos locais, aumentam a renda da comunidade, promovem inclusão social e fortalecem a economia em nível local e nacional.</p>
+      </div>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Procrastinação no empreendedorismo:</strong> Adiar tarefas e decisões é um dos maiores riscos para um negócio. A procrastinação diminui a motivação e o entusiasmo, compromete a competitividade e pode levar ao fracasso do empreendimento. A etapa de risco deve ser analisada no <strong>planejamento</strong>, não adiada.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media" style="margin-top:32px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Importante para gestão estratégica e implementação de negócios</div>
+  </div>
+
+  <!-- 5. MINDSET EMPREENDEDOR -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🧠</div>
+      <div class="card-titulo">
+        <h3>Mindset Empreendedor — Desbloqueio da Mente</h3>
+        <p>Unidade 4 · Conceito, tipos de mindset, propósito e gestão inovadora</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é Mindset?</h4>
+      <p>O <strong>mindset</strong> está vinculado a um propósito da mente para certos tipos de pensamento e padrões comportamentais — determina se somos otimistas ou pessimistas, bem-sucedidos ou não, e como nos relacionamos com o trabalho e as pessoas.</p>
+
+      <h4>Mindset Fixo vs Mindset de Crescimento</h4>
+      <table class="tabela">
+        <tr><th>Mindset Fixo</th><th>Mindset de Crescimento (Empreendedor)</th></tr>
+        <tr><td>"Eu não nasci para empreender"</td><td>Acredita que habilidades podem ser desenvolvidas</td></tr>
+        <tr><td>Evita desafios e riscos</td><td>Enfrenta desafios como aprendizado</td></tr>
+        <tr><td>Desiste diante do obstáculo</td><td>Persiste e busca soluções criativas</td></tr>
+        <tr><td>Ignora feedbacks negativos</td><td>Usa críticas para crescer</td></tr>
+        <tr><td>Vê o esforço como fraqueza</td><td>Vê o esforço como caminho para maestria</td></tr>
+      </table>
+
+      <h4>Gestão Inovadora e Inteligência Artificial</h4>
+      <p>O futuro da gestão passa por uma parceria entre <strong>inteligência artificial</strong> (processos automatizáveis, repetitivos, baseados em dados) e o <strong>intelecto humano</strong> (criatividade, perspicácia, decisões qualitativas). A IA libera as pessoas para atuarem onde a criatividade humana é essencial.</p>
+
+      <h4>Branding — Gestão da Marca</h4>
+      <p>Branding é o conjunto de atividades ligadas à administração de uma marca. Vai além dos elementos visuais (nome, logomarca, cores) e inclui: valor agregado, significado, experiência do consumidor. Tipos: <strong>cobranding, digital branding, marca pessoal, marca de causas, marca territorial.</strong></p>
+
+      <div class="destaque">
+        <p>💡 <strong>Ikigai e Propósito:</strong> O propósito de vida pode ser entendido como o sentido da existência — aquilo que nos motiva, nos dá alegria e nos faz sentir úteis. No empreendedorismo, ter um propósito bem definido diferencia o empreendedor do mero administrador e sustenta a motivação diante dos desafios.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. FERRAMENTAS: CANVAS E VALIDAÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🗺️</div>
+      <div class="card-titulo">
+        <h3>Ferramentas Essenciais — Canvas, Validação e Estratégias</h3>
+        <p>Unidade 5 · Business Model Canvas, validação de ideia, MVP e modo Beta</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Por que Validar a Ideia?</h4>
+      <p>Segundo o Sebrae, alto número de empresas fecha após poucos anos. O problema reside na <strong>falta de preparo para a gestão</strong>. Ter uma boa ideia é apenas o começo — a validação consiste em identificar o quanto a solução proposta entrega valor real para o consumidor antes de investir tempo e dinheiro.</p>
+
+      <h4>Business Model Canvas (BMC)</h4>
+      <p>Ferramenta visual de uma página para mapear o modelo de negócios. Composta por 9 blocos:</p>
+      <table class="tabela">
+        <tr><th>Bloco</th><th>Pergunta que responde</th></tr>
+        <tr><td><strong>Segmento de Clientes</strong></td><td>Para quem criamos valor?</td></tr>
+        <tr><td><strong>Proposta de Valor</strong></td><td>Que problema resolvemos? Que necessidade atendemos?</td></tr>
+        <tr><td><strong>Canais</strong></td><td>Como entregamos a proposta de valor ao cliente?</td></tr>
+        <tr><td><strong>Relacionamento com Clientes</strong></td><td>Que tipo de relação mantemos com cada segmento?</td></tr>
+        <tr><td><strong>Fontes de Receita</strong></td><td>Pelo que os clientes realmente pagam?</td></tr>
+        <tr><td><strong>Recursos-Chave</strong></td><td>Que recursos a proposta de valor exige?</td></tr>
+        <tr><td><strong>Atividades-Chave</strong></td><td>Quais atividades são mais importantes para o negócio?</td></tr>
+        <tr><td><strong>Parcerias-Chave</strong></td><td>Quem são nossos fornecedores e parceiros estratégicos?</td></tr>
+        <tr><td><strong>Estrutura de Custos</strong></td><td>Quais são os custos mais relevantes?</td></tr>
+      </table>
+
+      <h4>Estratégias de Crescimento e Validação</h4>
+      <ul>
+        <li><strong>MVP (Produto Mínimo Viável):</strong> lançar a versão mais simples possível para testar hipóteses com o menor custo</li>
+        <li><strong>Modo Beta em Looping:</strong> lançar, coletar feedback, iterar continuamente — nunca considerar o produto "pronto"</li>
+        <li><strong>Lean Startup (Eric Ries):</strong> construir → medir → aprender, em ciclos rápidos</li>
+        <li><strong>Pesquisa de mercado:</strong> validar o problema real do público-alvo antes de desenvolver a solução</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Da ideia ao negócio:</strong> Roberto e Manoel (caso do livro) desenvolveram uma plataforma por 6 meses sem validar com o público correto. Lição: validar o problema real do cliente ANTES de desenvolver a solução é fundamental. Dados do pai do Roberto eram importantes, mas insuficientes sem pesquisa com o consumidor final.</p>
+      </div>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Pensar fora da caixa:</strong> A diversidade de ideias e visões no ambiente empresarial gera soluções mais criativas. Contratar pessoas diferentes, com outras vivências e perspectivas, é mais eficaz para um ambiente inovador do que contratar apenas perfis alinhados à cultura atual da empresa.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Mentalidade Criativa e Empreendedora</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">🚀 Empreendedorismo</span>
+      <span class="chip chip-green">🎨 Criatividade</span>
+      <span class="chip chip-orange">🧠 Mindset e Canvas</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+  <div id="bannerProgresso" class="banner-progresso" style="display:none">
+    <p>📌 Você tem progresso salvo neste simulado. Deseja continuar?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="continuarProgresso()">✅ Continuar</button>
+      <button onclick="descartarProgresso()" style="background:#dc2626">🗑️ Recomeçar</button>
+    </div>
+  </div>
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <div class="btn-export-group" style="justify-content:flex-end">
+      <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+      <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+    </div>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const questoes = [
+  {
+    tema: 'Empreendedorismo',
+    enunciado: 'Segundo Barreto (1998), empreendedorismo pode ser definido como:',
+    opcoes: [
+      'A administração eficiente de uma empresa já consolidada no mercado.',
+      'A habilidade de criar e constituir algo a partir de muito pouco ou de quase nada.',
+      'O processo de gerenciar equipes e distribuir tarefas em uma organização.',
+      'A capacidade de investir grandes recursos financeiros em novos projetos.'
+    ],
+    correta: 1,
+    gabarito: 'Barreto (1998) define empreendedorismo como "a habilidade de criar e constituir algo a partir de muito pouco ou de quase nada". Essa definição destaca a criatividade e a capacidade de gerar valor com recursos limitados — essência do empreendedorismo, especialmente em pequenos negócios.'
+  },
+  {
+    tema: 'Empreendedorismo',
+    enunciado: 'A principal diferença entre empreendedor e empresário é:',
+    opcoes: [
+      'O empresário assume mais riscos que o empreendedor.',
+      'O empreendedor busca inovar e criar algo novo; o empresário administra e gere um negócio existente. Um pode se tornar o outro.',
+      'O empreendedor trabalha apenas em startups; o empresário, em grandes corporações.',
+      'São sinônimos — representam o mesmo perfil profissional.'
+    ],
+    correta: 1,
+    gabarito: 'Empreendedor: essência na inovação, criação de algo novo, assumir riscos. Empresário: foco na gestão e administração do negócio já existente. Um empreendedor pode tornar-se empresário ao formalizar sua ideia. Um empresário pode agir como empreendedor ao buscar novas formas de atuação. Não são sinônimos, mas podem coexistir na mesma pessoa.'
+  },
+  {
+    tema: 'Tipos de Empreendedorismo',
+    enunciado: 'O empreendedorismo social caracteriza-se por:',
+    opcoes: [
+      'Criar negócios lucrativos dentro de empresas já existentes no mercado.',
+      'Identificar oportunidades de negócio em nichos específicos para maximizar o lucro.',
+      'Criar serviços e produtos com impacto positivo na sociedade, atuando na intermediação entre comunidade, governo e setor privado.',
+      'Abrir empresas por necessidade financeira, após perda de emprego.'
+    ],
+    correta: 2,
+    gabarito: 'Empreendedorismo social: criação de serviços/produtos com impacto positivo na sociedade; intermediação entre comunidade, governo e setor privado; objetivo de desenvolvimento da qualidade de vida nos aspectos sociais e ambientais. Exemplo: Rede Asta, que apoia mais de 8.500 mulheres empreendedoras em 234 cidades brasileiras.'
+  },
+  {
+    tema: 'Motivação',
+    enunciado: 'A motivação no contexto empreendedor é melhor descrita como:',
+    opcoes: [
+      'Um conceito abstrato sem relação direta com as ações do empreendedor.',
+      'A força que impulsiona a pessoa a agir de determinada forma, podendo ser estimulada por fatores externos ou internos, e influenciada pelo conjunto de valores pessoais.',
+      'Algo exclusivamente determinado por fatores financeiros e recompensas materiais.',
+      'Uma característica inata que não pode ser desenvolvida ou estimulada.'
+    ],
+    correta: 1,
+    gabarito: 'Motivação (origem: latim motus actionis = movimento de uma ação): impulso interno ou externo que move uma pessoa a agir. No empreendedorismo, é influenciada pelos valores pessoais e determina como o empreendedor reage a desafios, riscos e oportunidades. Motivação alta → maior foco, persistência e criatividade.'
+  },
+  {
+    tema: 'Motivação',
+    enunciado: 'Segundo Botvinick e Braver (2015), a motivação pode ser influenciada pelo:',
+    opcoes: [
+      'Volume de capital disponível para investir no negócio.',
+      'Grau de importância que o indivíduo atribui à recompensa almejada — se o esforço vale a pena pelo retorno esperado.',
+      'Número de concorrentes no mercado de atuação.',
+      'Nível de escolaridade formal do empreendedor.'
+    ],
+    correta: 1,
+    gabarito: 'A motivação é influenciada pelo quanto o indivíduo valoriza a recompensa. Se o empreendedor acredita que o resultado vale o esforço, mantém-se motivado mesmo diante de dificuldades. Se julgar que o esforço não vale a recompensa, desmotiva-se. Por isso, definir propósito e metas claras é fundamental para sustentar a motivação ao longo do tempo.'
+  },
+  {
+    tema: 'Criatividade',
+    enunciado: 'Sobre a criatividade no empreendedorismo, é CORRETO afirmar:',
+    opcoes: [
+      'A criatividade é um dom inato que apenas algumas pessoas possuem.',
+      'A criatividade pode ajudar a desenvolver apenas novos produtos, mas não processos de gestão.',
+      'A criatividade é uma habilidade que pode ser desenvolvida e estimulada em qualquer pessoa, com ambiente propício e práticas adequadas.',
+      'A criatividade possui participação bastante limitada no desenvolvimento de novos negócios.'
+    ],
+    correta: 2,
+    gabarito: 'Atualmente, a visão consolidada é que criatividade NÃO é dom inato — é habilidade desenvolvível por qualquer pessoa. Requer ambiente propício, práticas, diversidade de experiências e abertura a novas ideias. A criatividade auxilia no desenvolvimento de produtos, serviços, processos, estratégias e formas de gerir empresas — não se restringe a nenhuma área específica.'
+  },
+  {
+    tema: 'Criatividade',
+    enunciado: 'O pensamento divergente, descrito por Guilford (1959), é:',
+    opcoes: [
+      'A capacidade de convergir para uma única solução correta e eficiente.',
+      'O tipo de pensamento responsável pela geração de ideias criativas — encontrar múltiplas soluções para um mesmo problema.',
+      'A habilidade de analisar criticamente e eliminar ideias inviáveis.',
+      'A tendência de seguir padrões estabelecidos e métodos já testados.'
+    ],
+    correta: 1,
+    gabarito: 'Guilford (1959) identificou o pensamento divergente como o principal responsável pela criatividade. Enquanto o pensamento convergente busca a resposta correta única, o divergente explora múltiplas possibilidades, gera novas conexões e soluções inovadoras. É a base do brainstorming e de metodologias criativas como o Design Thinking.'
+  },
+  {
+    tema: 'Design Thinking',
+    enunciado: 'O objetivo principal do Design Thinking é:',
+    opcoes: [
+      'Reduzir os custos de produção por meio de processos automatizados.',
+      'Criar a identidade visual de uma empresa de forma inovadora e atraente.',
+      'Entender as necessidades dos usuários e criar soluções inovadoras e eficazes para atendê-las.',
+      'Gerenciar o tempo e os recursos financeiros de um novo empreendimento.'
+    ],
+    correta: 2,
+    gabarito: 'Design Thinking é uma metodologia centrada no usuário: parte da empatia (entender profundamente o usuário) para chegar a soluções inovadoras. As 5 fases são: Empatia → Definição → Ideação → Prototipagem → Teste. O foco está em resolver problemas reais de pessoas reais — não em criar algo "bonito" ou econômico.'
+  },
+  {
+    tema: 'Design Thinking',
+    enunciado: 'Na fase de prototipagem do Design Thinking:',
+    opcoes: [
+      'O produto final é lançado ao mercado após aprovação da equipe interna.',
+      'É realizada uma pesquisa de mercado para identificar os concorrentes.',
+      'Define-se claramente qual é o problema principal a ser resolvido.',
+      'É criado um protótipo simples e rápido para testar a solução proposta com usuários reais.'
+    ],
+    correta: 3,
+    gabarito: 'Na fase de prototipagem, cria-se uma versão simples (baixo custo, rápida) da solução para testar as hipóteses com usuários reais. O objetivo NÃO é o produto final — é aprender rápido e barato se a solução funciona antes de investir recursos. É o conceito do MVP (Produto Mínimo Viável) aplicado na prática.'
+  },
+  {
+    tema: 'Oportunidades de Mercado',
+    enunciado: 'Ao avaliar uma oportunidade de mercado, o elemento "sustentabilidade" refere-se a:',
+    opcoes: [
+      'A capacidade financeira do empreendedor de sustentar o negócio nos primeiros meses.',
+      'Modelos de negócios que evitam desperdícios, aproveitando a economia circular, bem avaliados por consumidores e mercados.',
+      'A durabilidade física dos produtos fabricados pela empresa.',
+      'A estabilidade do ambiente macroeconômico para abertura de novos negócios.'
+    ],
+    correta: 1,
+    gabarito: 'No contexto da avaliação de oportunidades (Sebrae), "sustentabilidade" refere-se à economia circular — modelos que evitam desperdício de recursos, com impacto ambiental reduzido. Esses negócios têm boa avaliação por consumidores e mercados na atualidade. Não se confunde com sustentabilidade financeira do negócio.'
+  },
+  {
+    tema: 'MEI e Formalização',
+    enunciado: 'O programa MEI (Microempreendedor Individual) foi criado com o objetivo principal de:',
+    opcoes: [
+      'Oferecer crédito facilitado para micro e pequenas empresas já formalizadas.',
+      'Ajudar pessoas a abrirem seus próprios negócios saindo da informalidade, sem enfrentar burocracias e custos elevados.',
+      'Substituir o regime tributário Simples Nacional para empresas de pequeno porte.',
+      'Criar um cadastro nacional de todos os trabalhadores autônomos informais.'
+    ],
+    correta: 1,
+    gabarito: 'O MEI (criado pela Lei Complementar nº 128/2008) tem como essência tirar empreendedores da informalidade de forma simples e acessível. Benefícios: CNPJ gratuito, tributação fixa mensal (DAS), acesso à Previdência Social, emissão de nota fiscal, abertura de conta PJ. É voltado a quem fatura até R$ 81.000/ano e pode ter 1 funcionário.'
+  },
+  {
+    tema: 'MEI e Formalização',
+    enunciado: 'O Simples Nacional foi desenvolvido para:',
+    opcoes: [
+      'Aumentar a arrecadação tributária das grandes empresas brasileiras.',
+      'Simplificar a arrecadação de impostos e incentivar empreendedores a seguirem com a formalização de seus negócios.',
+      'Substituir o MEI para microempreendedores com faturamento acima de R$ 81.000.',
+      'Criar um fundo de garantia específico para micro e pequenas empresas.'
+    ],
+    correta: 1,
+    gabarito: 'O Simples Nacional (Lei Complementar nº 123/2006) simplifica o pagamento de tributos federais, estaduais e municipais em uma única guia mensal (DAS). Seu objetivo é incentivar a formalização ao reduzir a burocracia fiscal. Abrange MEs (até R$ 360 mil) e EPPs (até R$ 4,8 milhões). Junto com o MEI, forma o ecossistema de apoio ao pequeno empreendedor.'
+  },
+  {
+    tema: 'MEI e Formalização',
+    enunciado: 'Os microempreendedores são importantes para a economia brasileira porque:',
+    opcoes: [
+      'Reduzem a renda disponível na comunidade ao concentrar lucros.',
+      'Diminuem a demanda por produtos e serviços locais.',
+      'Aumentam as desigualdades sociais ao não contratar mão de obra formal.',
+      'Geram empregos locais, aumentam a renda da comunidade e promovem inclusão social.'
+    ],
+    correta: 3,
+    gabarito: 'Os microempreendedores contribuem para a geração de empregos (contratam mão de obra local), aumento da renda da comunidade, promoção da inclusão social e fortalecimento da economia em nível local e nacional. São considerados força motriz para o crescimento e desenvolvimento do país — por isso o governo investe em políticas de incentivo como MEI e Simples Nacional.'
+  },
+  {
+    tema: 'Procrastinação',
+    enunciado: 'A procrastinação na vida de um empreendedor resulta principalmente em:',
+    opcoes: [
+      'Aumento da produtividade por permitir que tarefas amadureçam.',
+      'Crescimento e desenvolvimento pessoal aprimorados.',
+      'Diminuição da motivação e do entusiasmo, comprometendo a competitividade e os resultados.',
+      'Melhora do bem-estar mental por reduzir a pressão imediata.'
+    ],
+    correta: 2,
+    gabarito: 'Procrastinação é adiar o que precisa de atenção imediata. No empreendedorismo, o efeito é progressivo: metas atrasadas → resultados comprometidos → diminuição da motivação e entusiasmo → perda de competitividade. Um gestor que procrastina perde oportunidades de mercado e dificulta o crescimento da empresa. A solução está no planejamento, disciplina e controle contínuo.'
+  },
+  {
+    tema: 'Mindset',
+    enunciado: 'Uma característica fundamental do mindset empreendedor é:',
+    opcoes: [
+      'Evitar desafios para não arriscar o capital investido.',
+      'Acreditar que habilidades e inteligência são fixas e não podem ser desenvolvidas.',
+      'Encarar desafios como aprendizado, persistir diante de obstáculos e buscar constantemente conhecimento para superar limitações.',
+      'Focar exclusivamente nos resultados financeiros, desconsiderando aspectos pessoais e de equipe.'
+    ],
+    correta: 2,
+    gabarito: 'O mindset empreendedor (de crescimento) caracteriza-se por: olhar para o horizonte de possibilidades, encarar limitações como aprendizado, persistir diante dos desafios, acreditar na capacidade de desenvolver inteligência e habilidades. O mindset fixo faz o contrário — por isso pessoas com frases como "eu não nasci para empreender" perdem oportunidades por bloqueios mentais.'
+  },
+  {
+    tema: 'Mindset',
+    enunciado: 'O intraempreendedor pode ser definido como:',
+    opcoes: [
+      'O empreendedor que abre múltiplas empresas simultaneamente.',
+      'O colaborador com sentido de dono, criatividade e capacidade inovadora que trabalha dentro de uma empresa ou órgão público.',
+      'O investidor anjo que financia startups em fase inicial.',
+      'O gestor contratado externamente para liderar processos de inovação.'
+    ],
+    correta: 1,
+    gabarito: 'Intraempreendedor: colaborador com mindset empreendedor que atua dentro de uma empresa ou órgão público. Possui "sentido de dono", criatividade, capacidade inovadora e modelo mental diferenciado. Não precisa abrir seu próprio negócio para ser empreendedor — pode empreender dentro da organização onde trabalha, gerando inovação incremental ou radical para o empregador.'
+  },
+  {
+    tema: 'Branding',
+    enunciado: 'O branding pode ser definido como:',
+    opcoes: [
+      'A estratégia de precificação de produtos e serviços no mercado competitivo.',
+      'O planejamento de campanhas publicitárias em mídias tradicionais como TV e rádio.',
+      'O conjunto de atividades ligadas à administração de uma marca, incluindo elementos tangíveis e intangíveis como valor, significado e experiência do consumidor.',
+      'O processo de desenvolvimento de novas linhas de produtos para aumentar o portfólio da empresa.'
+    ],
+    correta: 2,
+    gabarito: 'Branding (gestão de marca) vai além dos elementos visuais. Inclui: nome, logomarca, cores, sons, mas também valor agregado, significado, experiência e memória do consumidor. Exemplos de marcas com branding forte: Coca-Cola (design consistente há décadas), Red Bull (conceito de aventura), Apple (inovação + minimalismo), Nike (Just do It). A marca é um ativo estratégico do negócio.'
+  },
+  {
+    tema: 'Oportunidades de Mercado',
+    enunciado: 'Na famosa história das sandálias na África (presente no livro), o representante com visão empreendedora foi aquele que:',
+    opcoes: [
+      'Concluiu que ninguém compraria sandálias pois as pessoas não tinham o costume de usá-las.',
+      'Identificou uma grande oportunidade de mercado, pois ninguém utilizava sandálias — o mercado estava inexplorado e os consumidores poderiam ser convencidos dos benefícios.',
+      'Recomendou investir apenas nas regiões urbanas, onde o costume já existia.',
+      'Sugeriu adaptar o produto para competir com artesãos locais que já faziam calçados.'
+    ],
+    correta: 1,
+    gabarito: 'O segundo representante teve visão empreendedora ao enxergar oportunidade onde o outro viu obstáculo. Como ninguém usava sandálias, o mercado estava completamente inexplorado — potencial enorme. Uma oportunidade é a possibilidade de um negócio dar certo baseado em um problema existente que pode ser solucionado. Mas atenção: vislumbrar a oportunidade não garante o sucesso — é apenas o ponto de partida.'
+  },
+  {
+    tema: 'Marketing Digital',
+    enunciado: 'O SEO (Search Engine Optimization) é uma estratégia de marketing digital que:',
+    opcoes: [
+      'Consiste no envio de e-mails promocionais para uma lista de clientes segmentados.',
+      'Utiliza influenciadores digitais para promover produtos nas redes sociais.',
+      'Otimiza a presença de um site nos mecanismos de busca como Google, aumentando a visibilidade orgânica do negócio.',
+      'Cria conteúdo educativo para fidelizar clientes por meio de blogs e podcasts.'
+    ],
+    correta: 2,
+    gabarito: 'SEO (Search Engine Optimization) = otimização para mecanismos de busca. Permite que o site apareça nas primeiras posições do Google para buscas relacionadas ao negócio. O Google processa ~8,5 bilhões de buscas por dia — estar bem posicionado gera visibilidade a baixo custo. Diferente de e-mail marketing (envio de e-mails), marketing de influência (parcerias com influenciadores) ou marketing de conteúdo (conteúdo educativo).'
+  },
+  {
+    tema: 'Marketing Digital',
+    enunciado: 'O marketing de influenciadores é mais eficaz quando:',
+    opcoes: [
+      'O influenciador é famoso globalmente, com milhões de seguidores em todo o mundo.',
+      'O influenciador é conhecido e engajado no público-alvo específico da empresa — não precisa ser famoso, mas deve ter alcance no público certo.',
+      'A empresa utiliza apenas influenciadores de outras regiões para expandir o mercado.',
+      'O número de seguidores é o único critério relevante para a escolha do influenciador.'
+    ],
+    correta: 1,
+    gabarito: 'O marketing de influência não exige influenciadores famosos globalmente. O critério mais importante é o ALINHAMENTO com o público-alvo. Microinfluenciadores (10 mil a 100 mil seguidores) com audiência engajada e localizada muitas vezes geram resultados melhores que macro influenciadores sem conexão com o nicho. A chave é alcance + engajamento + relevância para o público específico.'
+  },
+  {
+    tema: 'Business Model Canvas',
+    enunciado: 'No Business Model Canvas, a "Proposta de Valor" responde à pergunta:',
+    opcoes: [
+      'Quanto os clientes pagarão pelo produto ou serviço?',
+      'Que problema resolvemos? Que necessidade atendemos? Que valor entregamos ao cliente?',
+      'Quais são os canais de distribuição do produto?',
+      'Quem são os fornecedores e parceiros estratégicos do negócio?'
+    ],
+    correta: 1,
+    gabarito: 'A Proposta de Valor é o coração do Canvas — responde POR QUE um cliente escolheria sua empresa em vez do concorrente. Define o problema que resolve, a necessidade que atende e o valor percebido pelo cliente. É o elemento mais crítico: sem uma proposta de valor clara e diferenciada, os demais blocos do Canvas perdem sustentação.'
+  },
+  {
+    tema: 'Validação de Negócio',
+    enunciado: 'No caso de Roberto e Manoel (plataforma de análise de riscos imobiliários), o principal erro foi:',
+    opcoes: [
+      'Escolher o setor imobiliário, que é muito competitivo e difícil de penetrar.',
+      'Investir tempo demais no desenvolvimento técnico da plataforma.',
+      'Não validar a solução junto ao público-alvo correto antes de desenvolvê-la, baseando o projeto apenas nas informações do pai de Roberto.',
+      'Lançar o produto de forma totalmente digital, sem presença física no mercado.'
+    ],
+    correta: 2,
+    gabarito: 'O erro central foi não validar o problema real com o público-alvo correto (investidores em imóveis) antes de desenvolver. Os dados do pai — dono de imobiliária — eram relevantes mas representavam o mercado de operadores, não investidores. A validação deve identificar: o problema real existe? A solução entrega valor percebido? O público pagaria por isso? Tudo isso ANTES de investir 6 meses de desenvolvimento.'
+  },
+  {
+    tema: 'Validação de Negócio',
+    enunciado: 'O "Modo Beta em Looping" como estratégia empreendedora significa:',
+    opcoes: [
+      'Lançar o produto apenas quando estiver 100% finalizado e sem defeitos.',
+      'Testar o produto apenas com o público interno da empresa antes do lançamento oficial.',
+      'Lançar, coletar feedback dos usuários reais, iterar continuamente — nunca considerar o produto totalmente "pronto".',
+      'Desenvolver múltiplas versões do produto simultaneamente para o mercado escolher a melhor.'
+    ],
+    correta: 2,
+    gabarito: 'Modo Beta em Looping é baseado na filosofia da Lean Startup (Eric Ries): construir → medir → aprender, em ciclos rápidos e contínuos. Parte do princípio que nenhum produto está "pronto" — sempre há algo a melhorar com base no feedback real dos usuários. É o oposto do desenvolvimento longo e secreto, que gasta recursos antes de validar se o produto resolve um problema real.'
+  },
+  {
+    tema: 'Empreendedorismo',
+    enunciado: 'Segundo o GEM (Global Entrepreneurship Monitor), a diferença entre empreendedor por oportunidade e por necessidade é:',
+    opcoes: [
+      'O empreendedor por oportunidade tem menos capital disponível que o por necessidade.',
+      'O empreendedor por oportunidade percebe um nicho de mercado potencial; o por necessidade não tem alternativa satisfatória de emprego e renda.',
+      'O empreendedor por necessidade tem maior taxa de sucesso por estar mais motivado.',
+      'São idênticos — a motivação não influencia o resultado do negócio.'
+    ],
+    correta: 1,
+    gabarito: 'GEM (maior pesquisa de empreendedorismo do mundo): por oportunidade = motivado por perceber um nicho com potencial de retorno; se prepara, planeja, busca conhecimento. Por necessidade = motivado pela falta de emprego/renda; em geral abre negócio sem planejamento adequado e fecha com mais frequência nos primeiros meses. Empreendedores por oportunidade tendem a ser mais sustentáveis no longo prazo.'
+  },
+  {
+    tema: 'Criatividade',
+    enunciado: 'A empresa Netflix transformou um problema em oportunidade ao:',
+    opcoes: [
+      'Manter o modelo de entrega de DVDs por correio mesmo com o crescimento do streaming.',
+      'Resistir às mudanças digitais para preservar sua base de clientes tradicional.',
+      'Antecipar a mudança no comportamento do consumidor e transformar sua plataforma de DVD para streaming, expandindo globalmente.',
+      'Focar apenas no mercado norte-americano para consolidar sua posição antes de internacionalizar.'
+    ],
+    correta: 2,
+    gabarito: 'A Netflix é um exemplo clássico de criatividade empreendedora: em vez de resistir à ascensão do streaming (que ameaçava seu modelo de DVD pelo correio), abraçou a mudança e se reinventou. Resultado: líder mundial em streaming. A lição: empreendedores criativos não resistem às mudanças — antecipam tendências e transformam ameaças em oportunidades de negócio.'
+  },
+  {
+    tema: 'Gestão e Administração',
+    enunciado: 'Em qual das quatro funções administrativas deve ser identificado e analisado o risco de um novo negócio?',
+    opcoes: [
+      'Controle, pois é onde os resultados são monitorados e os problemas identificados.',
+      'Direção, pois o líder deve conhecer os riscos para orientar a equipe.',
+      'Organização, pois os recursos precisam ser alocados considerando os riscos.',
+      'Planejamento, pois é a etapa inicial onde objetivos são definidos e riscos calculados antes de qualquer investimento.'
+    ],
+    correta: 3,
+    gabarito: 'O risco deve ser identificado e calculado na fase de PLANEJAMENTO — antes de qualquer investimento financeiro ou de tempo. Ao compreender o grau de risco no planejamento, o empreendedor pode adaptar o projeto ou desistir antes de incorrer em perdas. Deixar para identificar riscos apenas na fase de controle (pós-execução) é tarde demais e pode significar prejuízo irreversível.'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = [];
+
+function renderQuestao(idx) {
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('quiz-container');
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'questao-card-' + idx;
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn" id="op-${idx}-${i}" onclick="responder(${idx}, ${i})">
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito" id="gabarito-${idx}">💬 ${q.gabarito}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function responder(idx, opcaoIdx) {
+  if (respondidas.includes(idx)) return;
+  respondidas.push(idx);
+  salvarProgresso();
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('questao-card-' + idx);
+  const gabarito = document.getElementById('gabarito-' + idx);
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+  const selecionado = document.getElementById('op-' + idx + '-' + opcaoIdx);
+  if (opcaoIdx === q.correta) {
+    acertos++;
+    card.classList.add('acertou');
+    gabarito.className = 'q-gabarito show-acertou';
+    gabarito.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    erros++;
+    selecionado.classList.add('incorreta');
+    card.classList.add('errou');
+    gabarito.className = 'q-gabarito show-errou';
+    gabarito.innerHTML = '❌ Incorreto. Resposta correta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = false;
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  if (questaoAtual < questoes.length) {
+    renderQuestao(questaoAtual);
+  } else {
+    mostrarResultado();
+  }
+}
+
+function atualizarProgresso() {
+  const pct = (respondidas.length / questoes.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas.length + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const pct = Math.round((acertos / questoes.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  let msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Você completou todas as questões de Mentalidade Criativa e Empreendedora.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = [];
+  renderQuestao(0);
+  atualizarProgresso();
+}
+
+renderQuestao(0);
+
+const QUIZ_KEY = 'quiz_' + window.location.pathname.split('/').pop().replace('.html','');
+
+function salvarProgresso() {
+  try {
+    localStorage.setItem(QUIZ_KEY, JSON.stringify({
+      respondidas, acertos, erros,
+      qAtual: typeof questaoAtual !== 'undefined' ? questaoAtual : 0,
+      salvoEm: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function carregarProgresso() {
+  try {
+    const salvo = localStorage.getItem(QUIZ_KEY);
+    if (!salvo) return false;
+    const d = JSON.parse(salvo);
+    const totalResp = Array.isArray(d.respondidas) ? d.respondidas.filter(x => x !== undefined && x !== null).length : Object.keys(d.respondidas || {}).length;
+    if (totalResp === 0) return false;
+    return d;
+  } catch(e) { return false; }
+}
+
+function limparProgresso() {
+  try { localStorage.removeItem(QUIZ_KEY); } catch(e) {}
+}
+
+function continuarProgresso() {
+  const d = carregarProgresso();
+  if (!d) return;
+  respondidas = d.respondidas || [];
+  acertos = d.acertos || 0;
+  erros = d.erros || 0;
+  questaoAtual = d.qAtual || respondidas.length;
+  document.getElementById('bannerProgresso').style.display = 'none';
+  if (questaoAtual >= questoes.length) { mostrarResultado(); return; }
+  renderQuestao(questaoAtual);
+}
+
+function descartarProgresso() {
+  limparProgresso();
+  document.getElementById('bannerProgresso').style.display = 'none';
+  reiniciarQuiz();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const d = carregarProgresso();
+  if (d) document.getElementById('bannerProgresso').style.display = 'flex';
+});
+
+function exportarPDF() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  const respostasPDF = questoes.map((q, i) => {
+    let resp = Array.isArray(respondidas) ? respondidas[i] : respondidas[String(i)];
+    const certa = q.correta;
+    const acertou = resp === certa;
+    return { q, i, resp, certa, acertou, letras: ['A','B','C','D'] };
+  });
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Resultado — ${materia}</title>
+  <style>body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:30px;color:#1a2e1f}h1{color:#2d6a4f;font-size:22px;margin-bottom:4px}.sub{color:#7a8a7c;font-size:13px;margin-bottom:24px}.stats{display:flex;gap:20px;margin-bottom:28px;flex-wrap:wrap}.stat{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 20px;text-align:center;min-width:100px}.stat-val{font-size:28px;font-weight:800;color:#2d6a4f}.stat-label{font-size:11px;text-transform:uppercase;color:#7a8a7c;letter-spacing:1px}.stat.err{background:#fff5f5;border-color:#fecaca}.stat.err .stat-val{color:#dc2626}.stat.pct{background:#fefce8;border-color:#fde68a}.stat.pct .stat-val{color:#ca8a04}.questao{margin-bottom:20px;padding:16px;border-radius:8px;border:1px solid #e0ebe0;page-break-inside:avoid}.questao.acertou{background:#f0fdf4;border-color:#86efac}.questao.errou{background:#fff5f5;border-color:#fca5a5}.q-num{font-size:11px;font-weight:700;text-transform:uppercase;color:#7a8a7c;margin-bottom:6px}.q-text{font-size:14px;font-weight:600;color:#1a2e1f;margin-bottom:10px;line-height:1.5}.q-resp{font-size:13px;margin-bottom:4px}.q-resp.certa{color:#16a34a;font-weight:700}.q-resp.errada{color:#dc2626;font-weight:700;text-decoration:line-through}.q-gabarito{font-size:12px;color:#2d6a4f;background:#f0fdf4;border-radius:6px;padding:8px 12px;margin-top:8px;line-height:1.5}.rodape{margin-top:32px;padding-top:16px;border-top:1px solid #e0ebe0;font-size:12px;color:#9ca3af;text-align:center}@media print{body{padding:16px}}</style></head><body>
+  <h1>📊 Resultado do Simulado</h1><div class="sub">${materia} · ${data} às ${hora}</div>
+  <div class="stats"><div class="stat"><div class="stat-val">${acertos}</div><div class="stat-label">Acertos</div></div><div class="stat err"><div class="stat-val">${erros}</div><div class="stat-label">Erros</div></div><div class="stat pct"><div class="stat-val">${taxa}%</div><div class="stat-label">Aproveitamento</div></div><div class="stat"><div class="stat-val">${questoes.length}</div><div class="stat-label">Total</div></div></div>
+  ${respostasPDF.map(({q,i,resp,certa,acertou,letras})=>`<div class="questao ${resp!==undefined?(acertou?'acertou':'errou'):''}"><div class="q-num">Questão ${i+1} · ${q.tema} · ${resp!==undefined?(acertou?'✅ Correta':'❌ Incorreta'):'⚪ Não respondida'}</div><div class="q-text">${q.enunciado}</div>${q.opcoes.map((op,oi)=>`<div class="q-resp ${oi===certa?'certa':(oi===resp&&!acertou?'errada':'')}">${letras[oi]}) ${op}</div>`).join('')}<div class="q-gabarito">💬 ${q.gabarito}</div></div>`).join('')}
+  <div class="rodape">Nutri Amorim · Conhecimento na Prática · Gerado em ${data}</div></body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 600);
+}
+
+function exportarExcel() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const letras = ['A','B','C','D'];
+  let csv = '\uFEFF';
+  csv += `Matéria;${materia}\nData;${data}\nAcertos;${acertos}\nErros;${erros}\nTotal;${questoes.length}\nAproveitamento;${taxa}%\n\n`;
+  csv += `Nº;Tema;Enunciado;Sua Resposta;Resposta Correta;Resultado;Gabarito\n`;
+  questoes.forEach((q, i) => {
+    let resp = Array.isArray(respondidas) ? respondidas[i] : respondidas[String(i)];
+    const certa = q.correta;
+    const acertou = resp === certa;
+    csv += `${i+1};"${q.tema}";"${q.enunciado.replace(/;/g,',').replace(/\n/g,'')}";"${resp!==undefined?`${letras[resp]}) ${q.opcoes[resp]}`:'Não respondida'}";"${letras[certa]}) ${q.opcoes[certa]}";"${resp!==undefined?(acertou?'Correta':'Incorreta'):'Não respondida'}";"${q.gabarito.replace(/;/g,',').replace(/\n/g,'')}"\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resultado_${materia.toLowerCase().replace(/\s+/g,'_')}_${data.replace(/\//g,'-')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
