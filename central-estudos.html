@@ -231,11 +231,220 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
 .prog-res-card.laranja .prog-res-val { color: var(--laranja); }
 .prog-res-card.roxo .prog-res-val { color: var(--roxo); }
 
+
+/* ── TUTORIAL ONBOARDING ── */
+.tutorial-overlay {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(10,20,12,0.55);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s ease;
+}
+.tutorial-balao {
+  position: fixed; z-index: 9999;
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 22px;
+  width: 300px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.28);
+  animation: popIn 0.3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn { from { opacity:0; transform: scale(0.88); } to { opacity:1; transform: scale(1); } }
+
+/* Seta dinâmica via atributo data-seta */
+.tutorial-balao::before {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  background: #fff;
+  box-shadow: -2px -2px 4px rgba(0,0,0,0.06);
+}
+/* Seta apontando para CIMA (balão está ABAIXO do elemento) */
+.tutorial-balao[data-seta="cima"]::before {
+  top: -7px;
+  transform: rotate(45deg);
+  left: var(--seta-x, 28px);
+  box-shadow: -2px -2px 4px rgba(0,0,0,0.06);
+}
+/* Seta apontando para BAIXO (balão está ACIMA do elemento) */
+.tutorial-balao[data-seta="baixo"]::before {
+  bottom: -7px;
+  transform: rotate(45deg);
+  left: var(--seta-x, 28px);
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.06);
+}
+/* Sem seta (centralizado) */
+.tutorial-balao[data-seta="none"]::before { display: none; }
+.tutorial-step-badge {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--verde-neon);
+  background: var(--escuro); padding: 3px 10px;
+  border-radius: 20px; display: inline-block; margin-bottom: 10px;
+}
+.tutorial-balao h3 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--escuro); margin-bottom: 6px; }
+.tutorial-balao p  { font-size: 13px; color: #5a6a5c; line-height: 1.65; margin-bottom: 14px; }
+.tutorial-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tut-btn-prox {
+  background: var(--verde); color: #fff; border: none;
+  padding: 9px 20px; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.tut-btn-prox:hover { background: var(--escuro); }
+.tut-btn-pular {
+  background: none; border: none; font-size: 12px;
+  color: #9ca3af; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  text-decoration: underline;
+}
+.tut-pontos { display: flex; gap: 5px; }
+.tut-ponto { width: 7px; height: 7px; border-radius: 50%; background: #d1d5db; transition: background 0.2s; }
+.tut-ponto.ativo { background: var(--verde); }
+.tutorial-highlight {
+  position: relative; z-index: 9999;
+  outline: 3px solid var(--verde-neon);
+  outline-offset: 4px;
+  border-radius: 12px;
+  box-shadow: 0 0 0 6px rgba(116,198,157,0.25);
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVIDADE COMPLETA
+════════════════════════════════════════ */
+
+/* ── TABLET (max 900px) ── */
+@media (max-width: 900px) {
+  .panel { padding: 24px 20px; }
+
+  /* Hero */
+  .hero { padding: 28px 28px; gap: 20px; }
+  .hero h1 { font-size: 21px; }
+  .hero-icon { font-size: 42px; }
+
+  /* Flashcard */
+  .fc-card-wrap { height: 200px; }
+  .fc-text { font-size: 15px; }
+
+  /* Simulado grid */
+  .sim-opts { grid-template-columns: repeat(2, 1fr); }
+
+  /* Progresso grid */
+  .prog-grid { grid-template-columns: 1fr 1fr; }
+  .prog-resumo { grid-template-columns: repeat(2, 1fr); }
+
+  /* Revisão grid */
+  .rev-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── MOBILE (max 640px) ── */
 @media (max-width: 640px) {
-  .panel { padding: 20px 16px; }
-  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
-  .questao-card { padding: 20px; }
-  .sim-opts { grid-template-columns: 1fr; }
+
+  /* Topbar */
+  .topbar { padding: 0 16px; height: 52px; }
+  .topbar-title { font-size: 15px; }
+  .badge { display: none; }
+
+  /* Tabs — scroll horizontal com tamanho reduzido */
+  .tabs-nav { padding: 0 8px; top: 52px; }
+  .tab-btn { padding: 0 12px; height: 44px; font-size: 12px; gap: 5px; }
+
+  /* Painéis */
+  .panel { padding: 16px 12px; }
+
+  /* Hero */
+  .hero { padding: 20px 18px; flex-direction: column; text-align: center; gap: 14px; border-radius: 16px; margin-bottom: 20px; }
+  .hero-icon { font-size: 38px; }
+  .hero h1 { font-size: 19px; margin-bottom: 4px; }
+  .hero p { font-size: 13px; }
+  .hero-tag { font-size: 9px; }
+
+  /* Títulos de seção */
+  .sec-title { font-size: 17px; }
+
+  /* ── FLASHCARDS ── */
+  .fc-controls { gap: 8px; }
+  .fc-select { font-size: 13px; padding: 9px 10px; width: 100%; }
+  .btn-verde, .btn-outline { width: 100%; text-align: center; padding: 12px 16px; font-size: 14px; }
+  .fc-card-wrap { height: 190px; }
+  .fc-front, .fc-back { padding: 20px 18px; }
+  .fc-text { font-size: 14px; line-height: 1.55; }
+  .fc-back .fc-text { font-size: 13px; }
+  .fc-hint { font-size: 11px; }
+  .fc-stats { gap: 8px; }
+  .fc-stat { padding: 8px 12px; min-width: 64px; }
+  .fc-stat-val { font-size: 18px; }
+  .fc-stat-label { font-size: 10px; }
+  .fc-actions { gap: 8px; width: 100%; }
+  .btn-fc-errei, .btn-fc-revisar, .btn-fc-acertei { flex: 1; padding: 12px 8px; font-size: 13px; border-radius: 10px; }
+
+  /* ── REVISÃO ESPAÇADA ── */
+  .rev-grid { grid-template-columns: 1fr; gap: 10px; }
+  .rev-legenda { gap: 10px; }
+  .rev-leg-item { font-size: 11px; }
+  .rev-card { padding: 14px 16px; }
+  .rev-materia { font-size: 13px; }
+  .rev-badge { font-size: 10px; padding: 3px 8px; }
+
+  /* ── MODO ESTUDO ── */
+  .ms-select-wrap { flex-direction: column; align-items: stretch; }
+  .ms-select-wrap .fc-select { width: 100%; }
+  .ms-questao { padding: 16px 14px; border-radius: 12px; }
+  .ms-q-header { flex-wrap: wrap; gap: 6px; }
+  .ms-enunciado { font-size: 14px; }
+  .ms-opcao { padding: 8px 10px; font-size: 13px; gap: 8px; }
+  .ms-letra { width: 22px; height: 22px; font-size: 11px; }
+  .ms-gabarito { font-size: 12px; padding: 10px 12px; }
+
+  /* ── SIMULADO ── */
+  .sim-opts { grid-template-columns: 1fr; gap: 8px; }
+  .sim-opt { padding: 12px 14px; }
+  .sim-opt-label { font-size: 12px; }
+  .sim-opt-sub { font-size: 10px; }
+  .sim-bottom { flex-direction: column; align-items: stretch; gap: 10px; }
+  .sim-qtd { justify-content: space-between; }
+  .sim-topbar { padding: 12px 14px; gap: 8px; border-radius: 12px; }
+  .sim-topbar-info { font-size: 12px; }
+  .sim-timer-display { font-size: 15px; padding: 6px 12px; }
+  .questao-card { padding: 16px 14px; border-radius: 14px; }
+  .q-enunciado { font-size: 14px; line-height: 1.6; margin-bottom: 14px; }
+  .opcao-btn { padding: 11px 14px; font-size: 13px; gap: 8px; border-radius: 10px; margin-bottom: 8px; }
+  .opcao-letra { width: 24px; height: 24px; font-size: 11px; }
+  .q-gabarito { font-size: 12px; padding: 10px 12px; }
+  .sim-nav { gap: 8px; }
+  .btn-nav { padding: 11px 18px; font-size: 13px; }
+  .resultado { padding: 28px 18px; border-radius: 16px; }
+  .resultado-emoji { font-size: 48px; }
+  .resultado h2 { font-size: 20px; }
+  .resultado-stats { gap: 10px; }
+  .r-stat { padding: 12px 16px; min-width: 70px; }
+  .r-stat-val { font-size: 24px; }
+
+  /* ── PROGRESSO ── */
+  .prog-resumo { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .prog-res-val { font-size: 22px; }
+  .prog-res-label { font-size: 11px; }
+  .prog-grid { grid-template-columns: 1fr; gap: 10px; }
+  .prog-card { padding: 16px 14px; }
+  .prog-card-top { gap: 10px; }
+  .prog-icon { font-size: 22px; }
+  .prog-titulo { font-size: 13px; }
+  .prog-score-val { font-size: 18px; }
+
+  /* ── BOTÃO PDF ── */
+  #panel-progresso > div:last-child { justify-content: stretch; }
+  #panel-progresso > div:last-child .btn-verde { width: 100%; justify-content: center; font-size: 14px; }
+
+  /* ── TUTORIAL ── */
+  .tutorial-balao { width: calc(100vw - 32px) !important; left: 16px !important; transform: none !important; }
+  .tutorial-balao[data-seta='cima']::before, .tutorial-balao[data-seta='baixo']::before { left: 50% !important; transform: translateX(-50%) rotate(45deg) !important; }
+}
+
+/* ── MOBILE PEQUENO (max 380px) ── */
+@media (max-width: 380px) {
+  .topbar-title { display: none; }
+  .tab-btn { padding: 0 9px; font-size: 11px; }
+  .fc-card-wrap { height: 170px; }
+  .btn-fc-errei, .btn-fc-revisar, .btn-fc-acertei { font-size: 12px; padding: 10px 4px; }
+  .prog-resumo { grid-template-columns: 1fr 1fr; }
+  .r-stat { min-width: 60px; padding: 10px 10px; }
 }
 </style>
 </head>
@@ -662,7 +871,13 @@ function showPanel(id, el) {
   if (el) el.classList.add('active');
   if (id === 'revisao') revRenderizar();
   if (id === 'progresso') progRenderizar();
+  setTimeout(() => tutMostrar(id), 400);
 }
+
+// Dispara o tutorial da primeira aba ao carregar
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => tutMostrar('flashcards'), 600);
+});
 
 // ═══════════════════════════════════════════════
 // FLASHCARDS
@@ -1399,6 +1614,274 @@ ${materiasHTML}
   janela.document.write(html);
   janela.document.close();
   setTimeout(() => janela.print(), 800);
+}
+
+// ═══════════════════════════════════════════════
+// TUTORIAL ONBOARDING
+// ═══════════════════════════════════════════════
+const TUTORIAIS = {
+  flashcards: [
+    {
+      titulo: '🃏 Flashcards Interativos',
+      texto: 'Esta é a ferramenta de memorização mais poderosa da Central! Vou te mostrar como usar em 4 passos rápidos.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Passo 1 — Escolha a matéria',
+      texto: 'Selecione uma matéria no menu ou deixe em "Todas as matérias" para revisar tudo de uma vez. Você também pode filtrar só os cards que precisa revisar.',
+      alvo: 'fc-materia-select', seta: 'seta-cima'
+    },
+    {
+      titulo: 'Passo 2 — Inicie o deck',
+      texto: 'Clique em "▶ Iniciar" para começar. Os cards podem aparecer em ordem aleatória ou sequencial, conforme você escolher.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Passo 3 — Tente lembrar antes de virar!',
+      texto: 'Aparece uma pergunta na frente do card. Tente responder mentalmente — esse esforço é o que fixa o conteúdo no cérebro. Depois clique no card para ver a resposta.',
+      alvo: 'fc-card-wrap', seta: 'seta-cima'
+    },
+    {
+      titulo: 'Passo 4 — Classifique sua resposta',
+      texto: '❌ Não sei — errou ou travou na hora. ⚠️ Revisar — lembrou com dificuldade. ✅ Sei! — respondeu com confiança. Seja honesto — isso calibra sua revisão espaçada!',
+      alvo: null, seta: null
+    }
+  ],
+  revisao: [
+    {
+      titulo: '📅 Revisão Espaçada',
+      texto: 'Aqui o sistema calcula o momento ideal para você revisar cada matéria, com base na Curva do Esquecimento de Ebbinghaus.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Como funciona?',
+      texto: 'Quem vai mal no quiz → revisa em 1–2 dias. Quem vai bem → revisa em 7+ dias. Assim você estuda menos e fixa mais, revisando na hora certa!',
+      alvo: 'rev-grid', seta: 'seta-cima'
+    },
+    {
+      titulo: 'Cores dos badges',
+      texto: '🔴 Revisar hoje — urgente! 🟠 Amanhã — fique de olho. 🟡 Esta semana — programado. 🟢 Em dia — tudo certo. ⚪ Não iniciado — faça o quiz!',
+      alvo: null, seta: null
+    }
+  ],
+  'modo-estudo': [
+    {
+      titulo: '📝 Modo Estudo',
+      texto: 'Aqui você vê todas as questões com o gabarito aberto desde o início — sem pressão de tempo, sem cliques. Ideal para estudar com calma antes de uma prova.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Escolha a matéria',
+      texto: 'Selecione a disciplina no menu acima. Todas as questões vão aparecer com a resposta correta destacada em verde e um comentário explicando o porquê.',
+      alvo: 'ms-materia-select', seta: 'seta-cima'
+    }
+  ],
+  simulado: [
+    {
+      titulo: '🎯 Simulado Geral',
+      texto: 'Simule uma prova de verdade! Questões misturadas de várias matérias, com timer opcional e gabarito só no final de cada questão.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Configure antes de começar',
+      texto: 'Marque as matérias que quer incluir, escolha quantas questões e se quer usar o cronômetro. Depois clique em "Iniciar Simulado".',
+      alvo: 'sim-config', seta: 'seta-cima'
+    },
+    {
+      titulo: 'Durante o simulado',
+      texto: 'Clique na alternativa que achar correta. O gabarito aparece na hora, com explicação. Só avance para a próxima quando estiver pronto.',
+      alvo: null, seta: null
+    }
+  ],
+  progresso: [
+    {
+      titulo: '📊 Meu Progresso',
+      texto: 'Aqui você acompanha toda sua evolução — acertos, aproveitamento por matéria e quando foi seu último estudo.',
+      alvo: null, seta: null
+    },
+    {
+      titulo: 'Desempenho por matéria',
+      texto: 'Cada card mostra o percentual de acertos, a barra de progresso e os temas. Verde = ótimo ✅ | Amarelo = regular ⚠️ | Vermelho = precisa estudar mais 🔴',
+      alvo: 'prog-grid', seta: 'seta-cima'
+    },
+    {
+      titulo: 'Baixe seu relatório',
+      texto: 'No final desta página tem o botão para baixar um PDF completo com seu desempenho e quais matérias priorizar nos estudos!',
+      alvo: null, seta: null
+    }
+  ]
+};
+
+let tutAtual = null, tutPasso = 0, tutElementoDestacado = null;
+
+function tutMostrar(painel) {
+  const chave = 'tut_visto_' + painel;
+  if (localStorage.getItem(chave)) return; // já viu
+  const passos = TUTORIAIS[painel];
+  if (!passos) return;
+  tutAtual = painel;
+  tutPasso = 0;
+  tutRenderPasso();
+}
+
+function tutRenderPasso() {
+  tutLimpar();
+  const passos = TUTORIAIS[tutAtual];
+  const passo = passos[tutPasso];
+
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'tutorial-overlay';
+  overlay.id = 'tut-overlay';
+  overlay.onclick = () => {}; // bloqueia cliques no fundo
+  document.body.appendChild(overlay);
+
+  // Destaque no elemento alvo
+  if (passo.alvo) {
+    const el = document.getElementById(passo.alvo);
+    if (el) {
+      el.classList.add('tutorial-highlight');
+      tutElementoDestacado = el;
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // Balão
+  const balao = document.createElement('div');
+  balao.className = 'tutorial-balao';
+  balao.setAttribute('data-seta', 'none');
+  balao.id = 'tut-balao';
+
+  // Pontos de progresso
+  const pontos = passos.map((_, i) =>
+    `<div class="tut-ponto${i === tutPasso ? ' ativo' : ''}"></div>`
+  ).join('');
+
+  const ehUltimo = tutPasso === passos.length - 1;
+
+  balao.innerHTML = `
+    <div class="tutorial-step-badge">Passo ${tutPasso + 1} de ${passos.length}</div>
+    <h3>${passo.titulo}</h3>
+    <p>${passo.texto}</p>
+    <div class="tutorial-nav">
+      <div class="tut-pontos">${pontos}</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="tut-btn-pular" onclick="tutPular()">Pular tutorial</button>
+        <button class="tut-btn-prox" onclick="tutProximo()">${ehUltimo ? '✓ Entendi!' : 'Próximo →'}</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(balao);
+
+  // Posicionamento do balão
+  posicionarBalao(balao, passo);
+}
+
+function posicionarBalao(balao, passo) {
+  const GAP = 14;       // distância entre elemento e balão
+  const MARGEM = 12;    // distância mínima das bordas da tela
+  const BW = 300;       // largura fixa do balão
+
+  // Sem alvo: centraliza na tela
+  if (!passo.alvo) {
+    balao.setAttribute('data-seta', 'none');
+    balao.style.top = '50%';
+    balao.style.left = '50%';
+    balao.style.transform = 'translate(-50%, -50%)';
+    return;
+  }
+
+  const el = document.getElementById(passo.alvo);
+  if (!el) {
+    balao.setAttribute('data-seta', 'none');
+    balao.style.top = '50%';
+    balao.style.left = '50%';
+    balao.style.transform = 'translate(-50%, -50%)';
+    return;
+  }
+
+  // Scroll suave até o elemento e depois posiciona
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  setTimeout(() => {
+    const rect = el.getBoundingClientRect();
+    const bH = balao.offsetHeight || 220;
+    const vW = window.innerWidth;
+    const vH = window.innerHeight;
+
+    // Calcula left ideal: alinha com a borda esquerda do elemento,
+    // mas garante que não saia da tela
+    const leftIdeal = rect.left;
+    const left = Math.max(MARGEM, Math.min(leftIdeal, vW - BW - MARGEM));
+
+    // Posição da seta em X relativa ao balão (aponta para o centro do elemento)
+    const elCentroX = rect.left + rect.width / 2;
+    const setaX = Math.max(16, Math.min(elCentroX - left - 7, BW - 30));
+
+    // Tenta ABAIXO do elemento (seta aponta pra cima)
+    const topAbaixo = rect.bottom + GAP;
+    if (topAbaixo + bH < vH - MARGEM) {
+      balao.setAttribute('data-seta', 'cima');
+      balao.style.setProperty('--seta-x', setaX + 'px');
+      balao.style.top = topAbaixo + 'px';
+      balao.style.left = left + 'px';
+      balao.style.transform = 'none';
+      return;
+    }
+
+    // Tenta ACIMA do elemento (seta aponta pra baixo)
+    const topAcima = rect.top - bH - GAP;
+    if (topAcima > MARGEM) {
+      balao.setAttribute('data-seta', 'baixo');
+      balao.style.setProperty('--seta-x', setaX + 'px');
+      balao.style.top = topAcima + 'px';
+      balao.style.left = left + 'px';
+      balao.style.transform = 'none';
+      return;
+    }
+
+    // Fallback: centralizado sem seta
+    balao.setAttribute('data-seta', 'none');
+    balao.style.top = '50%';
+    balao.style.left = '50%';
+    balao.style.transform = 'translate(-50%, -50%)';
+  }, 380); // aguarda o scroll suave terminar
+}
+
+function tutProximo() {
+  const passos = TUTORIAIS[tutAtual];
+  if (tutPasso < passos.length - 1) {
+    tutPasso++;
+    tutRenderPasso();
+  } else {
+    tutConcluir();
+  }
+}
+
+function tutPular() {
+  tutConcluir();
+}
+
+function tutConcluir() {
+  localStorage.setItem('tut_visto_' + tutAtual, '1');
+  tutLimpar();
+  tutAtual = null;
+}
+
+function tutLimpar() {
+  const overlay = document.getElementById('tut-overlay');
+  if (overlay) overlay.remove();
+  const balao = document.getElementById('tut-balao');
+  if (balao) balao.remove();
+  if (tutElementoDestacado) {
+    tutElementoDestacado.classList.remove('tutorial-highlight');
+    tutElementoDestacado = null;
+  }
+}
+
+function tutResetar() {
+  // Apaga todos os tutoriais vistos (útil para testar)
+  Object.keys(TUTORIAIS).forEach(k => localStorage.removeItem('tut_visto_' + k));
 }
 
 </script>
