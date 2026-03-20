@@ -273,6 +273,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
       <option value="genetica">🧬 Genética e Embriologia</option>
       <option value="mentalidade">💡 Mentalidade Empreendedora</option>
       <option value="bioestatistica">📊 Bioestatística e Epidemiologia</option>
+      <option value="fisiologia">🫀 Fisiologia Humana</option>
+      <option value="producao">🔭 Produção do Conhecimento</option>
+      <option value="projeto">🎯 Projeto de Vida</option>
+      <option value="saude">🏥 Saúde Coletiva</option>
     </select>
     <select class="fc-select" id="fc-ordem">
       <option value="aleatorio">🔀 Aleatório</option>
@@ -365,6 +369,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
       <option value="genetica">🧬 Genética e Embriologia</option>
       <option value="mentalidade">💡 Mentalidade Empreendedora</option>
       <option value="bioestatistica">📊 Bioestatística e Epidemiologia</option>
+      <option value="fisiologia">🫀 Fisiologia Humana</option>
+      <option value="producao">🔭 Produção do Conhecimento</option>
+      <option value="projeto">🎯 Projeto de Vida</option>
+      <option value="saude">🏥 Saúde Coletiva</option>
     </select>
     <span id="ms-total-label" style="font-size:13px;color:#7a8a7c;font-weight:600"></span>
   </div>
@@ -404,6 +412,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
       <label class="sim-opt selected" onclick="simToggle(this)">
         <input type="checkbox" value="bioestatistica" checked>
         <div><div class="sim-opt-label">📊 Bioestatística e Epidemiologia</div><div class="sim-opt-sub">2º Módulo 2025</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="fisiologia" checked>
+        <div><div class="sim-opt-label">🫀 Fisiologia Humana</div><div class="sim-opt-sub">4º Módulo 2025</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="producao" checked>
+        <div><div class="sim-opt-label">🔭 Produção do Conhecimento</div><div class="sim-opt-sub">3º Módulo 2025</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="projeto" checked>
+        <div><div class="sim-opt-label">🎯 Projeto de Vida</div><div class="sim-opt-sub">2º Módulo 2025</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="saude" checked>
+        <div><div class="sim-opt-label">🏥 Saúde Coletiva</div><div class="sim-opt-sub">1º Módulo 2025</div></div>
       </label>
     </div>
     <div class="sim-bottom">
@@ -518,6 +542,82 @@ const MATERIAS = {
       { frente: 'Business Model Canvas — proposta de valor', verso: 'Responde: que problema resolvemos? Que necessidade atendemos? Que valor entregamos ao cliente?' },
       { frente: 'O que é MVP?', verso: 'Produto Mínimo Viável — versão mais simples do produto para testar hipóteses com menor custo e validar se resolve um problema real.' },
       { frente: 'Diferença: Empreendedor por oportunidade vs necessidade', verso: 'Oportunidade: percebe nicho de mercado, planeja, prepara-se. Necessidade: sem emprego/renda, abre negócio sem planejamento adequado.' },
+    ]
+  },
+  fisiologia: {
+    nome: 'Fisiologia Humana',
+    icon: '🫀',
+    modulo: '4º Módulo 2025',
+    cor: '#dc2626',
+    url: 'fisiologia-humana.html',
+    flashcards: [
+      { frente: 'Quatro processos fisiológicos do TGI', verso: 'Motilidade (movimento), Secreção (enzimas/sucos), Digestão (quebra mecânica e química) e Absorção (passagem para corrente sanguínea).' },
+      { frente: 'Diferença entre peristaltismo e segmentação', verso: 'Peristaltismo: ondas de contração que propulsionam o alimento para frente. Segmentação: mistura o conteúdo sem propulsioná-lo, maximizando contato com enzimas.' },
+      { frente: 'Como glicose e galactose são absorvidas no intestino?', verso: 'SGLT-1 na membrana apical (cotransporte com Na⁺, ativo) → saem pelo GLUT2 para a circulação portal. Frutose usa GLUT5 (passivo).' },
+      { frente: 'Causa fisiológica da intolerância à lactose', verso: 'Deficiência de lactase nos enterócitos → lactose não digerida → fermentação colônica → gases + diarreia osmótica.' },
+      { frente: 'Diferença entre insulina e glucagon', verso: 'Insulina (célula β): liberada após refeição, reduz glicemia (capta glicose). Glucagon (célula α): liberado no jejum, aumenta glicemia (glicogenólise + gliconeogênese).' },
+      { frente: 'Função do rim na nutrição', verso: 'Filtra 180 L/dia, reabsorve 99%. Regula equilíbrio hídrico, eletrólitos, pH e excreta produtos do metabolismo proteico (ureia).' },
+      { frente: 'O que é metabolismo basal?', verso: 'Energia mínima para manter funções vitais em repouso. Influenciado por: massa muscular, hormônios tireoidianos, idade, sexo e temperatura corporal.' },
+      { frente: 'Papel da bile na digestão de lipídios', verso: 'Emulsifica as gorduras (aumenta superfície de contato) → facilita ação da lipase pancreática. Bile produzida no fígado, armazenada na vesícula biliar.' },
+      { frente: 'O que são peptídeos gastrointestinais? Exemplos', verso: 'Hormônios secretados pelo TGI que regulam digestão. Ex: Gastrina (↑ HCl), Secretina (↑ bicarbonato pancreático), CCK (↑ bile e enzimas pancreáticas), GLP-1 (↑ insulina).' },
+      { frente: 'Diferença entre digestão química e mecânica', verso: 'Mecânica: mastigação, peristaltismo, segmentação (dividem fisicamente). Química: enzimas (amilase, pepsina, lipase) e ácidos quebram ligações moleculares.' },
+    ]
+  },
+  producao: {
+    nome: 'Produção do Conhecimento Científico',
+    icon: '🔭',
+    modulo: '3º Módulo 2025',
+    cor: '#7c3aed',
+    url: 'producao-conhecimento.html',
+    flashcards: [
+      { frente: 'Diferença entre ciência, tecnologia e técnica', verso: 'Ciência: compreender o mundo. Tecnologia: aplicar conhecimento científico (saber teórico+prático). Técnica: saber fazer empírico sem base teórica.' },
+      { frente: 'O que diferencia a ciência do senso comum?', verso: 'Ciência usa método científico rigoroso, sistemático, replicável por outros pesquisadores. Senso comum é empírico, não sistemático, baseado em experiência pessoal.' },
+      { frente: 'O que é neuroplasticidade?', verso: 'Capacidade do cérebro de reorganizar suas conexões neurais em resposta a experiências, aprendizado e ambiente — base biológica da aprendizagem.' },
+      { frente: 'Diferença entre pesquisa qualitativa e quantitativa', verso: 'Quantitativa: dados numéricos, estatística, generalização. Qualitativa: dados descritivos, compreensão de significados, contextos. Podem ser combinadas (mista).' },
+      { frente: 'O que é disrupção tecnológica?', verso: 'Inovação que transforma ou substitui mercados, produtos ou serviços existentes. Ex: streaming substituiu DVD, smartphones substituíram câmeras e GPS.' },
+      { frente: 'As 4 Revoluções Industriais', verso: '1ª: vapor e mecanização. 2ª: eletricidade e produção em massa. 3ª: computadores e automação. 4ª: IA, IoT, Big Data e fusão físico-digital.' },
+      { frente: 'O que é propriedade intelectual? Tipos', verso: 'Direito legal sobre criações da mente. Tipos: patente (invenção), direito autoral (obras criativas), marca registrada, segredo industrial.' },
+      { frente: 'Etapas do método científico', verso: 'Observação → Problema → Hipótese → Experimentação/Coleta de dados → Análise → Conclusão → Publicação.' },
+      { frente: 'O que é aprendizagem segundo o construtivismo (Piaget)?', verso: 'O sujeito constrói ativamente o conhecimento interagindo com o ambiente. Aprender é assimilar e acomodar novas informações em esquemas mentais existentes.' },
+      { frente: 'O que é alta performance cognitiva?', verso: 'Estado de funcionamento mental ótimo: foco, memória eficiente, criatividade e resolução de problemas. Favorecido por sono adequado, exercício, nutrição e mindfulness.' },
+    ]
+  },
+  projeto: {
+    nome: 'Projeto de Vida',
+    icon: '🎯',
+    modulo: '2º Módulo 2025',
+    cor: '#16a34a',
+    url: 'projeto-de-vida.html',
+    flashcards: [
+      { frente: 'O que é Projeto de Vida?', verso: 'Visualização antecipada da vida desejada e processo de organizar metas, condutas e ações para torná-la realidade — engloba dimensões pessoal e profissional.' },
+      { frente: 'O que significa a sigla SMART?', verso: 'Specific (específica), Measurable (mensurável), Achievable (alcançável), Relevant (relevante), Time-bound (com prazo definido).' },
+      { frente: 'O que são crenças limitantes?', verso: 'Pensamentos automáticos negativos sobre si mesmo ("não sou capaz") que sabotam o desempenho e impedem o alcance de objetivos. Podem ser ressignificadas.' },
+      { frente: 'Para que serve a Roda da Vida?', verso: 'Ferramenta de autoavaliação que mapeia 8 áreas (carreira, finanças, saúde, relacionamentos, desenvolvimento, lazer, espiritualidade, família) para identificar desequilíbrios.' },
+      { frente: 'O que é autorresponsabilidade?', verso: 'Assumir a responsabilidade pelos próprios resultados — positivos e negativos — e agir para mudar o que for necessário. Oposto da vitimização.' },
+      { frente: 'Diferença entre sucesso e prosperidade', verso: 'Sucesso: alcançar metas externas (carreira, dinheiro). Prosperidade: estado interno de realização, propósito e bem-estar — engloba todas as dimensões da vida.' },
+      { frente: 'O que é Personal Branding?', verso: 'Gestão da própria marca pessoal — como você se posiciona e é percebido no mercado. Inclui presença digital, reputação, habilidades e valores comunicados.' },
+      { frente: 'O que é estado atual vs estado desejado?', verso: 'Estado atual: onde você está hoje (diagnóstico real). Estado desejado: onde quer chegar. O gap entre eles define o plano de ação do projeto de vida.' },
+      { frente: 'Competências do futuro do trabalho', verso: 'Pensamento crítico, criatividade, inteligência emocional, colaboração, adaptabilidade, literacia digital e aprendizado contínuo (lifelong learning).' },
+      { frente: 'O que é legado no contexto do projeto de vida?', verso: 'O impacto positivo e duradouro que você deixa no mundo e nas pessoas — vai além de realizações pessoais, representa sua contribuição para a sociedade.' },
+    ]
+  },
+  saude: {
+    nome: 'Saúde Coletiva',
+    icon: '🏥',
+    modulo: '1º Módulo 2025',
+    cor: '#0891b2',
+    url: 'saude-coletiva.html',
+    flashcards: [
+      { frente: 'Princípios doutrinários do SUS', verso: 'UIE: Universalidade (saúde para todos), Integralidade (atenção ao todo — promoção, prevenção e cura) e Equidade (tratar desigualmente os desiguais).' },
+      { frente: 'Princípios organizacionais do SUS', verso: 'Regionalização, hierarquização, descentralização, resolubilidade e participação social (controle social).' },
+      { frente: 'O que foi a 8ª Conferência Nacional de Saúde (1986)?', verso: 'Marco histórico que propôs a Reforma Sanitária e estabeleceu as bases para o SUS na Constituição de 1988. Maior evento de participação social na saúde brasileira.' },
+      { frente: 'Definição de saúde pela OMS (1948)', verso: 'Estado de completo bem-estar físico, mental e social — não apenas ausência de doença. Representou avanço histórico ao incluir dimensões além da biológica.' },
+      { frente: 'O que são determinantes sociais da saúde?', verso: 'Condições em que as pessoas nascem, crescem, vivem, trabalham e envelhecem. Ex: renda, educação, moradia, saneamento, emprego. Modelo de Dahlgren e Whitehead.' },
+      { frente: 'O que é a PNH (Política Nacional de Humanização)?', verso: 'Política do SUS que visa humanizar as práticas de saúde, valorizando usuários e trabalhadores. Princípios: acolhimento, vínculo, responsabilização e autonomia.' },
+      { frente: 'Diferença entre vigilância epidemiológica e sanitária', verso: 'Epidemiológica: monitora doenças e agravos na população. Sanitária: fiscaliza produtos, serviços e ambientes para prevenir riscos à saúde.' },
+      { frente: 'O que é equidade no SUS?', verso: 'Tratar desigualmente os desiguais — dar mais recursos e atenção a quem tem maior necessidade. Diferente de igualdade (dar igual a todos).' },
+      { frente: 'O que é controle social no SUS?', verso: 'Participação da sociedade no planejamento e fiscalização do SUS por meio de Conselhos de Saúde e Conferências de Saúde. Princípio organizacional garantido pela Constituição.' },
+      { frente: 'Níveis de atenção à saúde no SUS', verso: 'Primária (UBS — porta de entrada, prevenção e promoção), Secundária (especialidades ambulatoriais), Terciária (hospitais de alta complexidade).' },
     ]
   },
   bioestatistica: {
@@ -675,7 +775,16 @@ function fcCarregarMateria() {} // trigger ao mudar select
 // ═══════════════════════════════════════════════
 function revGetDados(mat) {
   try {
-    const key = 'quiz_' + (mat === 'genetica' ? 'genetica-embriologia' : mat === 'mentalidade' ? 'mentalidade-criativa-empreendedora' : 'bioestatistica-epidemiologia');
+    const keyMap = {
+      genetica: 'genetica-embriologia',
+      mentalidade: 'mentalidade-criativa-empreendedora',
+      bioestatistica: 'bioestatistica-epidemiologia',
+      fisiologia: 'fisiologia-humana',
+      producao: 'producao-conhecimento',
+      projeto: 'projeto-de-vida',
+      saude: 'saude-coletiva'
+    };
+    const key = 'quiz_' + (keyMap[mat] || mat);
     const salvo = localStorage.getItem(key);
     if (!salvo) return null;
     const d = JSON.parse(salvo);
@@ -759,7 +868,36 @@ const MS_QUESTOES = {
     { tema:'Mindset', enunciado:'Uma característica do mindset empreendedor é:', opcoes:['Evitar desafios para proteger o capital.','Acreditar que habilidades são fixas.','Encarar desafios como aprendizado e persistir diante dos obstáculos.','Focar só em resultados financeiros.'], correta:2, gabarito:'Mindset de crescimento: desafios = aprendizado; limitações = oportunidade. Oposto do mindset fixo que evita desafios.' },
     { tema:'Canvas', enunciado:'No Business Model Canvas, a "Proposta de Valor" responde à pergunta:', opcoes:['Quanto os clientes pagarão?','Que problema resolvemos? Que necessidade atendemos?','Quais são os canais de distribuição?','Quem são os fornecedores?'], correta:1, gabarito:'Proposta de Valor = coração do Canvas. Define POR QUE o cliente escolhe sua empresa em vez da concorrente.' },
   ],
+  fisiologia: [
+    { tema:'Sistema Digestivo', enunciado:'Qual processo fisiológico do TGI mistura o conteúdo intestinal sem propulsioná-lo?', opcoes:['Peristaltismo','Secreção','Segmentação','Absorção'], correta:2, gabarito:'Segmentação agita e mistura sem propulsionar, maximizando contato com enzimas e epitélio. Peristaltismo propulsiona o alimento ao longo do TGI.' },
+    { tema:'Digestão de Carboidratos', enunciado:'Como glicose e galactose são absorvidas pelos enterócitos?', opcoes:['Difusão simples','Cotransporte com Na⁺ via SGLT-1 na membrana apical, saindo pelo GLUT2 para a circulação portal','Difusão facilitada via GLUT5','Transporte ativo via bomba de cálcio'], correta:1, gabarito:'SGLT-1 = transporte ativo secundário (usa gradiente de Na⁺ criado pela bomba Na⁺/K⁺). Saída pelo GLUT2 (passivo). Frutose usa GLUT5.' },
+    { tema:'Insulina e Glucagon', enunciado:'Qual é a diferença entre insulina e glucagon no metabolismo da glicose?', opcoes:['Ambos aumentam a glicemia.','Insulina reduz a glicemia (capta glicose); glucagon aumenta a glicemia (glicogenólise + gliconeogênese).','Glucagon é produzido após refeições; insulina em jejum.','São produzidos no mesmo tipo celular do pâncreas.'], correta:1, gabarito:'Insulina (célula β): pós-prandial, reduz glicemia. Glucagon (célula α): jejum, aumenta glicemia. Balanço entre eles regula a homeostase glicêmica.' },
+    { tema:'Sistema Digestivo', enunciado:'A intolerância à lactose tem como causa fisiológica:', opcoes:['Alergia à proteína do leite (IgE contra caseína).','Deficiência de lactase nos enterócitos → lactose não digerida → fermentação colônica → gases e diarreia osmótica.','Deficiência de amilase pancreática.','Intolerância ao glúten.'], correta:1, gabarito:'Sem lactase, a lactose chega ao cólon intacta → fermentação bacteriana → H₂, CO₂, metano (distensão) + efeito osmótico (atrai água → diarreia).' },
+    { tema:'Metabolismo', enunciado:'O metabolismo basal é influenciado por:', opcoes:['Apenas pela ingestão calórica diária.','Massa muscular, hormônios tireoidianos, idade, sexo e temperatura corporal.','Exclusivamente pela atividade física realizada.','Somente pelo índice de massa corporal (IMC).'], correta:1, gabarito:'Metabolismo basal = energia mínima para funções vitais em repouso. Maior massa muscular, T3/T4 elevados, sexo masculino e idade jovem → maior metabolismo basal.' },
+  ],
+  producao: [
+    { tema:'Tipos de Conhecimento', enunciado:'O que diferencia a ciência das outras formas de conhecimento?', opcoes:['É criada por gênios isolados.','Usa método científico rigoroso, baseado em evidências, replicável por outros pesquisadores.','Não pode ser questionada após publicada.','Depende exclusivamente da intuição.'], correta:1, gabarito:'Ciência: método científico (problema → hipótese → coleta → análise → conclusão), sistemático e replicável. Difere do senso comum (empírico) e da filosofia (razão pura).' },
+    { tema:'Aprendizagem', enunciado:'Para o construtivismo de Piaget, a aprendizagem é:', opcoes:['Mudança de comportamento por estímulo-resposta.','Construção ativa do conhecimento pelo sujeito interagindo com o ambiente — assimilação e acomodação em esquemas mentais.','Transmissão passiva de informação do professor para o aluno.','Memorização de conteúdos por repetição.'], correta:1, gabarito:'Construtivismo: o sujeito constrói ativamente o conhecimento. Assimila novas informações em esquemas existentes; quando não encaixa, acomoda (modifica os esquemas). Diferente do behaviorismo (estímulo-resposta).' },
+    { tema:'Disrupção', enunciado:'O que é disrupção tecnológica?', opcoes:['Melhoria gradual de produtos já existentes no mercado.','Inovação que transforma ou substitui mercados e serviços existentes. Ex: streaming substituiu DVD.','Regulamentação governamental de novas tecnologias.','Retorno a tecnologias analógicas por questões de segurança.'], correta:1, gabarito:'Disrupção (Clayton Christensen): inovação que começa marginal e eventualmente desloca ou elimina o produto/serviço estabelecido. Ex: Netflix/DVD, Uber/táxi, smartphones/GPS.' },
+    { tema:'Revoluções Industriais', enunciado:'A 4ª Revolução Industrial é caracterizada por:', opcoes:['Mecanização a vapor e surgimento das fábricas.','Eletricidade e produção em série (Ford).','Computadores e automação industrial.','Fusão entre físico, digital e biológico — IA, IoT, Big Data, impressão 3D.'], correta:3, gabarito:'1ª: vapor. 2ª: eletricidade. 3ª: computadores/automação. 4ª: fusão físico-digital-biológico — IA, IoT, Big Data, biotecnologia, robótica avançada.' },
+    { tema:'Método Científico', enunciado:'A diferença entre pesquisa qualitativa e quantitativa é:', opcoes:['Qualitativa usa números; quantitativa usa palavras.','Quantitativa: dados numéricos, estatística, generalização. Qualitativa: dados descritivos, compreensão de significados e contextos.','São idênticas em metodologia, diferindo apenas no tema.','Qualitativa é mais científica que quantitativa.'], correta:1, gabarito:'Quantitativa: mede, conta, generaliza (ex: prevalência de obesidade em %). Qualitativa: compreende significados, experiências, contextos (ex: percepção do paciente sobre sua dieta). Podem ser combinadas na pesquisa mista.' },
+  ],
+  projeto: [
+    { tema:'Projeto de Vida', enunciado:'Projeto de Vida pode ser definido como:', opcoes:['Lista de objetivos financeiros para a aposentadoria.','Visualização antecipada da vida desejada e processo de organizar metas, condutas e ações para torná-la realidade.','Documento elaborado por orientadores vocacionais.','Planejamento exclusivo da vida profissional.'], correta:1, gabarito:'Projeto de Vida engloba dimensões pessoal e profissional, baseado em valores e prioridades individuais. Não é só lista de metas ou restrito à carreira.' },
+    { tema:'Metas SMART', enunciado:'Na metodologia SMART, o "M" significa:', opcoes:['Motivacional.','Mensurável — com indicadores concretos que permitam verificar o progresso.','Multidimensional.','Modular.'], correta:1, gabarito:'SMART: Specific, Measurable, Achievable, Relevant, Time-bound. "M" = mensurável. Ex: não "quero me formar bem", mas "quero CRA acima de 8,0 em todos os períodos".' },
+    { tema:'Autoconhecimento', enunciado:'Crenças limitantes são:', opcoes:['Convicções religiosas que orientam escolhas.','Pensamentos automáticos negativos que sabotam o desempenho e impedem o alcance de objetivos.','Limitações físicas a superar por tratamento.','Restrições do mercado de trabalho.'], correta:1, gabarito:'Crenças limitantes: "não sou capaz", "não tenho sorte". Identificá-las e ressignificá-las é parte fundamental do autoconhecimento e do projeto de vida.' },
+    { tema:'Roda da Vida', enunciado:'A Roda da Vida é usada para:', opcoes:['Calcular tempo para atingir metas profissionais.','Mapear satisfação e equilíbrio entre as diferentes áreas da vida.','Definir sequência de atividades do plano de ação.','Avaliar só desempenho acadêmico.'], correta:1, gabarito:'Roda da Vida: 8 áreas (carreira, finanças, saúde, relacionamentos, desenvolvimento, lazer, espiritualidade, família). Identifica desequilíbrios e prioriza melhorias.' },
+    { tema:'Protagonismo', enunciado:'Autorresponsabilidade significa:', opcoes:['Culpar terceiros pelos resultados negativos.','Assumir responsabilidade pelos próprios resultados e agir para mudar o que for necessário.','Delegar decisões para mentores.','Esperar condições ideais para agir.'], correta:1, gabarito:'Autorresponsabilidade = oposto da vitimização. Protagonista analisa o que está sob seu controle, aprende com erros e age. Pilar fundamental do projeto de vida.' },
+  ],
+  saude: [
+    { tema:'SUS — Princípios', enunciado:'Os princípios doutrinários do SUS são:', opcoes:['Regionalização, Hierarquização e Descentralização.','Universalidade, Integralidade e Equidade.','Universalidade, Resolutividade e Participação Social.','Equidade, Descentralização e Integralidade.'], correta:1, gabarito:'UIE: Universalidade (todos têm direito), Integralidade (atenção completa — promoção, prevenção, cura e reabilitação), Equidade (mais a quem mais precisa).' },
+    { tema:'SUS — Histórico', enunciado:'A 8ª Conferência Nacional de Saúde (1986) foi um marco porque:', opcoes:['Criou o INAMPS.','Propôs a Reforma Sanitária e estabeleceu as bases conceituais para o SUS na Constituição de 1988.','Regulamentou hospitais privados conveniados.','Instituiu a Lei 8.080/1990.'], correta:1, gabarito:'8ª CNS: maior evento de participação social na saúde. Com trabalhadores, usuários e profissionais, propôs a Reforma Sanitária → SUS na Constituição de 1988.' },
+    { tema:'Conceito de Saúde', enunciado:'A definição de saúde da OMS (1948) é:', opcoes:['Ausência de doenças físicas.','Estado de completo bem-estar físico, mental e social — não apenas ausência de doença.','Capacidade de trabalhar e produzir.','Equilíbrio biológico sem interferência social.'], correta:1, gabarito:'OMS 1948: ampliou para além da ausência de doenças. Inclui bem-estar físico, mental e social. A 8ª CNS (1986) avançou mais incluindo condições de vida como moradia e emprego.' },
+    { tema:'Determinantes Sociais', enunciado:'No modelo de Dahlgren e Whitehead, a camada mais próxima do indivíduo (não modificável) refere-se a:', opcoes:['Condições socioeconômicas gerais.','Condições de trabalho e moradia.','Idade, sexo e herança genética.','Estilos de vida individuais.'], correta:2, gabarito:'Camada central: fatores não modificáveis — idade, sexo, herança genética. Camadas externas (modificáveis): comportamento, redes sociais, condições de vida/trabalho, macroeconomia.' },
+    { tema:'PNH', enunciado:'A Política Nacional de Humanização (PNH) tem como princípios:', opcoes:['Privatização, eficiência e lucratividade dos serviços de saúde.','Acolhimento, vínculo, responsabilização e autonomia dos usuários e trabalhadores.','Centralização das decisões na gestão federal do SUS.','Priorização do atendimento hospitalar sobre a atenção básica.'], correta:1, gabarito:'PNH: humaniza práticas de saúde valorizando usuários e trabalhadores. Acolhimento (escuta qualificada), vínculo (continuidade do cuidado), responsabilização (corresponsabilidade) e autonomia.' },
+  ],
   bioestatistica: [
+    { tema:'Prevalência vs Incidência',  bioestatistica: [
     { tema:'Prevalência vs Incidência', enunciado:'A diferença entre prevalência e incidência é:', opcoes:['São iguais para doenças crônicas.','Prevalência conta casos existentes (novos + antigos); incidência conta apenas casos NOVOS em pessoas saudáveis.','Incidência usa a população total; prevalência usa os doentes.','Prevalência é usada para doenças agudas; incidência para crônicas.'], correta:1, gabarito:'Prevalência = fotografia (todos os casos). Incidência = filme (só novos, em pessoas sob risco). Prevalência = Incidência × Duração.' },
     { tema:'Odds Ratio', enunciado:'O Odds Ratio (OR) é usado em:', opcoes:['Estudos prospectivos como coorte.','Estudos retrospectivos como caso-controle e transversal.','Apenas ensaios clínicos randomizados.','Revisões sistemáticas e metanálises.'], correta:1, gabarito:'OR: estudos retrospectivos (caso-controle, transversal). RR: estudos prospectivos (coorte, ensaio clínico). OR = (A×D)/(B×C).' },
     { tema:'Hierarquia de Evidências', enunciado:'A hierarquia de evidências do maior para o menor nível é:', opcoes:['Relato de caso → Transversal → Coorte → ECR → Revisão sistemática','Revisão sistemática → ECR → Coorte → Caso-Controle → Transversal → Relato de caso','ECR → Coorte → Revisão sistemática → Caso-Controle','Todos têm o mesmo nível dependendo da amostra.'], correta:1, gabarito:'Revisão sistemática/Metanálise > ECR > Coorte > Caso-Controle > Transversal > Relato de caso. Base da Nutrição Baseada em Evidências.' },
@@ -815,7 +953,36 @@ const SIM_QUESTOES = {
     { mat:'Mentalidade', tema:'Administração', enunciado:'O risco de um novo negócio deve ser identificado na fase de:', opcoes:['Controle.','Direção.','Organização.','Planejamento — antes de qualquer investimento.'], correta:3, gabarito:'Risco no planejamento: identifica ANTES de investir. Se for alto, pode adaptar ou desistir sem perdas maiores.' },
     { mat:'Mentalidade', tema:'Validação', enunciado:'O "Modo Beta em Looping" significa:', opcoes:['Lançar só quando 100% pronto.','Testar apenas com público interno.','Lançar, coletar feedback, iterar continuamente — nunca "pronto".','Desenvolver múltiplas versões simultaneamente.'], correta:2, gabarito:'Lean Startup: construir → medir → aprender. Produto nunca está pronto — sempre há melhorias com base em feedback real.' },
   ],
+  fisiologia: [
+    { mat:'Fisiologia', tema:'Sistema Digestivo', enunciado:'Qual processo fisiológico do TGI mistura o conteúdo sem propulsioná-lo?', opcoes:['Peristaltismo','Secreção','Segmentação','Absorção'], correta:2, gabarito:'Segmentação mistura sem propulsionar. Peristaltismo propulsiona. Absorção = passagem de nutrientes para o sangue.' },
+    { mat:'Fisiologia', tema:'Digestão de Carboidratos', enunciado:'A amilase salivar é inativada no estômago porque:', opcoes:['O estômago não tem a enzima para ativá-la.','O HCl gástrico reduz o pH abaixo de 4,0, inativando a amilase.','A bile neutraliza a amilase antes de agir.','O peristaltismo destrói a estrutura proteica da enzima.'], correta:1, gabarito:'Amilase salivar age na boca (pH ~7). No estômago, HCl reduz pH < 4 → desnaturação da amilase. Por isso < 5% do amido é digerido na boca — maioria no duodeno pela amilase pancreática.' },
+    { mat:'Fisiologia', tema:'Insulina e Glucagon', enunciado:'Insulina e glucagon são produzidos, respectivamente, pelas células:', opcoes:['Alfa e beta do pâncreas.','Beta e alfa do pâncreas.','Delta e beta do pâncreas.','Acinar e beta do pâncreas.'], correta:1, gabarito:'Células β (beta) → insulina (pós-prandial, reduz glicemia). Células α (alfa) → glucagon (jejum, aumenta glicemia). Ambas nas ilhotas de Langerhans do pâncreas endócrino.' },
+    { mat:'Fisiologia', tema:'Sistema Renal', enunciado:'O rim filtra aproximadamente quantos litros de plasma por dia, e quanto é excretado na urina?', opcoes:['10 L filtrados, 1 L excretado.','180 L filtrados, ~1,5 L excretado na urina.','50 L filtrados, 5 L excretado.','180 L filtrados, 50 L excretado.'], correta:1, gabarito:'180 L de ultrafiltrado glomerular/dia. 99% reabsorvidos nos túbulos. Apenas ~1,5 L formam a urina final. Alta eficiência de reabsorção de água, glicose, aminoácidos e eletrólitos.' },
+    { mat:'Fisiologia', tema:'Metabolismo', enunciado:'O que é e o que influencia o metabolismo basal?', opcoes:['Gasto energético durante exercício intenso; influenciado apenas pela dieta.','Energia mínima para manter funções vitais em repouso; influenciado por massa muscular, hormônios tireoidianos, idade, sexo e temperatura.','Gasto calórico total diário; determinado exclusivamente pelo IMC.','Energia gasta na digestão dos alimentos; influenciado pela velocidade do TGI.'], correta:1, gabarito:'Metabolismo basal (MB): energia mínima em repouso para funções vitais. Maior com mais massa muscular, T3/T4 elevados, sexo masculino, juventude e temperatura ambiente baixa.' },
+  ],
+  producao: [
+    { mat:'Produção do Conhecimento', tema:'Tipos de Conhecimento', enunciado:'A ciência se distingue do senso comum principalmente porque:', opcoes:['É criada por especialistas em laboratório.','Usa método rigoroso, sistemático e replicável, partindo de evidências para compreender relações de causa e efeito.','Não pode ser questionada após publicada.','Depende exclusivamente da intuição do pesquisador.'], correta:1, gabarito:'Ciência: sistemática, replicável, baseada em evidências. Senso comum: empírico, não sistemático, baseado em experiência pessoal. Filosofia: razão pura sem necessidade de experimentação.' },
+    { mat:'Produção do Conhecimento', tema:'Disrupção', enunciado:'A Netflix é exemplo de disrupção porque:', opcoes:['Melhorou gradualmente o serviço de aluguel de DVDs.','Abandonou o modelo de DVD e transformou a indústria ao antecipar a mudança para streaming, tornando-se líder mundial.','Investiu em lojas físicas para competir com Blockbuster.','Focou em um nicho específico sem afetar o mercado maior.'], correta:1, gabarito:'Disrupção: em vez de resistir ao streaming (ameaça ao seu modelo de DVD), a Netflix abraçou a mudança e se reinventou. Clássico exemplo de empresa que se disrompeu antes de ser disrompida por outros.' },
+    { mat:'Produção do Conhecimento', tema:'Revoluções Industriais', enunciado:'A 4ª Revolução Industrial se distingue das anteriores porque:', opcoes:['Introduziu a produção em série e as linhas de montagem.','Automatizou processos com computadores e robótica básica.','Promove a fusão entre o físico, o digital e o biológico — IA, IoT, Big Data e biotecnologia.','Criou as primeiras fábricas movidas a vapor.'], correta:2, gabarito:'4ª RI: fusão físico-digital-biológico. Sem fronteiras claras entre tecnologia e biologia. IA, impressão 3D de órgãos, edição genética (CRISPR), cidades inteligentes. Velocidade, amplitude e profundidade sem precedentes.' },
+    { mat:'Produção do Conhecimento', tema:'Aprendizagem', enunciado:'O que é neuroplasticidade e sua importância para a aprendizagem?', opcoes:['Capacidade do cérebro de armazenar memórias de longo prazo apenas na infância.','Capacidade do cérebro de reorganizar conexões neurais em resposta a experiências e aprendizado — base biológica da aprendizagem ao longo da vida.','Processo de envelhecimento das células cerebrais após os 25 anos.','Fenômeno exclusivo do hemisfério direito relacionado à criatividade.'], correta:1, gabarito:'Neuroplasticidade: o cérebro adulto mantém capacidade de formar novas sinapses. É a base biológica de toda aprendizagem. Estimulada por: aprendizado de novas habilidades, exercício físico, sono de qualidade e desafios cognitivos.' },
+    { mat:'Produção do Conhecimento', tema:'Método Científico', enunciado:'Pesquisa qualitativa e quantitativa diferem porque:', opcoes:['Qualitativa usa números; quantitativa usa descrições.','Quantitativa mede e generaliza com dados numéricos; qualitativa compreende significados e contextos com dados descritivos.','São idênticas em metodologia.','Qualitativa é mais científica por ser mais objetiva.'], correta:1, gabarito:'Quantitativa: prevalências, médias, testes estatísticos (ex: IMC médio de escolares). Qualitativa: experiências, percepções, significados (ex: como pacientes vivenciam restrição alimentar). Podem ser combinadas na pesquisa mista.' },
+  ],
+  projeto: [
+    { mat:'Projeto de Vida', tema:'Metas SMART', enunciado:'Uma meta SMART deve ser, entre outras características:', opcoes:['Subjetiva — baseada em sentimentos e aspirações.','Mensurável — com indicadores que permitam verificar o progresso objetivamente.','Motivacional — focada exclusivamente no entusiasmo gerado.','Mágica — além das capacidades atuais do indivíduo.'], correta:1, gabarito:'SMART: Specific, Measurable, Achievable, Relevant, Time-bound. Mensurável = você sabe exatamente quando atingiu. Diferente de aspiração vaga ("ser saudável" → vs "perder 5 kg em 3 meses").' },
+    { mat:'Projeto de Vida', tema:'Autoconhecimento', enunciado:'No contexto do projeto de vida, a Roda da Vida serve para:', opcoes:['Calcular tempo para metas profissionais.','Mapear satisfação nas diferentes áreas da vida e identificar desequilíbrios.','Definir sequência do plano de ação.','Avaliar só desempenho acadêmico.'], correta:1, gabarito:'Roda da Vida: avalia 8 áreas (carreira, finanças, saúde, relacionamentos, desenvolvimento pessoal, lazer, espiritualidade, família) em escala de 0–10. Visualiza desequilíbrios e prioriza melhorias.' },
+    { mat:'Projeto de Vida', tema:'Futuro do Trabalho', enunciado:'Quais são as competências mais valorizadas no futuro do trabalho?', opcoes:['Memorização de conteúdos e execução de tarefas repetitivas.','Pensamento crítico, criatividade, inteligência emocional, adaptabilidade e aprendizado contínuo.','Especialização técnica em uma única área sem flexibilidade.','Cumprimento rigoroso de hierarquias e protocolos estabelecidos.'], correta:1, gabarito:'Futuro do trabalho (WEF): as habilidades mais valorizadas são pensamento crítico, criatividade, inteligência emocional, colaboração, adaptabilidade e literacia digital. Competências que as máquinas ainda não replicam bem.' },
+    { mat:'Projeto de Vida', tema:'Personal Branding', enunciado:'Personal branding é:', opcoes:['Criar um perfil no LinkedIn com foto profissional.','Gestão estratégica da própria marca pessoal — como você se posiciona e é percebido no mercado, incluindo reputação, habilidades e valores.','Memorizar uma lista de qualidades para entrevistas.','Copiar o estilo de profissionais de sucesso na sua área.'], correta:1, gabarito:'Personal branding = gestão da marca pessoal. Envolve: presença digital consistente, narrativa autêntica, reputação construída com entregas, valores comunicados claramente. É o que as pessoas dizem sobre você quando você não está na sala.' },
+    { mat:'Projeto de Vida', tema:'Protagonismo', enunciado:'Autorresponsabilidade, como pilar do protagonismo, significa:', opcoes:['Culpar circunstâncias externas pelos resultados negativos.','Assumir responsabilidade pelos próprios resultados e agir para mudar o que for necessário, sem terceirizar os resultados.','Delegar decisões a mentores e orientadores.','Esperar condições ideais para agir.'], correta:1, gabarito:'Protagonismo = oposto da vitimização. Analisa o que está sob seu controle, aprende com erros e age. Não significa ignorar circunstâncias — significa focar no que PODE ser mudado.' },
+  ],
+  saude: [
+    { mat:'Saúde Coletiva', tema:'SUS — Princípios', enunciado:'Os princípios doutrinários do SUS são:', opcoes:['Regionalização, Hierarquização e Descentralização.','Universalidade, Integralidade e Equidade.','Universalidade, Resolutividade e Participação Social.','Equidade, Descentralização e Integralidade.'], correta:1, gabarito:'UIE: Universalidade (todos têm direito), Integralidade (atenção completa), Equidade (tratar desigualmente os desiguais, dando mais a quem precisa mais). Os organizacionais incluem regionalização, hierarquização e descentralização.' },
+    { mat:'Saúde Coletiva', tema:'Conceito de Saúde', enunciado:'O conceito de saúde da OMS (1948) é:', opcoes:['Ausência de doenças físicas.','Estado de completo bem-estar físico, mental e social — não apenas ausência de doença.','Capacidade de trabalhar e produzir.','Equilíbrio biológico sem interferência social.'], correta:1, gabarito:'OMS 1948: revolucionou ao incluir bem-estar mental e social. A 8ª CNS (1986) avançou incluindo condições de vida (moradia, emprego, saneamento, alimentação) como determinantes de saúde.' },
+    { mat:'Saúde Coletiva', tema:'Determinantes Sociais', enunciado:'No modelo de Dahlgren e Whitehead, os determinantes sociais estão:', opcoes:['Todos no mesmo nível de influência.','Organizados em camadas — da mais próxima (genética, não modificável) à mais distal (macroeconomia, modificável por políticas).','Exclusivamente ligados a fatores biológicos.','Restritos a aspectos econômicos e financeiros.'], correta:1, gabarito:'Modelo de camadas: centro = idade/sexo/genética (não modificável). Camadas seguintes: comportamento individual, redes sociais, condições de vida/trabalho, fatores macroeconômicos (mais modificáveis por políticas públicas).' },
+    { mat:'Saúde Coletiva', tema:'SUS — Histórico', enunciado:'A 8ª Conferência Nacional de Saúde (1986) é marco porque:', opcoes:['Criou o INAMPS e centralizou a saúde.','Propôs a Reforma Sanitária e estabeleceu bases para o SUS na Constituição de 1988.','Regulamentou hospitais privados conveniados.','Instituiu a Lei 8.080/1990.'], correta:1, gabarito:'8ª CNS: com trabalhadores, usuários e profissionais → Reforma Sanitária → SUS na Constituição 1988 (Art. 196). Lei 8.080/1990 regulamentou depois. É o maior evento de participação social na saúde brasileira.' },
+    { mat:'Saúde Coletiva', tema:'PNH', enunciado:'A Política Nacional de Humanização (PNH) tem como princípios:', opcoes:['Privatização, eficiência e lucratividade.','Acolhimento, vínculo, responsabilização e autonomia.','Centralização das decisões na gestão federal.','Priorização do atendimento hospitalar.'], correta:1, gabarito:'PNH humaniza práticas valorizando usuários e trabalhadores. Acolhimento = escuta qualificada. Vínculo = continuidade do cuidado. Responsabilização = corresponsabilidade. Autonomia = empoderamento do usuário.' },
+  ],
   bioestatistica: [
+    { mat:'Bioestatística', tema:'Prevalência',  bioestatistica: [
     { mat:'Bioestatística', tema:'Prevalência', enunciado:'A prevalência é a medida epidemiológica que:', opcoes:['Conta apenas casos NOVOS.','Mede o número de casos existentes (novos + antigos) em determinado período.','Avalia a velocidade de surgimento de novos casos.','É usada exclusivamente para doenças agudas.'], correta:1, gabarito:'Prevalência = fotografia. Casos existentes (novos + antigos) / população × 10ⁿ. Ideal para doenças crônicas (DM, HAS).' },
     { mat:'Bioestatística', tema:'Risco Relativo', enunciado:'O Risco Relativo difere do Odds Ratio porque:', opcoes:['RR é calculado em estudos retrospectivos.','RR mede o risco real (estudos prospectivos) e pode inferir causalidade; OR é estimativa de risco (estudos retrospectivos).','RR usa tabela 2×2 e OR não.','OR é sempre maior que RR.'], correta:1, gabarito:'RR: prospectivos (coorte, ECR), causalidade. OR: retrospectivos (caso-controle, transversal), associação.' },
     { mat:'Bioestatística', tema:'Desenhos de Estudos', enunciado:'O ensaio clínico randomizado é padrão-ouro porque:', opcoes:['É o mais barato e rápido.','Permite analisar dados retrospectivos.','A randomização elimina vieses, garante grupos comparáveis e permite inferir causalidade com alto nível de evidência.','Usa dados do IBGE.'], correta:2, gabarito:'Randomização distribui igualmente os fatores de confusão. É o único estudo que pode afirmar causalidade com alta certeza.' },
