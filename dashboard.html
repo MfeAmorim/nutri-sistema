@@ -1135,6 +1135,133 @@
             </div>
           </div>
 
+          <!-- BARRA DE PROGRESSO DO CURSO -->
+          <div id="barra-curso" style="background:#fff;border:1px solid #e0ebe0;border-radius:16px;padding:22px 24px;margin-bottom:28px"></div>
+          <script>
+          (function() {
+            const inicio  = new Date(2025, 0, 1);   // 01/Jan/2025
+            const fim     = new Date(2028, 11, 31);  // 31/Dez/2028
+            const hoje    = new Date();
+            const totalMs = fim - inicio;
+            const percMs  = Math.min(100, Math.max(0, ((hoje - inicio) / totalMs) * 100));
+            const perc    = percMs.toFixed(1);
+
+            // ── Contadores ──────────────────────────────────────────
+            const msRestantes  = Math.max(0, fim - hoje);
+            const diasRestantes  = Math.ceil(msRestantes / 86400000);
+            const mesesRestantes = Math.ceil(diasRestantes / 30.44);
+            const anosR  = Math.floor(diasRestantes / 365);
+            const mesesR = Math.floor((diasRestantes % 365) / 30);
+            const diasR  = diasRestantes % 30;
+
+            // Tempo decorrido
+            const msDecorrido   = Math.max(0, hoje - inicio);
+            const diasDecorrido = Math.floor(msDecorrido / 86400000);
+            const mesesDecorrido = Math.floor(diasDecorrido / 30.44);
+
+            // Label legível do tempo restante
+            let tempoRestLabel = '';
+            if (anosR > 0)   tempoRestLabel += `${anosR} ano${anosR>1?'s':''} `;
+            if (mesesR > 0)  tempoRestLabel += `${mesesR} ${mesesR>1?'meses':'mês'} `;
+            if (diasR > 0 && anosR === 0) tempoRestLabel += `${diasR} dia${diasR>1?'s':''}`;
+            tempoRestLabel = tempoRestLabel.trim() || 'Concluído!';
+
+            // ── Datas e módulos ──────────────────────────────────────
+            const anos    = [2025, 2026, 2027, 2028];
+            const mesesNm = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+            const mesAtual = mesesNm[hoje.getMonth()];
+            const anoAtual = hoje.getFullYear();
+
+            const modulos = [
+              { label:'1º Mod', ano:2025, sem:1 },
+              { label:'2º Mod', ano:2025, sem:1 },
+              { label:'3º Mod', ano:2025, sem:2 },
+              { label:'4º Mod', ano:2025, sem:2 },
+              { label:'5º Mod', ano:2026, sem:1 },
+              { label:'6º Mod', ano:2026, sem:1 },
+              { label:'7º Mod', ano:2026, sem:2 },
+              { label:'8º Mod', ano:2026, sem:2 },
+            ];
+
+            const hojeLabel = `${mesAtual}/${anoAtual}`;
+
+            document.getElementById('barra-curso').innerHTML = `
+
+              <!-- cabeçalho -->
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:12px">
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:var(--escuro)">📅 Progresso do Curso — Nutrição Unicesumar</div>
+                  <div style="font-size:12px;color:#7a8a7c;margin-top:3px">Jan/2025 → Dez/2028 · 4 anos · 8 módulos</div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px 14px;text-align:center;min-width:70px">
+                    <div style="font-size:20px;font-weight:800;color:var(--verde);line-height:1">${perc}%</div>
+                    <div style="font-size:10px;color:#7a8a7c;margin-top:2px;font-weight:600">concluído</div>
+                  </div>
+                  <div style="background:#fff5f0;border:1px solid #fed7aa;border-radius:10px;padding:8px 14px;text-align:center;min-width:70px">
+                    <div style="font-size:20px;font-weight:800;color:#ea580c;line-height:1">${diasRestantes}</div>
+                    <div style="font-size:10px;color:#7a8a7c;margin-top:2px;font-weight:600">dias rest.</div>
+                  </div>
+                  <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:8px 14px;text-align:center;min-width:70px">
+                    <div style="font-size:20px;font-weight:800;color:#2563eb;line-height:1">${mesesRestantes}</div>
+                    <div style="font-size:10px;color:#7a8a7c;margin-top:2px;font-weight:600">meses rest.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- contador detalhado -->
+              <div style="background:linear-gradient(135deg,#f8f4ef,#ede8df);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <span style="font-size:16px">⏳</span>
+                <div style="font-size:13px;color:var(--texto)">
+                  <strong>${tempoRestLabel}</strong> restantes para a formatura
+                  <span style="color:#9ca3af;margin:0 6px">·</span>
+                  <span style="color:#7a8a7c">${diasDecorrido} dias cursados · ${mesesDecorrido} meses de faculdade</span>
+                </div>
+              </div>
+
+              <!-- barra visual -->
+              <div style="position:relative;margin-bottom:10px">
+                <div style="height:14px;background:#f0f5f0;border-radius:99px;overflow:hidden">
+                  <div style="height:100%;width:${perc}%;background:linear-gradient(90deg,var(--verde),var(--verde-neon));border-radius:99px"></div>
+                </div>
+                <!-- bolinha hoje -->
+                <div style="position:absolute;left:calc(${perc}% - 12px);top:-5px;width:24px;height:24px;background:var(--verde);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(45,106,79,0.4);z-index:2"></div>
+              </div>
+
+              <!-- marcadores de ano -->
+              <div style="position:relative;height:30px;margin-bottom:16px">
+                ${anos.map(a => {
+                  const pct2 = ((new Date(a,0,1) - inicio) / totalMs) * 100;
+                  const ehAtual = a === anoAtual;
+                  return `<div style="position:absolute;left:${pct2}%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px">
+                    <div style="width:1.5px;height:8px;background:${ehAtual?'var(--verde)':'#d1d5db'}"></div>
+                    <span style="font-size:10px;font-weight:700;color:${ehAtual?'var(--verde)':'#9ca3af'};white-space:nowrap;background:${ehAtual?'#f0fdf4':'transparent'};padding:1px 5px;border-radius:6px">${a}${ehAtual?' ◀':''}</span>
+                  </div>`;
+                }).join('')}
+                <!-- label hoje -->
+                <div style="position:absolute;left:${perc}%;transform:translateX(-50%);top:0;display:flex;flex-direction:column;align-items:center">
+                  <span style="background:var(--verde);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;white-space:nowrap;margin-top:10px">${hojeLabel}</span>
+                </div>
+              </div>
+
+              <!-- chips dos módulos -->
+              <div style="display:flex;gap:7px;flex-wrap:wrap">
+                ${modulos.map((m) => {
+                  const passou = (m.ano < anoAtual) || (m.ano === anoAtual && m.sem < (hoje.getMonth() < 6 ? 1 : 2));
+                  const ehAtual = m.ano === anoAtual && ((m.sem === 1 && hoje.getMonth() < 6) || (m.sem === 2 && hoje.getMonth() >= 6));
+                  let bg, cor, borda, icone;
+                  if (ehAtual)      { bg='var(--verde)'; cor='#fff'; borda='var(--verde)'; icone='▶ '; }
+                  else if (passou)  { bg='#dcfce7'; cor='#15803d'; borda='#86efac'; icone='✓ '; }
+                  else              { bg='#f8f4ef'; cor='#b0bcb0'; borda='#e0ebe0'; icone=''; }
+                  return `<span style="padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};color:${cor};border:1.5px solid ${borda};white-space:nowrap">
+                    ${icone}${m.label} · ${m.ano}
+                  </span>`;
+                }).join('')}
+              </div>
+            `;
+          })();
+          </script>
+
           <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#7a8a7c;margin-bottom:12px">1º Módulo 2025</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:28px">
             <a href="biosseguranca.html" style="text-decoration:none">
@@ -1217,6 +1344,15 @@
               <div style="font-size:30px;margin-bottom:10px">➕</div>
               <div style="font-size:14px;font-weight:600;color:#7a8a7c;margin-bottom:4px">Mais matérias em breve</div>
               <div style="font-size:12px;color:#b0bcb0">Novos conteúdos adicionados conforme o curso avança</div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#7a8a7c;margin-bottom:12px">1º Módulo 2026</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:28px">
+            <div style="background:#fff;border:1.5px dashed #74c69d;border-radius:14px;padding:20px;opacity:0.75">
+              <div style="font-size:30px;margin-bottom:10px">📖</div>
+              <div style="font-size:14px;font-weight:700;color:var(--verde);margin-bottom:4px">Em andamento</div>
+              <div style="font-size:12px;color:#7a8a7c">Conteúdos do 1º Módulo 2026 serão adicionados aqui conforme as aulas avançam</div>
             </div>
           </div>
 
@@ -2795,12 +2931,13 @@ function calcularMetasManual() {
   const ativ     = document.getElementById('mt-atividade').value;
   const objetivo = document.getElementById('mt-objetivo').value;
 
-  // Validações obrigatórias
-  if (!sexo)   { alert('⚠️ Selecione o Sexo antes de calcular.'); return; }
-  if (!idade || idade < 10 || idade > 110) { alert('⚠️ Informe uma Idade válida (10–110 anos).'); return; }
-  if (!peso  || peso  < 20 || peso  > 300) { alert('⚠️ Informe um Peso válido (20–300 kg).'); return; }
-  if (!altura) { alert('⚠️ Informe a Altura antes de calcular.'); return; }
-  if (!ativ)   { alert('⚠️ Selecione o Nível de Atividade antes de calcular.'); return; }
+  // Validações — silenciosas se chamado automaticamente (sem interação do usuário)
+  const chamadoManualmente = (typeof event !== 'undefined' && event && event.type === 'click');
+  if (!sexo)   { if (chamadoManualmente) alert('⚠️ Selecione o Sexo antes de calcular.'); return; }
+  if (!idade || idade < 10 || idade > 110) { if (chamadoManualmente) alert('⚠️ Informe uma Idade válida (10–110 anos).'); return; }
+  if (!peso  || peso  < 20 || peso  > 300) { if (chamadoManualmente) alert('⚠️ Informe um Peso válido (20–300 kg).'); return; }
+  if (!altura) { if (chamadoManualmente) alert('⚠️ Informe a Altura antes de calcular.'); return; }
+  if (!ativ)   { if (chamadoManualmente) alert('⚠️ Selecione o Nível de Atividade antes de calcular.'); return; }
 
   // Detectar se digitou em metros (ex: 1.70) em vez de cm (170)
   if (altura < 3) {
