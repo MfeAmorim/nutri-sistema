@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Estudos — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+  --roxo: #7c3aed;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; margin-left: auto; }
+
+/* ── TABS ── */
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; gap: 0; }
+.tab-btn { padding: 0 18px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 960px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ── HERO ── */
+.hero { background: var(--escuro); border-radius: 20px; padding: 36px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:radial-gradient(circle,rgba(116,198,157,0.12) 0%,transparent 70%); }
+.hero-icon { font-size: 52px; flex-shrink: 0; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 24px; margin-bottom: 6px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+
+/* ── SECTION TITLE ── */
+.sec-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--escuro); margin-bottom: 6px; }
+.sec-sub { font-size: 13px; color: #7a8a7c; margin-bottom: 20px; }
+
+/* ══════════════════════════════════════
+   1. FLASHCARDS
+══════════════════════════════════════ */
+.fc-controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.fc-select { padding: 10px 14px; border: 1.5px solid #dde8de; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--escuro); background: #fff; outline: none; cursor: pointer; }
+.fc-select:focus { border-color: var(--verde); }
+.btn-verde { background: var(--verde); color: #fff; border: none; padding: 10px 22px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-verde:hover { background: var(--escuro); }
+.btn-outline { background: #fff; color: var(--verde); border: 1.5px solid var(--verde); padding: 10px 22px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-outline:hover { background: var(--verde); color: #fff; }
+
+.fc-arena { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.fc-card-wrap { perspective: 1000px; width: 100%; max-width: 680px; height: 220px; cursor: pointer; }
+.fc-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s ease; border-radius: 20px; }
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-front, .fc-back { position: absolute; inset: 0; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 32px; text-align: center; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.fc-front { background: var(--escuro); color: #fff; }
+.fc-back { background: #f0fdf4; border: 2px solid #86efac; color: var(--escuro); transform: rotateY(180deg); }
+.fc-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--verde-neon); margin-bottom: 12px; }
+.fc-back .fc-label { color: var(--verde); }
+.fc-text { font-size: 16px; font-weight: 600; line-height: 1.6; }
+.fc-back .fc-text { font-size: 14px; font-weight: 400; line-height: 1.75; color: var(--texto); }
+.fc-hint { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 12px; }
+
+.fc-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.btn-fc-errei { background: #fee2e2; color: #dc2626; border: 2px solid #fca5a5; padding: 11px 28px; border-radius: 12px; font-family:'DM Sans',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-fc-errei:hover { background: #fecaca; }
+.btn-fc-revisar { background: #fef9c3; color: #ca8a04; border: 2px solid #fde68a; padding: 11px 28px; border-radius: 12px; font-family:'DM Sans',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-fc-revisar:hover { background: #fef08a; }
+.btn-fc-acertei { background: #dcfce7; color: #16a34a; border: 2px solid #86efac; padding: 11px 28px; border-radius: 12px; font-family:'DM Sans',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-fc-acertei:hover { background: #bbf7d0; }
+
+.fc-stats { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.fc-stat { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 10px 20px; text-align: center; min-width: 80px; }
+.fc-stat-val { font-size: 22px; font-weight: 800; }
+.fc-stat-label { font-size: 11px; color: #7a8a7c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.fc-stat.verde .fc-stat-val { color: #16a34a; }
+.fc-stat.vermelho .fc-stat-val { color: #dc2626; }
+.fc-stat.amarelo .fc-stat-val { color: #ca8a04; }
+.fc-stat.cinza .fc-stat-val { color: #6b7280; }
+
+.fc-progress-bar { width: 100%; max-width: 680px; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.fc-progress-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.4s ease; }
+.fc-counter { font-size: 12px; font-weight: 700; color: #7a8a7c; }
+
+/* ══════════════════════════════════════
+   2. REVISÃO ESPAÇADA
+══════════════════════════════════════ */
+.rev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.rev-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 18px 20px; transition: all 0.2s; }
+.rev-card:hover { border-color: var(--verde-claro); transform: translateY(-2px); }
+.rev-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.rev-icon { font-size: 24px; }
+.rev-materia { font-size: 14px; font-weight: 700; color: var(--escuro); }
+.rev-modulo { font-size: 11px; color: #7a8a7c; margin-top: 2px; }
+.rev-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
+.rev-badge.hoje { background: #fee2e2; color: #dc2626; }
+.rev-badge.amanha { background: #fff5f0; color: var(--laranja); }
+.rev-badge.semana { background: #fef9c3; color: #ca8a04; }
+.rev-badge.ok { background: #dcfce7; color: #16a34a; }
+.rev-badge.novo { background: #ede8df; color: #6b7280; }
+.rev-prog-wrap { background: var(--creme2); border-radius: 99px; height: 6px; overflow: hidden; margin-bottom: 8px; }
+.rev-prog-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+.rev-info { display: flex; justify-content: space-between; font-size: 11px; color: #7a8a7c; }
+.rev-btn { width: 100%; margin-top: 12px; background: var(--verde); color: #fff; border: none; padding: 9px; border-radius: 8px; font-family:'DM Sans',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.rev-btn:hover { background: var(--escuro); }
+.rev-btn.disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+
+.rev-legenda { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+.rev-leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #7a8a7c; }
+.rev-leg-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ══════════════════════════════════════
+   3. MODO ESTUDO
+══════════════════════════════════════ */
+.ms-select-wrap { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+.ms-questao { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 24px 28px; margin-bottom: 16px; }
+.ms-q-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.ms-q-num { background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
+.ms-q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.ms-enunciado { font-size: 15px; font-weight: 600; color: var(--escuro); line-height: 1.7; margin-bottom: 16px; }
+.ms-opcao { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px; line-height: 1.6; }
+.ms-opcao.correta { background: #dcfce7; color: #14532d; font-weight: 600; }
+.ms-opcao.normal { background: #f9fafb; color: #374151; }
+.ms-letra { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+.ms-opcao.correta .ms-letra { background: #16a34a; color: #fff; }
+.ms-opcao.normal .ms-letra { background: #e5e7eb; color: var(--escuro); }
+.ms-gabarito { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin-top: 12px; font-size: 13px; color: var(--texto); line-height: 1.7; }
+.ms-gabarito strong { color: var(--verde); }
+
+/* ══════════════════════════════════════
+   4. SIMULADO GERAL
+══════════════════════════════════════ */
+.sim-config { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.sim-config h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); margin-bottom: 16px; }
+.sim-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.sim-opt { border: 2px solid #e0ebe0; border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 10px; }
+.sim-opt:hover { border-color: var(--verde-claro); background: #f8fbf8; }
+.sim-opt.selected { border-color: var(--verde); background: #f0fdf4; }
+.sim-opt input[type=checkbox] { accent-color: var(--verde); width: 16px; height: 16px; flex-shrink: 0; }
+.sim-opt-label { font-size: 13px; font-weight: 600; color: var(--escuro); }
+.sim-opt-sub { font-size: 11px; color: #7a8a7c; }
+.sim-bottom { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.sim-qtd { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--escuro); }
+.sim-qtd select { padding: 8px 12px; border: 1.5px solid #dde8de; border-radius: 8px; font-family:'DM Sans',sans-serif; font-size: 14px; outline: none; }
+.sim-timer { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #7a8a7c; }
+
+.sim-arena { display: none; }
+.sim-topbar { background: var(--escuro); border-radius: 16px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.sim-topbar-info { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; }
+.sim-topbar-info span { color: #fff; font-weight: 800; }
+.sim-timer-display { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 16px; font-size: 18px; font-weight: 800; color: var(--verde-neon); font-family: monospace; }
+.sim-timer-display.urgente { color: #fca5a5; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg,#f0fdf4,#fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg,#fff5f5,#fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family:'DM Sans',sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+
+.sim-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family:'DM Sans',sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family:'Playfair Display',serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+/* ══════════════════════════════════════
+   5. MAPA DE PROGRESSO
+══════════════════════════════════════ */
+.prog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.prog-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 20px 22px; }
+.prog-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.prog-icon { font-size: 26px; }
+.prog-titulo { font-size: 14px; font-weight: 700; color: var(--escuro); }
+.prog-modulo { font-size: 11px; color: #7a8a7c; }
+.prog-score { margin-left: auto; text-align: right; }
+.prog-score-val { font-size: 22px; font-weight: 800; }
+.prog-score-label { font-size: 10px; color: #7a8a7c; font-weight: 600; }
+.prog-bar-wrap { background: var(--creme2); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 10px; }
+.prog-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+.prog-temas { display: flex; flex-wrap: wrap; gap: 6px; }
+.prog-tema-chip { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.prog-tema-chip.bom { background: #dcfce7; color: #15803d; }
+.prog-tema-chip.medio { background: #fef9c3; color: #a16207; }
+.prog-tema-chip.ruim { background: #fee2e2; color: #dc2626; }
+.prog-tema-chip.sem-dados { background: #f3f4f6; color: #6b7280; }
+.prog-sem-dados { text-align: center; color: #9ca3af; font-size: 13px; padding: 16px 0; }
+
+.prog-resumo { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.prog-res-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 14px; padding: 18px; text-align: center; }
+.prog-res-val { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
+.prog-res-label { font-size: 12px; color: #7a8a7c; font-weight: 600; }
+.prog-res-card.verde .prog-res-val { color: #16a34a; }
+.prog-res-card.azul .prog-res-val { color: var(--azul); }
+.prog-res-card.laranja .prog-res-val { color: var(--laranja); }
+.prog-res-card.roxo .prog-res-val { color: var(--roxo); }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+  .sim-opts { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="dashboard.html" class="back-btn">← Voltar</a>
+  <div class="divider"></div>
+  <div class="topbar-title">Central de Estudos</div>
+  <div class="badge">5 ferramentas integradas</div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('flashcards')">🃏 Flashcards</div>
+  <div class="tab-btn" onclick="showPanel('revisao')">📅 Revisão Espaçada</div>
+  <div class="tab-btn" onclick="showPanel('modo-estudo')">📝 Modo Estudo</div>
+  <div class="tab-btn" onclick="showPanel('simulado')">🎯 Simulado Geral</div>
+  <div class="tab-btn" onclick="showPanel('progresso')">📊 Meu Progresso</div>
+</div>
+
+<!-- ══════ FLASHCARDS ══════ -->
+<div id="panel-flashcards" class="panel active">
+  <div class="hero">
+    <div class="hero-icon">🃏</div>
+    <div>
+      <div class="hero-tag">Ferramenta 1 de 5</div>
+      <h1>Flashcards Interativos</h1>
+      <p>Veja o conceito, tente lembrar e vire o card. Classifique seu desempenho para focar no que precisa revisar.</p>
+    </div>
+  </div>
+
+  <div class="fc-controls">
+    <select class="fc-select" id="fc-materia-select" onchange="fcCarregarMateria()">
+      <option value="todas">🔀 Todas as matérias</option>
+      <option value="genetica">🧬 Genética e Embriologia</option>
+      <option value="mentalidade">💡 Mentalidade Empreendedora</option>
+      <option value="bioestatistica">📊 Bioestatística e Epidemiologia</option>
+    </select>
+    <select class="fc-select" id="fc-ordem">
+      <option value="aleatorio">🔀 Aleatório</option>
+      <option value="sequencial">📋 Sequencial</option>
+      <option value="revisar">⚠️ Só para revisar</option>
+    </select>
+    <button class="btn-verde" onclick="fcIniciar()">▶ Iniciar</button>
+    <button class="btn-outline" onclick="fcReset()">🔄 Resetar</button>
+  </div>
+
+  <div class="fc-arena" id="fc-arena">
+    <div class="fc-stats">
+      <div class="fc-stat verde"><div class="fc-stat-val" id="fc-acertei">0</div><div class="fc-stat-label">Sei</div></div>
+      <div class="fc-stat amarelo"><div class="fc-stat-val" id="fc-revisar-count">0</div><div class="fc-stat-label">Revisar</div></div>
+      <div class="fc-stat vermelho"><div class="fc-stat-val" id="fc-errei">0</div><div class="fc-stat-label">Não sei</div></div>
+      <div class="fc-stat cinza"><div class="fc-stat-val" id="fc-restantes">0</div><div class="fc-stat-label">Restantes</div></div>
+    </div>
+
+    <div style="width:100%;max-width:680px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span class="fc-counter" id="fc-counter">Card 0 de 0</span>
+        <span class="fc-counter" id="fc-materia-label"></span>
+      </div>
+      <div class="fc-progress-bar"><div class="fc-progress-fill" id="fc-prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="fc-card-wrap" onclick="fcVirar()" id="fc-card-wrap">
+      <div class="fc-card" id="fc-card">
+        <div class="fc-front">
+          <div class="fc-label">📖 Conceito</div>
+          <div class="fc-text" id="fc-frente">Selecione uma matéria e clique em Iniciar</div>
+          <div class="fc-hint">👆 Clique para revelar a resposta</div>
+        </div>
+        <div class="fc-back">
+          <div class="fc-label">✅ Resposta</div>
+          <div class="fc-text" id="fc-verso">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-actions" id="fc-actions" style="display:none">
+      <button class="btn-fc-errei" onclick="fcClassificar('errei')">❌ Não sei</button>
+      <button class="btn-fc-revisar" onclick="fcClassificar('revisar')">⚠️ Revisar</button>
+      <button class="btn-fc-acertei" onclick="fcClassificar('acertei')">✅ Sei!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ REVISÃO ESPAÇADA ══════ -->
+<div id="panel-revisao" class="panel">
+  <div class="hero">
+    <div class="hero-icon">📅</div>
+    <div>
+      <div class="hero-tag">Ferramenta 2 de 5</div>
+      <h1>Revisão Espaçada</h1>
+      <p>Baseado na Curva do Esquecimento de Ebbinghaus. Revise na hora certa para fixar de verdade.</p>
+    </div>
+  </div>
+
+  <div class="rev-legenda">
+    <div class="rev-leg-item"><div class="rev-leg-dot" style="background:#dc2626"></div> Revisar hoje</div>
+    <div class="rev-leg-item"><div class="rev-leg-dot" style="background:var(--laranja)"></div> Amanhã</div>
+    <div class="rev-leg-item"><div class="rev-leg-dot" style="background:#ca8a04"></div> Esta semana</div>
+    <div class="rev-leg-item"><div class="rev-leg-dot" style="background:#16a34a"></div> Em dia</div>
+    <div class="rev-leg-item"><div class="rev-leg-dot" style="background:#9ca3af"></div> Não iniciado</div>
+  </div>
+
+  <div class="rev-grid" id="rev-grid"><!-- preenchido por JS --></div>
+
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:20px">💡</span>
+    <div style="font-size:13px;color:var(--verde)"><strong>Como funciona:</strong> Após fazer o quiz de uma matéria, o sistema calcula quando você deve revisá-la. Quem foi mal → revisa em 1–2 dias. Quem foi bem → revisa em 7+ dias. Isso otimiza a memorização de longo prazo.</div>
+  </div>
+</div>
+
+<!-- ══════ MODO ESTUDO ══════ -->
+<div id="panel-modo-estudo" class="panel">
+  <div class="hero">
+    <div class="hero-icon">📝</div>
+    <div>
+      <div class="hero-tag">Ferramenta 3 de 5</div>
+      <h1>Modo Estudo</h1>
+      <p>Todas as questões com gabarito visível desde o início. Leia com calma, sem pressão de acertar.</p>
+    </div>
+  </div>
+
+  <div class="ms-select-wrap">
+    <select class="fc-select" id="ms-materia-select" onchange="msCarregar()">
+      <option value="">— Escolha uma matéria —</option>
+      <option value="genetica">🧬 Genética e Embriologia</option>
+      <option value="mentalidade">💡 Mentalidade Empreendedora</option>
+      <option value="bioestatistica">📊 Bioestatística e Epidemiologia</option>
+    </select>
+    <span id="ms-total-label" style="font-size:13px;color:#7a8a7c;font-weight:600"></span>
+  </div>
+
+  <div id="ms-container">
+    <div style="text-align:center;padding:60px 20px;color:#9ca3af">
+      <div style="font-size:48px;margin-bottom:12px">📝</div>
+      <div style="font-size:15px;font-weight:600">Selecione uma matéria para estudar</div>
+      <div style="font-size:13px;margin-top:6px">Todas as questões ficarão abertas com gabarito comentado</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SIMULADO GERAL ══════ -->
+<div id="panel-simulado" class="panel">
+  <div class="hero">
+    <div class="hero-icon">🎯</div>
+    <div>
+      <div class="hero-tag">Ferramenta 4 de 5</div>
+      <h1>Simulado Geral</h1>
+      <p>Questões misturadas de várias matérias, com timer opcional. Simule uma prova real.</p>
+    </div>
+  </div>
+
+  <div class="sim-config" id="sim-config">
+    <h3>⚙️ Configure seu simulado</h3>
+    <div style="font-size:13px;color:#7a8a7c;margin-bottom:16px">Selecione as matérias que deseja incluir:</div>
+    <div class="sim-opts" id="sim-opts">
+      <label class="sim-opt" onclick="simToggle(this)">
+        <input type="checkbox" value="genetica" checked>
+        <div><div class="sim-opt-label">🧬 Genética e Embriologia</div><div class="sim-opt-sub">1º Módulo 2026</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="mentalidade" checked>
+        <div><div class="sim-opt-label">💡 Mentalidade Empreendedora</div><div class="sim-opt-sub">1º Módulo 2026</div></div>
+      </label>
+      <label class="sim-opt selected" onclick="simToggle(this)">
+        <input type="checkbox" value="bioestatistica" checked>
+        <div><div class="sim-opt-label">📊 Bioestatística e Epidemiologia</div><div class="sim-opt-sub">2º Módulo 2025</div></div>
+      </label>
+    </div>
+    <div class="sim-bottom">
+      <div class="sim-qtd">
+        <span>Quantidade:</span>
+        <select id="sim-qtd-select" class="fc-select">
+          <option value="10">10 questões</option>
+          <option value="20" selected>20 questões</option>
+          <option value="30">30 questões</option>
+          <option value="0">Todas</option>
+        </select>
+      </div>
+      <div class="sim-timer">
+        <input type="checkbox" id="sim-timer-check" accent-color="var(--verde)" style="width:16px;height:16px;cursor:pointer">
+        <label for="sim-timer-check" style="cursor:pointer;font-size:13px;font-weight:600;color:var(--escuro)">Timer</label>
+        <select id="sim-timer-min" class="fc-select" style="padding:6px 10px">
+          <option value="10">10 min</option>
+          <option value="20" selected>20 min</option>
+          <option value="30">30 min</option>
+          <option value="45">45 min</option>
+        </select>
+      </div>
+      <button class="btn-verde" style="padding:12px 28px" onclick="simIniciar()">🎯 Iniciar Simulado</button>
+    </div>
+  </div>
+
+  <div class="sim-arena" id="sim-arena">
+    <div class="sim-topbar">
+      <div class="sim-topbar-info">Questão <span id="sim-q-atual">1</span> de <span id="sim-q-total">0</span> &nbsp;·&nbsp; <span id="sim-acertos-live">0</span> acertos</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="background:rgba(255,255,255,0.1);border-radius:99px;height:8px;width:160px;overflow:hidden"><div id="sim-prog-bar" style="height:100%;background:linear-gradient(90deg,var(--verde),var(--verde-neon));border-radius:99px;transition:width 0.4s;width:0%"></div></div>
+        <div class="sim-timer-display" id="sim-timer-disp" style="display:none">00:00</div>
+      </div>
+    </div>
+    <div id="sim-container"></div>
+    <div class="sim-nav">
+      <button class="btn-nav btn-reiniciar" onclick="simVoltar()">⬅ Configurar</button>
+      <button class="btn-nav btn-proximo" id="sim-btn-prox" onclick="simProxima()" disabled>Próxima →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PROGRESSO ══════ -->
+<div id="panel-progresso" class="panel">
+  <div class="hero">
+    <div class="hero-icon">📊</div>
+    <div>
+      <div class="hero-tag">Ferramenta 5 de 5</div>
+      <h1>Meu Progresso</h1>
+      <p>Acompanhe seu desempenho por matéria e identifique onde precisa estudar mais.</p>
+    </div>
+  </div>
+
+  <div class="prog-resumo" id="prog-resumo"><!-- JS --></div>
+  <h2 class="sec-title" style="margin-bottom:16px">📚 Desempenho por Matéria</h2>
+  <div class="prog-grid" id="prog-grid"><!-- JS --></div>
+
+  <div style="margin-top:24px;background:#fff5f0;border:1px solid #fed7aa;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:20px">⚠️</span>
+    <div style="font-size:13px;color:#92400e">Os dados de progresso são baseados nos quizzes realizados nas páginas de cada matéria e nos simulados feitos aqui. Faça os quizzes para ver os dados aparecerem!</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DADOS DAS MATÉRIAS
+// ═══════════════════════════════════════════════
+const MATERIAS = {
+  genetica: {
+    nome: 'Genética e Embriologia',
+    icon: '🧬',
+    modulo: '1º Módulo 2026',
+    cor: '#7c3aed',
+    url: 'genetica-embriologia.html',
+    flashcards: [
+      { frente: 'O que é Nutrigenômica?', verso: 'Estuda como os nutrientes modulam a expressão dos genes (do nutriente ao gene).' },
+      { frente: 'O que é Nutrigenética?', verso: 'Estuda como variações genéticas individuais afetam a resposta do organismo aos nutrientes (do gene ao nutriente).' },
+      { frente: 'O que é Epigenética?', verso: 'Alterações na expressão gênica sem mudar a sequência do DNA. Ex: metilação do DNA influenciada pela dieta.' },
+      { frente: 'Diferença entre catabolismo e anabolismo', verso: 'Catabolismo = degrada moléculas e libera energia. Anabolismo = sintetiza moléculas e consome energia.' },
+      { frente: 'Função da mitocôndria', verso: 'Produção de ATP via respiração celular aeróbica — Ciclo de Krebs + Cadeia Transportadora de Elétrons.' },
+      { frente: 'Etapas da respiração celular (ordem)', verso: 'Glicólise (citoplasma) → Ciclo de Krebs (matriz mitocondrial) → Cadeia Respiratória (membrana interna) → ~36–38 ATP.' },
+      { frente: 'Como a vitamina C melhora absorção do ferro?', verso: 'Reduz Fe³⁺ (não absorvível) para Fe²⁺ (absorvível pelo transportador DMT1) — transporte ativo.' },
+      { frente: 'Diferença entre transporte ativo e passivo', verso: 'Passivo: sem ATP, a favor do gradiente. Ativo: gasta ATP, pode ser contra o gradiente.' },
+      { frente: 'O que é osmose?', verso: 'Movimento de água por membrana semipermeável do meio hipotônico (menos soluto) para o hipertônico (mais soluto).' },
+      { frente: 'Como a glicose é absorvida no intestino?', verso: 'Membrana apical: SGLT1 (ativo, cotransporte Na⁺). Membrana basolateral: GLUT2 (difusão facilitada, passivo).' },
+      { frente: 'Hipótese de Barker', verso: 'Desnutrição intrauterina programa o metabolismo fetal para maior risco de obesidade, DM2 e doenças cardiovasculares na vida adulta.' },
+      { frente: 'Para que serve o ácido fólico na gestação?', verso: 'Fechamento do tubo neural (3ª–4ª semana). Deficiência causa anencefalia e espinha bífida. Suplementação deve ser periconcepção.' },
+      { frente: 'Fenilcetonúria (PKU) — causa e conduta', verso: 'Mutação no gene PAH → acúmulo de fenilalanina → neurotóxico. Conduta: dieta restrita em fenilalanina + fórmulas metabólicas.' },
+      { frente: 'O que é o Teste do Pezinho?', verso: 'Triagem neonatal obrigatória que detecta PKU, hipotireoidismo, galactosemia e outras condições. Intervenção precoce previne danos irreversíveis.' },
+      { frente: 'Vitaminas do complexo B e energia', verso: 'B1, B2, B3, B5 são coenzimas do Ciclo de Krebs e da cadeia respiratória. Deficiência compromete a produção de ATP.' },
+    ]
+  },
+  mentalidade: {
+    nome: 'Mentalidade Empreendedora',
+    icon: '💡',
+    modulo: '1º Módulo 2026',
+    cor: '#e07b39',
+    url: 'mentalidade-criativa-empreendedora.html',
+    flashcards: [
+      { frente: 'Definição de empreendedorismo (Barreto, 1998)', verso: '"A habilidade de criar e constituir algo a partir de muito pouco ou de quase nada."' },
+      { frente: 'Diferença: Empreendedor vs Empresário', verso: 'Empreendedor = inova, cria algo novo, assume riscos. Empresário = administra e gere um negócio existente.' },
+      { frente: 'O que é empreendedorismo social?', verso: 'Cria serviços/produtos com impacto positivo na sociedade; intermediação entre comunidade, governo e setor privado.' },
+      { frente: 'O que é intraempreendedorismo?', verso: 'Colaborador com "sentido de dono", criatividade e capacidade inovadora dentro de uma empresa ou órgão público.' },
+      { frente: 'As 4 funções administrativas do empreendedor', verso: 'Planejamento → Organização → Direção → Controle. Formam um ciclo contínuo.' },
+      { frente: 'Onde o risco de um negócio deve ser identificado?', verso: 'Na fase de Planejamento — antes de qualquer investimento financeiro ou de tempo.' },
+      { frente: 'O que é Design Thinking?', verso: 'Metodologia centrada no usuário para criar soluções inovadoras. Fases: Empatia → Definição → Ideação → Prototipagem → Teste.' },
+      { frente: 'O que é pensamento divergente? (Guilford, 1959)', verso: 'Tipo de pensamento responsável pela criatividade — gera múltiplas soluções para um mesmo problema.' },
+      { frente: 'O que é o MEI?', verso: 'Microempreendedor Individual — criado em 2008 para tirar empreendedores da informalidade sem burocracia. Fatura até R$ 81.000/ano.' },
+      { frente: 'Objetivo do Simples Nacional', verso: 'Simplificar a arrecadação tributária e incentivar a formalização de micro e pequenas empresas.' },
+      { frente: 'O que é mindset empreendedor?', verso: 'Mentalidade de crescimento: encarar desafios como aprendizado, persistir, acreditar na capacidade de desenvolver habilidades.' },
+      { frente: 'O que é branding?', verso: 'Conjunto de atividades de administração de uma marca — elementos tangíveis (logo, cores) e intangíveis (valor, experiência).' },
+      { frente: 'Business Model Canvas — proposta de valor', verso: 'Responde: que problema resolvemos? Que necessidade atendemos? Que valor entregamos ao cliente?' },
+      { frente: 'O que é MVP?', verso: 'Produto Mínimo Viável — versão mais simples do produto para testar hipóteses com menor custo e validar se resolve um problema real.' },
+      { frente: 'Diferença: Empreendedor por oportunidade vs necessidade', verso: 'Oportunidade: percebe nicho de mercado, planeja, prepara-se. Necessidade: sem emprego/renda, abre negócio sem planejamento adequado.' },
+    ]
+  },
+  bioestatistica: {
+    nome: 'Bioestatística e Epidemiologia',
+    icon: '📊',
+    modulo: '2º Módulo 2025',
+    cor: '#2563eb',
+    url: 'bioestatistica-epidemiologia.html',
+    flashcards: [
+      { frente: 'Diferença entre Prevalência e Incidência', verso: 'Prevalência = casos existentes (novos + antigos) — "fotografia". Incidência = só casos NOVOS em pessoas saudáveis — "filme".' },
+      { frente: 'Fórmula da Prevalência', verso: 'Prevalência = (Nº casos existentes / população) × 10ⁿ. Ideal para doenças crônicas.' },
+      { frente: 'Fórmula da Incidência', verso: 'Incidência = (Nº casos NOVOS / pessoas sob risco) × 10ⁿ. Medida de risco. Ideal para doenças agudas.' },
+      { frente: 'Quando usar Odds Ratio (OR)?', verso: 'Estudos RETROSPECTIVOS: caso-controle e transversal. Fórmula: OR = (A×D)/(B×C).' },
+      { frente: 'Quando usar Risco Relativo (RR)?', verso: 'Estudos PROSPECTIVOS: coorte e ensaio clínico. Mede risco real, pode inferir causalidade.' },
+      { frente: 'Interpretação do OR/RR > 1, = 1 e < 1', verso: '> 1 = fator de risco. = 1 = sem associação. < 1 = fator de proteção. Para < 1: (1–OR) × 100% = redução do risco.' },
+      { frente: 'Hierarquia de evidências (maior → menor)', verso: 'Revisão sistemática/Metanálise → ECR → Coorte → Caso-Controle → Transversal → Relato de caso.' },
+      { frente: 'O que é o Estudo Transversal?', verso: 'Avalia exposição e desfecho no mesmo momento ("fotografia"). Rápido, barato. Não infere causalidade. Usa OR ou Razão de Prevalência.' },
+      { frente: 'O que é o Estudo de Coorte?', verso: 'Acompanha saudáveis expostos e não-expostos ao longo do tempo. Prospectivo. Calcula RR real. Pode inferir causalidade.' },
+      { frente: 'O que é o Estudo Caso-Controle?', verso: 'Compara doentes (casos) com não-doentes (controles) e investiga exposições passadas. Retrospectivo. Usa OR.' },
+      { frente: 'Fórmula da Mortalidade Infantil', verso: '(Óbitos < 1 ano / nascidos vivos) × 1.000. Multiplicador é SEMPRE 1.000.' },
+      { frente: 'Diferença: Letalidade vs Mortalidade', verso: 'Letalidade = óbitos/doentes com a doença X (gravidade). Mortalidade = óbitos/população total (impacto na população).' },
+      { frente: 'O que é a tríade ecológica?', verso: 'Hospedeiro + Agente + Meio Ambiente. Modelo multicausal da epidemiologia. Doença = desequilíbrio entre os três.' },
+      { frente: 'Prevenção primária, secundária e terciária', verso: 'Primária: antes da doença (vacinação). Secundária: diagnóstico precoce (rastreamento). Terciária: reabilitação.' },
+      { frente: 'O que é o SINAN?', verso: 'Sistema de Informação de Agravos de Notificação — base de dados da Vigilância Epidemiológica brasileira. Registra doenças de notificação compulsória.' },
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════
+// NAVEGAÇÃO DE PAINÉIS
+// ═══════════════════════════════════════════════
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (id === 'revisao') revRenderizar();
+  if (id === 'progresso') progRenderizar();
+}
+
+// ═══════════════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════════════
+let fcDeck = [], fcIdx = 0, fcFlipped = false;
+let fcStats = { acertei: 0, revisar: 0, errei: 0 };
+let fcClassifs = {};
+
+function fcGetDeck() {
+  const mat = document.getElementById('fc-materia-select').value;
+  const ord = document.getElementById('fc-ordem').value;
+  let cards = [];
+  if (mat === 'todas') {
+    Object.entries(MATERIAS).forEach(([k, m]) => m.flashcards.forEach((fc, i) => cards.push({ ...fc, mat: k, id: k + '_' + i })));
+  } else if (MATERIAS[mat]) {
+    cards = MATERIAS[mat].flashcards.map((fc, i) => ({ ...fc, mat, id: mat + '_' + i }));
+  }
+  if (ord === 'revisar') cards = cards.filter(c => fcClassifs[c.id] === 'revisar' || fcClassifs[c.id] === 'errei');
+  if (ord === 'aleatorio') cards = cards.sort(() => Math.random() - 0.5);
+  return cards;
+}
+
+function fcIniciar() {
+  fcDeck = fcGetDeck();
+  if (!fcDeck.length) { alert('Nenhum card disponível para os filtros selecionados.'); return; }
+  fcIdx = 0; fcFlipped = false; fcStats = { acertei: 0, revisar: 0, errei: 0 };
+  fcMostrarCard();
+}
+
+function fcMostrarCard() {
+  if (fcIdx >= fcDeck.length) { fcFinalizar(); return; }
+  const c = fcDeck[fcIdx];
+  document.getElementById('fc-frente').textContent = c.frente;
+  document.getElementById('fc-verso').textContent = c.verso;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-actions').style.display = 'none';
+  document.getElementById('fc-card-wrap').style.cursor = 'pointer';
+  fcFlipped = false;
+  fcAtualizarUI();
+  const mat = c.mat in MATERIAS ? MATERIAS[c.mat].nome : '';
+  document.getElementById('fc-materia-label').textContent = mat;
+}
+
+function fcVirar() {
+  if (!fcDeck.length) return;
+  if (fcFlipped) return;
+  document.getElementById('fc-card').classList.add('flipped');
+  document.getElementById('fc-actions').style.display = 'flex';
+  document.getElementById('fc-card-wrap').style.cursor = 'default';
+  fcFlipped = true;
+}
+
+function fcClassificar(tipo) {
+  if (!fcDeck.length) return;
+  const c = fcDeck[fcIdx];
+  fcClassifs[c.id] = tipo;
+  if (tipo === 'acertei') fcStats.acertei++;
+  else if (tipo === 'revisar') fcStats.revisar++;
+  else fcStats.errei++;
+  fcIdx++;
+  fcFlipped = false;
+  fcMostrarCard();
+}
+
+function fcAtualizarUI() {
+  const total = fcDeck.length;
+  const feitos = fcIdx;
+  const pct = total > 0 ? (feitos / total) * 100 : 0;
+  document.getElementById('fc-counter').textContent = `Card ${Math.min(fcIdx + 1, total)} de ${total}`;
+  document.getElementById('fc-prog-fill').style.width = pct + '%';
+  document.getElementById('fc-acertei').textContent = fcStats.acertei;
+  document.getElementById('fc-revisar-count').textContent = fcStats.revisar;
+  document.getElementById('fc-errei').textContent = fcStats.errei;
+  document.getElementById('fc-restantes').textContent = Math.max(0, total - fcIdx);
+}
+
+function fcFinalizar() {
+  const total = fcDeck.length;
+  document.getElementById('fc-frente').textContent = '🎉 Deck concluído!';
+  document.getElementById('fc-verso').textContent = `Sei: ${fcStats.acertei} · Revisar: ${fcStats.revisar} · Não sei: ${fcStats.errei}`;
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-actions').style.display = 'none';
+  document.getElementById('fc-restantes').textContent = '0';
+  fcSalvarProgresso();
+}
+
+function fcReset() {
+  fcDeck = []; fcIdx = 0; fcFlipped = false; fcStats = { acertei: 0, revisar: 0, errei: 0 };
+  document.getElementById('fc-frente').textContent = 'Selecione uma matéria e clique em Iniciar';
+  document.getElementById('fc-verso').textContent = '—';
+  document.getElementById('fc-card').classList.remove('flipped');
+  document.getElementById('fc-actions').style.display = 'none';
+  document.getElementById('fc-counter').textContent = 'Card 0 de 0';
+  document.getElementById('fc-prog-fill').style.width = '0%';
+  document.getElementById('fc-acertei').textContent = '0';
+  document.getElementById('fc-revisar-count').textContent = '0';
+  document.getElementById('fc-errei').textContent = '0';
+  document.getElementById('fc-restantes').textContent = '0';
+}
+
+function fcSalvarProgresso() {
+  try {
+    const dados = JSON.parse(localStorage.getItem('nutri_progresso') || '{}');
+    Object.entries(fcStats).forEach(([k, v]) => {
+      if (!dados.flashcards) dados.flashcards = {};
+      dados.flashcards[k] = (dados.flashcards[k] || 0) + v;
+    });
+    localStorage.setItem('nutri_progresso', JSON.stringify(dados));
+  } catch(e) {}
+}
+
+function fcCarregarMateria() {} // trigger ao mudar select
+
+// ═══════════════════════════════════════════════
+// REVISÃO ESPAÇADA
+// ═══════════════════════════════════════════════
+function revGetDados(mat) {
+  try {
+    const key = 'quiz_' + (mat === 'genetica' ? 'genetica-embriologia' : mat === 'mentalidade' ? 'mentalidade-criativa-empreendedora' : 'bioestatistica-epidemiologia');
+    const salvo = localStorage.getItem(key);
+    if (!salvo) return null;
+    const d = JSON.parse(salvo);
+    return d;
+  } catch(e) { return null; }
+}
+
+function revCalcularStatus(mat) {
+  const d = revGetDados(mat);
+  if (!d || !d.salvoEm) return { status: 'novo', pct: 0, acertos: 0, total: 0, proxRevisao: null };
+  const acertos = d.acertos || 0;
+  const respondidas = Array.isArray(d.respondidas) ? d.respondidas.filter(x => x !== undefined && x !== null).length : 0;
+  const total = 25;
+  const pct = total > 0 ? Math.round((acertos / total) * 100) : 0;
+  const salvoEm = new Date(d.salvoEm);
+  const hoje = new Date();
+  const diffDias = Math.floor((hoje - salvoEm) / 86400000);
+
+  // Intervalo baseado no desempenho (Ebbinghaus)
+  let intervaloDias;
+  if (pct >= 80) intervaloDias = 7;
+  else if (pct >= 60) intervaloDias = 4;
+  else if (pct >= 40) intervaloDias = 2;
+  else intervaloDias = 1;
+
+  const proxRevisao = new Date(salvoEm);
+  proxRevisao.setDate(proxRevisao.getDate() + intervaloDias);
+  const diasRestantes = Math.ceil((proxRevisao - hoje) / 86400000);
+
+  let status;
+  if (diasRestantes <= 0) status = 'hoje';
+  else if (diasRestantes === 1) status = 'amanha';
+  else if (diasRestantes <= 7) status = 'semana';
+  else status = 'ok';
+
+  return { status, pct, acertos, total, proxRevisao, diasRestantes, intervaloDias, ultimaVez: diffDias };
+}
+
+function revRenderizar() {
+  const grid = document.getElementById('rev-grid');
+  grid.innerHTML = '';
+  Object.entries(MATERIAS).forEach(([k, m]) => {
+    const s = revCalcularStatus(k);
+    const badgeMap = { hoje: 'hoje', amanha: 'amanha', semana: 'semana', ok: 'ok', novo: 'novo' };
+    const badgeText = { hoje: '🔴 Revisar hoje', amanha: '🟠 Amanhã', semana: `🟡 Em ${s.diasRestantes} dias`, ok: '🟢 Em dia', novo: '⚪ Não iniciado' };
+    const corBar = { hoje: '#dc2626', amanha: '#e07b39', semana: '#ca8a04', ok: '#16a34a', novo: '#d1d5db' };
+    const card = document.createElement('div');
+    card.className = 'rev-card';
+    card.innerHTML = `
+      <div class="rev-card-top">
+        <div class="rev-icon">${m.icon}</div>
+        <div><div class="rev-materia">${m.nome}</div><div class="rev-modulo">${m.modulo}</div></div>
+        <div class="rev-badge ${badgeMap[s.status]}">${badgeText[s.status]}</div>
+      </div>
+      <div class="rev-prog-wrap"><div class="rev-prog-fill" style="width:${s.pct}%;background:${corBar[s.status]}"></div></div>
+      <div class="rev-info">
+        <span>${s.status === 'novo' ? 'Nenhum quiz realizado ainda' : `${s.acertos}/${s.total} questões · ${s.pct}% de aproveitamento`}</span>
+        <span>${s.status !== 'novo' ? `Estuda há ${s.ultimaVez} dia${s.ultimaVez !== 1 ? 's' : ''}` : ''}</span>
+      </div>
+      <button class="rev-btn ${s.status === 'ok' ? 'disabled' : ''}" onclick="window.open('${m.url}','_blank')">${s.status === 'novo' ? '🚀 Iniciar' : s.status === 'ok' ? '✅ Em dia' : '📖 Revisar agora'}</button>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// MODO ESTUDO
+// ═══════════════════════════════════════════════
+const MS_QUESTOES = {
+  genetica: [
+    { tema:'Genética e Nutrição', enunciado:'A genética influencia o metabolismo nutricional porque:', opcoes:['Determina apenas o tamanho corporal do indivíduo.','Alterações no DNA podem modificar enzimas, transportadores e hormônios que controlam a absorção e o metabolismo dos nutrientes.','O DNA é a única fonte de energia para as células intestinais.','A expressão gênica é idêntica em todos os indivíduos.'], correta:1, gabarito:'O DNA codifica enzimas metabólicas, transportadores e hormônios. Mutações alteram como nutrientes são absorvidos e metabolizados.' },
+    { tema:'Transporte', enunciado:'A diferença entre transporte ativo e passivo é:', opcoes:['Passivo ocorre contra o gradiente; ativo, a favor.','Ativo consome ATP e pode mover substâncias contra o gradiente; passivo não gasta energia e ocorre a favor do gradiente.','Ativo é exclusivo para vitaminas; passivo para minerais.','Ambos gastam ATP.'], correta:1, gabarito:'Passivo: sem ATP, a favor do gradiente. Ativo: gasta ATP, pode ir contra o gradiente. Ex: SGLT1 (glicose intestinal), DMT1 (ferro).' },
+    { tema:'Mitocôndria', enunciado:'A ordem correta das etapas da respiração celular aeróbica é:', opcoes:['Ciclo de Krebs → Glicólise → Cadeia Transportadora','Glicólise → Ciclo de Krebs → Cadeia Transportadora de Elétrons','Cadeia Transportadora → Glicólise → Ciclo de Krebs','Glicólise → Cadeia Transportadora → Ciclo de Krebs'], correta:1, gabarito:'Glicólise (citoplasma) → Ciclo de Krebs (matriz mitocondrial) → Cadeia Respiratória (membrana interna) → ~36–38 ATP.' },
+    { tema:'Desenvolvimento', enunciado:'O ácido fólico é indicado no período periconcepcional porque:', opcoes:['Previne anemia ferropriva.','É essencial para o fechamento do tubo neural (3ª–4ª semana), antes de muitas mulheres saberem que estão grávidas.','Estimula produção de colostro.','Reduz náuseas matinais.'], correta:1, gabarito:'Tubo neural fecha no 21º–28º dia. Deficiência de folato causa anencefalia e espinha bífida. Suplementação deve ser periconcepção.' },
+    { tema:'Mutações', enunciado:'A fenilcetonúria (PKU) requer intervenção nutricional porque:', opcoes:['Causa deficiência de fenilalanina.','O acúmulo de fenilalanina é neurotóxico; dieta restrita nesse aminoácido é o tratamento.','Provoca intolerância ao glúten.','Causa deficiência de insulina.'], correta:1, gabarito:'PKU: sem fenilalanina hidroxilase → fenilalanina acumula → neurotóxico → retardo mental. Conduta: restrição de fenilalanina + fórmulas metabólicas.' },
+  ],
+  mentalidade: [
+    { tema:'Empreendedorismo', enunciado:'Segundo Barreto (1998), empreendedorismo é:', opcoes:['Administrar eficientemente uma empresa já consolidada.','A habilidade de criar e constituir algo a partir de muito pouco ou de quase nada.','Gerenciar equipes e distribuir tarefas.','Investir recursos financeiros em projetos.'], correta:1, gabarito:'Barreto destaca a criatividade e capacidade de gerar valor com recursos limitados — essência do empreendedorismo.' },
+    { tema:'Criatividade', enunciado:'Sobre a criatividade, é CORRETO afirmar:', opcoes:['É dom inato que só alguns possuem.','Pode ajudar apenas novos produtos, não processos.','É habilidade desenvolvível em qualquer pessoa com ambiente propício e práticas adequadas.','Tem participação limitada em novos negócios.'], correta:2, gabarito:'Criatividade NÃO é dom inato — é desenvolvível por qualquer pessoa. Ajuda produtos, serviços, processos, estratégias e gestão.' },
+    { tema:'MEI', enunciado:'O MEI foi criado com o objetivo principal de:', opcoes:['Oferecer crédito para empresas formalizadas.','Ajudar pessoas a saírem da informalidade sem burocracia e custos elevados.','Substituir o Simples Nacional.','Cadastrar trabalhadores autônomos informais.'], correta:1, gabarito:'MEI (Lei Complementar nº 128/2008): tirar da informalidade de forma simples. Fatura até R$ 81.000/ano, 1 funcionário.' },
+    { tema:'Mindset', enunciado:'Uma característica do mindset empreendedor é:', opcoes:['Evitar desafios para proteger o capital.','Acreditar que habilidades são fixas.','Encarar desafios como aprendizado e persistir diante dos obstáculos.','Focar só em resultados financeiros.'], correta:2, gabarito:'Mindset de crescimento: desafios = aprendizado; limitações = oportunidade. Oposto do mindset fixo que evita desafios.' },
+    { tema:'Canvas', enunciado:'No Business Model Canvas, a "Proposta de Valor" responde à pergunta:', opcoes:['Quanto os clientes pagarão?','Que problema resolvemos? Que necessidade atendemos?','Quais são os canais de distribuição?','Quem são os fornecedores?'], correta:1, gabarito:'Proposta de Valor = coração do Canvas. Define POR QUE o cliente escolhe sua empresa em vez da concorrente.' },
+  ],
+  bioestatistica: [
+    { tema:'Prevalência vs Incidência', enunciado:'A diferença entre prevalência e incidência é:', opcoes:['São iguais para doenças crônicas.','Prevalência conta casos existentes (novos + antigos); incidência conta apenas casos NOVOS em pessoas saudáveis.','Incidência usa a população total; prevalência usa os doentes.','Prevalência é usada para doenças agudas; incidência para crônicas.'], correta:1, gabarito:'Prevalência = fotografia (todos os casos). Incidência = filme (só novos, em pessoas sob risco). Prevalência = Incidência × Duração.' },
+    { tema:'Odds Ratio', enunciado:'O Odds Ratio (OR) é usado em:', opcoes:['Estudos prospectivos como coorte.','Estudos retrospectivos como caso-controle e transversal.','Apenas ensaios clínicos randomizados.','Revisões sistemáticas e metanálises.'], correta:1, gabarito:'OR: estudos retrospectivos (caso-controle, transversal). RR: estudos prospectivos (coorte, ensaio clínico). OR = (A×D)/(B×C).' },
+    { tema:'Hierarquia de Evidências', enunciado:'A hierarquia de evidências do maior para o menor nível é:', opcoes:['Relato de caso → Transversal → Coorte → ECR → Revisão sistemática','Revisão sistemática → ECR → Coorte → Caso-Controle → Transversal → Relato de caso','ECR → Coorte → Revisão sistemática → Caso-Controle','Todos têm o mesmo nível dependendo da amostra.'], correta:1, gabarito:'Revisão sistemática/Metanálise > ECR > Coorte > Caso-Controle > Transversal > Relato de caso. Base da Nutrição Baseada em Evidências.' },
+    { tema:'Indicadores', enunciado:'O coeficiente de mortalidade infantil é calculado como:', opcoes:['Óbitos < 5 anos / total de óbitos × 100','Óbitos < 1 ano / nascidos vivos × 1.000','Óbitos < 1 ano / população total × 10.000','Nascidos vivos / óbitos infantis × 1.000'], correta:1, gabarito:'Mortalidade infantil = (óbitos < 1 ano / nascidos vivos) × 1.000. Multiplicador SEMPRE 1.000. Indicador sensível ao nível socioeconômico.' },
+    { tema:'Prevenção', enunciado:'A vacinação é exemplo de prevenção:', opcoes:['Terciária — reabilita quem teve a doença.','Secundária — detecta precocemente.','Primária — age antes da doença, no período pré-patogênico.','Quaternária — evita excesso de medicalização.'], correta:2, gabarito:'Prevenção primária: age antes da doença instalar-se (período pré-patogênico). Ex: vacinação, educação alimentar, saneamento.' },
+  ]
+};
+
+function msCarregar() {
+  const mat = document.getElementById('ms-materia-select').value;
+  const container = document.getElementById('ms-container');
+  if (!mat || !MS_QUESTOES[mat]) {
+    container.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#9ca3af"><div style="font-size:48px;margin-bottom:12px">📝</div><div style="font-size:15px;font-weight:600">Selecione uma matéria para estudar</div></div>';
+    document.getElementById('ms-total-label').textContent = '';
+    return;
+  }
+  const qs = MS_QUESTOES[mat];
+  document.getElementById('ms-total-label').textContent = `${qs.length} questões com gabarito`;
+  const letras = ['A','B','C','D'];
+  container.innerHTML = qs.map((q, i) => `
+    <div class="ms-questao">
+      <div class="ms-q-header">
+        <span class="ms-q-num">Questão ${i+1}</span>
+        <span class="ms-q-tema">${q.tema}</span>
+      </div>
+      <div class="ms-enunciado">${q.enunciado}</div>
+      ${q.opcoes.map((op, oi) => `
+        <div class="ms-opcao ${oi === q.correta ? 'correta' : 'normal'}">
+          <div class="ms-letra">${letras[oi]}</div>
+          <span>${op}</span>
+        </div>
+      `).join('')}
+      <div class="ms-gabarito">💬 <strong>Gabarito:</strong> ${q.gabarito}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+// SIMULADO GERAL
+// ═══════════════════════════════════════════════
+const SIM_QUESTOES = {
+  genetica: [
+    { mat:'Genética', tema:'Transporte', enunciado:'A glicose é absorvida no intestino delgado por:', opcoes:['Difusão simples pela membrana.','SGLT1 (ativo, cotransporte Na⁺) na membrana apical e GLUT2 (passivo) na basolateral.','Endocitose mediada por receptor.','Osmose acompanhando o fluxo de água.'], correta:1, gabarito:'SGLT1 na membrana apical (ativo, depende de Na⁺) → GLUT2 na basolateral (difusão facilitada, passivo) → sangue portal.' },
+    { mat:'Genética', tema:'Mitocôndria', enunciado:'As vitaminas do complexo B são essenciais para o metabolismo energético porque:', opcoes:['Fornecem calorias diretamente.','Atuam como coenzimas no Ciclo de Krebs e na cadeia respiratória.','Compõem a membrana mitocondrial.','Inibem enzimas do catabolismo.'], correta:1, gabarito:'B1, B2, B3, B5 = cofatores enzimáticos vitais. Sem elas, a produção de ATP é comprometida. B1 deficiente → beribéri.' },
+    { mat:'Genética', tema:'Desenvolvimento', enunciado:'A Hipótese de Barker postula que:', opcoes:['O peso ao nascer é só genético.','Desnutrição intrauterina programa maior risco de obesidade, DM2 e doenças cardiovasculares na vida adulta.','Bebês macrossômicos são imunes a doenças metabólicas.','Alimentação nos primeiros 5 anos é mais determinante que a intrauterina.'], correta:1, gabarito:'Feto adapta metabolismo à escassez. Quando nasce em ambiente de abundância, essas adaptações viram fatores de risco.' },
+    { mat:'Genética', tema:'Genética e Nutrição', enunciado:'A diferença entre Nutrigenômica e Nutrigenética é:', opcoes:['São sinônimas.','Nutrigenômica = nutrientes → modulam expressão gênica; Nutrigenética = variações genéticas → afetam resposta ao nutriente.','Nutrigenômica estuda doenças hereditárias.','Nutrigenômica é só para gestantes.'], correta:1, gabarito:'Nutrigenômica: do nutriente ao gene. Nutrigenética: do gene ao nutriente. Conceitos complementares e distintos.' },
+    { mat:'Genética', tema:'Mutações', enunciado:'Na doença celíaca, a intervenção é exclusão do glúten porque:', opcoes:['Glúten é tóxico para todos.','Indivíduos com HLA-DQ2/DQ8 desenvolvem resposta imune ao glúten → atrofia de vilosidades → má absorção.','Glúten bloqueia GLUT.','É exclusão temporária até a inflamação melhorar.'], correta:1, gabarito:'Doença autoimune em predispostos. Exclusão VITALÍCIA e TOTAL de glúten é o único tratamento. Promove regeneração das vilosidades.' },
+  ],
+  mentalidade: [
+    { mat:'Mentalidade', tema:'Empreendedorismo', enunciado:'A principal diferença entre empreendedor por oportunidade e por necessidade é:', opcoes:['O por oportunidade tem menos capital.','Por oportunidade percebe nicho de mercado e planeja; por necessidade não tem alternativa de renda e geralmente não planeja.','Por necessidade tem maior taxa de sucesso.','São idênticos — motivação não influencia resultado.'], correta:1, gabarito:'Por oportunidade: planeja, estuda, prepara-se. Por necessidade: urgência financeira, sem planejamento. O primeiro tende a ser mais sustentável.' },
+    { mat:'Mentalidade', tema:'Design Thinking', enunciado:'Na prototipagem do Design Thinking:', opcoes:['O produto final é lançado ao mercado.','Pesquisa-se os concorrentes.','Define-se o problema principal.','Cria-se um protótipo simples para testar com usuários reais.'], correta:3, gabarito:'Prototipagem = versão simples e barata para testar hipóteses antes de investir recursos. É o MVP na prática.' },
+    { mat:'Mentalidade', tema:'Tipos de Empreendedorismo', enunciado:'O empreendedorismo social caracteriza-se por:', opcoes:['Criar negócios lucrativos dentro de empresas existentes.','Identificar nichos para maximizar lucro.','Criar serviços/produtos com impacto positivo na sociedade, intermediando comunidade, governo e setor privado.','Abrir empresas após perda de emprego.'], correta:2, gabarito:'Social: impacto positivo na sociedade. Ex: Rede Asta — apoiou 8.500 mulheres empreendedoras em 234 cidades.' },
+    { mat:'Mentalidade', tema:'Administração', enunciado:'O risco de um novo negócio deve ser identificado na fase de:', opcoes:['Controle.','Direção.','Organização.','Planejamento — antes de qualquer investimento.'], correta:3, gabarito:'Risco no planejamento: identifica ANTES de investir. Se for alto, pode adaptar ou desistir sem perdas maiores.' },
+    { mat:'Mentalidade', tema:'Validação', enunciado:'O "Modo Beta em Looping" significa:', opcoes:['Lançar só quando 100% pronto.','Testar apenas com público interno.','Lançar, coletar feedback, iterar continuamente — nunca "pronto".','Desenvolver múltiplas versões simultaneamente.'], correta:2, gabarito:'Lean Startup: construir → medir → aprender. Produto nunca está pronto — sempre há melhorias com base em feedback real.' },
+  ],
+  bioestatistica: [
+    { mat:'Bioestatística', tema:'Prevalência', enunciado:'A prevalência é a medida epidemiológica que:', opcoes:['Conta apenas casos NOVOS.','Mede o número de casos existentes (novos + antigos) em determinado período.','Avalia a velocidade de surgimento de novos casos.','É usada exclusivamente para doenças agudas.'], correta:1, gabarito:'Prevalência = fotografia. Casos existentes (novos + antigos) / população × 10ⁿ. Ideal para doenças crônicas (DM, HAS).' },
+    { mat:'Bioestatística', tema:'Risco Relativo', enunciado:'O Risco Relativo difere do Odds Ratio porque:', opcoes:['RR é calculado em estudos retrospectivos.','RR mede o risco real (estudos prospectivos) e pode inferir causalidade; OR é estimativa de risco (estudos retrospectivos).','RR usa tabela 2×2 e OR não.','OR é sempre maior que RR.'], correta:1, gabarito:'RR: prospectivos (coorte, ECR), causalidade. OR: retrospectivos (caso-controle, transversal), associação.' },
+    { mat:'Bioestatística', tema:'Desenhos de Estudos', enunciado:'O ensaio clínico randomizado é padrão-ouro porque:', opcoes:['É o mais barato e rápido.','Permite analisar dados retrospectivos.','A randomização elimina vieses, garante grupos comparáveis e permite inferir causalidade com alto nível de evidência.','Usa dados do IBGE.'], correta:2, gabarito:'Randomização distribui igualmente os fatores de confusão. É o único estudo que pode afirmar causalidade com alta certeza.' },
+    { mat:'Bioestatística', tema:'História Natural da Doença', enunciado:'A tríade ecológica em epidemiologia é composta por:', opcoes:['Pessoa, Tempo e Lugar.','Incidência, Prevalência e Mortalidade.','Hospedeiro, Agente e Meio Ambiente.','Prevenção Primária, Secundária e Terciária.'], correta:2, gabarito:'Hospedeiro + Agente + Meio Ambiente = modelo multicausal. Saúde = equilíbrio. Doença = desequilíbrio entre os três.' },
+    { mat:'Bioestatística', tema:'Bioestatística', enunciado:'Em distribuições assimétricas ou com outliers, a medida de tendência central mais adequada é:', opcoes:['Média aritmética.','Mediana.','Moda.','Desvio padrão.'], correta:1, gabarito:'Mediana é robusta — não é afetada por valores extremos. Média seria puxada pelos outliers, distorcendo a representação.' },
+  ]
+};
+
+let simDeck = [], simIdx = 0, simAcertos = 0, simErros = 0, simRespondidas = [];
+let simTimerInterval = null, simTempoRestante = 0;
+
+function simToggle(label) {
+  const cb = label.querySelector('input[type=checkbox]');
+  setTimeout(() => { label.classList.toggle('selected', cb.checked); }, 10);
+}
+
+function simGetQuestoes() {
+  const checks = document.querySelectorAll('#sim-opts input[type=checkbox]:checked');
+  const qtdSelect = parseInt(document.getElementById('sim-qtd-select').value);
+  let qs = [];
+  checks.forEach(cb => {
+    const mat = cb.value;
+    if (SIM_QUESTOES[mat]) qs.push(...SIM_QUESTOES[mat]);
+  });
+  qs = qs.sort(() => Math.random() - 0.5);
+  if (qtdSelect > 0) qs = qs.slice(0, qtdSelect);
+  return qs;
+}
+
+function simIniciar() {
+  simDeck = simGetQuestoes();
+  if (!simDeck.length) { alert('Selecione ao menos uma matéria!'); return; }
+  simIdx = 0; simAcertos = 0; simErros = 0; simRespondidas = [];
+  document.getElementById('sim-config').style.display = 'none';
+  document.getElementById('sim-arena').style.display = 'block';
+  document.getElementById('sim-q-total').textContent = simDeck.length;
+
+  // Timer
+  const timerOn = document.getElementById('sim-timer-check').checked;
+  const timerMin = parseInt(document.getElementById('sim-timer-min').value);
+  const timerDisp = document.getElementById('sim-timer-disp');
+  if (timerOn) {
+    simTempoRestante = timerMin * 60;
+    timerDisp.style.display = 'block';
+    simAtualizarTimer();
+    simTimerInterval = setInterval(() => {
+      simTempoRestante--;
+      simAtualizarTimer();
+      if (simTempoRestante <= 0) { clearInterval(simTimerInterval); simMostrarResultado(); }
+    }, 1000);
+  } else {
+    timerDisp.style.display = 'none';
+    clearInterval(simTimerInterval);
+  }
+  simRenderQuestao(0);
+}
+
+function simAtualizarTimer() {
+  const m = Math.floor(simTempoRestante / 60).toString().padStart(2,'0');
+  const s = (simTempoRestante % 60).toString().padStart(2,'0');
+  const el = document.getElementById('sim-timer-disp');
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle('urgente', simTempoRestante <= 60);
+}
+
+function simRenderQuestao(idx) {
+  const q = simDeck[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('sim-container');
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'sim-qcard-' + idx;
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx+1} de ${simDeck.length}</span>
+      <span class="q-tema">${q.mat} · ${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op,i) => `
+      <button class="opcao-btn" id="sim-op-${idx}-${i}" onclick="simResponder(${idx},${i})">
+        <span class="opcao-letra">${letras[i]}</span><span>${op}</span>
+      </button>`).join('')}
+    <div class="q-gabarito" id="sim-gab-${idx}">💬 ${q.gabarito}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('sim-btn-prox').disabled = true;
+  document.getElementById('sim-q-atual').textContent = idx + 1;
+  const pct = (idx / simDeck.length) * 100;
+  document.getElementById('sim-prog-bar').style.width = pct + '%';
+}
+
+function simResponder(idx, opcaoIdx) {
+  if (simRespondidas.includes(idx)) return;
+  simRespondidas.push(idx);
+  const q = simDeck[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('sim-qcard-' + idx);
+  const gab = document.getElementById('sim-gab-' + idx);
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('sim-op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+  if (opcaoIdx === q.correta) {
+    simAcertos++;
+    card.classList.add('acertou');
+    gab.className = 'q-gabarito show-acertou';
+    gab.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    simErros++;
+    document.getElementById('sim-op-' + idx + '-' + opcaoIdx).classList.add('incorreta');
+    card.classList.add('errou');
+    gab.className = 'q-gabarito show-errou';
+    gab.innerHTML = '❌ Incorreto. Resposta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+  document.getElementById('sim-acertos-live').textContent = simAcertos;
+  document.getElementById('sim-btn-prox').disabled = false;
+}
+
+function simProxima() {
+  simIdx++;
+  if (simIdx < simDeck.length) simRenderQuestao(simIdx);
+  else simMostrarResultado();
+}
+
+function simMostrarResultado() {
+  clearInterval(simTimerInterval);
+  const pct = Math.round((simAcertos / simDeck.length) * 100);
+  const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  const msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+  document.getElementById('sim-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Simulado com ${simDeck.length} questões concluído.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${simAcertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${simErros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+        <div class="r-stat"><div class="r-stat-val" style="color:var(--azul)">${simDeck.length}</div><div class="r-stat-label">Total</div></div>
+      </div>
+    </div>`;
+  document.getElementById('sim-btn-prox').disabled = true;
+  document.getElementById('sim-prog-bar').style.width = '100%';
+  simSalvarProgresso(pct);
+}
+
+function simVoltar() {
+  clearInterval(simTimerInterval);
+  document.getElementById('sim-config').style.display = 'block';
+  document.getElementById('sim-arena').style.display = 'none';
+}
+
+function simSalvarProgresso(pct) {
+  try {
+    const dados = JSON.parse(localStorage.getItem('nutri_progresso') || '{}');
+    if (!dados.simulados) dados.simulados = [];
+    dados.simulados.push({ data: new Date().toISOString(), acertos: simAcertos, total: simDeck.length, pct });
+    localStorage.setItem('nutri_progresso', JSON.stringify(dados));
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════
+// PROGRESSO
+// ═══════════════════════════════════════════════
+function progRenderizar() {
+  // Resumo geral
+  let totalAcertos = 0, totalQuestoes = 0, totalSimulados = 0, melhorPct = 0;
+  try {
+    const dados = JSON.parse(localStorage.getItem('nutri_progresso') || '{}');
+    if (dados.simulados) {
+      totalSimulados = dados.simulados.length;
+      dados.simulados.forEach(s => {
+        totalAcertos += s.acertos;
+        totalQuestoes += s.total;
+        if (s.pct > melhorPct) melhorPct = s.pct;
+      });
+    }
+    // Somar também dos quizzes individuais
+    Object.keys(MATERIAS).forEach(k => {
+      const s = revCalcularStatus(k);
+      if (s.status !== 'novo') {
+        totalAcertos += s.acertos;
+        totalQuestoes += s.total;
+      }
+    });
+  } catch(e) {}
+
+  const mediaPct = totalQuestoes > 0 ? Math.round((totalAcertos / totalQuestoes) * 100) : 0;
+  const resumoEl = document.getElementById('prog-resumo');
+  resumoEl.innerHTML = `
+    <div class="prog-res-card azul"><div class="prog-res-val">${totalQuestoes}</div><div class="prog-res-label">Questões respondidas</div></div>
+    <div class="prog-res-card verde"><div class="prog-res-val">${totalAcertos}</div><div class="prog-res-label">Acertos totais</div></div>
+    <div class="prog-res-card laranja"><div class="prog-res-val">${mediaPct}%</div><div class="prog-res-label">Aproveitamento médio</div></div>
+    <div class="prog-res-card roxo"><div class="prog-res-val">${totalSimulados}</div><div class="prog-res-label">Simulados realizados</div></div>
+  `;
+
+  // Grid por matéria
+  const grid = document.getElementById('prog-grid');
+  grid.innerHTML = '';
+  Object.entries(MATERIAS).forEach(([k, m]) => {
+    const s = revCalcularStatus(k);
+    const corPct = s.pct >= 80 ? '#16a34a' : s.pct >= 60 ? '#ca8a04' : s.pct > 0 ? '#dc2626' : '#d1d5db';
+    const semDados = s.status === 'novo';
+
+    // Temas do quiz (simulados)
+    const temasDesempenho = [];
+    if (!semDados && SIM_QUESTOES[k]) {
+      const temas = [...new Set(SIM_QUESTOES[k].map(q => q.tema))];
+      temas.forEach(t => temasDesempenho.push({ t, nivel: s.pct >= 80 ? 'bom' : s.pct >= 60 ? 'medio' : 'ruim' }));
+    }
+
+    const card = document.createElement('div');
+    card.className = 'prog-card';
+    card.innerHTML = `
+      <div class="prog-card-top">
+        <div class="prog-icon">${m.icon}</div>
+        <div><div class="prog-titulo">${m.nome}</div><div class="prog-modulo">${m.modulo}</div></div>
+        <div class="prog-score">
+          <div class="prog-score-val" style="color:${corPct}">${semDados ? '—' : s.pct + '%'}</div>
+          <div class="prog-score-label">${semDados ? 'Não iniciado' : `${s.acertos}/${s.total} acertos`}</div>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${s.pct}%;background:${corPct}"></div></div>
+      ${semDados
+        ? `<div class="prog-sem-dados">📌 Realize o quiz desta matéria para ver seu desempenho</div>`
+        : `<div class="prog-temas">${temasDesempenho.map(td => `<span class="prog-tema-chip ${td.nivel}">${td.t}</span>`).join('')}</div>`
+      }
+    `;
+    grid.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
