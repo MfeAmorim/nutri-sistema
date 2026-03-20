@@ -14,1495 +14,792 @@
   --code-bg: #0f1923; --code-border: #1e3040;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
-
-/* ── TOPBAR ── */
 .topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
 .back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
 .back-btn:hover { color: #fff; }
 .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
 .topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
-.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; margin-left: auto; }
-
-/* ── LAYOUT ── */
+.badge-top { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; margin-left: auto; }
 .page-wrap { max-width: 960px; margin: 0 auto; padding: 32px; }
-
-/* ── HERO ── */
 .hero { background: var(--escuro); border-radius: 20px; padding: 36px 44px; margin-bottom: 32px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
-.hero::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; background:radial-gradient(circle,rgba(116,198,157,0.12) 0%,transparent 70%); }
-.hero::after { content:'</>'; position:absolute; right: 40px; bottom: -10px; font-family:'Fira Code',monospace; font-size: 80px; color: rgba(116,198,157,0.06); font-weight:500; }
+.hero::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; background:radial-gradient(circle,rgba(116,198,157,0.12) 0%,transparent 70%); pointer-events:none; }
+.hero::after { content:'</>'; position:absolute; right:40px; bottom:-10px; font-family:'Fira Code',monospace; font-size:80px; color:rgba(116,198,157,0.06); font-weight:500; pointer-events:none; }
 .hero-icon { font-size: 52px; flex-shrink: 0; }
 .hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
 .hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 6px; }
 .hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; max-width: 480px; }
-
-/* ── PROGRESSO GERAL ── */
-.prog-geral { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-.prog-geral-txt { flex: 1; min-width: 160px; }
-.prog-geral-titulo { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 2px; }
-.prog-geral-sub { font-size: 12px; color: #7a8a7c; }
-.prog-bar-wrap { flex: 2; min-width: 200px; }
-.prog-bar-bg { background: var(--creme2); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 6px; }
-.prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.6s ease; }
-.prog-bar-label { font-size: 12px; color: #7a8a7c; font-weight: 600; display: flex; justify-content: space-between; }
-.prog-nums { display: flex; gap: 16px; }
+/* SELETOR */
+.sec-titulo { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--escuro); margin-bottom: 6px; }
+.sec-sub { font-size: 13px; color: #7a8a7c; margin-bottom: 20px; }
+.trilhas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.trilha-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 16px; padding: 22px; cursor: pointer; transition: all 0.2s; position: relative; }
+.trilha-card:hover { border-color: var(--verde-claro); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,106,79,0.1); }
+.trilha-card.selecionada { border-color: var(--verde); box-shadow: 0 0 0 4px rgba(45,106,79,0.12); }
+.trilha-card.selecionada .trilha-check { display: flex; }
+.trilha-check { display: none; position: absolute; top: 14px; right: 14px; background: var(--verde); color: #fff; width: 22px; height: 22px; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+.trilha-icon { font-size: 34px; margin-bottom: 10px; }
+.trilha-nome { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 5px; }
+.trilha-desc { font-size: 12px; color: #7a8a7c; line-height: 1.55; margin-bottom: 12px; }
+.trilha-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.trilha-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+.btn-comecar { background: var(--verde); color: #fff; border: none; padding: 14px 32px; border-radius: 12px; font-family: 'DM Sans',sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-comecar:hover { background: var(--escuro); }
+.btn-comecar:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+/* TRILHA ATIVA */
+.trilha-ativa { display: none; }
+.trilha-ativa.visivel { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.th-header { background: var(--escuro); border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.th-info { flex: 1; }
+.th-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--verde-neon); margin-bottom: 3px; }
+.th-titulo { font-family: 'Playfair Display', serif; font-size: 19px; color: #fff; }
+.btn-trocar { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); padding: 8px 14px; border-radius: 8px; font-family:'DM Sans',sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.btn-trocar:hover { background: rgba(255,255,255,0.18); color: #fff; }
+/* PROGRESSO */
+.prog-box { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 14px; padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.prog-txt { flex: 1; min-width: 120px; }
+.prog-titulo { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 2px; }
+.prog-sub { font-size: 12px; color: #7a8a7c; }
+.prog-bar-wrap { flex: 2; min-width: 160px; }
+.prog-bar-bg { background: var(--creme2); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 5px; }
+.prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.6s; }
+.prog-bar-labels { font-size: 11px; color: #7a8a7c; font-weight: 600; display: flex; justify-content: space-between; }
+.prog-nums { display: flex; gap: 14px; }
 .prog-num { text-align: center; }
-.prog-num-val { font-size: 22px; font-weight: 800; color: var(--verde); }
-.prog-num-label { font-size: 11px; color: #7a8a7c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* ── MÓDULOS ── */
-.modulo { margin-bottom: 36px; }
-.modulo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--creme2); }
-.modulo-icon { font-size: 22px; }
-.modulo-titulo { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); }
-.modulo-count { font-size: 12px; color: #7a8a7c; margin-left: auto; font-weight: 600; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
-
-/* ── CARDS DE AULA ── */
-.aulas-grid { display: flex; flex-direction: column; gap: 12px; }
-.aula-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; overflow: hidden; transition: all 0.2s; }
-.aula-card:hover { border-color: var(--verde-claro); box-shadow: 0 4px 16px rgba(45,106,79,0.08); }
+.prog-num-val { font-size: 20px; font-weight: 800; color: var(--verde); }
+.prog-num-label { font-size: 10px; color: #7a8a7c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+/* MÓDULO */
+.modulo { margin-bottom: 28px; }
+.modulo-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--creme2); }
+.modulo-icon { font-size: 20px; }
+.modulo-titulo { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--escuro); }
+.modulo-count { font-size: 11px; color: #7a8a7c; margin-left: auto; font-weight: 600; background: var(--creme2); padding: 3px 9px; border-radius: 20px; }
+.aulas-grid { display: flex; flex-direction: column; gap: 9px; }
+/* AULA CARD */
+.aula-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 12px; overflow: hidden; transition: all 0.2s; }
+.aula-card:hover:not(.bloqueada) { border-color: var(--verde-claro); box-shadow: 0 3px 12px rgba(45,106,79,0.08); }
 .aula-card.concluida { border-color: #86efac; }
-.aula-card.bloqueada { opacity: 0.55; pointer-events: none; }
-
-.aula-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; }
-.aula-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; background: var(--creme2); color: #7a8a7c; transition: all 0.2s; }
+.aula-card.bloqueada { opacity: 0.5; pointer-events: none; }
+.aula-header { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; }
+.aula-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; background: var(--creme2); color: #7a8a7c; }
 .aula-card.concluida .aula-num { background: #dcfce7; color: #16a34a; }
 .aula-card.ativa .aula-num { background: var(--verde); color: #fff; }
 .aula-info { flex: 1; }
-.aula-titulo { font-size: 15px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.aula-titulo { font-size: 14px; font-weight: 700; color: var(--escuro); margin-bottom: 2px; }
 .aula-desc { font-size: 12px; color: #7a8a7c; }
-.aula-badge { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; flex-shrink: 0; }
+.aula-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; flex-shrink: 0; }
 .aula-badge.nova { background: #fef9c3; color: #92400e; }
 .aula-badge.feita { background: #dcfce7; color: #15803d; }
 .aula-badge.lock { background: var(--creme2); color: #9ca3af; }
 .aula-chevron { font-size: 16px; color: #9ca3af; transition: transform 0.25s; flex-shrink: 0; }
 .aula-card.aberta .aula-chevron { transform: rotate(90deg); }
-
-/* ── CONTEÚDO DA AULA ── */
 .aula-body { display: none; border-top: 1.5px solid #f0f0f0; }
 .aula-card.aberta .aula-body { display: block; animation: fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
-
-.aula-conteudo { padding: 24px 24px 0; }
-
-/* Texto formatado */
-.aula-conteudo h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--escuro); margin: 0 0 8px; }
-.aula-conteudo h3 { font-size: 15px; font-weight: 700; color: var(--escuro); margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
-.aula-conteudo p { font-size: 14px; line-height: 1.75; color: #4a5a4c; margin-bottom: 14px; }
-.aula-conteudo ul { margin: 0 0 14px 0; padding-left: 0; list-style: none; }
-.aula-conteudo ul li { font-size: 14px; line-height: 1.7; color: #4a5a4c; padding: 4px 0 4px 20px; position: relative; }
+/* CONTEÚDO AULA */
+.aula-conteudo { padding: 20px 20px 0; }
+.aula-conteudo h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); margin: 0 0 8px; }
+.aula-conteudo h3 { font-size: 14px; font-weight: 700; color: var(--escuro); margin: 16px 0 7px; }
+.aula-conteudo p { font-size: 13px; line-height: 1.75; color: #4a5a4c; margin-bottom: 10px; }
+.aula-conteudo ul { margin: 0 0 10px; padding-left: 0; list-style: none; }
+.aula-conteudo ul li { font-size: 13px; line-height: 1.7; color: #4a5a4c; padding: 3px 0 3px 17px; position: relative; }
 .aula-conteudo ul li::before { content: '→'; position: absolute; left: 0; color: var(--verde); font-weight: 700; }
-
-/* Tabela */
-.aula-tabela { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
-.aula-tabela th { background: var(--escuro); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-.aula-tabela th:first-child { border-radius: 10px 0 0 0; }
-.aula-tabela th:last-child { border-radius: 0 10px 0 0; }
-.aula-tabela td { padding: 10px 14px; border-bottom: 1px solid #f0ebe5; color: var(--texto); }
+.aula-tabela { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+.aula-tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.aula-tabela th:first-child { border-radius: 7px 0 0 0; } .aula-tabela th:last-child { border-radius: 0 7px 0 0; }
+.aula-tabela td { padding: 8px 12px; border-bottom: 1px solid #f0ebe5; }
 .aula-tabela tr:last-child td { border-bottom: none; }
 .aula-tabela tr:nth-child(even) td { background: #fafaf8; }
-
-/* Bloco de código */
-.code-block { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 12px; margin: 14px 0; overflow: hidden; }
-.code-header { background: #162030; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; }
-.code-lang { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--verde-neon); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-.code-copy { background: none; border: 1px solid rgba(116,198,157,0.3); color: rgba(116,198,157,0.7); font-size: 11px; padding: 3px 10px; border-radius: 6px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.15s; }
+.code-block { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 10px; margin: 10px 0; overflow: hidden; }
+.code-header { background: #162030; padding: 7px 14px; display: flex; align-items: center; justify-content: space-between; }
+.code-lang { font-family: 'Fira Code', monospace; font-size: 10px; color: var(--verde-neon); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+.code-copy { background: none; border: 1px solid rgba(116,198,157,0.3); color: rgba(116,198,157,0.7); font-size: 10px; padding: 2px 8px; border-radius: 5px; cursor: pointer; font-family:'DM Sans',sans-serif; transition: all 0.15s; }
 .code-copy:hover { background: rgba(116,198,157,0.1); color: var(--verde-neon); }
-.code-body { padding: 16px 20px; overflow-x: auto; }
+.code-body { padding: 13px 16px; overflow-x: auto; }
 .code-body pre { font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.7; color: #e2e8f0; white-space: pre; }
-/* Syntax highlight manual */
-.kw { color: #93c5fd; }   /* keyword: function, const, if */
-.fn { color: #86efac; }   /* function name */
-.str { color: #fca5a5; }  /* strings */
-.cm { color: #64748b; font-style: italic; } /* comentário */
-.tg { color: #fb923c; }   /* html tag */
-.at { color: #fde68a; }   /* attribute */
-.vl { color: #c4b5fd; }   /* value */
-.cs { color: #67e8f9; }   /* css property */
-.num { color: #fdba74; }  /* number */
-
-/* Caixa de destaque */
-.destaque { border-radius: 12px; padding: 14px 18px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; }
+.kw{color:#93c5fd}.fn{color:#86efac}.str{color:#fca5a5}.cm{color:#4a6070;font-style:italic}.tg{color:#fb923c}.at{color:#fde68a}.vl{color:#c4b5fd}.cs{color:#67e8f9}.num{color:#fdba74}
+.destaque { border-radius: 9px; padding: 11px 14px; margin: 10px 0; display: flex; gap: 9px; align-items: flex-start; }
 .destaque.info { background: #eff6ff; border: 1.5px solid #bfdbfe; }
 .destaque.dica { background: #fffbeb; border: 1.5px solid #fde68a; }
 .destaque.atencao { background: #fff5f0; border: 1.5px solid #fed7aa; }
-.destaque-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.destaque-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
 .destaque-txt { font-size: 13px; line-height: 1.65; }
-.destaque.info .destaque-txt { color: #1e40af; }
-.destaque.dica .destaque-txt { color: #78350f; }
-.destaque.atencao .destaque-txt { color: #92400e; }
-
-/* Quiz da aula */
-.aula-quiz { margin: 24px 0 0; padding: 20px 24px; background: var(--creme); border-top: 1.5px solid #e8e0d8; }
-.quiz-titulo { font-size: 13px; font-weight: 800; color: var(--escuro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.quiz-pergunta { font-size: 14px; font-weight: 600; color: var(--escuro); margin-bottom: 12px; line-height: 1.6; }
-.quiz-opcoes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.quiz-opcao { background: #fff; border: 1.5px solid #dde8de; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--texto); cursor: pointer; transition: all 0.15s; text-align: left; font-family: 'DM Sans',sans-serif; display: flex; align-items: center; gap: 10px; }
+.destaque.info .destaque-txt{color:#1e40af}.destaque.dica .destaque-txt{color:#78350f}.destaque.atencao .destaque-txt{color:#92400e}
+/* QUIZ */
+.aula-quiz { margin: 18px 0 0; padding: 16px 20px; background: var(--creme); border-top: 1.5px solid #e8e0d8; }
+.quiz-titulo { font-size: 11px; font-weight: 800; color: var(--escuro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.quiz-pergunta { font-size: 13px; font-weight: 600; color: var(--escuro); margin-bottom: 10px; line-height: 1.6; }
+.quiz-opcoes { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.quiz-opcao { background: #fff; border: 1.5px solid #dde8de; border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--texto); cursor: pointer; transition: all 0.15s; text-align: left; font-family:'DM Sans',sans-serif; display: flex; align-items: center; gap: 8px; }
 .quiz-opcao:hover { border-color: var(--verde-claro); background: #f0fdf4; }
 .quiz-opcao.certa { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; pointer-events: none; }
 .quiz-opcao.errada { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; pointer-events: none; }
-.quiz-opcao.neutra { opacity: 0.5; pointer-events: none; }
-.quiz-letra { width: 24px; height: 24px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
-.quiz-feedback { font-size: 13px; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: none; }
+.quiz-opcao.neutra { opacity: 0.45; pointer-events: none; }
+.quiz-letra { width: 21px; height: 21px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+.quiz-feedback { font-size: 13px; border-radius: 8px; padding: 8px 12px; font-weight: 600; display: none; }
 .quiz-feedback.show { display: block; animation: fadeIn 0.2s ease; }
 .quiz-feedback.certa { background: #dcfce7; color: #15803d; }
 .quiz-feedback.errada { background: #fee2e2; color: #dc2626; }
-
-/* Botão concluir */
-.aula-footer { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.btn-concluir { background: var(--verde); color: #fff; border: none; padding: 12px 28px; border-radius: 12px; font-family:'DM Sans',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+/* FOOTER AULA */
+.aula-footer { padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.btn-concluir { background: var(--verde); color: #fff; border: none; padding: 10px 22px; border-radius: 9px; font-family:'DM Sans',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
 .btn-concluir:hover { background: var(--escuro); }
 .btn-concluir:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
 .btn-concluir.ja-feita { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; cursor: default; }
-.aula-tempo { font-size: 12px; color: #7a8a7c; display: flex; align-items: center; gap: 5px; }
-
-/* ── RESPONSIVIDADE ── */
+.aula-tempo { font-size: 12px; color: #7a8a7c; }
+/* CRONOGRAMA */
+.crono-semana { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
+.crono-header { background: var(--escuro); padding: 13px 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.crono-badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.3); color: var(--verde-neon); font-size: 10px; font-weight: 800; padding: 2px 9px; border-radius: 20px; letter-spacing: 1px; flex-shrink: 0; }
+.crono-titulo { color: #fff; font-weight: 700; font-size: 13px; }
+.crono-aulas { color: rgba(255,255,255,0.4); font-size: 11px; margin-left: auto; }
+.crono-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.crono-item { display: flex; gap: 11px; align-items: flex-start; }
+.crono-num { width: 27px; height: 27px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; background: #f0fdf4; border: 1.5px solid #86efac; color: #15803d; }
+.crono-num.meta { background: #fffbeb; border-color: #fde68a; color: #92400e; font-size: 13px; }
+.crono-item-titulo { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 1px; }
+.crono-item-desc { font-size: 12px; color: #7a8a7c; line-height: 1.5; }
+/* PROJETO FINAL */
+.projeto-card { background: linear-gradient(135deg,#1a2e1f,#2d3f52); border: 1.5px solid var(--verde-claro); border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+.projeto-tag-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--verde-neon); margin-bottom: 6px; }
+.projeto-titulo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; margin-bottom: 6px; }
+.projeto-desc { color: rgba(255,255,255,0.5); font-size: 13px; line-height: 1.65; margin-bottom: 12px; }
+.projeto-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.projeto-tag-item { background: rgba(116,198,157,0.15); color: var(--verde-neon); font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; border: 1px solid rgba(116,198,157,0.3); }
+/* RESPONSIVE */
 @media (max-width: 640px) {
-  .page-wrap { padding: 16px 12px; }
-  .hero { padding: 20px 18px; flex-direction: column; text-align: center; border-radius: 16px; }
+  .page-wrap { padding: 14px 10px; }
+  .hero { padding: 18px 14px; flex-direction: column; text-align: center; border-radius: 12px; }
   .hero::after { display: none; }
-  .hero h1 { font-size: 20px; }
-  .prog-geral { gap: 14px; }
-  .aula-header { padding: 14px 16px; gap: 10px; }
-  .aula-conteudo { padding: 18px 16px 0; }
-  .aula-footer { padding: 14px 16px; }
-  .aula-quiz { padding: 16px; }
-  .code-body { padding: 12px 14px; }
-  .code-body pre { font-size: 12px; }
-  .topbar { padding: 0 16px; }
-  .badge { display: none; }
-  .aula-tabela { font-size: 13px; }
+  .hero h1 { font-size: 19px; }
+  .trilhas-grid { grid-template-columns: 1fr; }
+  .topbar { padding: 0 12px; }
+  .badge-top { display: none; }
+  .aula-header { padding: 11px 12px; gap: 9px; }
+  .aula-conteudo { padding: 14px 12px 0; }
+  .aula-footer { padding: 10px 12px; }
+  .aula-quiz { padding: 12px; }
+  .code-body pre { font-size: 11px; }
+  .crono-body { padding: 12px; }
 }
 </style>
 </head>
 <body>
-
 <div class="topbar">
   <a href="producao-conhecimento.html" class="back-btn">← Voltar</a>
   <div class="divider"></div>
   <div class="topbar-title">Programação na Prática</div>
-  <div class="badge" id="badge-prog">Aula 1 de 8</div>
+  <div class="badge-top" id="badge-top">Escolha sua trilha</div>
 </div>
-
 <div class="page-wrap">
-
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-icon">💻</div>
     <div>
       <div class="hero-tag">Conhecimento na Prática — Módulo Especial</div>
-      <h1>Programação Web na Prática</h1>
-      <p>Aprenda HTML, CSS e JavaScript usando o próprio código do Nutri Amorim como exemplo. Cada aula explica o que foi feito e por que funciona.</p>
+      <h1>Aprenda a Programar do Jeito Certo</h1>
+      <p>Escolha o que você quer construir e receba as aulas organizadas para esse objetivo. HTML, CSS e JavaScript com exemplos do seu projeto.</p>
     </div>
   </div>
 
-  <!-- PROGRESSO GERAL -->
-  <div class="prog-geral">
-    <div class="prog-geral-txt">
-      <div class="prog-geral-titulo">Seu progresso no curso</div>
-      <div class="prog-geral-sub" id="prog-sub">0 de 6 aulas concluídas</div>
+  <!-- SELETOR -->
+  <div id="seletor">
+    <div class="sec-titulo">O que você quer criar?</div>
+    <div class="sec-sub">Selecione um objetivo — as aulas, o cronograma e o projeto final serão montados para esse caminho</div>
+    <div class="trilhas-grid">
+      <div class="trilha-card" id="tc-loja" onclick="selecionarTrilha('loja')">
+        <div class="trilha-check">✓</div>
+        <div class="trilha-icon">🛍️</div>
+        <div class="trilha-nome">Loja Online</div>
+        <div class="trilha-desc">Vitrine de produtos, catálogo, filtros e botão de compra pelo WhatsApp. Ideal para perfumes, roupas ou qualquer produto.</div>
+        <div class="trilha-tags">
+          <span class="trilha-tag" style="background:#fef9c3;color:#92400e">Catálogo</span>
+          <span class="trilha-tag" style="background:#dbeafe;color:#1d4ed8">Filtros</span>
+          <span class="trilha-tag" style="background:#f0fdf4;color:#15803d">WhatsApp</span>
+        </div>
+      </div>
+      <div class="trilha-card" id="tc-sistema" onclick="selecionarTrilha('sistema')">
+        <div class="trilha-check">✓</div>
+        <div class="trilha-icon">⚙️</div>
+        <div class="trilha-nome">Sistema com Cálculos</div>
+        <div class="trilha-desc">Calculadoras, planilhas e sistemas de registro. Ideal para calorias, finanças, estoque — qualquer coisa com fórmulas.</div>
+        <div class="trilha-tags">
+          <span class="trilha-tag" style="background:#fef9c3;color:#92400e">Inputs</span>
+          <span class="trilha-tag" style="background:#dbeafe;color:#1d4ed8">Fórmulas</span>
+          <span class="trilha-tag" style="background:#f0fdf4;color:#15803d">Tabelas</span>
+        </div>
+      </div>
+      <div class="trilha-card" id="tc-portfolio" onclick="selecionarTrilha('portfolio')">
+        <div class="trilha-check">✓</div>
+        <div class="trilha-icon">🎨</div>
+        <div class="trilha-nome">Portfólio / Site Pessoal</div>
+        <div class="trilha-desc">Apresente seu trabalho e habilidades. Ideal para nutricionistas, designers, fotógrafos ou qualquer profissional.</div>
+        <div class="trilha-tags">
+          <span class="trilha-tag" style="background:#fef9c3;color:#92400e">Design</span>
+          <span class="trilha-tag" style="background:#dbeafe;color:#1d4ed8">Projetos</span>
+          <span class="trilha-tag" style="background:#f0fdf4;color:#15803d">Contato</span>
+        </div>
+      </div>
+      <div class="trilha-card" id="tc-blog" onclick="selecionarTrilha('blog')">
+        <div class="trilha-check">✓</div>
+        <div class="trilha-icon">📝</div>
+        <div class="trilha-nome">Blog ou Site de Conteúdo</div>
+        <div class="trilha-desc">Publique artigos, receitas ou dicas. Ideal para criar autoridade na sua área e atrair pacientes ou clientes.</div>
+        <div class="trilha-tags">
+          <span class="trilha-tag" style="background:#fef9c3;color:#92400e">Artigos</span>
+          <span class="trilha-tag" style="background:#dbeafe;color:#1d4ed8">Categorias</span>
+          <span class="trilha-tag" style="background:#f0fdf4;color:#15803d">Busca</span>
+        </div>
+      </div>
+      <div class="trilha-card" id="tc-dashboard" onclick="selecionarTrilha('dashboard')">
+        <div class="trilha-check">✓</div>
+        <div class="trilha-icon">📊</div>
+        <div class="trilha-nome">Dashboard / Painel</div>
+        <div class="trilha-desc">Painel com abas, cards e dados — igual ao Nutri Amorim. Ideal para sistemas internos e ferramentas de gestão.</div>
+        <div class="trilha-tags">
+          <span class="trilha-tag" style="background:#fef9c3;color:#92400e">Abas</span>
+          <span class="trilha-tag" style="background:#dbeafe;color:#1d4ed8">Cards</span>
+          <span class="trilha-tag" style="background:#f0fdf4;color:#15803d">Dados</span>
+        </div>
+      </div>
     </div>
-    <div class="prog-bar-wrap">
-      <div class="prog-bar-bg">
-        <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
-      </div>
-      <div class="prog-bar-label">
-        <span id="prog-pct">0% concluído</span>
-        <span id="prog-prox">Comece pela Aula 1 👇</span>
-      </div>
-    </div>
-    <div class="prog-nums">
-      <div class="prog-num">
-        <div class="prog-num-val" id="prog-feitas">0</div>
-        <div class="prog-num-label">Feitas</div>
-      </div>
-      <div class="prog-num">
-        <div class="prog-num-val" style="color:var(--azul)" id="prog-restantes">6</div>
-        <div class="prog-num-label">Restantes</div>
-      </div>
-    </div>
+    <button class="btn-comecar" id="btn-comecar" onclick="comecar()" disabled>Escolha uma trilha acima</button>
   </div>
 
-  <!-- MÓDULO 1 -->
-  <div class="modulo">
-    <div class="modulo-header">
-      <div class="modulo-icon">🏗️</div>
-      <div class="modulo-titulo">Módulo 1 — Os Fundamentos</div>
-      <div class="modulo-count" id="count-mod1">0 / 6 aulas</div>
-    </div>
-    <div class="aulas-grid">
-
-      <!-- AULA 1 — VS Code -->
-      <div class="aula-card ativa" id="aula-1" data-aula="1">
-        <div class="aula-header" onclick="toggleAula(1)">
-          <div class="aula-num">1</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🛠️ Configurando o VS Code — Seu Ambiente de Trabalho</div>
-            <div class="aula-desc">Instale o Live Server e prepare a pasta do projeto antes de escrever qualquer código</div>
-          </div>
-          <span class="aula-badge nova" id="badge-aula-1">Nova</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-            <h2>Antes de Escrever Código — Prepare o Ambiente</h2>
-            <p>Todo programador tem um <strong>ambiente de trabalho</strong> configurado. O seu vai ser o VS Code com uma extensão chamada Live Server. Sem isso, você escreveria código mas teria que ficar apertando F5 no navegador toda hora para ver o resultado.</p>
-            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>O que é o Live Server?</strong> Extensão que abre seu HTML no browser e <strong>atualiza automaticamente</strong> toda vez que você salva. Digita, salva, vê — em tempo real.</div></div>
-            <h3>📦 Passo 1 — Instalar o Live Server no VS Code</h3>
-            <ul>
-              <li>Abra o VS Code</li>
-              <li>Na barra lateral esquerda clica no ícone de 4 quadradinhos <strong>(Extensions)</strong></li>
-              <li>Na caixa de busca digita: <strong>Live Server</strong></li>
-              <li>Instala o de <strong>Ritwick Dey</strong> — mais de 40 milhões de instalações</li>
-            </ul>
-            <h3>📁 Passo 2 — Criar sua pasta de trabalho</h3>
-            <ul>
-              <li>Cria uma pasta em qualquer lugar do computador. Chama de <strong>meu-site</strong></li>
-              <li>No VS Code: <strong>File → Open Folder</strong> → seleciona a pasta meu-site</li>
-            </ul>
-            <h3>📄 Passo 3 — Criar seu primeiro arquivo</h3>
-            <ul>
-              <li>No painel esquerdo, passa o mouse na pasta e clica no ícone de folha com <strong>+</strong></li>
-              <li>Digita o nome: <strong>index.html</strong> e aperta Enter</li>
-            </ul>
-            <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Por que index.html?</strong> Convenção universal — quando você acessa www.site.com sem especificar arquivo, o browser procura automaticamente o index.html. É sempre o ponto de entrada.</div></div>
-            <h3>🚀 Passo 4 — Abrir com o Live Server</h3>
-            <ul>
-              <li>Com o index.html aberto, clica com <strong>botão direito</strong> em qualquer lugar do editor</li>
-              <li>Clica em <strong>Open with Live Server</strong></li>
-              <li>O browser abre com o endereço <strong>127.0.0.1:5500</strong> — página em branco por enquanto, normal</li>
-            </ul>
-            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>O que é 127.0.0.1?</strong> Endereço do seu próprio computador. O Live Server cria um servidor local — como se o seu PC fosse temporariamente um servidor web. Só você acessa.</div></div>
-            <h3>✅ Resumo do que você configurou</h3>
-            <table class="aula-tabela">
-              <thead><tr><th>O quê</th><th>Para quê</th></tr></thead>
-              <tbody>
-                <tr><td>VS Code</td><td>Editor onde você escreve o código</td></tr>
-                <tr><td>Live Server</td><td>Mostra o resultado no browser em tempo real</td></tr>
-                <tr><td>Pasta meu-site</td><td>Onde ficam todos os arquivos do projeto</td></tr>
-                <tr><td>index.html</td><td>Ponto de entrada — todo site começa aqui</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Por que o Live Server atualiza a página automaticamente quando você salva o arquivo?</div>
-            <div class="quiz-opcoes" id="quiz-1">
-              <button class="quiz-opcao" onclick="responder(1,'A','C')"><span class="quiz-letra">A</span> Porque o VS Code tem internet embutida</button>
-              <button class="quiz-opcao" onclick="responder(1,'B','C')"><span class="quiz-letra">B</span> Porque o index.html tem permissão especial</button>
-              <button class="quiz-opcao" onclick="responder(1,'C','C')"><span class="quiz-letra">C</span> Porque ele cria um servidor local que monitora mudanças e recarrega o browser automaticamente</button>
-              <button class="quiz-opcao" onclick="responder(1,'D','C')"><span class="quiz-letra">D</span> Porque o navegador verifica o arquivo a cada segundo</button>
-            </div>
-            <div class="quiz-feedback" id="fb-1"></div>
-          </div>
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~8 min</div>
-            <button class="btn-concluir" id="btn-1" onclick="concluir(1)" disabled>✓ Marcar como concluída</button>
-          </div>
-        </div>
+  <!-- TRILHA ATIVA -->
+  <div class="trilha-ativa" id="trilha-ativa">
+    <div class="th-header">
+      <div style="font-size:30px" id="th-icon">⚙️</div>
+      <div class="th-info">
+        <div class="th-tag" id="th-tag">Trilha</div>
+        <div class="th-titulo" id="th-titulo">Nome</div>
       </div>
+      <button class="btn-trocar" onclick="trocarTrilha()">↩ Trocar trilha</button>
+    </div>
+    <div class="prog-box">
+      <div class="prog-txt">
+        <div class="prog-titulo">Seu progresso</div>
+        <div class="prog-sub" id="prog-sub">0 de 0 aulas</div>
+      </div>
+      <div class="prog-bar-wrap">
+        <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="prog-bar-labels"><span id="prog-pct">0%</span><span id="prog-prox">Comece pela Aula 1 👇</span></div>
+      </div>
+      <div class="prog-nums">
+        <div class="prog-num"><div class="prog-num-val" id="prog-feitas">0</div><div class="prog-num-label">Feitas</div></div>
+        <div class="prog-num"><div class="prog-num-val" style="color:var(--azul)" id="prog-rest">0</div><div class="prog-num-label">Restantes</div></div>
+      </div>
+    </div>
+    <div id="aulas-container"></div>
+    <div id="crono-container"></div>
+    <div id="projeto-container"></div>
+  </div>
+</div>
 
-      <!-- AULA 2 — Primeira Página -->
-      <div class="aula-card" id="aula-2" data-aula="2">
-        <div class="aula-header" onclick="toggleAula(2)">
-          <div class="aula-num">2</div>
-          <div class="aula-info">
-            <div class="aula-titulo">✍️ Sua Primeira Página — Você Vai Digitar o Código</div>
-            <div class="aula-desc">Escreva seu primeiro HTML do zero, linha por linha, e veja no browser em tempo real</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-2">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-            <h2>Escreva Seu Primeiro HTML</h2>
-            <p>Agora você vai <strong>digitar</strong> — não copiar — o código abaixo no arquivo <strong>index.html</strong>. Digitar é importante: seu cérebro aprende o padrão das tags na prática, não na teoria.</p>
-            <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Regra desta aula:</strong> Não use o botão Copiar agora. Digite cada linha. Se errar, corrija. Errar faz parte do aprendizado.</div></div>
-            <h3>✍️ O que você vai digitar agora</h3>
-            <p>Com o <strong>index.html</strong> aberto e o Live Server rodando, delete tudo que tiver no arquivo e <strong>digite</strong>:</p>
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Digite isso no VS Code</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;!DOCTYPE html&gt;</span>
+<script>
+const TRILHAS = {
+  loja: {
+    icon:'🛍️', nome:'Loja Online', tag:'Trilha — Loja Online',
+    projeto: { icon:'🛍️', titulo:'Loja de Perfumes Online', desc:'Vitrine de produtos com catálogo visual, filtro por tipo de perfume, página individual de cada produto e botão de compra pelo WhatsApp. Responsiva para celular.', tags:['Vitrine de produtos','Página de produto','Filtro por categoria','Botão WhatsApp','Responsivo para celular'] },
+    semanas: [
+      { titulo:'Ambiente + Base', aulas:'Aulas 1 e 2', itens:[
+        {n:'1',t:'VS Code + Live Server',d:'Instalar o ambiente e criar a pasta da loja. O ponto de partida de qualquer projeto.'},
+        {n:'2',t:'Primeira página digitada',d:'Estrutura HTML base com nome da loja, descrição e primeiros elementos.'},
+        {n:'🎯',t:'Meta da semana',d:'Página da loja abrindo no browser com título e uma frase de apresentação.'}
+      ]},
+      { titulo:'Aparência da Loja', aulas:'Aulas 3 a 5', itens:[
+        {n:'3',t:'CSS — cores e identidade visual',d:'Definir as cores da loja, fontes e espaçamentos. A cara da marca começa aqui.'},
+        {n:'4',t:'Arquivo style.css separado',d:'Organizar o CSS em arquivo próprio — loja com muitos produtos exige código organizado.'},
+        {n:'5',t:'Espaçamento e indentação',d:'As regras de formatação que todo programador segue — Tab, linhas e chaves.'},
+        {n:'🎯',t:'Meta da semana',d:'Página com cores da loja, fonte bonita e código organizado em dois arquivos.'}
+      ]},
+      { titulo:'Estrutura Visual', aulas:'Aulas 6 a 8', itens:[
+        {n:'6',t:'Topbar com logo e menu',d:'Barra do topo com logo da loja, links de navegação e ícone de carrinho.'},
+        {n:'7',t:'Grid de produtos',d:'Perfumes exibidos em cards organizados em grade — nome, foto, preço e botão.'},
+        {n:'8',t:'Página de produto individual',d:'Ao clicar num perfume, abrir página com descrição completa e botão de compra.'},
+        {n:'🎯',t:'Meta da semana',d:'Sua loja tem cara de e-commerce — topbar, produtos em grade e página de detalhe.'}
+      ]},
+      { titulo:'Funcionalidades JavaScript', aulas:'Aulas 9 a 11', itens:[
+        {n:'9',t:'Filtro por categoria',d:'JS para filtrar por tipo (floral, amadeirado, cítrico) sem recarregar a página.'},
+        {n:'10',t:'Barra de busca em tempo real',d:'Campo que filtra produtos conforme o usuário digita.'},
+        {n:'11',t:'WhatsApp + responsivo',d:'Botão de compra via WhatsApp e media queries para funcionar no celular.'},
+        {n:'🎯',t:'Meta da semana',d:'Loja funcional — cliente filtra, busca e compra pelo WhatsApp.'}
+      ]},
+      { titulo:'Git e GitHub', aulas:'Aulas 12 e 13', itens:[
+        {n:'12',t:'Git e GitHub — salvar na nuvem',d:'Criar repositório, primeiro commit e nunca mais perder o projeto.'},
+        {n:'13',t:'Desfazer erros com commits',d:'Como restaurar versão anterior quando algo quebrar.'},
+        {n:'🎯',t:'Meta da semana',d:'Loja completa no GitHub. Código seguro com histórico de versões.'}
+      ]}
+    ],
+    modulos: [
+      { icon:'🏗️', titulo:'Módulo 1 — Fundamentos', aulas:[
+        {n:1,t:'🛠️ VS Code + Live Server',d:'Instalar o ambiente — o ponto de partida de qualquer projeto'},
+        {n:2,t:'✍️ Sua Primeira Página',d:'Estrutura HTML base que todo site usa — você digita do zero'},
+        {n:3,t:'🎨 CSS — Cores e Identidade Visual',d:'Definir as cores da loja, fontes e espaçamento para dar identidade à marca'},
+        {n:4,t:'🗂️ Separando o CSS (style.css)',d:'Organizar HTML e CSS em arquivos diferentes — código mais limpo'},
+        {n:5,t:'📐 Espaçamento e Indentação',d:'As regras de formatação que todo programador segue'},
+      ]},
+      { icon:'🛍️', titulo:'Módulo 2 — Construindo a Loja', aulas:[
+        {n:6,t:'🔝 Topbar com Logo e Menu',d:'Barra do topo com logo, navegação e ícone de carrinho'},
+        {n:7,t:'🃏 Grid de Produtos',d:'Cards dos perfumes em grade — nome, imagem, preço e botão'},
+        {n:8,t:'📄 Página de Produto Individual',d:'Ao clicar no produto, abrir detalhes e opção de compra'},
+        {n:9,t:'🔍 Filtro por Categoria',d:'JavaScript para filtrar por tipo sem recarregar a página'},
+        {n:10,t:'🔎 Busca em Tempo Real',d:'Campo que filtra produtos conforme o usuário digita'},
+        {n:11,t:'📱 WhatsApp + Responsivo',d:'Botão de compra e layout adaptado para celular'},
+      ]},
+      { icon:'🐙', titulo:'Módulo 3 — Git e GitHub', aulas:[
+        {n:12,t:'🐙 Git e GitHub',d:'Repositório, commits e código salvo na nuvem'},
+        {n:13,t:'⏪ Desfazendo Erros com Commits',d:'Voltar a versões anteriores quando algo quebrar'},
+      ]}
+    ]
+  },
+  sistema: {
+    icon:'⚙️', nome:'Sistema com Cálculos', tag:'Trilha — Sistema com Cálculos',
+    projeto: { icon:'🧮', titulo:'Sistema de Calorias e Macros', desc:'O usuário digita peso, altura, idade, sexo e objetivo. O sistema calcula TMB, GET e distribui proteínas, carboidratos e gorduras automaticamente numa tabela de resultados.', tags:['Inputs e formulários','Fórmula Harris-Benedict','TMB e GET','Distribuição de macros','localStorage','Responsivo'] },
+    semanas: [
+      { titulo:'Ambiente + Base', aulas:'Aulas 1 e 2', itens:[
+        {n:'1',t:'VS Code + Live Server',d:'Instalar o ambiente e criar a pasta do sistema.'},
+        {n:'2',t:'Primeira página',d:'Estrutura base HTML que vai receber os inputs do sistema.'},
+        {n:'🎯',t:'Meta da semana',d:'Página com área de formulário simples abrindo no browser.'}
+      ]},
+      { titulo:'Visual e Organização', aulas:'Aulas 3 a 5', itens:[
+        {n:'3',t:'CSS — aparência do sistema',d:'Visual de ferramenta profissional — fontes, cores e cards.'},
+        {n:'4',t:'CSS separado',d:'Sistemas crescem muito — organizar desde o início é essencial.'},
+        {n:'5',t:'Espaçamento e indentação',d:'Código de sistema precisa ser muito legível.'},
+        {n:'🎯',t:'Meta da semana',d:'Interface com visual limpo e código organizado.'}
+      ]},
+      { titulo:'Estrutura do Sistema', aulas:'Aulas 6 a 8', itens:[
+        {n:'6',t:'Layout com topbar e sidebar',d:'Estrutura de dashboard — barra do topo e menu lateral.'},
+        {n:'7',t:'Formulário de entrada de dados',d:'Inputs para peso, altura, idade, sexo e nível de atividade.'},
+        {n:'8',t:'Tabela de resultados',d:'Mostrar os cálculos em tabela formatada após o preenchimento.'},
+        {n:'🎯',t:'Meta da semana',d:'Sistema recebe dados e mostra tabela de resultados.'}
+      ]},
+      { titulo:'JavaScript — O Coração', aulas:'Aulas 9 a 11', itens:[
+        {n:'9',t:'Variáveis e tipos de dados',d:'Como armazenar os valores digitados — números, textos, booleanos.'},
+        {n:'10',t:'Funções — calcular TMB e GET',d:'Escrever as fórmulas de Harris-Benedict em JavaScript passo a passo.'},
+        {n:'11',t:'localStorage — salvar dados',d:'Guardar os dados entre sessões para o usuário não perder ao fechar.'},
+        {n:'🎯',t:'Meta da semana',d:'Sistema calcula TMB, GET e macros e salva os dados automaticamente.'}
+      ]},
+      { titulo:'Finalização', aulas:'Aulas 12 e 13', itens:[
+        {n:'12',t:'Responsivo para celular',d:'Media queries para funcionar em qualquer tela.'},
+        {n:'13',t:'Git e GitHub',d:'Código na nuvem com histórico de versões.'},
+        {n:'🎯',t:'Meta da semana',d:'Sistema completo, responsivo e salvo no GitHub.'}
+      ]}
+    ],
+    modulos: [
+      { icon:'🏗️', titulo:'Módulo 1 — Fundamentos', aulas:[
+        {n:1,t:'🛠️ VS Code + Live Server',d:'Instalar o ambiente — o ponto de partida de qualquer projeto'},
+        {n:2,t:'✍️ Sua Primeira Página',d:'Estrutura HTML base — você digita do zero'},
+        {n:3,t:'🎨 CSS — Visual do Sistema',d:'Fontes, cores e cards para cara de ferramenta profissional'},
+        {n:4,t:'🗂️ CSS Separado',d:'Sistemas crescem — organizar o código desde o início'},
+        {n:5,t:'📐 Espaçamento e Indentação',d:'Código de sistema precisa ser muito legível e limpo'},
+      ]},
+      { icon:'⚙️', titulo:'Módulo 2 — Construindo o Sistema', aulas:[
+        {n:6,t:'🔝 Layout com Topbar e Sidebar',d:'Estrutura de dashboard — topbar e menu lateral'},
+        {n:7,t:'📋 Formulário de Entrada de Dados',d:'Inputs para peso, altura, idade, sexo e atividade'},
+        {n:8,t:'📊 Tabela de Resultados',d:'Exibir os cálculos formatados após o preenchimento'},
+        {n:9,t:'🧠 JavaScript — Variáveis e Dados',d:'Como armazenar e manipular os valores digitados'},
+        {n:10,t:'🧮 Funções — TMB e GET',d:'Fórmulas de Harris-Benedict em JavaScript passo a passo'},
+        {n:11,t:'💾 localStorage — Salvar Dados',d:'Guardar resultados entre sessões'},
+      ]},
+      { icon:'🚀', titulo:'Módulo 3 — Finalização', aulas:[
+        {n:12,t:'📱 Responsivo para Celular',d:'Media queries para qualquer tela'},
+        {n:13,t:'🐙 Git e GitHub',d:'Código na nuvem com histórico de versões e commits'},
+      ]}
+    ]
+  },
+  portfolio: {
+    icon:'🎨', nome:'Portfólio / Site Pessoal', tag:'Trilha — Portfólio',
+    projeto: { icon:'🎨', titulo:'Portfólio Profissional', desc:'Site com hero de impacto, grid de projetos, seção de habilidades, depoimentos e formulário de contato. Design marcante com animações sutis.', tags:['Hero section','Grid de projetos','Seção de habilidades','Formulário de contato','Animações CSS','Responsivo','GitHub Pages'] },
+    semanas: [
+      { titulo:'Ambiente + Base', aulas:'Aulas 1 e 2', itens:[
+        {n:'1',t:'VS Code + Live Server',d:'Instalar o ambiente — ponto de partida.'},
+        {n:'2',t:'Primeira página',d:'Estrutura base HTML para o portfólio.'},
+        {n:'🎯',t:'Meta da semana',d:'Página com seu nome e uma frase de apresentação no browser.'}
+      ]},
+      { titulo:'Design e Identidade', aulas:'Aulas 3 a 5', itens:[
+        {n:'3',t:'CSS avançado — gradientes e sombras',d:'Portfólio precisa de visual marcante. Técnicas de CSS para se destacar.'},
+        {n:'4',t:'CSS separado + Google Fonts',d:'Importar fontes elegantes e organizar o código.'},
+        {n:'5',t:'Espaçamento profissional',d:'Regras para um layout refinado.'},
+        {n:'🎯',t:'Meta da semana',d:'Visual definido, fonte elegante, identidade visual sua.'}
+      ]},
+      { titulo:'Seções do Portfólio', aulas:'Aulas 6 a 9', itens:[
+        {n:'6',t:'Hero section — primeira impressão',d:'Seção de impacto com nome, título e foto. O que o visitante vê primeiro.'},
+        {n:'7',t:'Grid de projetos',d:'Cards dos seus trabalhos com imagem, descrição e links.'},
+        {n:'8',t:'Seção de habilidades',d:'Barras de progresso e ícones para mostrar competências.'},
+        {n:'9',t:'Formulário de contato',d:'Formulário de e-mail e links para redes sociais.'},
+        {n:'🎯',t:'Meta da semana',d:'Portfólio completo e funcional — pronto para mostrar para clientes.'}
+      ]},
+      { titulo:'Animações e Publicação', aulas:'Aulas 10 a 12', itens:[
+        {n:'10',t:'Animações CSS',d:'Elementos que aparecem conforme o usuário rola a página.'},
+        {n:'11',t:'Responsivo para celular',d:'Layout adaptado para qualquer dispositivo.'},
+        {n:'12',t:'Git, GitHub e publicar online',d:'Publicar gratuitamente com GitHub Pages — qualquer pessoa no mundo acessa.'},
+        {n:'🎯',t:'Meta da semana',d:'Portfólio no ar com endereço próprio, responsivo e animado.'}
+      ]}
+    ],
+    modulos: [
+      { icon:'🏗️', titulo:'Módulo 1 — Fundamentos', aulas:[
+        {n:1,t:'🛠️ VS Code + Live Server',d:'Instalar o ambiente — o ponto de partida de qualquer projeto'},
+        {n:2,t:'✍️ Sua Primeira Página',d:'Estrutura HTML base — você digita do zero'},
+        {n:3,t:'🎨 CSS — Gradientes e Sombras',d:'Técnicas de CSS para um portfólio que se destaca'},
+        {n:4,t:'🗂️ CSS Separado + Google Fonts',d:'Fontes elegantes e código organizado'},
+        {n:5,t:'📐 Espaçamento Profissional',d:'Regras de formatação para um layout refinado'},
+      ]},
+      { icon:'🎨', titulo:'Módulo 2 — Construindo o Portfólio', aulas:[
+        {n:6,t:'🌟 Hero Section',d:'Seção de impacto com nome, título e foto'},
+        {n:7,t:'🃏 Grid de Projetos',d:'Cards dos seus trabalhos com imagem e links'},
+        {n:8,t:'💪 Seção de Habilidades',d:'Barras de progresso e ícones de competências'},
+        {n:9,t:'📬 Formulário de Contato',d:'E-mail e links para redes sociais'},
+        {n:10,t:'✨ Animações CSS',d:'Elementos que aparecem ao rolar a página'},
+        {n:11,t:'📱 Responsivo para Celular',d:'Layout adaptado para qualquer tela'},
+      ]},
+      { icon:'🌐', titulo:'Módulo 3 — Publicação', aulas:[
+        {n:12,t:'🌐 Git, GitHub e GitHub Pages',d:'Publicar gratuitamente — qualquer pessoa no mundo acessa'},
+      ]}
+    ]
+  },
+  blog: {
+    icon:'📝', nome:'Blog ou Site de Conteúdo', tag:'Trilha — Blog',
+    projeto: { icon:'📝', titulo:'Blog de Nutrição', desc:'Site com listagem de artigos, página individual de cada post, categorias, barra de busca e newsletter. Design editorial com tipografia cuidada.', tags:['Listagem de artigos','Página de post','Categorias','Barra de busca','Newsletter','GitHub Pages'] },
+    semanas: [
+      { titulo:'Ambiente + Base', aulas:'Aulas 1 e 2', itens:[
+        {n:'1',t:'VS Code + Live Server',d:'Instalar o ambiente de trabalho.'},
+        {n:'2',t:'Primeira página',d:'Estrutura base HTML com foco em tipografia e leitura.'},
+        {n:'🎯',t:'Meta da semana',d:'Página com título do blog e um artigo de exemplo.'}
+      ]},
+      { titulo:'Visual Editorial', aulas:'Aulas 3 a 5', itens:[
+        {n:'3',t:'CSS editorial — tipografia',d:'Blog precisa ser fácil de ler. Fontes, line-height e largura de coluna.'},
+        {n:'4',t:'CSS separado + Google Fonts',d:'Combinações de fontes profissionais para blog.'},
+        {n:'5',t:'Espaçamento de leitura',d:'Código limpo para um blog que vai crescer.'},
+        {n:'🎯',t:'Meta da semana',d:'Artigo de teste com visual editorial e fácil de ler.'}
+      ]},
+      { titulo:'Estrutura do Blog', aulas:'Aulas 6 a 9', itens:[
+        {n:'6',t:'Header com logo e categorias',d:'Topo com logo, nome e links de navegação por categoria.'},
+        {n:'7',t:'Grid de artigos na home',d:'Cards dos posts com imagem, título, resumo e data.'},
+        {n:'8',t:'Página individual do post',d:'Template de artigo com conteúdo, autor e posts relacionados.'},
+        {n:'9',t:'Busca e categorias com JavaScript',d:'Filtrar artigos por categoria ou palavra-chave em tempo real.'},
+        {n:'🎯',t:'Meta da semana',d:'Blog funcional com home, artigo individual e filtro.'}
+      ]},
+      { titulo:'Funcionalidades e Publicação', aulas:'Aulas 10 a 12', itens:[
+        {n:'10',t:'Newsletter — capturar e-mails',d:'Formulário de cadastro para lista de leitores.'},
+        {n:'11',t:'Responsivo para celular',d:'A maioria dos leitores acessa pelo celular.'},
+        {n:'12',t:'Git, GitHub e publicação',d:'Blog no ar com GitHub Pages — endereço próprio gratuito.'},
+        {n:'🎯',t:'Meta da semana',d:'Blog publicado online, acessível por qualquer pessoa.'}
+      ]}
+    ],
+    modulos: [
+      { icon:'🏗️', titulo:'Módulo 1 — Fundamentos', aulas:[
+        {n:1,t:'🛠️ VS Code + Live Server',d:'Instalar o ambiente — o ponto de partida de qualquer projeto'},
+        {n:2,t:'✍️ Sua Primeira Página',d:'Estrutura HTML com foco em tipografia e leitura'},
+        {n:3,t:'🎨 CSS Editorial — Tipografia',d:'Fontes e line-height para blog profissional'},
+        {n:4,t:'🗂️ CSS Separado + Google Fonts',d:'Combinações profissionais de fontes para blog'},
+        {n:5,t:'📐 Espaçamento de Leitura',d:'Código limpo para um blog que vai crescer'},
+      ]},
+      { icon:'📝', titulo:'Módulo 2 — Construindo o Blog', aulas:[
+        {n:6,t:'🔝 Header com Categorias',d:'Topo com logo, nome e links por categoria'},
+        {n:7,t:'🃏 Grid de Artigos na Home',d:'Cards dos posts com imagem, título e resumo'},
+        {n:8,t:'📄 Página Individual do Post',d:'Template de artigo com conteúdo e autor'},
+        {n:9,t:'🔍 Busca e Categorias',d:'Filtrar artigos em tempo real com JavaScript'},
+        {n:10,t:'📧 Newsletter',d:'Formulário de cadastro para lista de leitores'},
+        {n:11,t:'📱 Responsivo para Celular',d:'A maioria dos leitores acessa pelo celular'},
+      ]},
+      { icon:'🌐', titulo:'Módulo 3 — Publicação', aulas:[
+        {n:12,t:'🌐 Git, GitHub e GitHub Pages',d:'Blog publicado com endereço próprio gratuito'},
+      ]}
+    ]
+  },
+  dashboard: {
+    icon:'📊', nome:'Dashboard / Painel', tag:'Trilha — Dashboard',
+    projeto: { icon:'📊', titulo:'Dashboard como o Nutri Amorim', desc:'Painel com abas de navegação, cards de estatísticas, tabelas de dados e sistema de abas igual ao Nutri Amorim — você vai entender cada linha do código que já existe.', tags:['Sistema de abas','Cards de estatísticas','Tabelas dinâmicas','localStorage','Responsivo'] },
+    semanas: [
+      { titulo:'Ambiente + Base', aulas:'Aulas 1 e 2', itens:[
+        {n:'1',t:'VS Code + Live Server',d:'Instalar o ambiente e abrir o dashboard.html do Nutri Amorim para comparar.'},
+        {n:'2',t:'Primeira página',d:'Estrutura base — você vai reconhecer no Nutri Amorim cada parte que aprender.'},
+        {n:'🎯',t:'Meta da semana',d:'Abrir o Nutri Amorim ao lado e identificar a mesma estrutura que você criou.'}
+      ]},
+      { titulo:'CSS do Dashboard', aulas:'Aulas 3 a 5', itens:[
+        {n:'3',t:'CSS — variáveis e cores',d:'Variáveis CSS como --verde. Como o Nutri Amorim define todas as cores globais.'},
+        {n:'4',t:'CSS separado vs. embutido',d:'O central-estudos.html tem CSS dentro — quando separar e quando não.'},
+        {n:'5',t:'Espaçamento de interface',d:'Dashboards têm regras específicas — padding, gap e grid.'},
+        {n:'🎯',t:'Meta da semana',d:'Interface com esquema de cores e variáveis CSS igual ao Nutri Amorim.'}
+      ]},
+      { titulo:'Estrutura do Dashboard', aulas:'Aulas 6 a 9', itens:[
+        {n:'6',t:'Topbar sticky + sidebar',d:'Barra que gruda no topo ao rolar e menu lateral — exatamente como o Nutri Amorim.'},
+        {n:'7',t:'Sistema de abas com JavaScript',d:'A função showPanel() — o coração da navegação do Nutri Amorim.'},
+        {n:'8',t:'Cards de estatísticas',d:'Grid de cards com números e ícones.'},
+        {n:'9',t:'Tabela de dados dinâmica',d:'Tabela que recebe dados do JavaScript e renderiza automaticamente.'},
+        {n:'🎯',t:'Meta da semana',d:'Dashboard com abas, topbar e cards de estatísticas funcionando.'}
+      ]},
+      { titulo:'JavaScript e Finalização', aulas:'Aulas 10 a 12', itens:[
+        {n:'10',t:'localStorage — salvar dados',d:'Como o Nutri Amorim salva o progresso — você vai replicar.'},
+        {n:'11',t:'Responsivo para celular',d:'As media queries do Nutri Amorim aplicadas ao seu dashboard.'},
+        {n:'12',t:'Git e GitHub',d:'Código na nuvem com histórico de versões.'},
+        {n:'🎯',t:'Meta da semana',d:'Dashboard completo, responsivo, com dados salvos e no GitHub.'}
+      ]}
+    ],
+    modulos: [
+      { icon:'🏗️', titulo:'Módulo 1 — Fundamentos', aulas:[
+        {n:1,t:'🛠️ VS Code + Live Server',d:'Instalar o ambiente e abrir o Nutri Amorim para comparar enquanto aprende'},
+        {n:2,t:'✍️ Sua Primeira Página',d:'Estrutura que você vai reconhecer em cada arquivo do Nutri Amorim'},
+        {n:3,t:'🎨 CSS — Variáveis e Cores',d:'Como o Nutri Amorim define --verde, --escuro e todas as cores globais'},
+        {n:4,t:'🗂️ CSS Separado vs. Embutido',d:'Quando separar e quando manter junto — a decisão técnica'},
+        {n:5,t:'📐 Espaçamento de Interface',d:'Padding, gap e grid — as regras específicas de dashboards'},
+      ]},
+      { icon:'📊', titulo:'Módulo 2 — Construindo o Dashboard', aulas:[
+        {n:6,t:'🔝 Topbar Sticky + Sidebar',d:'Barra que gruda no topo e menu lateral — como no Nutri Amorim'},
+        {n:7,t:'🗂️ Sistema de Abas',d:'A função showPanel() — o coração da navegação do Nutri Amorim'},
+        {n:8,t:'📦 Cards de Estatísticas',d:'Grid de cards com números, ícones e cores por status'},
+        {n:9,t:'📋 Tabela de Dados Dinâmica',d:'Tabela que recebe dados do JavaScript automaticamente'},
+        {n:10,t:'💾 localStorage',d:'Como o Nutri Amorim salva flashcards — você vai replicar'},
+        {n:11,t:'📱 Responsivo para Celular',d:'As media queries do Nutri Amorim aplicadas ao seu projeto'},
+      ]},
+      { icon:'🐙', titulo:'Módulo 3 — Finalização', aulas:[
+        {n:12,t:'🐙 Git e GitHub',d:'Dashboard na nuvem com histórico de versões e commits'},
+      ]}
+    ]
+  }
+};
+
+let trilhaSel = null, trilhaAtual = null;
+let prog = {};
+
+function carregar() {
+  const s = localStorage.getItem('prog_trilha_v1');
+  prog = s ? JSON.parse(s) : {};
+  if (!prog.concluidas) prog.concluidas = {};
+  if (!prog.quizFeitos) prog.quizFeitos = {};
+  if (prog.trilha && TRILHAS[prog.trilha]) {
+    selecionarTrilha(prog.trilha);
+    comecar();
+  }
+}
+
+function salvar() { localStorage.setItem('prog_trilha_v1', JSON.stringify(prog)); }
+
+function selecionarTrilha(id) {
+  trilhaSel = id;
+  document.querySelectorAll('.trilha-card').forEach(c => c.classList.remove('selecionada'));
+  const c = document.getElementById('tc-' + id);
+  if (c) c.classList.add('selecionada');
+  const btn = document.getElementById('btn-comecar');
+  btn.disabled = false;
+  btn.textContent = '▶ Começar trilha: ' + TRILHAS[id].nome;
+}
+
+function comecar() {
+  if (!trilhaSel) return;
+  trilhaAtual = trilhaSel;
+  prog.trilha = trilhaAtual;
+  salvar();
+  const t = TRILHAS[trilhaAtual];
+  document.getElementById('seletor').style.display = 'none';
+  const ta = document.getElementById('trilha-ativa');
+  ta.classList.add('visivel');
+  document.getElementById('th-icon').textContent = t.icon;
+  document.getElementById('th-tag').textContent = t.tag;
+  document.getElementById('th-titulo').textContent = 'Trilha: ' + t.nome;
+  document.getElementById('badge-top').textContent = t.nome;
+  renderAulas(); renderCrono(); renderProjeto(); atualizarProg();
+  const todas = t.modulos.flatMap(m => m.aulas);
+  const conc = prog.concluidas[trilhaAtual] || [];
+  const prox = todas.find(a => !conc.includes(a.n));
+  if (prox) setTimeout(() => toggleAula(prox.n), 450);
+}
+
+function trocarTrilha() {
+  document.getElementById('seletor').style.display = 'block';
+  document.getElementById('trilha-ativa').classList.remove('visivel');
+  ['aulas-container','crono-container','projeto-container'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+}
+
+function renderAulas() {
+  const t = TRILHAS[trilhaAtual];
+  const conc = prog.concluidas[trilhaAtual] || [];
+  const todas = t.modulos.flatMap(m => m.aulas);
+  const desbloq = new Set([todas[0].n]);
+  for (let i = 1; i < todas.length; i++) {
+    if (conc.includes(todas[i-1].n)) desbloq.add(todas[i].n);
+  }
+  const container = document.getElementById('aulas-container');
+  container.innerHTML = '';
+  t.modulos.forEach((mod, mi) => {
+    const concMod = mod.aulas.filter(a => conc.includes(a.n)).length;
+    const el = document.createElement('div');
+    el.className = 'modulo';
+    el.innerHTML = `<div class="modulo-header"><div class="modulo-icon">${mod.icon}</div><div class="modulo-titulo">${mod.titulo}</div><div class="modulo-count">${concMod}/${mod.aulas.length} aulas</div></div><div class="aulas-grid" id="grid-${mi}"></div>`;
+    container.appendChild(el);
+    const grid = el.querySelector('#grid-' + mi);
+    mod.aulas.forEach(a => {
+      const feita = conc.includes(a.n);
+      const desbloqueada = desbloq.has(a.n);
+      let cls = 'aula-card' + (feita ? ' concluida' : desbloqueada ? ' ativa' : ' bloqueada');
+      const badge = feita ? '<span class="aula-badge feita">✓ Concluída</span>' : desbloqueada ? '<span class="aula-badge nova">Nova</span>' : '<span class="aula-badge lock">🔒</span>';
+      const card = document.createElement('div');
+      card.className = cls; card.id = 'ac-' + a.n;
+      card.innerHTML = `<div class="aula-header" onclick="toggleAula(${a.n})"><div class="aula-num">${feita?'✓':a.n}</div><div class="aula-info"><div class="aula-titulo">${a.t}</div><div class="aula-desc">${a.d}</div></div>${badge}<span class="aula-chevron">›</span></div><div class="aula-body" id="ab-${a.n}"><div id="ac-body-${a.n}" style="padding:0"></div></div>`;
+      grid.appendChild(card);
+      injetarCorpo(a.n);
+    });
+  });
+}
+
+function injetarCorpo(n) {
+  const el = document.getElementById('ac-body-' + n);
+  if (!el) return;
+  const conc = (prog.concluidas[trilhaAtual] || []).includes(n);
+  const qf = (prog.quizFeitos[trilhaAtual] || {})[n];
+  const t = TRILHAS[trilhaAtual];
+  const ex = {loja:{titulo:'Perfumes Amorim',h1:'Bem-vindo à nossa loja',p:'Os melhores perfumes com os melhores preços.'},sistema:{titulo:'Calculadora Nutricional',h1:'Calcule suas calorias',p:'Descubra seu gasto energético diário.'},portfolio:{titulo:'Meu Portfólio',h1:'Olá, eu sou [seu nome]',p:'Minha trajetória e projetos.'},blog:{titulo:'Blog de Nutrição',h1:'Dicas de Nutrição',p:'Receitas saudáveis e informações.'},dashboard:{titulo:'Meu Dashboard',h1:'Painel de Controle',p:'Todas as informações em um só lugar.'}}[trilhaAtual];
+
+  let corpo = '';
+  if (n === 1) {
+    corpo = `<div class="aula-conteudo">
+      <h2>Antes de Escrever Código — Prepare o Ambiente</h2>
+      <p>O seu ambiente vai ser o <strong>VS Code</strong> com o <strong>Live Server</strong>. Sem isso, você escreveria código mas teria que apertar F5 no browser toda hora para ver o resultado.</p>
+      <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>Live Server:</strong> extensão que abre seu HTML no browser e <strong>atualiza automaticamente</strong> toda vez que você salva. Digita → salva → vê. Em tempo real.</div></div>
+      <h3>📦 Passo 1 — Instalar o Live Server</h3>
+      <ul><li>No VS Code, clica no ícone de 4 quadradinhos na barra lateral <strong>(Extensions)</strong></li><li>Busca: <strong>Live Server</strong></li><li>Instala o de <strong>Ritwick Dey</strong> — mais de 40 milhões de instalações</li></ul>
+      <h3>📁 Passo 2 — Criar sua pasta</h3>
+      <ul><li>Cria uma pasta chamada <strong>meu-projeto</strong> em qualquer lugar</li><li>No VS Code: <strong>File → Open Folder</strong> → seleciona ela</li></ul>
+      <h3>📄 Passo 3 — Criar o arquivo</h3>
+      <ul><li>No painel esquerdo, passa o mouse na pasta e clica no <strong>+ de nova folha</strong></li><li>Digita: <strong>index.html</strong> → Enter</li></ul>
+      <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Por que index.html?</strong> Convenção universal — quando você acessa www.site.com, o browser procura automaticamente o index.html. É sempre o ponto de entrada.</div></div>
+      <h3>🚀 Passo 4 — Abrir com Live Server</h3>
+      <ul><li>Com o index.html aberto, clica com <strong>botão direito</strong> no editor</li><li>Clica em <strong>Open with Live Server</strong></li><li>O browser abre com <strong>127.0.0.1:5500</strong> — página em branco, normal</li></ul>
+      <table class="aula-tabela"><thead><tr><th>O quê</th><th>Para quê</th></tr></thead><tbody><tr><td>VS Code</td><td>Editor onde você escreve o código</td></tr><tr><td>Live Server</td><td>Mostra no browser em tempo real</td></tr><tr><td>meu-projeto</td><td>Onde ficam todos os arquivos</td></tr><tr><td>index.html</td><td>Ponto de entrada — todo site começa aqui</td></tr></tbody></table>
+      <div class="aula-quiz"><div class="quiz-titulo">✏️ Teste</div><div class="quiz-pergunta">Por que o Live Server atualiza automaticamente ao salvar?</div><div class="quiz-opcoes" id="qo-1"><button class="quiz-opcao" onclick="resp(1,'A','C')"><span class="quiz-letra">A</span> Porque o VS Code tem internet embutida</button><button class="quiz-opcao" onclick="resp(1,'B','C')"><span class="quiz-letra">B</span> Porque o index.html tem permissão especial</button><button class="quiz-opcao" onclick="resp(1,'C','C')"><span class="quiz-letra">C</span> Porque ele cria um servidor local que monitora mudanças e recarrega automaticamente</button><button class="quiz-opcao" onclick="resp(1,'D','C')"><span class="quiz-letra">D</span> Porque o navegador verifica o arquivo a cada segundo</button></div><div class="quiz-feedback" id="qf-1"></div></div>
+    </div>`;
+  } else if (n === 2) {
+    corpo = `<div class="aula-conteudo">
+      <h2>Escreva Seu Primeiro HTML</h2>
+      <p>Agora você vai <strong>digitar</strong> — não copiar — o código abaixo. Exemplo adaptado para: <strong>${t.nome}</strong>.</p>
+      <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Regra desta aula:</strong> Não use o botão Copiar. Digite cada linha. Errar faz parte — corrija e continue.</div></div>
+      <div class="code-block"><div class="code-header"><span class="code-lang">HTML — Digite no VS Code</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div><div class="code-body"><pre><span class="tg">&lt;!DOCTYPE html&gt;</span>
 <span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="str">"pt-BR"</span><span class="tg">&gt;</span>
 <span class="tg">&lt;head&gt;</span>
   <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;title&gt;</span>Minha Primeira Página<span class="tg">&lt;/title&gt;</span>
+  <span class="tg">&lt;title&gt;</span>${ex.titulo}<span class="tg">&lt;/title&gt;</span>
 <span class="tg">&lt;/head&gt;</span>
 <span class="tg">&lt;body&gt;</span>
 
-  <span class="tg">&lt;h1&gt;</span>Olá, mundo!<span class="tg">&lt;/h1&gt;</span>
-  <span class="tg">&lt;p&gt;</span>Essa é minha primeira página HTML.<span class="tg">&lt;/p&gt;</span>
+  <span class="tg">&lt;h1&gt;</span>${ex.h1}<span class="tg">&lt;/h1&gt;</span>
+  <span class="tg">&lt;p&gt;</span>${ex.p}<span class="tg">&lt;/p&gt;</span>
 
 <span class="tg">&lt;/body&gt;</span>
-<span class="tg">&lt;/html&gt;</span></pre></div>
-            </div>
-            <p>Depois de digitar, aperta <strong>Ctrl+S</strong>. O browser atualiza sozinho e mostra o resultado.</p>
-            <h3>🔍 Entendendo cada linha</h3>
-            <table class="aula-tabela">
-              <thead><tr><th>Linha</th><th>O que faz</th></tr></thead>
-              <tbody>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;!DOCTYPE html&gt;</code></td><td>Avisa o browser: isso é HTML moderno</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;html lang="pt-BR"&gt;</code></td><td>Começa o documento, idioma português</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;head&gt;</code></td><td>Configurações — não aparece na tela</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;meta charset="UTF-8"&gt;</code></td><td>Permite acentos, ç, ã e emojis</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;title&gt;</code></td><td>Nome que aparece na aba do browser</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;body&gt;</code></td><td>Tudo que aparece na tela fica aqui</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;</code></td><td>Título grande — heading nível 1</td></tr>
-                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;p&gt;</code></td><td>Parágrafo de texto</td></tr>
-              </tbody>
-            </table>
-            <div class="destaque dica"><div class="destaque-icon">🔦</div><div class="destaque-txt"><strong>Regra de ouro:</strong> toda tag que abre &lt;x&gt; precisa fechar &lt;/x&gt;. É como parênteses na matemática — o que abre tem que fechar.</div></div>
-            <h3>🎯 Exercício — Modifique o código</h3>
-            <p>Com o Live Server rodando, faça essas 4 mudanças e veja atualizar no browser após cada Ctrl+S:</p>
-            <ul>
-              <li>Troca o texto do &lt;h1&gt; para o seu nome</li>
-              <li>Muda o &lt;title&gt; para <strong>Nutri Amorim</strong> — veja a aba do browser mudar</li>
-              <li>Adiciona um segundo &lt;p&gt; com qualquer texto depois do primeiro</li>
-              <li>Adiciona um &lt;h2&gt; entre o h1 e o p — perceba que h2 é menor que h1</li>
-            </ul>
-            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>Conectando com o Nutri Amorim:</strong> o arquivo central-estudos.html começa exatamente assim — com !DOCTYPE, html, head e body. A estrutura é idêntica. O que muda é só o conteúdo dentro.</div></div>
-          </div>
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Você quer que "Nutri Amorim" apareça na aba do navegador. Qual tag usa e onde?</div>
-            <div class="quiz-opcoes" id="quiz-2">
-              <button class="quiz-opcao" onclick="responder(2,'A','C')"><span class="quiz-letra">A</span> &lt;h1&gt;Nutri Amorim&lt;/h1&gt; no início do body</button>
-              <button class="quiz-opcao" onclick="responder(2,'B','C')"><span class="quiz-letra">B</span> &lt;header&gt;Nutri Amorim&lt;/header&gt; no body</button>
-              <button class="quiz-opcao" onclick="responder(2,'C','C')"><span class="quiz-letra">C</span> &lt;title&gt;Nutri Amorim&lt;/title&gt; dentro do &lt;head&gt;</button>
-              <button class="quiz-opcao" onclick="responder(2,'D','C')"><span class="quiz-letra">D</span> &lt;p&gt;Nutri Amorim&lt;/p&gt; no início do body</button>
-            </div>
-            <div class="quiz-feedback" id="fb-2"></div>
-          </div>
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~15 min (leitura + exercício)</div>
-            <button class="btn-concluir" id="btn-2" onclick="concluir(2)" disabled>✓ Marcar como concluída</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- AULA 3 -->
-      <div class="aula-card" id="aula-3" data-aula="3">
-        <div class="aula-header" onclick="toggleAula(3)">
-          <div class="aula-num">3</div>
-          <div class="aula-info">
-            <div class="aula-titulo">Os 3 Pilares — HTML, CSS e JavaScript</div>
-            <div class="aula-desc">Entenda o que cada tecnologia faz e como elas trabalham juntas</div>
-          </div>
-          <span class="aula-badge nova" id="badge-aula-3">Nova</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-
-            <h2>Os 3 Pilares de Qualquer Site</h2>
-            <p>Pensa assim: um site é como uma pessoa. Cada tecnologia cuida de uma parte:</p>
-
-            <table class="aula-tabela">
-              <thead><tr><th>Parte</th><th>Tecnologia</th><th>O que faz</th></tr></thead>
-              <tbody>
-                <tr><td>🦴 Esqueleto</td><td><strong>HTML</strong></td><td>Define o que existe na página</td></tr>
-                <tr><td>👗 Aparência</td><td><strong>CSS</strong></td><td>Define como cada coisa parece</td></tr>
-                <tr><td>🧠 Comportamento</td><td><strong>JavaScript</strong></td><td>Define o que acontece ao interagir</td></tr>
-              </tbody>
-            </table>
-
-            <div class="destaque info">
-              <div class="destaque-icon">💡</div>
-              <div class="destaque-txt">Sem HTML, não existe nada. Sem CSS, existe mas é feio. Sem JavaScript, existe e é bonito mas não faz nada. Os três são obrigatórios.</div>
-            </div>
-
-            <h3>🦴 HTML — O Esqueleto</h3>
-            <p>HTML é feito de <strong>tags</strong> — etiquetas que dizem ao navegador o que é cada coisa. Uma tag tem abertura e fechamento:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML</span><button class="code-copy" onclick="copiar(this, '&lt;div&gt;conteúdo aqui&lt;/div&gt;')">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;div&gt;</span>conteúdo aqui<span class="tg">&lt;/div&gt;</span></pre></div>
-            </div>
-
-            <p>O <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:13px">&lt;div&gt;</code> abre, o <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:13px">&lt;/div&gt;</code> fecha. Tudo dentro pertence a essa "caixinha". <strong>No Nutri Amorim, veja a barra do topo:</strong></p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Topbar do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="str">"dashboard.html"</span> <span class="at">class</span>=<span class="str">"back-btn"</span><span class="tg">&gt;</span>← Voltar<span class="tg">&lt;/a&gt;</span>
-  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar-title"</span><span class="tg">&gt;</span>Central de Estudos<span class="tg">&lt;/div&gt;</span>
-  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"badge"</span><span class="tg">&gt;</span>5 ferramentas integradas<span class="tg">&lt;/div&gt;</span>
-<span class="tg">&lt;/div&gt;</span></pre></div>
-            </div>
-
-            <ul>
-              <li><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;div class="topbar"&gt;</code> → cria a caixinha da barra verde escura do topo</li>
-              <li><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;a href="..."&gt;</code> → cria um link clicável (o botão "← Voltar")</li>
-              <li>As caixinhas ficam <strong>dentro umas das outras</strong> — isso se chama <strong>aninhamento</strong></li>
-            </ul>
-
-            <h3>👗 CSS — A Aparência</h3>
-            <p>CSS diz: <em>"pegue essa caixinha e pinte ela assim"</em>. A sintaxe é sempre:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">CSS — Estrutura básica</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cs">.nome-da-caixinha</span> {
-  <span class="cs">propriedade</span>: <span class="vl">valor</span>;
-}</pre></div>
-            </div>
-
-            <p><strong>O CSS da topbar no Nutri Amorim:</strong></p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">CSS — Topbar do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cs">.topbar</span> {
-  <span class="cs">background</span>: <span class="vl">var(--escuro)</span>;  <span class="cm">/* fundo verde escuro */</span>
-  <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>;         <span class="cm">/* espaço interno nas laterais */</span>
-  <span class="cs">height</span>: <span class="num">56px</span>;             <span class="cm">/* altura fixa */</span>
-  <span class="cs">display</span>: <span class="vl">flex</span>;            <span class="cm">/* organiza filhos lado a lado */</span>
-  <span class="cs">align-items</span>: <span class="vl">center</span>;     <span class="cm">/* centraliza verticalmente */</span>
-  <span class="cs">position</span>: <span class="vl">sticky</span>;        <span class="cm">/* fica grudada no topo ao rolar */</span>
-}</pre></div>
-            </div>
-
-            <h3>🧠 JavaScript — O Comportamento</h3>
-            <p>JavaScript entra quando algo precisa <strong>acontecer</strong>. Quando você clica numa aba do Nutri Amorim, este código roda:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">JavaScript — Troca de abas</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="kw">function</span> <span class="fn">showPanel</span>(id, el) {
-  <span class="cm">// 1. Esconde TODOS os painéis</span>
-  document.<span class="fn">querySelectorAll</span>(<span class="str">'.panel'</span>).<span class="fn">forEach</span>(p =&gt;
-    p.classList.<span class="fn">remove</span>(<span class="str">'active'</span>)
-  );
-  <span class="cm">// 2. Remove destaque de TODAS as abas</span>
-  document.<span class="fn">querySelectorAll</span>(<span class="str">'.tab-btn'</span>).<span class="fn">forEach</span>(b =&gt;
-    b.classList.<span class="fn">remove</span>(<span class="str">'active'</span>)
-  );
-  <span class="cm">// 3. Mostra SÓ o painel clicado</span>
-  document.<span class="fn">getElementById</span>(<span class="str">'panel-'</span> + id).classList.<span class="fn">add</span>(<span class="str">'active'</span>);
-  <span class="cm">// 4. Destaca a aba clicada</span>
-  <span class="kw">if</span> (el) el.classList.<span class="fn">add</span>(<span class="str">'active'</span>);
-}</pre></div>
-            </div>
-
-            <div class="destaque dica">
-              <div class="destaque-icon">🔦</div>
-              <div class="destaque-txt"><strong>Analogia do interruptor:</strong> Primeiro apaga todas as luzes, depois acende só a que você pediu. É exatamente o que esse código faz com os painéis.</div>
-            </div>
-
-            <h3>🔗 Como os três trabalham juntos</h3>
-            <p>A aba "Flashcards" do Nutri Amorim funciona com os três ao mesmo tempo:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Botão da aba</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"tab-btn active"</span> <span class="at">onclick</span>=<span class="str">"showPanel('flashcards', this)"</span><span class="tg">&gt;</span>
-  🃏 Flashcards
-<span class="tg">&lt;/div&gt;</span></pre></div>
-            </div>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">CSS — Estilo da aba ativa</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cs">.tab-btn.active</span> {
-  <span class="cs">color</span>: <span class="vl">var(--verde)</span>;
-  <span class="cs">border-bottom-color</span>: <span class="vl">var(--verde)</span>;
-}</pre></div>
-            </div>
-
-          </div><!-- /aula-conteudo -->
-
-          <!-- QUIZ -->
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Qual tecnologia é responsável por fazer o flashcard VIRAR quando você clica nele?</div>
-            <div class="quiz-opcoes" id="quiz-3">
-              <button class="quiz-opcao" onclick="responder(3,'A','C')"><span class="quiz-letra">A</span> HTML — porque define a estrutura do card</button>
-              <button class="quiz-opcao" onclick="responder(3,'B','C')"><span class="quiz-letra">B</span> CSS — porque define a animação de rotação</button>
-              <button class="quiz-opcao" onclick="responder(3,'C','C')"><span class="quiz-letra">C</span> JavaScript — porque detecta o clique e aciona o giro</button>
-              <button class="quiz-opcao" onclick="responder(3,'D','C')"><span class="quiz-letra">D</span> Os três juntos — não é possível sem os três</button>
-            </div>
-            <div class="quiz-feedback" id="fb-3"></div>
-          </div>
-
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
-            <button class="btn-concluir" id="btn-3" onclick="concluir(3)" disabled>✓ Marcar como concluída</button>
-          </div>
-
-        </div><!-- /aula-body -->
-      </div><!-- /aula-card -->
-
-      <!-- AULA 4 -->
-      <div class="aula-card" id="aula-4" data-aula="4">
-        <div class="aula-header" onclick="toggleAula(4)">
-          <div class="aula-num">4</div>
-          <div class="aula-info">
-            <div class="aula-titulo">A Estrutura do Arquivo HTML</div>
-            <div class="aula-desc">Por que o arquivo tem &lt;head&gt;, &lt;body&gt;, &lt;style&gt; e &lt;script&gt;?</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-4">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-
-            <h2>A Anatomia de um Arquivo HTML</h2>
-            <p>O arquivo do Nutri Amorim tem uma estrutura específica. Cada bloco tem um propósito:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Esqueleto completo</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;!DOCTYPE html&gt;</span>         <span class="cm">&lt;!-- diz ao browser: isso é HTML5 --&gt;</span>
-<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="str">"pt-BR"</span><span class="tg">&gt;</span>       <span class="cm">&lt;!-- raiz de tudo, idioma PT --&gt;</span>
-
-  <span class="tg">&lt;head&gt;</span>                 <span class="cm">&lt;!-- cabeça: configurações (não aparece) --&gt;</span>
-    <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>  <span class="cm">&lt;!-- aceita acentos e emojis --&gt;</span>
-    <span class="tg">&lt;title&gt;</span>Nutri Amorim<span class="tg">&lt;/title&gt;</span>  <span class="cm">&lt;!-- nome na aba do browser --&gt;</span>
-    <span class="tg">&lt;style&gt;</span>
-      <span class="cm">/* TODO o CSS fica aqui */</span>
-    <span class="tg">&lt;/style&gt;</span>
-  <span class="tg">&lt;/head&gt;</span>
-
-  <span class="tg">&lt;body&gt;</span>                 <span class="cm">&lt;!-- corpo: tudo que aparece na tela --&gt;</span>
-    <span class="cm">&lt;!-- HTML da página aqui --&gt;</span>
-
-    <span class="tg">&lt;script&gt;</span>
-      <span class="cm">// TODO o JavaScript fica aqui</span>
-    <span class="tg">&lt;/script&gt;</span>
-  <span class="tg">&lt;/body&gt;</span>
-
-<span class="tg">&lt;/html&gt;</span></pre></div>
-            </div>
-
-            <h3>📦 O &lt;head&gt; — Configurações invisíveis</h3>
-            <p>O <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;head&gt;</code> não aparece na tela. Ele configura o documento. No Nutri Amorim:</p>
-            <ul>
-              <li><strong>charset UTF-8</strong> → garante que ç, ã, é e emojis apareçam certo</li>
-              <li><strong>viewport</strong> → faz o site se adaptar ao celular (responsividade)</li>
-              <li><strong>link Google Fonts</strong> → carrega as fontes Playfair Display e DM Sans</li>
-              <li><strong>&lt;style&gt;</strong> → todo o CSS do site fica aqui dentro</li>
-            </ul>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Head do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;head&gt;</span>
-  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;meta</span> <span class="at">name</span>=<span class="str">"viewport"</span> <span class="at">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;title&gt;</span>Central de Estudos — Nutri Amorim<span class="tg">&lt;/title&gt;</span>
-  <span class="tg">&lt;link</span> <span class="at">href</span>=<span class="str">"https://fonts.googleapis.com/css2?family=Playfair..."</span> <span class="at">rel</span>=<span class="str">"stylesheet"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;style&gt;</span>
-    <span class="cm">/* aqui vem todo o CSS */</span>
-  <span class="tg">&lt;/style&gt;</span>
-<span class="tg">&lt;/head&gt;</span></pre></div>
-            </div>
-
-            <h3>🖥️ O &lt;body&gt; — Tudo que você vê</h3>
-            <p>O <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;body&gt;</code> é onde vive tudo que aparece na tela. Topbar, abas, cards, flashcards — tudo está dentro do body.</p>
-
-            <h3>⚙️ Por que o &lt;script&gt; fica no final do &lt;body&gt;?</h3>
-            <p>Repare: o JavaScript sempre fica no final, antes de fechar o <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;/body&gt;</code>. Isso não é acidente — é uma decisão técnica importante:</p>
-
-            <div class="destaque atencao">
-              <div class="destaque-icon">⚠️</div>
-              <div class="destaque-txt"><strong>Se o script viesse no &lt;head&gt;</strong>, o JavaScript tentaria encontrar os elementos HTML (botões, cards, painéis) antes deles existirem na tela — e daria erro. No final do body, o HTML já foi todo carregado quando o JS roda.</div>
-            </div>
-
-            <h3>🎨 O que são Variáveis CSS? (var(--verde))</h3>
-            <p>Você viu <code style="font-family:'Fira Code',monospace;font-size:12px">var(--verde)</code> em vários lugares. Isso é uma <strong>variável CSS</strong> — uma cor definida uma vez e usada em todo lugar:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">CSS — Variáveis do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cs">:root</span> {
-  <span class="cs">--verde</span>: <span class="vl">#2d6a4f</span>;         <span class="cm">/* verde escuro principal */</span>
-  <span class="cs">--verde-claro</span>: <span class="vl">#52b788</span>;   <span class="cm">/* verde médio */</span>
-  <span class="cs">--verde-neon</span>: <span class="vl">#74c69d</span>;    <span class="cm">/* verde brilhante */</span>
-  <span class="cs">--escuro</span>: <span class="vl">#1a2e1f</span>;        <span class="cm">/* quase preto esverdeado */</span>
-  <span class="cs">--creme</span>: <span class="vl">#f8f4ef</span>;         <span class="cm">/* fundo bege claro */</span>
-}
-
-<span class="cm">/* Uso em qualquer lugar: */</span>
-<span class="cs">.topbar</span> { <span class="cs">background</span>: <span class="vl">var(--escuro)</span>; }
-<span class="cs">.btn-verde</span> { <span class="cs">background</span>: <span class="vl">var(--verde)</span>; }</pre></div>
-            </div>
-
-            <div class="destaque info">
-              <div class="destaque-icon">💡</div>
-              <div class="destaque-txt"><strong>Vantagem:</strong> Se quiser mudar a cor verde de todo o site, muda em um único lugar no <code style="font-family:'Fira Code',monospace;font-size:12px">:root</code>. Sem variáveis, teria que mudar em centenas de lugares.</div>
-            </div>
-
-          </div>
-
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Por que o JavaScript do Nutri Amorim fica no final do &lt;body&gt; e não no &lt;head&gt;?</div>
-            <div class="quiz-opcoes" id="quiz-4">
-              <button class="quiz-opcao" onclick="responder(4,'A','B')"><span class="quiz-letra">A</span> É uma convenção estética sem impacto técnico</button>
-              <button class="quiz-opcao" onclick="responder(4,'B','B')"><span class="quiz-letra">B</span> Para garantir que o HTML exista antes do JS tentar usá-lo</button>
-              <button class="quiz-opcao" onclick="responder(4,'C','B')"><span class="quiz-letra">C</span> Porque o script no head carregaria mais lento</button>
-              <button class="quiz-opcao" onclick="responder(4,'D','B')"><span class="quiz-letra">D</span> Para que o CSS seja lido antes do JavaScript</button>
-            </div>
-            <div class="quiz-feedback" id="fb-4"></div>
-          </div>
-
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~12 min de leitura</div>
-            <button class="btn-concluir" id="btn-4" onclick="concluir(4)" disabled>✓ Marcar como concluída</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- AULA 5 -->
-      <div class="aula-card" id="aula-5" data-aula="5">
-        <div class="aula-header" onclick="toggleAula(5)">
-          <div class="aula-num">5</div>
-          <div class="aula-info">
-            <div class="aula-titulo">Os Bugs que Encontramos e Como Corrigimos</div>
-            <div class="aula-desc">event.currentTarget, Unexpected token — o que causou e como pensar em erros</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-5">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-
-            <h2>Depuração — A Arte de Encontrar e Corrigir Erros</h2>
-            <p>Durante o desenvolvimento do Nutri Amorim, dois bugs apareceram. Cada um ensina algo importante sobre como o código funciona.</p>
-
-            <h3>🐛 Bug 1 — As abas não ficavam ativas ao clicar</h3>
-            <p>O código original era assim:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">JavaScript — Código com bug</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="kw">function</span> <span class="fn">showPanel</span>(id) {
-  document.<span class="fn">querySelectorAll</span>(<span class="str">'.panel'</span>).<span class="fn">forEach</span>(p =&gt; p.classList.<span class="fn">remove</span>(<span class="str">'active'</span>));
-  document.<span class="fn">querySelectorAll</span>(<span class="str">'.tab-btn'</span>).<span class="fn">forEach</span>(b =&gt; b.classList.<span class="fn">remove</span>(<span class="str">'active'</span>));
-  document.<span class="fn">getElementById</span>(<span class="str">'panel-'</span> + id).classList.<span class="fn">add</span>(<span class="str">'active'</span>);
-  event.currentTarget.classList.<span class="fn">add</span>(<span class="str">'active'</span>); <span class="cm">// ← PROBLEMA AQUI</span>
-}</pre></div>
-            </div>
-
-            <p>O problema: <code style="font-family:'Fira Code',monospace;font-size:12px">event.currentTarget</code> é uma variável <strong>global</strong> do navegador — ela existia em versões antigas do Chrome, mas parou de funcionar nos navegadores modernos.</p>
-
-            <div class="destaque atencao">
-              <div class="destaque-icon">⚠️</div>
-              <div class="destaque-txt"><strong>Lição:</strong> Nunca dependa de variáveis globais implícitas. Sempre passe o que você precisa como parâmetro explícito.</div>
-            </div>
-
-            <p><strong>A correção:</strong> passamos o próprio elemento clicado como parâmetro <code style="font-family:'Fira Code',monospace;font-size:12px">this</code>:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML + JavaScript — Solução</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">&lt;!-- HTML: passa "this" (o próprio botão clicado) --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">onclick</span>=<span class="str">"showPanel('flashcards', this)"</span><span class="tg">&gt;</span>Flashcards<span class="tg">&lt;/div&gt;</span>
-
-<span class="cm">// JS: recebe o elemento como parâmetro "el"</span>
-<span class="kw">function</span> <span class="fn">showPanel</span>(id, el) {
-  <span class="cm">// ... esconde tudo ...</span>
-  <span class="kw">if</span> (el) el.classList.<span class="fn">add</span>(<span class="str">'active'</span>); <span class="cm">// ✓ confiável</span>
-}</pre></div>
-            </div>
-
-            <h3>🐛 Bug 2 — Unexpected token ';' (2 vezes!)</h3>
-            <p>O JavaScript travava com erro de sintaxe. A causa: um trecho de código foi duplicado por engano dentro dos dados:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">JavaScript — Dado corrompido</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">// ❌ ERRADO — linha duplicada e quebrada</span>
-bioestatistica: [
-  { tema: <span class="str">'Prevalência'</span>, bioestatistica: [  <span class="cm">// ← linha fantasma</span>
-  { tema: <span class="str">'Prevalência'</span>, enunciado: <span class="str">'...'</span> },   <span class="cm">// ← linha correta</span>
-
-<span class="cm">// ✓ CORRETO — linha fantasma removida</span>
-bioestatistica: [
-  { tema: <span class="str">'Prevalência'</span>, enunciado: <span class="str">'...'</span> },</pre></div>
-            </div>
-
-            <p>Aconteceu duas vezes, em seções diferentes. A ferramenta de diagnóstico que usamos foi o <strong>Node.js</strong> pelo terminal:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">Terminal — Como diagnosticar erros de JS</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm"># Extrai o JS do HTML e verifica a sintaxe</span>
-node --check arquivo.js
-
-<span class="cm"># Saída quando tem erro:</span>
-<span class="cm"># /tmp/test.js:414</span>
-<span class="cm"># };</span>
-<span class="cm"># SyntaxError: Unexpected token ';'</span>
-
-<span class="cm"># Saída quando está ok:</span>
-<span class="cm"># (silêncio = sem erros)</span></pre></div>
-            </div>
-
-            <div class="destaque info">
-              <div class="destaque-icon">🔍</div>
-              <div class="destaque-txt"><strong>Lição de depuração:</strong> o número da linha no erro (414) aponta <em>onde o JavaScript percebeu</em> o problema — mas o erro real costuma estar algumas linhas antes. Sempre olhe para cima do número indicado.</div>
-            </div>
-
-          </div>
-
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Qual foi a raiz do Bug 1 (abas não ficando ativas)?</div>
-            <div class="quiz-opcoes" id="quiz-5">
-              <button class="quiz-opcao" onclick="responder(5,'A','B')"><span class="quiz-letra">A</span> O CSS da classe .active estava errado</button>
-              <button class="quiz-opcao" onclick="responder(5,'B','B')"><span class="quiz-letra">B</span> Dependência de variável global (event.currentTarget) que parou de funcionar nos browsers modernos</button>
-              <button class="quiz-opcao" onclick="responder(5,'C','B')"><span class="quiz-letra">C</span> A função showPanel não estava sendo chamada</button>
-              <button class="quiz-opcao" onclick="responder(5,'D','B')"><span class="quiz-letra">D</span> O HTML não tinha o atributo onclick nos botões</button>
-            </div>
-            <div class="quiz-feedback" id="fb-5"></div>
-          </div>
-
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
-            <button class="btn-concluir" id="btn-5" onclick="concluir(5)" disabled>✓ Marcar como concluída</button>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- AULA 6 — Espaçamento -->
-      <div class="aula-card" id="aula-6" data-aula="6">
-        <div class="aula-header" onclick="toggleAula(6)">
-          <div class="aula-num">6</div>
-          <div class="aula-info">
-            <div class="aula-titulo">📐 Espaçamento — Quando e Quanto Dar em Cada Lugar</div>
-            <div class="aula-desc">Indentação, espaços entre tags, margin, padding — as regras que todo programador segue</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-6">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-        <div class="aula-body">
-          <div class="aula-conteudo">
-
-            <h2>Espaçamento no Código — As Regras que Ninguém Ensina</h2>
-            <p>Espaçamento no código serve para <strong>uma coisa só: facilitar a leitura</strong>. O browser ignora completamente quantos espaços você coloca — ele vai renderizar igual. Mas para você e para qualquer outro programador que ler seu código, faz toda a diferença.</p>
-
-            <div class="destaque info">
-              <div class="destaque-icon">💡</div>
-              <div class="destaque-txt">O browser não liga para espaços extras. <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;Oi&lt;/h1&gt;</code> e <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;   Oi   &lt;/h1&gt;</code> produzem o mesmo resultado na tela. Os espaços são para <strong>você</strong>, não para o browser.</div>
-            </div>
-
-            <h3>📏 Regra 1 — Indentação: 2 espaços por nível</h3>
-            <p>Cada vez que uma tag fica dentro de outra, você avança 2 espaços. Isso se chama <strong>indentação</strong> e mostra visualmente quem está dentro de quem.</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Indentação correta</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="tg">&lt;body&gt;</span>                        <span class="cm">&lt;!-- nível 0 — sem espaço --&gt;</span>
-  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>          <span class="cm">&lt;!-- nível 1 — 2 espaços --&gt;</span>
-    <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="str">"#"</span><span class="tg">&gt;</span>Voltar<span class="tg">&lt;/a&gt;</span>       <span class="cm">&lt;!-- nível 2 — 4 espaços --&gt;</span>
-    <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"titulo"</span><span class="tg">&gt;</span>        <span class="cm">&lt;!-- nível 2 — 4 espaços --&gt;</span>
-      <span class="tg">&lt;span&gt;</span>Nutri Amorim<span class="tg">&lt;/span&gt;</span>  <span class="cm">&lt;!-- nível 3 — 6 espaços --&gt;</span>
-    <span class="tg">&lt;/div&gt;</span>
-  <span class="tg">&lt;/div&gt;</span>
-<span class="tg">&lt;/body&gt;</span></pre></div>
-            </div>
-
-            <div class="destaque dica">
-              <div class="destaque-icon">🔦</div>
-              <div class="destaque-txt"><strong>Dica do VS Code:</strong> aperte <strong>Tab</strong> em vez de ficar contando espaços. O VS Code já adiciona 2 espaços automaticamente. E se quiser indentar várias linhas de uma vez, seleciona tudo e aperta Tab.</div>
-            </div>
-
-            <h3>📏 Regra 2 — Tags curtas ficam na mesma linha</h3>
-            <p>Se o conteúdo da tag é pequeno — uma palavra, um número, um ícone — fica tudo na mesma linha:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Curto = mesma linha</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Certo — conteúdo curto, tudo numa linha --&gt;</span>
-<span class="tg">&lt;h1&gt;</span>Central de Estudos<span class="tg">&lt;/h1&gt;</span>
-<span class="tg">&lt;p&gt;</span>Bem-vindo ao Nutri Amorim<span class="tg">&lt;/p&gt;</span>
-<span class="tg">&lt;span&gt;</span>🃏<span class="tg">&lt;/span&gt;</span>
-
-<span class="cm">&lt;!-- ❌ Desnecessário — conteúdo curto em 3 linhas --&gt;</span>
-<span class="tg">&lt;h1&gt;</span>
-  Central de Estudos
-<span class="tg">&lt;/h1&gt;</span></pre></div>
-            </div>
-
-            <h3>📏 Regra 3 — Tags longas ou com filhos: quebra linha</h3>
-            <p>Se a tag tem vários elementos filhos dentro, cada filho ganha sua própria linha:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Longo = quebra linha</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Certo — div com filhos, cada um na sua linha --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"card"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;h2&gt;</span>Flashcards<span class="tg">&lt;/h2&gt;</span>
-  <span class="tg">&lt;p&gt;</span>Revise seus conteúdos<span class="tg">&lt;/p&gt;</span>
-  <span class="tg">&lt;button&gt;</span>Iniciar<span class="tg">&lt;/button&gt;</span>
-<span class="tg">&lt;/div&gt;</span>
-
-<span class="cm">&lt;!-- ❌ Difícil de ler — tudo amontoado --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"card"</span><span class="tg">&gt;&lt;h2&gt;</span>Flashcards<span class="tg">&lt;/h2&gt;&lt;p&gt;</span>Revise<span class="tg">&lt;/p&gt;&lt;button&gt;</span>Iniciar<span class="tg">&lt;/button&gt;&lt;/div&gt;</span></pre></div>
-            </div>
-
-            <h3>📏 Regra 4 — CSS: uma propriedade por linha</h3>
-            <p>No CSS, cada propriedade fica na sua própria linha. Nunca escreva tudo numa linha só — fica impossível de achar o que você quer editar:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">CSS — Espaçamento correto</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">/* ✅ Certo — uma propriedade por linha */</span>
-<span class="cs">.topbar</span> {
-  <span class="cs">background</span>: <span class="vl">#1a2e1f</span>;
-  <span class="cs">height</span>: <span class="num">56px</span>;
-  <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>;
-  <span class="cs">display</span>: <span class="vl">flex</span>;
-}
-
-<span class="cm">/* ❌ Difícil de editar — tudo numa linha */</span>
-<span class="cs">.topbar</span> { <span class="cs">background</span>: <span class="vl">#1a2e1f</span>; <span class="cs">height</span>: <span class="num">56px</span>; <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>; <span class="cs">display</span>: <span class="vl">flex</span>; }</pre></div>
-            </div>
-
-            <h3>📏 Regra 5 — Linha em branco entre blocos</h3>
-            <p>Deixe uma linha em branco entre seções diferentes. Isso divide visualmente o código em partes, igual parágrafo num texto:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">HTML — Linhas em branco entre seções</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Com linha em branco — fácil de navegar --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;span&gt;</span>Logo<span class="tg">&lt;/span&gt;</span>
-<span class="tg">&lt;/div&gt;</span>
-                              <span class="cm">&lt;!-- linha em branco aqui --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"conteudo"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;h1&gt;</span>Bem-vindo<span class="tg">&lt;/h1&gt;</span>
-<span class="tg">&lt;/div&gt;</span>
-                              <span class="cm">&lt;!-- linha em branco aqui --&gt;</span>
-<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"rodape"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;p&gt;</span>Nutri Amorim 2026<span class="tg">&lt;/p&gt;</span>
-<span class="tg">&lt;/div&gt;</span></pre></div>
-            </div>
-
-            <h3>📏 Regra 6 — JavaScript: espaço antes da chave e entre operadores</h3>
-            <p>No JavaScript há dois padrões importantes que todo programador segue:</p>
-
-            <div class="code-block">
-              <div class="code-header"><span class="code-lang">JavaScript — Espaçamento padrão</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
-              <div class="code-body"><pre><span class="cm">// ✅ Certo — espaço antes da chave e entre operadores</span>
-<span class="kw">function</span> <span class="fn">calcular</span>(peso, altura) {
-  <span class="kw">const</span> imc = peso / (altura * altura);
-  <span class="kw">if</span> (imc &gt; <span class="num">25</span>) {
-    <span class="kw">return</span> <span class="str">"acima do peso"</span>;
+<span class="tg">&lt;/html&gt;</span></pre></div></div>
+      <p>Depois de digitar, aperta <strong>Ctrl+S</strong>. O browser atualiza sozinho.</p>
+      <table class="aula-tabela"><thead><tr><th>Linha</th><th>O que faz</th></tr></thead><tbody><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;!DOCTYPE html&gt;</code></td><td>Avisa o browser: isso é HTML moderno</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;html lang="pt-BR"&gt;</code></td><td>Começa o documento, idioma português</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;head&gt;</code></td><td>Configurações — não aparece na tela</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;meta charset="UTF-8"&gt;</code></td><td>Permite acentos, ç, ã e emojis</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;title&gt;</code></td><td>Nome na aba do browser</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;body&gt;</code></td><td>Tudo que aparece na tela fica aqui</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;h1&gt;</code></td><td>Título grande</td></tr><tr><td><code style="font-family:'Fira Code',monospace;font-size:11px">&lt;p&gt;</code></td><td>Parágrafo de texto</td></tr></tbody></table>
+      <div class="destaque dica"><div class="destaque-icon">🔦</div><div class="destaque-txt"><strong>Regra de ouro:</strong> toda tag que abre &lt;x&gt; precisa fechar &lt;/x&gt;. O que abre tem que fechar.</div></div>
+      <h3>🎯 Exercício</h3>
+      <ul><li>Troca o h1 para algo do seu projeto</li><li>Muda o title e veja a aba do browser mudar</li><li>Adiciona um segundo &lt;p&gt;</li><li>Adiciona um &lt;h2&gt; — veja que é menor que o h1</li></ul>
+      <div class="aula-quiz"><div class="quiz-titulo">✏️ Teste</div><div class="quiz-pergunta">Você quer que "${ex.titulo}" apareça na aba do browser. Qual tag usa?</div><div class="quiz-opcoes" id="qo-2"><button class="quiz-opcao" onclick="resp(2,'A','C')"><span class="quiz-letra">A</span> &lt;h1&gt;${ex.titulo}&lt;/h1&gt; no body</button><button class="quiz-opcao" onclick="resp(2,'B','C')"><span class="quiz-letra">B</span> &lt;header&gt;${ex.titulo}&lt;/header&gt;</button><button class="quiz-opcao" onclick="resp(2,'C','C')"><span class="quiz-letra">C</span> &lt;title&gt;${ex.titulo}&lt;/title&gt; dentro do &lt;head&gt;</button><button class="quiz-opcao" onclick="resp(2,'D','C')"><span class="quiz-letra">D</span> &lt;p&gt;${ex.titulo}&lt;/p&gt; no body</button></div><div class="quiz-feedback" id="qf-2"></div></div>
+    </div>`;
+  } else {
+    corpo = `<div style="padding:22px;text-align:center;color:#9ca3af"><div style="font-size:36px;margin-bottom:10px">📖</div><div style="font-size:14px;font-weight:600;margin-bottom:6px;color:var(--escuro)">Aula ${n} — ${TRILHAS[trilhaAtual].modulos.flatMap(m=>m.aulas).find(a=>a.n===n)?.t||''}</div><div style="font-size:13px">O conteúdo completo será adicionado conforme você avança.<br>Siga o cronograma abaixo para saber o que praticar!</div></div>`;
   }
+
+  const footer = conc
+    ? `<div class="aula-footer"><div class="aula-tempo">✅ Aula concluída</div><button class="btn-concluir ja-feita">✓ Concluída</button></div>`
+    : `<div class="aula-footer"><div class="aula-tempo">⏱️ Leia, pratique e marque quando terminar</div><button class="btn-concluir" id="bcn-${n}" onclick="concluir(${n})" ${(n<=2&&!qf)?'disabled':''}>✓ Marcar como concluída</button></div>`;
+
+  el.innerHTML = corpo + footer;
 }
 
-<span class="cm">// ❌ Sem espaços — difícil de ler</span>
-<span class="kw">function</span> <span class="fn">calcular</span>(peso,altura){
-  <span class="kw">const</span> imc=peso/(altura*altura);
-  <span class="kw">if</span>(imc&gt;<span class="num">25</span>){<span class="kw">return</span> <span class="str">"acima do peso"</span>;}
-}</pre></div>
-            </div>
-
-            <h3>🤖 O VS Code faz muito disso automaticamente</h3>
-            <p>Você não precisa memorizar tudo isso de uma vez. O VS Code tem um recurso chamado <strong>Format Document</strong> que arruma o espaçamento do seu arquivo inteiro automaticamente:</p>
-            <ul>
-              <li>Windows: <strong>Shift + Alt + F</strong></li>
-              <li>Mac: <strong>Shift + Option + F</strong></li>
-              <li>Ou clique direito no editor → <strong>Format Document</strong></li>
-            </ul>
-
-            <div class="destaque dica">
-              <div class="destaque-icon">🔦</div>
-              <div class="destaque-txt"><strong>Hábito profissional:</strong> antes de salvar qualquer arquivo, aperte Shift+Alt+F para formatar. Com o tempo isso vira reflexo automático e seu código sempre fica organizado.</div>
-            </div>
-
-            <h3>📋 Resumo das regras</h3>
-            <table class="aula-tabela">
-              <thead><tr><th>Situação</th><th>Regra</th></tr></thead>
-              <tbody>
-                <tr><td>Tag dentro de outra</td><td>Avança 2 espaços (Tab)</td></tr>
-                <tr><td>Conteúdo curto</td><td>Fica na mesma linha que a tag</td></tr>
-                <tr><td>Tag com vários filhos</td><td>Cada filho na sua própria linha</td></tr>
-                <tr><td>Propriedades CSS</td><td>Uma por linha, dentro das chaves</td></tr>
-                <tr><td>Seções diferentes</td><td>Linha em branco entre elas</td></tr>
-                <tr><td>JavaScript</td><td>Espaço antes de { e entre operadores</td></tr>
-                <tr><td>Qualquer dúvida</td><td>Shift+Alt+F no VS Code resolve</td></tr>
-              </tbody>
-            </table>
-
-          </div>
-
-          <div class="aula-quiz">
-            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
-            <div class="quiz-pergunta">Você escreveu um CSS com várias propriedades numa linha só. O que acontece no browser e qual o problema real?</div>
-            <div class="quiz-opcoes" id="quiz-6">
-              <button class="quiz-opcao" onclick="responder(6,'A','B')"><span class="quiz-letra">A</span> O browser não consegue ler o CSS e ignora os estilos</button>
-              <button class="quiz-opcao" onclick="responder(6,'B','B')"><span class="quiz-letra">B</span> O browser renderiza igual — o problema é só para quem lê o código, fica difícil de editar</button>
-              <button class="quiz-opcao" onclick="responder(6,'C','B')"><span class="quiz-letra">C</span> O site carrega mais lento por causa da formatação</button>
-              <button class="quiz-opcao" onclick="responder(6,'D','B')"><span class="quiz-letra">D</span> O CSS numa linha só funciona mas o HTML em linha não funciona</button>
-            </div>
-            <div class="quiz-feedback" id="fb-6"></div>
-          </div>
-
-          <div class="aula-footer">
-            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
-            <button class="btn-concluir" id="btn-6" onclick="concluir(6)" disabled>✓ Marcar como concluída</button>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /aulas-grid mod1 -->
-  </div><!-- /modulo 1 -->
-
-  <!-- MÓDULO 2 -->
-  <div class="modulo">
-    <div class="modulo-header">
-      <div class="modulo-icon">⚙️</div>
-      <div class="modulo-titulo">Módulo 2 — Construindo de Verdade</div>
-      <div class="modulo-count" id="count-mod2">0 / 5 aulas</div>
-    </div>
-    <div class="aulas-grid">
-
-      <!-- AULA 6 -->
-      <div class="aula-card bloqueada" id="aula-6" data-aula="6">
-        <div class="aula-header" onclick="toggleAula(6)">
-          <div class="aula-num">6</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🎨 CSS — Cores, Fontes e Deixando Bonito</div>
-            <div class="aula-desc">Adicione estilos à sua página: cor de fundo, fonte, tamanho e espaçamento</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-6">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 7 -->
-      <div class="aula-card bloqueada" id="aula-7" data-aula="7">
-        <div class="aula-header" onclick="toggleAula(7)">
-          <div class="aula-num">7</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🗂️ Separando o CSS em Arquivo Próprio (style.css)</div>
-            <div class="aula-desc">Por que separar HTML e CSS em arquivos diferentes deixa o código mais organizado</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-7">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 8 -->
-      <div class="aula-card bloqueada" id="aula-8" data-aula="8">
-        <div class="aula-header" onclick="toggleAula(8)">
-          <div class="aula-num">8</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🔝 Criando a Topbar e a Sidebar</div>
-            <div class="aula-desc">Construa a barra do topo e o menu lateral do zero — estrutura e posicionamento</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-8">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 9 -->
-      <div class="aula-card bloqueada" id="aula-9" data-aula="9">
-        <div class="aula-header" onclick="toggleAula(9)">
-          <div class="aula-num">9</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🔍 Adicionando uma Barra de Pesquisa</div>
-            <div class="aula-desc">Crie um input de busca funcional com HTML, CSS e o primeiro JavaScript interativo</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-9">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 10 -->
-      <div class="aula-card bloqueada" id="aula-10" data-aula="10">
-        <div class="aula-header" onclick="toggleAula(10)">
-          <div class="aula-num">10</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🖼️ Adicionando uma Logo ao Site</div>
-            <div class="aula-desc">Como inserir imagens, a tag img e posicionar a logo corretamente na topbar</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-10">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 11 -->
-      <div class="aula-card bloqueada" id="aula-11" data-aula="11">
-        <div class="aula-header" onclick="toggleAula(11)">
-          <div class="aula-num">11</div>
-          <div class="aula-info">
-            <div class="aula-titulo">📱 Responsividade — O Site no Celular</div>
-            <div class="aula-desc">Media queries e breakpoints — como adaptar qualquer página para qualquer tela</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-11">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 12 -->
-      <div class="aula-card bloqueada" id="aula-12" data-aula="12">
-        <div class="aula-header" onclick="toggleAula(12)">
-          <div class="aula-num">12</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🤖 Adicionando um Chatbot à Página</div>
-            <div class="aula-desc">Construa a janela de chat — HTML, CSS e JavaScript trabalhando juntos</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-12">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 13 -->
-      <div class="aula-card bloqueada" id="aula-13" data-aula="13">
-        <div class="aula-header" onclick="toggleAula(13)">
-          <div class="aula-num">13</div>
-          <div class="aula-info">
-            <div class="aula-titulo">⚙️ Configurando o Chatbot com IA</div>
-            <div class="aula-desc">O que é uma API, como conectar o chatbot a uma IA e fazer ele responder de verdade</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-13">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 14 -->
-      <div class="aula-card bloqueada" id="aula-14" data-aula="14">
-        <div class="aula-header" onclick="toggleAula(14)">
-          <div class="aula-num">14</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🐙 Git e GitHub — Nunca Perca seu Código</div>
-            <div class="aula-desc">O que é Git, como criar seu repositório e salvar versões do código com commits</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-14">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- AULA 15 -->
-      <div class="aula-card bloqueada" id="aula-15" data-aula="15">
-        <div class="aula-header" onclick="toggleAula(15)">
-          <div class="aula-num">15</div>
-          <div class="aula-info">
-            <div class="aula-titulo">⏪ Voltando no Tempo — Desfazendo Erros com Git</div>
-            <div class="aula-desc">Como usar o histórico de commits para voltar a uma versão anterior quando algo quebrar</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-15">🔒 Em breve</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-
-    </div>
-  </div>
-
-  <!-- CRONOGRAMA -->
-  <div class="modulo" style="margin-top:40px">
-    <div class="modulo-header">
-      <div class="modulo-icon">🗓️</div>
-      <div class="modulo-titulo">Cronograma — Do Zero ao Sistema de Calorias</div>
-    </div>
-
-    <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:16px;overflow:hidden;margin-bottom:20px">
-
-      <!-- SEMANA 1 -->
-      <div style="background:var(--escuro);padding:16px 24px;display:flex;align-items:center;gap:12px">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 1</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">Ambiente + Primeiros Passos</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 1 e 2</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">1</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Instalar VS Code + Live Server</div>
-            <div style="font-size:13px;color:#7a8a7c">Criar pasta <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;font-family:'Fira Code',monospace;font-size:12px">teste</code>, abrir com Live Server, ver atualizar em tempo real</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">2</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Digitar sua primeira página do zero</div>
-            <div style="font-size:13px;color:#7a8a7c">DOCTYPE, html, head, body, h1, p — entender cada linha. Fazer o exercício de modificar o código</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Ter uma página abrindo no browser com seu nome e um texto qualquer. Simples, mas feito por você.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEMANA 2 -->
-      <div style="background:#1e3a2f;padding:16px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #e0ebe0">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 2</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">Entendendo o Código Real</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 3, 4 e 5</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">3</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">HTML, CSS e JavaScript — os 3 pilares</div>
-            <div style="font-size:13px;color:#7a8a7c">Entender o que cada um faz abrindo o central-estudos.html no VS Code e identificando cada parte</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">4</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Anatomia do arquivo — head, body, style, script</div>
-            <div style="font-size:13px;color:#7a8a7c">Por que cada bloco existe e por que o script fica no final. Entender as variáveis CSS do Nutri Amorim</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">5</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Os bugs que apareceram e como foram corrigidos</div>
-            <div style="font-size:13px;color:#7a8a7c">Aprender a pensar em erros — onde olhar, como diagnosticar, como corrigir sem entrar em pânico</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Abrir o central-estudos.html no VS Code e conseguir identificar onde está o HTML, o CSS e o JavaScript sem precisar de ajuda.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEMANA 3 -->
-      <div style="background:#1a2e1f;padding:16px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #e0ebe0">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 3</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">CSS — Deixando Bonito</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 6 e 7</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">6</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">CSS na prática — cores, fontes, espaçamento</div>
-            <div style="font-size:13px;color:#7a8a7c">Adicionar estilos à sua página de teste. Trocar cor de fundo, mudar fonte, ajustar tamanhos</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">7</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Criar o arquivo style.css separado</div>
-            <div style="font-size:13px;color:#7a8a7c">Mover todo CSS para um arquivo separado e linkar no HTML. Criar a pasta <code style="background:#f0f0f0;padding:1px 5px;border-radius:4px;font-family:'Fira Code',monospace;font-size:12px">meu-site</code> organizada</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Ter a pasta meu-site com index.html e style.css separados. A página já com uma identidade visual básica sua.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEMANA 4 -->
-      <div style="background:#1a2e1f;padding:16px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #e0ebe0">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 4</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">Estrutura Visual — Topbar, Sidebar e Logo</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 8, 9 e 10</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">8</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Topbar fixa + Sidebar lateral</div>
-            <div style="font-size:13px;color:#7a8a7c">Construir a barra do topo que fica grudada ao rolar e o menu lateral. Igual ao Nutri Amorim mas feito por você</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">9</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Barra de pesquisa funcional</div>
-            <div style="font-size:13px;color:#7a8a7c">Primeiro JavaScript interativo — o usuário digita e o resultado aparece em tempo real</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">10</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Logo e imagens</div>
-            <div style="font-size:13px;color:#7a8a7c">Como inserir imagens, posicionar a logo na topbar e trabalhar com a tag img</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Sua página já tem cara de site — topbar, menu lateral, logo e uma barra de pesquisa. Qualquer pessoa que abrir já vai reconhecer como um sistema.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEMANA 5 -->
-      <div style="background:#1a2e1f;padding:16px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #e0ebe0">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 5</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">Celular + Chatbot</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 11, 12 e 13</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">11</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Responsividade — adaptar ao celular</div>
-            <div style="font-size:13px;color:#7a8a7c">Media queries e breakpoints. Abrir o site no celular e ver tudo funcionar direitinho</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">12</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Construir a janela do chatbot</div>
-            <div style="font-size:13px;color:#7a8a7c">HTML e CSS da janela de chat — botão flutuante, caixa de mensagens, input de texto</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">13</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Conectar o chatbot a uma IA</div>
-            <div style="font-size:13px;color:#7a8a7c">O que é uma API, como fazer o chatbot enviar e receber mensagens de uma IA de verdade</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Ter um site responsivo com um chatbot funcional que responde de verdade. Nesse ponto você já construiu algo que pouca gente consegue.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEMANA 6 -->
-      <div style="background:#1a2e1f;padding:16px 24px;display:flex;align-items:center;gap:12px;border-top:1px solid #e0ebe0">
-        <div style="background:rgba(116,198,157,0.2);border:1px solid rgba(116,198,157,0.3);color:var(--verde-neon);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px">SEMANA 6</div>
-        <div style="color:#fff;font-weight:700;font-size:15px">Git, GitHub e Segurança do Código</div>
-        <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:12px">Aulas 14 e 15</div>
-      </div>
-      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">14</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Git e GitHub — criar repositório e primeiro commit</div>
-            <div style="font-size:13px;color:#7a8a7c">Instalar Git, criar conta no GitHub, subir o meu-site para a nuvem. Seu código seguro para sempre</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#f0fdf4;border:1.5px solid #86efac;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">15</div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--escuro);margin-bottom:3px">Voltar no tempo — desfazer erros com commits</div>
-            <div style="font-size:13px;color:#7a8a7c">Como ver o histórico de versões e restaurar uma versão anterior quando algo quebrar</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:14px;align-items:flex-start">
-          <div style="width:32px;height:32px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎯</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:#92400e">Meta da semana</div>
-            <div style="font-size:13px;color:#7a8a7c">Todo o projeto meu-site salvo no GitHub com histórico de commits. A partir daqui você nunca mais vai perder código.</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MÓDULO 3 — PROJETO FINAL -->
-  <div class="modulo">
-    <div class="modulo-header">
-      <div class="modulo-icon">🏆</div>
-      <div class="modulo-titulo">Módulo 3 — Projeto Final: Sistema de Calorias</div>
-      <div class="modulo-count" id="count-mod3">0 / 3 etapas</div>
-    </div>
-
-    <div style="background:linear-gradient(135deg,#1a2e1f,#2d3f52);border:1.5px solid var(--verde-claro);border-radius:16px;padding:22px 24px;margin-bottom:16px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--verde-neon);margin-bottom:8px">O que você vai construir</div>
-      <div style="color:#fff;font-size:16px;font-weight:700;margin-bottom:8px">Sistema de Cálculo de Calorias, Macros e TMB</div>
-      <div style="color:rgba(255,255,255,0.55);font-size:13px;line-height:1.7;margin-bottom:16px">O usuário digita peso, altura, idade, sexo, nível de atividade e objetivo. O sistema calcula automaticamente a TMB, o GET, e a distribuição de proteínas, carboidratos e gorduras. Tudo numa interface limpa como uma planilha.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <span style="background:rgba(116,198,157,0.15);color:var(--verde-neon);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(116,198,157,0.3)">📊 Inputs e formulários</span>
-        <span style="background:rgba(116,198,157,0.15);color:var(--verde-neon);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(116,198,157,0.3)">🧮 Fórmulas Harris-Benedict</span>
-        <span style="background:rgba(116,198,157,0.15);color:var(--verde-neon);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(116,198,157,0.3)">📈 Tabela de resultados</span>
-        <span style="background:rgba(116,198,157,0.15);color:var(--verde-neon);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(116,198,157,0.3)">💾 Salvar com localStorage</span>
-        <span style="background:rgba(116,198,157,0.15);color:var(--verde-neon);font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(116,198,157,0.3)">📱 Responsivo para celular</span>
-      </div>
-    </div>
-
-    <div class="aulas-grid">
-
-      <!-- ETAPA 16 -->
-      <div class="aula-card bloqueada" id="aula-16" data-aula="16">
-        <div class="aula-header" onclick="toggleAula(16)">
-          <div class="aula-num">16</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🧮 Etapa 1 — Os Inputs e as Fórmulas</div>
-            <div class="aula-desc">Criar os campos de entrada e programar os cálculos de TMB e GET em JavaScript</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-16">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- ETAPA 17 -->
-      <div class="aula-card bloqueada" id="aula-17" data-aula="17">
-        <div class="aula-header" onclick="toggleAula(17)">
-          <div class="aula-num">17</div>
-          <div class="aula-info">
-            <div class="aula-titulo">📊 Etapa 2 — Tabela de Resultados e Macros</div>
-            <div class="aula-desc">Exibir os resultados numa tabela — calorias, proteína, carboidrato, gordura e déficit/superávit</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-17">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-      <!-- ETAPA 18 -->
-      <div class="aula-card bloqueada" id="aula-18" data-aula="18">
-        <div class="aula-header" onclick="toggleAula(18)">
-          <div class="aula-num">18</div>
-          <div class="aula-info">
-            <div class="aula-titulo">🚀 Etapa 3 — Finalizar, Salvar e Publicar</div>
-            <div class="aula-desc">Salvar os dados com localStorage, deixar responsivo e subir no GitHub — projeto completo!</div>
-          </div>
-          <span class="aula-badge lock" id="badge-aula-18">🔒 Bloqueada</span>
-          <span class="aula-chevron">›</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- RODAPÉ INFO -->
-  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-    <span style="font-size:20px">🚀</span>
-    <div style="font-size:13px;color:var(--verde)"><strong>As aulas do Módulo 2 serão desbloqueadas conforme você avança no Módulo 1.</strong> Cada aula nova que você pedir será adicionada aqui. Seu progresso fica salvo automaticamente!</div>
-  </div>
-
-</div><!-- /page-wrap -->
-
-<script>
-// ── ESTADO ──────────────────────────────────────────────────
-const TOTAL_AULAS = 19;
-const AULAS_DESBLOQUEADAS = [1, 2, 3, 4, 5, 6]; // módulo 2 ainda em breve
-let progresso = JSON.parse(localStorage.getItem('prog_programacao') || '{}');
-// progresso = { concluidas: [1, 2], quizFeitos: {1: true} }
-if (!progresso.concluidas) progresso.concluidas = [];
-if (!progresso.quizFeitos) progresso.quizFeitos = {};
-
-// ── INICIALIZAÇÃO ────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  atualizarEstadoGeral();
-  progresso.concluidas.forEach(n => aplicarConcluida(n));
-  // Abre a primeira aula não concluída automaticamente
-  const proxima = AULAS_DESBLOQUEADAS.find(n => !progresso.concluidas.includes(n));
-  if (proxima) toggleAula(proxima);
-});
-
-// ── TOGGLE AULA ──────────────────────────────────────────────
 function toggleAula(n) {
-  if (!AULAS_DESBLOQUEADAS.includes(n)) return;
-  const card = document.getElementById('aula-' + n);
+  const card = document.getElementById('ac-' + n);
+  if (!card || card.classList.contains('bloqueada')) return;
   const aberta = card.classList.contains('aberta');
-  // Fecha todas
   document.querySelectorAll('.aula-card').forEach(c => c.classList.remove('aberta'));
-  // Abre esta se estava fechada
   if (!aberta) card.classList.add('aberta');
 }
 
-// ── RESPONDER QUIZ ───────────────────────────────────────────
-function responder(aulaNum, opcao, certa) {
-  if (progresso.quizFeitos[aulaNum]) return;
-  const container = document.getElementById('quiz-' + aulaNum);
-  const fb = document.getElementById('fb-' + aulaNum);
-  const btns = container.querySelectorAll('.quiz-opcao');
+function resp(aulaNum, opcao, certa) {
+  if (!prog.quizFeitos[trilhaAtual]) prog.quizFeitos[trilhaAtual] = {};
+  if (prog.quizFeitos[trilhaAtual][aulaNum]) return;
+  const container = document.getElementById('qo-' + aulaNum);
+  const fb = document.getElementById('qf-' + aulaNum);
+  if (!container || !fb) return;
   const letras = ['A','B','C','D'];
   const acertou = opcao === certa;
-
-  btns.forEach((btn, i) => {
-    const letra = letras[i];
-    if (letra === certa) btn.classList.add('certa');
-    else if (letra === opcao && !acertou) btn.classList.add('errada');
+  container.querySelectorAll('.quiz-opcao').forEach((btn, i) => {
+    const l = letras[i];
+    if (l === certa) btn.classList.add('certa');
+    else if (l === opcao && !acertou) btn.classList.add('errada');
     else btn.classList.add('neutra');
   });
-
   fb.className = 'quiz-feedback show ' + (acertou ? 'certa' : 'errada');
-  fb.textContent = acertou
-    ? '✅ Correto! Você pode marcar a aula como concluída.'
-    : '❌ Não foi dessa vez — mas a resposta correta está destacada em verde. Releia e tente fixar!';
-
-  progresso.quizFeitos[aulaNum] = true;
+  fb.textContent = acertou ? '✅ Correto! Pode marcar a aula como concluída.' : '❌ Não foi — a resposta correta está em verde. Releia e fixe!';
+  prog.quizFeitos[trilhaAtual][aulaNum] = true;
   salvar();
-
-  // Libera botão de concluir
-  const btn = document.getElementById('btn-' + aulaNum);
-  if (btn && !progresso.concluidas.includes(aulaNum)) {
-    btn.disabled = false;
-  }
+  const btn = document.getElementById('bcn-' + aulaNum);
+  if (btn) btn.disabled = false;
 }
 
-// ── CONCLUIR AULA ────────────────────────────────────────────
 function concluir(n) {
-  if (progresso.concluidas.includes(n)) return;
-  progresso.concluidas.push(n);
+  if (!prog.concluidas[trilhaAtual]) prog.concluidas[trilhaAtual] = [];
+  if (prog.concluidas[trilhaAtual].includes(n)) return;
+  prog.concluidas[trilhaAtual].push(n);
   salvar();
-  aplicarConcluida(n);
-  atualizarEstadoGeral();
-
-  // Desbloqueio sequencial dentro do módulo 1
-  const proxima = AULAS_DESBLOQUEADAS.find(num => !progresso.concluidas.includes(num));
-  if (proxima) {
-    setTimeout(() => toggleAula(proxima), 400);
-  }
+  renderAulas(); atualizarProg();
+  const todas = TRILHAS[trilhaAtual].modulos.flatMap(m => m.aulas);
+  const idx = todas.findIndex(a => a.n === n);
+  if (idx >= 0 && idx < todas.length - 1) setTimeout(() => toggleAula(todas[idx+1].n), 400);
 }
 
-function aplicarConcluida(n) {
-  const card = document.getElementById('aula-' + n);
-  if (!card) return;
-  card.classList.add('concluida');
-  card.classList.remove('ativa');
-  const badge = document.getElementById('badge-aula-' + n);
-  if (badge) { badge.textContent = '✓ Concluída'; badge.className = 'aula-badge feita'; }
-  const btn = document.getElementById('btn-' + n);
-  if (btn) { btn.textContent = '✓ Concluída'; btn.className = 'btn-concluir ja-feita'; btn.disabled = true; }
-
-  // Desbloqueia a próxima do módulo 1
-  const idx = AULAS_DESBLOQUEADAS.indexOf(n);
-  const prox = AULAS_DESBLOQUEADAS[idx + 1];
-  if (prox) {
-    const proxCard = document.getElementById('aula-' + prox);
-    if (proxCard) {
-      proxCard.classList.remove('bloqueada');
-      proxCard.classList.add('ativa');
-      const proxBadge = document.getElementById('badge-aula-' + prox);
-      if (proxBadge && proxBadge.textContent.includes('Bloqueada')) {
-        proxBadge.textContent = 'Nova';
-        proxBadge.className = 'aula-badge nova';
-      }
-    }
-  }
-}
-
-// ── PROGRESSO GERAL ──────────────────────────────────────────
-function atualizarEstadoGeral() {
-  const feitas = progresso.concluidas.length;
-  const pct = Math.round((feitas / TOTAL_AULAS) * 100);
+function atualizarProg() {
+  const t = TRILHAS[trilhaAtual];
+  const conc = prog.concluidas[trilhaAtual] || [];
+  const total = t.modulos.reduce((s,m)=>s+m.aulas.length,0);
+  const feitas = conc.length;
+  const pct = total > 0 ? Math.round((feitas/total)*100) : 0;
   document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-sub').textContent = feitas + ' de ' + TOTAL_AULAS + ' aulas concluídas';
+  document.getElementById('prog-sub').textContent = feitas + ' de ' + total + ' aulas concluídas';
   document.getElementById('prog-pct').textContent = pct + '% concluído';
   document.getElementById('prog-feitas').textContent = feitas;
-  document.getElementById('prog-restantes').textContent = TOTAL_AULAS - feitas;
-  document.getElementById('badge-prog').textContent = 'Aula ' + Math.min(feitas + 1, TOTAL_AULAS) + ' de ' + TOTAL_AULAS;
-
-  const proxima = AULAS_DESBLOQUEADAS.find(n => !progresso.concluidas.includes(n));
+  document.getElementById('prog-rest').textContent = total - feitas;
+  document.getElementById('badge-top').textContent = t.nome + ' — ' + pct + '%';
   const proxEl = document.getElementById('prog-prox');
-  if (feitas === TOTAL_AULAS) proxEl.textContent = '🎉 Curso completo!';
-  else if (proxima) proxEl.textContent = 'Próxima: Aula ' + proxima + ' 👇';
-
-  // Contagem por módulo
-  const mod1 = progresso.concluidas.filter(n => [1,2,3,4,5,6].includes(n)).length;
-  const mod2 = progresso.concluidas.filter(n => [6,7,8].includes(n)).length;
-  document.getElementById('count-mod1').textContent = mod1 + ' / 5 aulas';
-  document.getElementById('count-mod2').textContent = mod2 + ' / 3 aulas';
+  proxEl.textContent = feitas === total ? '🎉 Trilha completa!' : 'Próxima: Aula ' + (feitas+1) + ' 👇';
 }
 
-// ── SALVAR ───────────────────────────────────────────────────
-function salvar() {
-  localStorage.setItem('prog_programacao', JSON.stringify(progresso));
+function renderCrono() {
+  const t = TRILHAS[trilhaAtual];
+  const cores = ['#1a2e1f','#1e3a2f','#162838','#1a2935','#1a2e1f'];
+  let html = `<div style="margin:28px 0 20px"><div class="modulo-header"><div class="modulo-icon">🗓️</div><div class="modulo-titulo">Cronograma Semana a Semana</div></div>`;
+  t.semanas.forEach((s, i) => {
+    html += `<div class="crono-semana"><div class="crono-header" style="background:${cores[i%cores.length]}"><div class="crono-badge">SEMANA ${i+1}</div><div class="crono-titulo">${s.titulo}</div><div class="crono-aulas">${s.aulas}</div></div><div class="crono-body">`;
+    s.itens.forEach(item => {
+      const isMeta = item.n === '🎯';
+      html += `<div class="crono-item"><div class="crono-num ${isMeta?'meta':''}">${item.n}</div><div><div class="crono-item-titulo">${item.t}</div><div class="crono-item-desc">${item.d}</div></div></div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+  document.getElementById('crono-container').innerHTML = html;
 }
 
-// ── COPIAR CÓDIGO ────────────────────────────────────────────
-function copiar(btn, texto) {
+function renderProjeto() {
+  const p = TRILHAS[trilhaAtual].projeto;
+  const tags = p.tags.map(tag => `<span class="projeto-tag-item">${tag}</span>`).join('');
+  document.getElementById('projeto-container').innerHTML = `
+    <div class="modulo-header"><div class="modulo-icon">🏆</div><div class="modulo-titulo">Projeto Final da Trilha</div></div>
+    <div class="projeto-card">
+      <div class="projeto-tag-label">O que você vai construir</div>
+      <div class="projeto-titulo">${p.icon} ${p.titulo}</div>
+      <div class="projeto-desc">${p.desc}</div>
+      <div class="projeto-tags">${tags}</div>
+    </div>`;
+}
+
+function copiar(btn) {
   const pre = btn.closest('.code-block').querySelector('pre');
-  const conteudo = texto || pre.innerText;
-  navigator.clipboard.writeText(conteudo).then(() => {
-    const original = btn.textContent;
-    btn.textContent = '✓ Copiado!';
-    setTimeout(() => btn.textContent = original, 2000);
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const o = btn.textContent; btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = o, 2000);
   });
 }
+
+window.addEventListener('DOMContentLoaded', carregar);
 </script>
 </body>
 </html>
