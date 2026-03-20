@@ -180,7 +180,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
   <a href="producao-conhecimento.html" class="back-btn">← Voltar</a>
   <div class="divider"></div>
   <div class="topbar-title">Programação na Prática</div>
-  <div class="badge" id="badge-prog">Aula 1 de 6</div>
+  <div class="badge" id="badge-prog">Aula 1 de 8</div>
 </div>
 
 <div class="page-wrap">
@@ -227,19 +227,167 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     <div class="modulo-header">
       <div class="modulo-icon">🏗️</div>
       <div class="modulo-titulo">Módulo 1 — Os Fundamentos</div>
-      <div class="modulo-count" id="count-mod1">0 / 3 aulas</div>
+      <div class="modulo-count" id="count-mod1">0 / 5 aulas</div>
     </div>
     <div class="aulas-grid">
 
-      <!-- AULA 1 -->
+      <!-- AULA 1 — VS Code -->
       <div class="aula-card ativa" id="aula-1" data-aula="1">
         <div class="aula-header" onclick="toggleAula(1)">
           <div class="aula-num">1</div>
           <div class="aula-info">
+            <div class="aula-titulo">🛠️ Configurando o VS Code — Seu Ambiente de Trabalho</div>
+            <div class="aula-desc">Instale o Live Server e prepare a pasta do projeto antes de escrever qualquer código</div>
+          </div>
+          <span class="aula-badge nova" id="badge-aula-1">Nova</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+            <h2>Antes de Escrever Código — Prepare o Ambiente</h2>
+            <p>Todo programador tem um <strong>ambiente de trabalho</strong> configurado. O seu vai ser o VS Code com uma extensão chamada Live Server. Sem isso, você escreveria código mas teria que ficar apertando F5 no navegador toda hora para ver o resultado.</p>
+            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>O que é o Live Server?</strong> Extensão que abre seu HTML no browser e <strong>atualiza automaticamente</strong> toda vez que você salva. Digita, salva, vê — em tempo real.</div></div>
+            <h3>📦 Passo 1 — Instalar o Live Server no VS Code</h3>
+            <ul>
+              <li>Abra o VS Code</li>
+              <li>Na barra lateral esquerda clica no ícone de 4 quadradinhos <strong>(Extensions)</strong></li>
+              <li>Na caixa de busca digita: <strong>Live Server</strong></li>
+              <li>Instala o de <strong>Ritwick Dey</strong> — mais de 40 milhões de instalações</li>
+            </ul>
+            <h3>📁 Passo 2 — Criar sua pasta de trabalho</h3>
+            <ul>
+              <li>Cria uma pasta em qualquer lugar do computador. Chama de <strong>meu-site</strong></li>
+              <li>No VS Code: <strong>File → Open Folder</strong> → seleciona a pasta meu-site</li>
+            </ul>
+            <h3>📄 Passo 3 — Criar seu primeiro arquivo</h3>
+            <ul>
+              <li>No painel esquerdo, passa o mouse na pasta e clica no ícone de folha com <strong>+</strong></li>
+              <li>Digita o nome: <strong>index.html</strong> e aperta Enter</li>
+            </ul>
+            <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Por que index.html?</strong> Convenção universal — quando você acessa www.site.com sem especificar arquivo, o browser procura automaticamente o index.html. É sempre o ponto de entrada.</div></div>
+            <h3>🚀 Passo 4 — Abrir com o Live Server</h3>
+            <ul>
+              <li>Com o index.html aberto, clica com <strong>botão direito</strong> em qualquer lugar do editor</li>
+              <li>Clica em <strong>Open with Live Server</strong></li>
+              <li>O browser abre com o endereço <strong>127.0.0.1:5500</strong> — página em branco por enquanto, normal</li>
+            </ul>
+            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>O que é 127.0.0.1?</strong> Endereço do seu próprio computador. O Live Server cria um servidor local — como se o seu PC fosse temporariamente um servidor web. Só você acessa.</div></div>
+            <h3>✅ Resumo do que você configurou</h3>
+            <table class="aula-tabela">
+              <thead><tr><th>O quê</th><th>Para quê</th></tr></thead>
+              <tbody>
+                <tr><td>VS Code</td><td>Editor onde você escreve o código</td></tr>
+                <tr><td>Live Server</td><td>Mostra o resultado no browser em tempo real</td></tr>
+                <tr><td>Pasta meu-site</td><td>Onde ficam todos os arquivos do projeto</td></tr>
+                <tr><td>index.html</td><td>Ponto de entrada — todo site começa aqui</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Por que o Live Server atualiza a página automaticamente quando você salva o arquivo?</div>
+            <div class="quiz-opcoes" id="quiz-1">
+              <button class="quiz-opcao" onclick="responder(1,'A','C')"><span class="quiz-letra">A</span> Porque o VS Code tem internet embutida</button>
+              <button class="quiz-opcao" onclick="responder(1,'B','C')"><span class="quiz-letra">B</span> Porque o index.html tem permissão especial</button>
+              <button class="quiz-opcao" onclick="responder(1,'C','C')"><span class="quiz-letra">C</span> Porque ele cria um servidor local que monitora mudanças e recarrega o browser automaticamente</button>
+              <button class="quiz-opcao" onclick="responder(1,'D','C')"><span class="quiz-letra">D</span> Porque o navegador verifica o arquivo a cada segundo</button>
+            </div>
+            <div class="quiz-feedback" id="fb-1"></div>
+          </div>
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~8 min</div>
+            <button class="btn-concluir" id="btn-1" onclick="concluir(1)" disabled>✓ Marcar como concluída</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AULA 2 — Primeira Página -->
+      <div class="aula-card" id="aula-2" data-aula="2">
+        <div class="aula-header" onclick="toggleAula(2)">
+          <div class="aula-num">2</div>
+          <div class="aula-info">
+            <div class="aula-titulo">✍️ Sua Primeira Página — Você Vai Digitar o Código</div>
+            <div class="aula-desc">Escreva seu primeiro HTML do zero, linha por linha, e veja no browser em tempo real</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-2">🔒 Bloqueada</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+            <h2>Escreva Seu Primeiro HTML</h2>
+            <p>Agora você vai <strong>digitar</strong> — não copiar — o código abaixo no arquivo <strong>index.html</strong>. Digitar é importante: seu cérebro aprende o padrão das tags na prática, não na teoria.</p>
+            <div class="destaque atencao"><div class="destaque-icon">⚠️</div><div class="destaque-txt"><strong>Regra desta aula:</strong> Não use o botão Copiar agora. Digite cada linha. Se errar, corrija. Errar faz parte do aprendizado.</div></div>
+            <h3>✍️ O que você vai digitar agora</h3>
+            <p>Com o <strong>index.html</strong> aberto e o Live Server rodando, delete tudo que tiver no arquivo e <strong>digite</strong>:</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Digite isso no VS Code</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;!DOCTYPE html&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="str">"pt-BR"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;head&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;title&gt;</span>Minha Primeira Página<span class="tg">&lt;/title&gt;</span>
+<span class="tg">&lt;/head&gt;</span>
+<span class="tg">&lt;body&gt;</span>
+
+  <span class="tg">&lt;h1&gt;</span>Olá, mundo!<span class="tg">&lt;/h1&gt;</span>
+  <span class="tg">&lt;p&gt;</span>Essa é minha primeira página HTML.<span class="tg">&lt;/p&gt;</span>
+
+<span class="tg">&lt;/body&gt;</span>
+<span class="tg">&lt;/html&gt;</span></pre></div>
+            </div>
+            <p>Depois de digitar, aperta <strong>Ctrl+S</strong>. O browser atualiza sozinho e mostra o resultado.</p>
+            <h3>🔍 Entendendo cada linha</h3>
+            <table class="aula-tabela">
+              <thead><tr><th>Linha</th><th>O que faz</th></tr></thead>
+              <tbody>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;!DOCTYPE html&gt;</code></td><td>Avisa o browser: isso é HTML moderno</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;html lang="pt-BR"&gt;</code></td><td>Começa o documento, idioma português</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;head&gt;</code></td><td>Configurações — não aparece na tela</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;meta charset="UTF-8"&gt;</code></td><td>Permite acentos, ç, ã e emojis</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;title&gt;</code></td><td>Nome que aparece na aba do browser</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;body&gt;</code></td><td>Tudo que aparece na tela fica aqui</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;</code></td><td>Título grande — heading nível 1</td></tr>
+                <tr><td><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;p&gt;</code></td><td>Parágrafo de texto</td></tr>
+              </tbody>
+            </table>
+            <div class="destaque dica"><div class="destaque-icon">🔦</div><div class="destaque-txt"><strong>Regra de ouro:</strong> toda tag que abre &lt;x&gt; precisa fechar &lt;/x&gt;. É como parênteses na matemática — o que abre tem que fechar.</div></div>
+            <h3>🎯 Exercício — Modifique o código</h3>
+            <p>Com o Live Server rodando, faça essas 4 mudanças e veja atualizar no browser após cada Ctrl+S:</p>
+            <ul>
+              <li>Troca o texto do &lt;h1&gt; para o seu nome</li>
+              <li>Muda o &lt;title&gt; para <strong>Nutri Amorim</strong> — veja a aba do browser mudar</li>
+              <li>Adiciona um segundo &lt;p&gt; com qualquer texto depois do primeiro</li>
+              <li>Adiciona um &lt;h2&gt; entre o h1 e o p — perceba que h2 é menor que h1</li>
+            </ul>
+            <div class="destaque info"><div class="destaque-icon">💡</div><div class="destaque-txt"><strong>Conectando com o Nutri Amorim:</strong> o arquivo central-estudos.html começa exatamente assim — com !DOCTYPE, html, head e body. A estrutura é idêntica. O que muda é só o conteúdo dentro.</div></div>
+          </div>
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Você quer que "Nutri Amorim" apareça na aba do navegador. Qual tag usa e onde?</div>
+            <div class="quiz-opcoes" id="quiz-2">
+              <button class="quiz-opcao" onclick="responder(2,'A','C')"><span class="quiz-letra">A</span> &lt;h1&gt;Nutri Amorim&lt;/h1&gt; no início do body</button>
+              <button class="quiz-opcao" onclick="responder(2,'B','C')"><span class="quiz-letra">B</span> &lt;header&gt;Nutri Amorim&lt;/header&gt; no body</button>
+              <button class="quiz-opcao" onclick="responder(2,'C','C')"><span class="quiz-letra">C</span> &lt;title&gt;Nutri Amorim&lt;/title&gt; dentro do &lt;head&gt;</button>
+              <button class="quiz-opcao" onclick="responder(2,'D','C')"><span class="quiz-letra">D</span> &lt;p&gt;Nutri Amorim&lt;/p&gt; no início do body</button>
+            </div>
+            <div class="quiz-feedback" id="fb-2"></div>
+          </div>
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~15 min (leitura + exercício)</div>
+            <button class="btn-concluir" id="btn-2" onclick="concluir(2)" disabled>✓ Marcar como concluída</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AULA 3 -->
+      <div class="aula-card" id="aula-3" data-aula="3">
+        <div class="aula-header" onclick="toggleAula(3)">
+          <div class="aula-num">3</div>
+          <div class="aula-info">
             <div class="aula-titulo">Os 3 Pilares — HTML, CSS e JavaScript</div>
             <div class="aula-desc">Entenda o que cada tecnologia faz e como elas trabalham juntas</div>
           </div>
-          <span class="aula-badge nova" id="badge-aula-1">Nova</span>
+          <span class="aula-badge nova" id="badge-aula-3">Nova</span>
           <span class="aula-chevron">›</span>
         </div>
         <div class="aula-body">
@@ -361,32 +509,32 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
           <div class="aula-quiz">
             <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
             <div class="quiz-pergunta">Qual tecnologia é responsável por fazer o flashcard VIRAR quando você clica nele?</div>
-            <div class="quiz-opcoes" id="quiz-1">
-              <button class="quiz-opcao" onclick="responder(1,'A','C')"><span class="quiz-letra">A</span> HTML — porque define a estrutura do card</button>
-              <button class="quiz-opcao" onclick="responder(1,'B','C')"><span class="quiz-letra">B</span> CSS — porque define a animação de rotação</button>
-              <button class="quiz-opcao" onclick="responder(1,'C','C')"><span class="quiz-letra">C</span> JavaScript — porque detecta o clique e aciona o giro</button>
-              <button class="quiz-opcao" onclick="responder(1,'D','C')"><span class="quiz-letra">D</span> Os três juntos — não é possível sem os três</button>
+            <div class="quiz-opcoes" id="quiz-3">
+              <button class="quiz-opcao" onclick="responder(3,'A','C')"><span class="quiz-letra">A</span> HTML — porque define a estrutura do card</button>
+              <button class="quiz-opcao" onclick="responder(3,'B','C')"><span class="quiz-letra">B</span> CSS — porque define a animação de rotação</button>
+              <button class="quiz-opcao" onclick="responder(3,'C','C')"><span class="quiz-letra">C</span> JavaScript — porque detecta o clique e aciona o giro</button>
+              <button class="quiz-opcao" onclick="responder(3,'D','C')"><span class="quiz-letra">D</span> Os três juntos — não é possível sem os três</button>
             </div>
-            <div class="quiz-feedback" id="fb-1"></div>
+            <div class="quiz-feedback" id="fb-3"></div>
           </div>
 
           <div class="aula-footer">
             <div class="aula-tempo">⏱️ ~10 min de leitura</div>
-            <button class="btn-concluir" id="btn-1" onclick="concluir(1)" disabled>✓ Marcar como concluída</button>
+            <button class="btn-concluir" id="btn-3" onclick="concluir(3)" disabled>✓ Marcar como concluída</button>
           </div>
 
         </div><!-- /aula-body -->
       </div><!-- /aula-card -->
 
-      <!-- AULA 2 -->
-      <div class="aula-card" id="aula-2" data-aula="2">
-        <div class="aula-header" onclick="toggleAula(2)">
-          <div class="aula-num">2</div>
+      <!-- AULA 4 -->
+      <div class="aula-card" id="aula-4" data-aula="4">
+        <div class="aula-header" onclick="toggleAula(4)">
+          <div class="aula-num">4</div>
           <div class="aula-info">
             <div class="aula-titulo">A Estrutura do Arquivo HTML</div>
             <div class="aula-desc">Por que o arquivo tem &lt;head&gt;, &lt;body&gt;, &lt;style&gt; e &lt;script&gt;?</div>
           </div>
-          <span class="aula-badge lock" id="badge-aula-2">🔒 Bloqueada</span>
+          <span class="aula-badge lock" id="badge-aula-4">🔒 Bloqueada</span>
           <span class="aula-chevron">›</span>
         </div>
         <div class="aula-body">
@@ -480,31 +628,31 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
           <div class="aula-quiz">
             <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
             <div class="quiz-pergunta">Por que o JavaScript do Nutri Amorim fica no final do &lt;body&gt; e não no &lt;head&gt;?</div>
-            <div class="quiz-opcoes" id="quiz-2">
-              <button class="quiz-opcao" onclick="responder(2,'A','B')"><span class="quiz-letra">A</span> É uma convenção estética sem impacto técnico</button>
-              <button class="quiz-opcao" onclick="responder(2,'B','B')"><span class="quiz-letra">B</span> Para garantir que o HTML exista antes do JS tentar usá-lo</button>
-              <button class="quiz-opcao" onclick="responder(2,'C','B')"><span class="quiz-letra">C</span> Porque o script no head carregaria mais lento</button>
-              <button class="quiz-opcao" onclick="responder(2,'D','B')"><span class="quiz-letra">D</span> Para que o CSS seja lido antes do JavaScript</button>
+            <div class="quiz-opcoes" id="quiz-4">
+              <button class="quiz-opcao" onclick="responder(4,'A','B')"><span class="quiz-letra">A</span> É uma convenção estética sem impacto técnico</button>
+              <button class="quiz-opcao" onclick="responder(4,'B','B')"><span class="quiz-letra">B</span> Para garantir que o HTML exista antes do JS tentar usá-lo</button>
+              <button class="quiz-opcao" onclick="responder(4,'C','B')"><span class="quiz-letra">C</span> Porque o script no head carregaria mais lento</button>
+              <button class="quiz-opcao" onclick="responder(4,'D','B')"><span class="quiz-letra">D</span> Para que o CSS seja lido antes do JavaScript</button>
             </div>
-            <div class="quiz-feedback" id="fb-2"></div>
+            <div class="quiz-feedback" id="fb-4"></div>
           </div>
 
           <div class="aula-footer">
             <div class="aula-tempo">⏱️ ~12 min de leitura</div>
-            <button class="btn-concluir" id="btn-2" onclick="concluir(2)" disabled>✓ Marcar como concluída</button>
+            <button class="btn-concluir" id="btn-4" onclick="concluir(4)" disabled>✓ Marcar como concluída</button>
           </div>
         </div>
       </div>
 
-      <!-- AULA 3 -->
-      <div class="aula-card" id="aula-3" data-aula="3">
-        <div class="aula-header" onclick="toggleAula(3)">
-          <div class="aula-num">3</div>
+      <!-- AULA 5 -->
+      <div class="aula-card" id="aula-5" data-aula="5">
+        <div class="aula-header" onclick="toggleAula(5)">
+          <div class="aula-num">5</div>
           <div class="aula-info">
             <div class="aula-titulo">Os Bugs que Encontramos e Como Corrigimos</div>
             <div class="aula-desc">event.currentTarget, Unexpected token — o que causou e como pensar em erros</div>
           </div>
-          <span class="aula-badge lock" id="badge-aula-3">🔒 Bloqueada</span>
+          <span class="aula-badge lock" id="badge-aula-5">🔒 Bloqueada</span>
           <span class="aula-chevron">›</span>
         </div>
         <div class="aula-body">
@@ -588,18 +736,18 @@ node --check arquivo.js
           <div class="aula-quiz">
             <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
             <div class="quiz-pergunta">Qual foi a raiz do Bug 1 (abas não ficando ativas)?</div>
-            <div class="quiz-opcoes" id="quiz-3">
-              <button class="quiz-opcao" onclick="responder(3,'A','B')"><span class="quiz-letra">A</span> O CSS da classe .active estava errado</button>
-              <button class="quiz-opcao" onclick="responder(3,'B','B')"><span class="quiz-letra">B</span> Dependência de variável global (event.currentTarget) que parou de funcionar nos browsers modernos</button>
-              <button class="quiz-opcao" onclick="responder(3,'C','B')"><span class="quiz-letra">C</span> A função showPanel não estava sendo chamada</button>
-              <button class="quiz-opcao" onclick="responder(3,'D','B')"><span class="quiz-letra">D</span> O HTML não tinha o atributo onclick nos botões</button>
+            <div class="quiz-opcoes" id="quiz-5">
+              <button class="quiz-opcao" onclick="responder(5,'A','B')"><span class="quiz-letra">A</span> O CSS da classe .active estava errado</button>
+              <button class="quiz-opcao" onclick="responder(5,'B','B')"><span class="quiz-letra">B</span> Dependência de variável global (event.currentTarget) que parou de funcionar nos browsers modernos</button>
+              <button class="quiz-opcao" onclick="responder(5,'C','B')"><span class="quiz-letra">C</span> A função showPanel não estava sendo chamada</button>
+              <button class="quiz-opcao" onclick="responder(5,'D','B')"><span class="quiz-letra">D</span> O HTML não tinha o atributo onclick nos botões</button>
             </div>
-            <div class="quiz-feedback" id="fb-3"></div>
+            <div class="quiz-feedback" id="fb-5"></div>
           </div>
 
           <div class="aula-footer">
             <div class="aula-tempo">⏱️ ~10 min de leitura</div>
-            <button class="btn-concluir" id="btn-3" onclick="concluir(3)" disabled>✓ Marcar como concluída</button>
+            <button class="btn-concluir" id="btn-5" onclick="concluir(5)" disabled>✓ Marcar como concluída</button>
           </div>
         </div>
       </div>
@@ -612,45 +760,45 @@ node --check arquivo.js
     <div class="modulo-header">
       <div class="modulo-icon">⚙️</div>
       <div class="modulo-titulo">Módulo 2 — Funcionalidades</div>
-      <div class="modulo-count" id="count-mod2">0 / 3 aulas</div>
+      <div class="modulo-count" id="count-mod2">0 / 5 aulas</div>
     </div>
     <div class="aulas-grid">
 
-      <!-- AULA 4 -->
-      <div class="aula-card bloqueada" id="aula-4" data-aula="4">
-        <div class="aula-header" onclick="toggleAula(4)">
+      <!-- AULA 6 -->
+      <div class="aula-card bloqueada" id="aula-6" data-aula="6">
+        <div class="aula-header" onclick="toggleAula(6)">
           <div class="aula-num">4</div>
           <div class="aula-info">
             <div class="aula-titulo">Como os Flashcards Funcionam por Dentro</div>
             <div class="aula-desc">Arrays, objetos, funções e o flip 3D com CSS — em breve</div>
           </div>
-          <span class="aula-badge lock" id="badge-aula-4">🔒 Em breve</span>
+          <span class="aula-badge lock" id="badge-aula-6">🔒 Em breve</span>
           <span class="aula-chevron">›</span>
         </div>
       </div>
 
-      <!-- AULA 5 -->
-      <div class="aula-card bloqueada" id="aula-5" data-aula="5">
-        <div class="aula-header" onclick="toggleAula(5)">
+      <!-- AULA 7 -->
+      <div class="aula-card bloqueada" id="aula-7" data-aula="7">
+        <div class="aula-header" onclick="toggleAula(7)">
           <div class="aula-num">5</div>
           <div class="aula-info">
             <div class="aula-titulo">localStorage — Como o Site Lembra de Você</div>
             <div class="aula-desc">Como o progresso e as dicas de memorização são salvos — em breve</div>
           </div>
-          <span class="aula-badge lock" id="badge-aula-5">🔒 Em breve</span>
+          <span class="aula-badge lock" id="badge-aula-7">🔒 Em breve</span>
           <span class="aula-chevron">›</span>
         </div>
       </div>
 
-      <!-- AULA 6 -->
-      <div class="aula-card bloqueada" id="aula-6" data-aula="6">
-        <div class="aula-header" onclick="toggleAula(6)">
+      <!-- AULA 8 -->
+      <div class="aula-card bloqueada" id="aula-8" data-aula="8">
+        <div class="aula-header" onclick="toggleAula(8)">
           <div class="aula-num">6</div>
           <div class="aula-info">
             <div class="aula-titulo">Responsividade — Como o Site se Adapta ao Celular</div>
             <div class="aula-desc">Media queries, breakpoints e por que usamos @media — em breve</div>
           </div>
-          <span class="aula-badge lock" id="badge-aula-6">🔒 Em breve</span>
+          <span class="aula-badge lock" id="badge-aula-8">🔒 Em breve</span>
           <span class="aula-chevron">›</span>
         </div>
       </div>
@@ -668,8 +816,8 @@ node --check arquivo.js
 
 <script>
 // ── ESTADO ──────────────────────────────────────────────────
-const TOTAL_AULAS = 6;
-const AULAS_DESBLOQUEADAS = [1, 2, 3]; // módulo 2 ainda em breve
+const TOTAL_AULAS = 8;
+const AULAS_DESBLOQUEADAS = [1, 2, 3, 4, 5]; // módulo 2 ainda em breve
 let progresso = JSON.parse(localStorage.getItem('prog_programacao') || '{}');
 // progresso = { concluidas: [1, 2], quizFeitos: {1: true} }
 if (!progresso.concluidas) progresso.concluidas = [];
@@ -785,9 +933,9 @@ function atualizarEstadoGeral() {
   else if (proxima) proxEl.textContent = 'Próxima: Aula ' + proxima + ' 👇';
 
   // Contagem por módulo
-  const mod1 = progresso.concluidas.filter(n => [1,2,3].includes(n)).length;
-  const mod2 = progresso.concluidas.filter(n => [4,5,6].includes(n)).length;
-  document.getElementById('count-mod1').textContent = mod1 + ' / 3 aulas';
+  const mod1 = progresso.concluidas.filter(n => [1,2,3,4,5].includes(n)).length;
+  const mod2 = progresso.concluidas.filter(n => [6,7,8].includes(n)).length;
+  document.getElementById('count-mod1').textContent = mod1 + ' / 5 aulas';
   document.getElementById('count-mod2').textContent = mod2 + ' / 3 aulas';
 }
 
