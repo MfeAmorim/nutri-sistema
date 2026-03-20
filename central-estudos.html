@@ -446,6 +446,25 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
   .prog-resumo { grid-template-columns: 1fr 1fr; }
   .r-stat { min-width: 60px; padding: 10px 10px; }
 }
+
+/* ── DICA DE MEMORIZAÇÃO ── */
+.dica-mem {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: linear-gradient(135deg, #fffbeb, #fef9c3);
+  border: 1.5px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 12px;
+  padding: 13px 16px;
+  margin-top: 12px;
+  animation: fadeIn 0.3s ease;
+}
+.dica-mem-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.dica-mem-body { flex: 1; }
+.dica-mem-label {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #92400e; margin-bottom: 5px;
+}
+.dica-mem-texto { font-size: 13px; color: #78350f; line-height: 1.65; font-weight: 500; }
 </style>
 </head>
 <body>
@@ -708,6 +727,170 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
 
 <script>
 // ═══════════════════════════════════════════════
+// DICAS DE MEMORIZAÇÃO
+// ═══════════════════════════════════════════════
+const FC_DICAS = [
+  "💡 Nutrigenômica: o NUTRIente vai ao GENE. 'nutriente → gene', como uma seta apontando para dentro do DNA.",
+  "💡 Nutrigenética: o GENE responde ao nutriente. Inverso da nutrigenômica. Genética = individual, como sua impressão digital.",
+  "💡 EPI = 'em cima de' (grego). Epigenética fica 'em cima' do DNA sem mudá-lo — como um post-it que diz o que ler.",
+  "💡 CAta = quebra e libera (CAtacismo destrói). ANAbola = constrói e gasta (ANAbolizante = construir músculo).",
+  "💡 Mitocôndria = usina de energia. Pense numa usina elétrica dentro da célula. Sem ela = sem ATP.",
+  "💡 'GLI-KRE-CA': Glicólise → Krebs → Cadeia. Ou: 'Gato Kospe Correndo' — cada letra inicial.",
+  "💡 Vitamina C é o 'ascensor' do ferro: sobe o Fe3+ para Fe2+ (forma absorvível). C de Converter.",
+  "💡 Ativo = atleta (gasta ATP). Passivo = preguiçoso (desce a ladeira a favor do gradiente, sem energia).",
+  "💡 Osmose: água vai para onde tem mais soluto — quer 'diluir a bagunça'. Hipotônico → hipertônico.",
+  "💡 SGLT1 na entrada (cotransporte Na+) → GLUT2 na saída. Entrou pela porta de serviço (ativo), saiu pela principal (passivo).",
+  "💡 Barker = 'bebê programado'. Desnutrição na barriga → feto aprende a guardar tudo → adulto obeso.",
+  "💡 Ácido fólico fecha o tubo neural como zíper. Se faltar folato, o zíper não fecha (espinha bífida).",
+  "💡 PKU: sem PAH → fenilalanina 'entope' o cérebro. Fenil = veneno sem a enzima. Retirar da dieta.",
+  "💡 Teste do Pezinho = furar o calcanhar do bebê para salvar o futuro. Triagem neonatal obrigatória.",
+  "💡 B1B2B3B5 = engrenagens do Krebs. Sem elas, a usina para. B de Bateria — sem B, sem energia.",
+  "💡 Barreto: empreender = criar do nada. Mágico tirando coelho da cartola — gera valor com quase nada.",
+  "💡 Empreendedor INOVA (cria algo novo). Empresário ADMINISTRA (cuida do que existe). E de Estrear vs Administrar.",
+  "💡 Social = impacto na SOCIedade. Empreendedorismo social resolve problema coletivo, não só lucra.",
+  "💡 INTRAempreendedor = empreendedor POR DENTRO da empresa. Empreendedor disfarçado de funcionário.",
+  "💡 PODC: Planejar → Organizar → Dirigir → Controlar. 'Por Onde Deve Caminhar' o administrador.",
+  "💡 Risco = identificar no PLANEJAMENTO. Antes de investir 1 real, mapeie os perigos. Planejar = prever o pior.",
+  "💡 Design Thinking: 'E-D-I-P-T' → Empatia → Definição → Ideação → Prototipagem → Teste. 'Edipo Testou'.",
+  "💡 Divergente = se espalha como raios de sol para todos os lados. Divergir = criar múltiplas soluções.",
+  "💡 MEI = formalizar sem burocracia. Criado em 2008, fatura até R$81mil/ano. MEI rima com REI do negócio.",
+  "💡 Simples Nacional = simplificar impostos para micro e pequenas empresas. SIMPLES de lembrar!",
+  "💡 Mindset de crescimento: desafio = aprendizado. Mentalidade elástica — estica sem quebrar.",
+  "💡 Branding = marca viva. Logo (tangível) + valor percebido (intangível). Nike: símbolo vale bilhões.",
+  "💡 Proposta de valor = coração do Canvas. 'Por que me escolher?' Sem isso o resto não funciona.",
+  "💡 MVP = versão mais simples que testa a ideia. Protótipo em papelão antes de construir a casa.",
+  "💡 Oportunidade = planejou. Necessidade = precisou. 'O planeja, N reage' — Oportunidade escolhe, Necessidade sobrevive.",
+  "💡 4 processos TGI: 'MSDA' → Motilidade, Secreção, Digestão, Absorção. 'Meu Sistema Digere Alimento'.",
+  "💡 Peristaltismo = propulsão (P de Progredir). Segmentação = mistura (S de Sacudir). P avança, S agita.",
+  "💡 SGLT1 entra com Na+ (ativo), GLUT2 sai (passivo). Frutose usa GLUT5 — Frutose e Cinco (5).",
+  "💡 Sem lactase → lactose vai ao cólon → bactérias fermentam → gases e diarreia. Lactase = chave do leite.",
+  "💡 Insulina = pós-refeição, baixa glicose (I de Ingeriu). Glucagon = jejum, sobe glicose (G de Guardar).",
+  "💡 Rim filtra 180L/dia, excreta 1-2L. 99% reabsorvido — filtro ultra-eficiente do metabolismo proteico!",
+  "💡 Metabolismo basal = custo de ficar ligado. Mais músculo = mais gasto. Motor maior = mais combustível parado.",
+  "💡 Bile = detergente dos lipídios. Emulsifica a gordura como sabão na louça — separa para as enzimas agirem.",
+  "💡 GIP, GLP-1, CCK = hormônios do intestino feliz. Avisam o cérebro que comeu, controlam saciedade.",
+  "💡 Química = enzimas quebram (invisível). Mecânica = dentes e peristaltismo trituram (visível). Quí-MICA = microniza.",
+  "💡 Ciência, tecnologia, técnica: C gera conhecimento. T aplica. Tc executa. Escada crescente C→T→Tc.",
+  "💡 Ciência = testável, replicável, falsificável. Senso comum = experiência pessoal. Ciência é 'provado por outros'.",
+  "💡 Neuroplasticidade = cérebro de plasticina — molda com prática e estímulo. Nunca é tarde para aprender.",
+  "💡 Qualitativa = qualidade das palavras (entrevistas). Quantitativa = quantidade de números (estatística).",
+  "💡 Disrupção dis-ROMPE. Netflix → DVD. Uber → Táxi. Inovação que substitui o que existia.",
+  "💡 4 Revoluções: '1234: Vapor Eletro Compu Fusão'. 1=vapor, 2=eletricidade, 3=computador, 4=físico+digital+biológico.",
+  "💡 Propriedade intelectual: 'PMD' = Patente (invenção) + Marca (identidade) + Direito autoral (obra cultural).",
+  "💡 Método científico 'PHEAC': Problema → Hipótese → Experimento → Análise → Conclusão.",
+  "💡 Piaget: assimila (encaixa no esquema) ou acomoda (reestrutura). Conhecimento CONSTRUÍDO, não recebido.",
+  "💡 Alta performance = foco + recuperação + rotina. Trabalhar melhor com cérebro descansado, não mais horas.",
+  "💡 Projeto de vida = GPS pessoal: destino (visão) + rota (metas) + combustível (valores). Sem GPS, círculos.",
+  "💡 SMART: 'Sua Meta Atinge Resultados Hoje' = Específica, Mensurável, Atingível, Relevante, Temporal.",
+  "💡 Crenças limitantes = vírus mental. 'Não consigo' contamina o desempenho. Identificar = instalar antivírus.",
+  "💡 Roda da Vida = 8 áreas. Pneu murcho = carro torto. Equilíbrio em todas as áreas para rodar bem.",
+  "💡 Autorresponsabilidade = dono da própria história. Protagonista age, vítima espera. Foca no que pode mudar.",
+  "💡 Sucesso = metas externas. Prosperidade = bem-estar integral (financeiro + relacional + emocional).",
+  "💡 Personal Branding = gerir sua marca pessoal. 'O que dizem de você quando sai da sala?'",
+  "💡 Estado atual → estado desejado: GAP entre onde está e onde quer chegar. O projeto preenche esse gap.",
+  "💡 Competências do futuro 'CIPA': Criatividade, Inteligência emocional, Pensamento crítico, Adaptabilidade.",
+  "💡 Legado = impacto que fica depois de você. 'Plantar árvore cuja sombra não verá'.",
+  "💡 UIE = Universalidade, Integralidade, Equidade. 'Você Integra Equipe' — SUS para TODOS, INTEIRO, de forma JUSTA.",
+  "💡 Organizacionais: 'RHD' = Regionalização + Hierarquização + Descentralização.",
+  "💡 8ª CNS 1986 = base do SUS. '8 gerou o SUS em 88'. Constituição 1988 recebeu o SUS da 8ª CNS.",
+  "💡 OMS 1948: saúde = bem-estar físico + mental + social. Três dimensões. Não é só ausência de doença.",
+  "💡 Determinantes sociais = tudo além do biológico: moradia, renda, educação, saneamento. Camadas de influência.",
+  "💡 PNH = humanizar o SUS. 'AVRA' = Acolhimento + Vínculo + Responsabilização + Autonomia.",
+  "💡 Epidemiológica = doenças e morbimortalidade. Sanitária = produtos e serviços (alimentos, medicamentos).",
+  "💡 Equidade ≠ igualdade. Igualdade = mesma coisa. Equidade = mais para quem precisa mais. Ex: tamanhos de calçado.",
+  "💡 Controle social = população decidindo junto no SUS. Conselhos e Conferências de Saúde. Cidadão como gestor.",
+  "💡 Pirâmide SUS: Primária (UBS — base larga) → Secundária (ambulatórios) → Terciária (hospitais — topo).",
+  "💡 Prevalência = FOTO (todos os casos). Incidência = FILME (só os novos). Foto vs Filme.",
+  "💡 Prevalência: casos existentes / população × 10n. 'Quantos estão doentes AGORA por grupo?'",
+  "💡 Incidência: casos NOVOS / população em risco × 10n. 'Quantos ADOECERAM no período?'",
+  "💡 OR = retrospectivo (caso-controle). 'Olhou para o passado'. RR = prospectivo (coorte). 'Risco futuro'.",
+  "💡 RR = estudos prospectivos, mede risco real. OR = retrospectivos, estima. R de futuro, O de passado.",
+  "💡 OR/RR >1 = fator de risco. =1 = sem associação. <1 = fator protetor. Semáforo: vermelho, amarelo, verde.",
+  "💡 Pirâmide de evidências: Revisão Sistemática no topo, Relato de Caso na base. Mais alto = mais confiável.",
+  "💡 Transversal = foto da população num momento. Rápido e barato, mas não prova causa. Corte no tempo.",
+  "💡 Coorte = acompanha grupo ao longo do tempo (prospectivo). Como seguir uma turma por 10 anos.",
+  "💡 Caso-Controle = parte dos doentes, compara com saudáveis olhando para o passado. Retrospectivo.",
+  "💡 Mortalidade infantil = (obitos < 1 ano / nascidos vivos) x 1.000. SEMPRE x1.000. 'Mil bebês, quantos morreram?'",
+  "💡 Letalidade = dos doentes, quantos morreram (gravidade). Mortalidade = da população total.",
+  "💡 Tríade ecológica = triângulo Hospedeiro + Agente + Meio Ambiente. Desequilíbrio = doença.",
+  "💡 '1-2-3: Previne, Detecta, Reabilita'. Primária = antes. Secundária = rastreamento. Terciária = reabilitação.",
+  "💡 SINAN = diário das doenças notificáveis do Brasil. Sistema de Informação de Agravos de Notificação.",
+];
+
+const Q_DICAS = [
+  "💡 DNA = código da vida. Mutações mudam enzimas e transportadores nutricionais. Genética personaliza nutrição.",
+  "💡 Ativo = atleta (gasta ATP contra a maré). Passivo = água descendo ladeira (a favor do gradiente, sem gasto).",
+  "💡 'GLI-KRE-CA': Glicólise → Krebs → Cadeia. Como 3 fases de uma corrida de revezamento na célula.",
+  "💡 Folato fecha o zíper do tubo neural. Falta folato → zíper aberto = espinha bífida ou anencefalia.",
+  "💡 PKU = sem PAH → fenilalanina vira veneno. FenilCETOnúria = cetona na urina. Solução: retirar da dieta.",
+  "💡 Barreto: criar do nada. Mágico com cartola vazia — gera valor com recursos mínimos.",
+  "💡 Criatividade não é dom, é treino. Como músculo: exercite diariamente e cresce em qualquer pessoa.",
+  "💡 MEI = sair da informalidade sem burocracia. 2008, R$81mil/ano. MEI rima com REI do pequeno negócio.",
+  "💡 Mindset de crescimento: desafio = aprendizado. Elástico — estica e não quebra diante dos obstáculos.",
+  "💡 Proposta de valor = coração do Canvas. 'Por que me escolher?' Sem essa resposta, o negócio não se sustenta.",
+  "💡 Segmentação = agitador (mistura sem mover). Peristaltismo = propulsor (move sem misturar). S de Sacudir, P de Progredir.",
+  "💡 SGLT1 (ativo, Na+) entra → GLUT2 (passivo) sai. Frutose = GLUT5. 'Frutose e Cinco'.",
+  "💡 Insulina = pos-refeicao, baixa glicose. Glucagon = jejum, sobe glicose. Yin e Yang do pâncreas.",
+  "💡 Sem lactase → lactose fermenta no cólon → gases e diarreia osmótica. Lactase = chave da digestão do leite.",
+  "💡 Metabolismo basal = custo de estar vivo. Músculo sobe o gasto. Motor maior = mais combustível parado.",
+  "💡 Ciência = método rigoroso + replicável. Senso comum = experiência pessoal. Ciência é 'provado por pares'.",
+  "💡 Piaget: assimila (encaixa no esquema) ou acomoda (reorganiza). Conhecimento CONSTRUÍDO, não recebido.",
+  "💡 Disrupção dis-ROMPE. Netflix rompeu o DVD. Uber rompeu o táxi. Inovação que substitui o estabelecido.",
+  "💡 4a Rev: fusão físico+digital+biológico. '1234: Vapor Eletro Compu Fusão'.",
+  "💡 Quali = palavras e contexto. Quanti = números e estatística. Qual é qualidade, Quant é quantidade.",
+  "💡 Projeto de vida = GPS: destino (visão) + rota (metas) + combustível (valores). Sem GPS, anda em círculos.",
+  "💡 SMART: 'Sua Meta Atinge Resultados Hoje' = Específica, Mensurável, Atingível, Relevante, Temporal.",
+  "💡 Crenças limitantes = vírus mental. 'Não consigo' contamina o desempenho. Identificar = instalar antivírus.",
+  "💡 Roda da Vida = 8 áreas. Pneu murcho = carro torto. Equilíbrio em todas as áreas para rodar bem.",
+  "💡 Autorresponsabilidade = protagonista, não vítima. Foca no que pode mudar, aprende com o erro e age.",
+  "💡 UIE: Universalidade (todos), Integralidade (tudo), Equidade (mais a quem precisa). 'Você Integra Equipe'.",
+  "💡 8a CNS 1986 → SUS na Constituição 1988. '8 gerou o SUS em 88'. Dois anos de diferença histórica.",
+  "💡 OMS 1948: saúde = bem-estar físico + mental + social. Três dimensões. Não é só ausência de doença.",
+  "💡 Dahlgren: camadas concêntricas. Centro = genética (imutável). Fora = macroeconomia (mutável por política).",
+  "💡 PNH: 'AVRA' = Acolhimento + Vínculo + Responsabilização + Autonomia. O SUS que humaniza.",
+  "💡 Prevalência = FOTO (todos os casos agora). Incidência = FILME (só os novos ao longo do tempo).",
+  "💡 OR = retrospectivo (caso-controle). 'Olhou para o passado'. RR = prospectivo (coorte). 'Risco futuro'.",
+  "💡 Pirâmide de evidências: topo = Revisão Sistemática, base = Relato de caso. Mais alto = mais confiável.",
+  "💡 Mortalidade infantil = (obitos <1 ano / nascidos vivos) x 1.000. Sempre x1.000 — nunca muda o multiplicador.",
+  "💡 Prevenção primária = antes da doença. 'Pri' de PRImeiro, antes de tudo acontecer. Ex: vacinação.",
+  "💡 SGLT1 (ativo, Na+) na membrana apical → GLUT2 (passivo) na basolateral. Entrada paga pedágio, saída é livre.",
+  "💡 B1B2B3B5 = engrenagens do Krebs. Sem elas, a usina para. B de Bateria energética.",
+  "💡 Barker: desnutrição intrauterina programa metabolismo econômico → adulto obeso. Berço programa o futuro.",
+  "💡 Nutrigenômica: nutriente → gene. Nutrigenética: gene → nutriente. Inversos complementares.",
+  "💡 Doença celíaca = glúten destrói vilosidades intestinais → sem absorção. Solução única: excluir glúten.",
+  "💡 Oportunidade = planejou e percebeu o nicho. Necessidade = precisou e não tinha opção. 'O escolhe, N reage'.",
+  "💡 Prototipagem = versão testável e barata. Papelão antes do concreto. Testar antes de investir tudo.",
+  "💡 Empreendedorismo social = negócio com impacto positivo. Lucro + propósito social. Não é só ONG.",
+  "💡 Risco no Planejamento = identificar ANTES de investir. Planejar = antecipar o pior cenário.",
+  "💡 Modo Beta = sempre testando, ajustando, melhorando. Nunca pronto — sempre em versão de melhoria contínua.",
+  "💡 Segmentação mistura (S de Sacudir). Peristaltismo propulsiona (P de Progredir). Distinção clássica do TGI.",
+  "💡 Amilase salivar digere amido. No estômago, pH ácido a inativa. Cada enzima tem seu pH ideal.",
+  "💡 Insulina = célula beta (b de baixar glicose). Glucagon = célula alfa (a de aumentar glicose).",
+  "💡 Rim filtra 180L/dia, excreta 1-2L. 99% reabsorvido! Filtro ultra-eficiente do metabolismo proteico.",
+  "💡 Metabolismo basal: músculo alto = gasto alto. Tireoide alta = gasto alto. Motor maior = mais combustível.",
+  "💡 Ciência = método + evidência + replicabilidade. Sem método rigoroso, é opinião, não ciência.",
+  "💡 Netflix dis-ROMPEU o DVD. Disrupção = inovação que elimina o estabelecido, não apenas o melhora.",
+  "💡 4a Rev = fusão dos mundos físico, digital e biológico. IA + IoT + biotecnologia. Inédito nas outras 3.",
+  "💡 Neuroplasticidade = cérebro se reconfigura com prática. Aprender muda literalmente a estrutura neural.",
+  "💡 Quali = entender o 'porquê' (contexto). Quanti = medir o 'quanto' (estatística). Complementares.",
+  "💡 Meta SMART: 'Quero me sair bem' nao é SMART. 'Nota maior ou igual a 8 em todas as provas' = SMART.",
+  "💡 Roda da Vida: 8 áreas em equilíbrio. Pneu furado = carro torto. Identifica onde focar energia primeiro.",
+  "💡 Competências futuro 'CIPA': Criatividade, IE, Pensamento crítico, Adaptabilidade. Insubstituíveis por IA.",
+  "💡 Personal branding: você é uma marca. 'O que dizem de você quando sai da sala?' Gerir isso é estratégico.",
+  "💡 Autorresponsabilidade = protagonismo. Foca no que controla, age, aprende. Oposto da vitimização.",
+  "💡 UIE: Universalidade (todos), Integralidade (tudo), Equidade (mais a quem precisa). Tríade doutrinária.",
+  "💡 OMS 1948: bem-estar físico + mental + social. 3 dimensões. Presença de bem-estar, não só ausência de doença.",
+  "💡 Dahlgren: camadas do indivíduo (genética) até a sociedade (macroeconomia). Mais externo = mais modificável.",
+  "💡 8a CNS → Reforma Sanitária → SUS na Constituição 1988. '8 gerou o SUS em 88'. Cadeia histórica essencial.",
+  "💡 PNH: Acolhimento + Vínculo + Responsabilização + Autonomia. Humaniza sem perder a técnica clínica.",
+  "💡 Prevalência = FOTO (casos existentes). Incidência = FILME (casos novos). Prevalência = Incidência x Duração.",
+  "💡 RR mede risco real (prospectivo, causalidade). OR estima risco (retrospectivo, apenas associação).",
+  "💡 Randomização elimina vieses — distribui o acaso igualmente. Único estudo que prova causalidade com certeza.",
+  "💡 Tríade ecológica: Hospedeiro + Agente + Meio Ambiente. Triângulo do equilíbrio. Desequilíbrio = doença.",
+  "💡 Mediana ignora outliers — robusta. Média é puxada por valores extremos. Dados assimétricos = mediana.",
+];
+
+// ═══════════════════════════════════════════════
 // DADOS DAS MATÉRIAS
 // ═══════════════════════════════════════════════
 const MATERIAS = {
@@ -935,11 +1118,59 @@ function fcClassificar(tipo) {
   const c = fcDeck[fcIdx];
   fcClassifs[c.id] = tipo;
   if (tipo === 'acertei') fcStats.acertei++;
-  else if (tipo === 'revisar') fcStats.revisar++;
-  else fcStats.errei++;
+  else if (tipo === 'revisar') {
+    fcStats.revisar++;
+    fcMostrarDica(c.id);
+    return;
+  } else {
+    fcStats.errei++;
+    fcMostrarDica(c.id);
+    return;
+  }
   fcIdx++;
   fcFlipped = false;
   fcMostrarCard();
+}
+
+function fcMostrarDica(cardId) {
+  // Extrai o índice global do card para pegar a dica certa
+  const partes = cardId.split('_');
+  const mat = partes[0];
+  const localIdx = parseInt(partes[1]);
+  // Calcula offset global
+  const mats = Object.keys(MATERIAS);
+  let offset = 0;
+  for (const m of mats) {
+    if (m === mat) break;
+    offset += MATERIAS[m].flashcards.length;
+  }
+  const globalIdx = offset + localIdx;
+  const dica = FC_DICAS[globalIdx] || null;
+
+  // Remove dica anterior se existir
+  const velha = document.getElementById('fc-dica-box');
+  if (velha) velha.remove();
+
+  if (dica) {
+    const box = document.createElement('div');
+    box.id = 'fc-dica-box';
+    box.className = 'dica-mem';
+    box.innerHTML = '<div class="dica-mem-icon">🧠</div><div class="dica-mem-body"><div class="dica-mem-label">Como memorizar</div><div class="dica-mem-texto">' + dica.replace('💡 ', '') + '</div></div>';
+    // Insere após os botões de ação
+    const actions = document.getElementById('fc-actions');
+    if (actions && actions.parentNode) {
+      actions.parentNode.insertBefore(box, actions.nextSibling);
+    }
+  }
+
+  // Avança após breve pausa para o usuário ler
+  setTimeout(() => {
+    const d = document.getElementById('fc-dica-box');
+    if (d) d.remove();
+    fcIdx++;
+    fcFlipped = false;
+    fcMostrarCard();
+  }, 4000);
 }
 
 function fcAtualizarUI() {
@@ -1126,6 +1357,17 @@ const MS_QUESTOES = {
   ]
 };
 
+function msDicaIdx(mat, localIdx) {
+  // Maps MS_QUESTOES mat key + local index to Q_DICAS global index
+  const order = ['genetica','mentalidade','fisiologia','producao','projeto','saude','bioestatistica'];
+  let offset = 0;
+  for (const m of order) {
+    if (m === mat) return offset + localIdx;
+    if (MS_QUESTOES[m]) offset += MS_QUESTOES[m].length;
+  }
+  return -1;
+}
+
 function msCarregar() {
   const mat = document.getElementById('ms-materia-select').value;
   const container = document.getElementById('ms-container');
@@ -1151,6 +1393,7 @@ function msCarregar() {
         </div>
       `).join('')}
       <div class="ms-gabarito">💬 <strong>Gabarito:</strong> ${q.gabarito}</div>
+      ${(()=>{ const di = msDicaIdx(mat, i); const dt = Q_DICAS[di]; return dt ? `<div class="dica-mem" style="margin-top:10px"><div class="dica-mem-icon">🧠</div><div class="dica-mem-body"><div class="dica-mem-label">Como memorizar</div><div class="dica-mem-texto">${dt.replace('💡 ','')}</div></div></div>` : ''; })()}
     </div>
   `).join('');
 }
@@ -1294,6 +1537,23 @@ function simRenderQuestao(idx) {
   document.getElementById('sim-prog-bar').style.width = pct + '%';
 }
 
+function simDicaIdx(q) {
+  // Maps a SIM question to its Q_DICAS index
+  // SIM order: genetica(5) mentalidade(5) fisiologia(5) producao(5) projeto(5) saude(5) bioestatistica(5)
+  // Q_DICAS order: ms_gen(5) ms_ment(5) ms_fis(5) ms_prod(5) ms_proj(5) ms_sau(5) ms_bio(5)
+  //               sim_gen(5) sim_ment(5) sim_fis(5) sim_prod(5) sim_proj(5) sim_sau(5) sim_bio(5)
+  const simOrder = ['genetica','mentalidade','fisiologia','producao','projeto','saude','bioestatistica'];
+  const msTotal = 35; // 7 mats x 5 questions each
+  for (let i = 0; i < simOrder.length; i++) {
+    const mat = simOrder[i];
+    if (SIM_QUESTOES[mat]) {
+      const localIdx = SIM_QUESTOES[mat].indexOf(q);
+      if (localIdx !== -1) return msTotal + (i * 5) + localIdx;
+    }
+  }
+  return -1;
+}
+
 function simResponder(idx, opcaoIdx) {
   if (simRespondidas.includes(idx)) return;
   simRespondidas.push(idx);
@@ -1317,6 +1577,16 @@ function simResponder(idx, opcaoIdx) {
     card.classList.add('errou');
     gab.className = 'q-gabarito show-errou';
     gab.innerHTML = '❌ Incorreto. Resposta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+    // Dica de memorização para erros
+    const dicaGlobal = simDicaIdx(simDeck[idx]);
+    const dicaTxt = Q_DICAS[dicaGlobal];
+    if (dicaTxt) {
+      const dicaBox = document.createElement('div');
+      dicaBox.className = 'dica-mem';
+      dicaBox.style.marginTop = '10px';
+      dicaBox.innerHTML = '<div class="dica-mem-icon">🧠</div><div class="dica-mem-body"><div class="dica-mem-label">Como memorizar</div><div class="dica-mem-texto">' + dicaTxt.replace('💡 ', '') + '</div></div>';
+      gab.parentNode.appendChild(dicaBox);
+    }
   }
   document.getElementById('sim-acertos-live').textContent = simAcertos;
   document.getElementById('sim-btn-prox').disabled = false;

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programação na Prática — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --roxo: #7c3aed;
+  --code-bg: #0f1923; --code-border: #1e3040;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; margin-left: auto; }
+
+/* ── LAYOUT ── */
+.page-wrap { max-width: 960px; margin: 0 auto; padding: 32px; }
+
+/* ── HERO ── */
+.hero { background: var(--escuro); border-radius: 20px; padding: 36px 44px; margin-bottom: 32px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; background:radial-gradient(circle,rgba(116,198,157,0.12) 0%,transparent 70%); }
+.hero::after { content:'</>'; position:absolute; right: 40px; bottom: -10px; font-family:'Fira Code',monospace; font-size: 80px; color: rgba(116,198,157,0.06); font-weight:500; }
+.hero-icon { font-size: 52px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 6px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; max-width: 480px; }
+
+/* ── PROGRESSO GERAL ── */
+.prog-geral { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.prog-geral-txt { flex: 1; min-width: 160px; }
+.prog-geral-titulo { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 2px; }
+.prog-geral-sub { font-size: 12px; color: #7a8a7c; }
+.prog-bar-wrap { flex: 2; min-width: 200px; }
+.prog-bar-bg { background: var(--creme2); border-radius: 99px; height: 10px; overflow: hidden; margin-bottom: 6px; }
+.prog-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.6s ease; }
+.prog-bar-label { font-size: 12px; color: #7a8a7c; font-weight: 600; display: flex; justify-content: space-between; }
+.prog-nums { display: flex; gap: 16px; }
+.prog-num { text-align: center; }
+.prog-num-val { font-size: 22px; font-weight: 800; color: var(--verde); }
+.prog-num-label { font-size: 11px; color: #7a8a7c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ── MÓDULOS ── */
+.modulo { margin-bottom: 36px; }
+.modulo-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--creme2); }
+.modulo-icon { font-size: 22px; }
+.modulo-titulo { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); }
+.modulo-count { font-size: 12px; color: #7a8a7c; margin-left: auto; font-weight: 600; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+
+/* ── CARDS DE AULA ── */
+.aulas-grid { display: flex; flex-direction: column; gap: 12px; }
+.aula-card { background: #fff; border: 1.5px solid #e0ebe0; border-radius: 16px; overflow: hidden; transition: all 0.2s; }
+.aula-card:hover { border-color: var(--verde-claro); box-shadow: 0 4px 16px rgba(45,106,79,0.08); }
+.aula-card.concluida { border-color: #86efac; }
+.aula-card.bloqueada { opacity: 0.55; pointer-events: none; }
+
+.aula-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; }
+.aula-num { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; background: var(--creme2); color: #7a8a7c; transition: all 0.2s; }
+.aula-card.concluida .aula-num { background: #dcfce7; color: #16a34a; }
+.aula-card.ativa .aula-num { background: var(--verde); color: #fff; }
+.aula-info { flex: 1; }
+.aula-titulo { font-size: 15px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.aula-desc { font-size: 12px; color: #7a8a7c; }
+.aula-badge { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; flex-shrink: 0; }
+.aula-badge.nova { background: #fef9c3; color: #92400e; }
+.aula-badge.feita { background: #dcfce7; color: #15803d; }
+.aula-badge.lock { background: var(--creme2); color: #9ca3af; }
+.aula-chevron { font-size: 16px; color: #9ca3af; transition: transform 0.25s; flex-shrink: 0; }
+.aula-card.aberta .aula-chevron { transform: rotate(90deg); }
+
+/* ── CONTEÚDO DA AULA ── */
+.aula-body { display: none; border-top: 1.5px solid #f0f0f0; }
+.aula-card.aberta .aula-body { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+.aula-conteudo { padding: 24px 24px 0; }
+
+/* Texto formatado */
+.aula-conteudo h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--escuro); margin: 0 0 8px; }
+.aula-conteudo h3 { font-size: 15px; font-weight: 700; color: var(--escuro); margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
+.aula-conteudo p { font-size: 14px; line-height: 1.75; color: #4a5a4c; margin-bottom: 14px; }
+.aula-conteudo ul { margin: 0 0 14px 0; padding-left: 0; list-style: none; }
+.aula-conteudo ul li { font-size: 14px; line-height: 1.7; color: #4a5a4c; padding: 4px 0 4px 20px; position: relative; }
+.aula-conteudo ul li::before { content: '→'; position: absolute; left: 0; color: var(--verde); font-weight: 700; }
+
+/* Tabela */
+.aula-tabela { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+.aula-tabela th { background: var(--escuro); color: #fff; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.aula-tabela th:first-child { border-radius: 10px 0 0 0; }
+.aula-tabela th:last-child { border-radius: 0 10px 0 0; }
+.aula-tabela td { padding: 10px 14px; border-bottom: 1px solid #f0ebe5; color: var(--texto); }
+.aula-tabela tr:last-child td { border-bottom: none; }
+.aula-tabela tr:nth-child(even) td { background: #fafaf8; }
+
+/* Bloco de código */
+.code-block { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 12px; margin: 14px 0; overflow: hidden; }
+.code-header { background: #162030; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; }
+.code-lang { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--verde-neon); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
+.code-copy { background: none; border: 1px solid rgba(116,198,157,0.3); color: rgba(116,198,157,0.7); font-size: 11px; padding: 3px 10px; border-radius: 6px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all 0.15s; }
+.code-copy:hover { background: rgba(116,198,157,0.1); color: var(--verde-neon); }
+.code-body { padding: 16px 20px; overflow-x: auto; }
+.code-body pre { font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.7; color: #e2e8f0; white-space: pre; }
+/* Syntax highlight manual */
+.kw { color: #93c5fd; }   /* keyword: function, const, if */
+.fn { color: #86efac; }   /* function name */
+.str { color: #fca5a5; }  /* strings */
+.cm { color: #64748b; font-style: italic; } /* comentário */
+.tg { color: #fb923c; }   /* html tag */
+.at { color: #fde68a; }   /* attribute */
+.vl { color: #c4b5fd; }   /* value */
+.cs { color: #67e8f9; }   /* css property */
+.num { color: #fdba74; }  /* number */
+
+/* Caixa de destaque */
+.destaque { border-radius: 12px; padding: 14px 18px; margin: 14px 0; display: flex; gap: 12px; align-items: flex-start; }
+.destaque.info { background: #eff6ff; border: 1.5px solid #bfdbfe; }
+.destaque.dica { background: #fffbeb; border: 1.5px solid #fde68a; }
+.destaque.atencao { background: #fff5f0; border: 1.5px solid #fed7aa; }
+.destaque-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.destaque-txt { font-size: 13px; line-height: 1.65; }
+.destaque.info .destaque-txt { color: #1e40af; }
+.destaque.dica .destaque-txt { color: #78350f; }
+.destaque.atencao .destaque-txt { color: #92400e; }
+
+/* Quiz da aula */
+.aula-quiz { margin: 24px 0 0; padding: 20px 24px; background: var(--creme); border-top: 1.5px solid #e8e0d8; }
+.quiz-titulo { font-size: 13px; font-weight: 800; color: var(--escuro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.quiz-pergunta { font-size: 14px; font-weight: 600; color: var(--escuro); margin-bottom: 12px; line-height: 1.6; }
+.quiz-opcoes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.quiz-opcao { background: #fff; border: 1.5px solid #dde8de; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--texto); cursor: pointer; transition: all 0.15s; text-align: left; font-family: 'DM Sans',sans-serif; display: flex; align-items: center; gap: 10px; }
+.quiz-opcao:hover { border-color: var(--verde-claro); background: #f0fdf4; }
+.quiz-opcao.certa { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; pointer-events: none; }
+.quiz-opcao.errada { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; pointer-events: none; }
+.quiz-opcao.neutra { opacity: 0.5; pointer-events: none; }
+.quiz-letra { width: 24px; height: 24px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+.quiz-feedback { font-size: 13px; border-radius: 10px; padding: 10px 14px; font-weight: 600; display: none; }
+.quiz-feedback.show { display: block; animation: fadeIn 0.2s ease; }
+.quiz-feedback.certa { background: #dcfce7; color: #15803d; }
+.quiz-feedback.errada { background: #fee2e2; color: #dc2626; }
+
+/* Botão concluir */
+.aula-footer { padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.btn-concluir { background: var(--verde); color: #fff; border: none; padding: 12px 28px; border-radius: 12px; font-family:'DM Sans',sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+.btn-concluir:hover { background: var(--escuro); }
+.btn-concluir:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-concluir.ja-feita { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; cursor: default; }
+.aula-tempo { font-size: 12px; color: #7a8a7c; display: flex; align-items: center; gap: 5px; }
+
+/* ── RESPONSIVIDADE ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 16px 12px; }
+  .hero { padding: 20px 18px; flex-direction: column; text-align: center; border-radius: 16px; }
+  .hero::after { display: none; }
+  .hero h1 { font-size: 20px; }
+  .prog-geral { gap: 14px; }
+  .aula-header { padding: 14px 16px; gap: 10px; }
+  .aula-conteudo { padding: 18px 16px 0; }
+  .aula-footer { padding: 14px 16px; }
+  .aula-quiz { padding: 16px; }
+  .code-body { padding: 12px 14px; }
+  .code-body pre { font-size: 12px; }
+  .topbar { padding: 0 16px; }
+  .badge { display: none; }
+  .aula-tabela { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="producao-conhecimento.html" class="back-btn">← Voltar</a>
+  <div class="divider"></div>
+  <div class="topbar-title">Programação na Prática</div>
+  <div class="badge" id="badge-prog">Aula 1 de 6</div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-icon">💻</div>
+    <div>
+      <div class="hero-tag">Conhecimento na Prática — Módulo Especial</div>
+      <h1>Programação Web na Prática</h1>
+      <p>Aprenda HTML, CSS e JavaScript usando o próprio código do Nutri Amorim como exemplo. Cada aula explica o que foi feito e por que funciona.</p>
+    </div>
+  </div>
+
+  <!-- PROGRESSO GERAL -->
+  <div class="prog-geral">
+    <div class="prog-geral-txt">
+      <div class="prog-geral-titulo">Seu progresso no curso</div>
+      <div class="prog-geral-sub" id="prog-sub">0 de 6 aulas concluídas</div>
+    </div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-bg">
+        <div class="prog-bar-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+      <div class="prog-bar-label">
+        <span id="prog-pct">0% concluído</span>
+        <span id="prog-prox">Comece pela Aula 1 👇</span>
+      </div>
+    </div>
+    <div class="prog-nums">
+      <div class="prog-num">
+        <div class="prog-num-val" id="prog-feitas">0</div>
+        <div class="prog-num-label">Feitas</div>
+      </div>
+      <div class="prog-num">
+        <div class="prog-num-val" style="color:var(--azul)" id="prog-restantes">6</div>
+        <div class="prog-num-label">Restantes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÓDULO 1 -->
+  <div class="modulo">
+    <div class="modulo-header">
+      <div class="modulo-icon">🏗️</div>
+      <div class="modulo-titulo">Módulo 1 — Os Fundamentos</div>
+      <div class="modulo-count" id="count-mod1">0 / 3 aulas</div>
+    </div>
+    <div class="aulas-grid">
+
+      <!-- AULA 1 -->
+      <div class="aula-card ativa" id="aula-1" data-aula="1">
+        <div class="aula-header" onclick="toggleAula(1)">
+          <div class="aula-num">1</div>
+          <div class="aula-info">
+            <div class="aula-titulo">Os 3 Pilares — HTML, CSS e JavaScript</div>
+            <div class="aula-desc">Entenda o que cada tecnologia faz e como elas trabalham juntas</div>
+          </div>
+          <span class="aula-badge nova" id="badge-aula-1">Nova</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+
+            <h2>Os 3 Pilares de Qualquer Site</h2>
+            <p>Pensa assim: um site é como uma pessoa. Cada tecnologia cuida de uma parte:</p>
+
+            <table class="aula-tabela">
+              <thead><tr><th>Parte</th><th>Tecnologia</th><th>O que faz</th></tr></thead>
+              <tbody>
+                <tr><td>🦴 Esqueleto</td><td><strong>HTML</strong></td><td>Define o que existe na página</td></tr>
+                <tr><td>👗 Aparência</td><td><strong>CSS</strong></td><td>Define como cada coisa parece</td></tr>
+                <tr><td>🧠 Comportamento</td><td><strong>JavaScript</strong></td><td>Define o que acontece ao interagir</td></tr>
+              </tbody>
+            </table>
+
+            <div class="destaque info">
+              <div class="destaque-icon">💡</div>
+              <div class="destaque-txt">Sem HTML, não existe nada. Sem CSS, existe mas é feio. Sem JavaScript, existe e é bonito mas não faz nada. Os três são obrigatórios.</div>
+            </div>
+
+            <h3>🦴 HTML — O Esqueleto</h3>
+            <p>HTML é feito de <strong>tags</strong> — etiquetas que dizem ao navegador o que é cada coisa. Uma tag tem abertura e fechamento:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML</span><button class="code-copy" onclick="copiar(this, '&lt;div&gt;conteúdo aqui&lt;/div&gt;')">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;div&gt;</span>conteúdo aqui<span class="tg">&lt;/div&gt;</span></pre></div>
+            </div>
+
+            <p>O <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:13px">&lt;div&gt;</code> abre, o <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:13px">&lt;/div&gt;</code> fecha. Tudo dentro pertence a essa "caixinha". <strong>No Nutri Amorim, veja a barra do topo:</strong></p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Topbar do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="str">"dashboard.html"</span> <span class="at">class</span>=<span class="str">"back-btn"</span><span class="tg">&gt;</span>← Voltar<span class="tg">&lt;/a&gt;</span>
+  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar-title"</span><span class="tg">&gt;</span>Central de Estudos<span class="tg">&lt;/div&gt;</span>
+  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"badge"</span><span class="tg">&gt;</span>5 ferramentas integradas<span class="tg">&lt;/div&gt;</span>
+<span class="tg">&lt;/div&gt;</span></pre></div>
+            </div>
+
+            <ul>
+              <li><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;div class="topbar"&gt;</code> → cria a caixinha da barra verde escura do topo</li>
+              <li><code style="font-family:'Fira Code',monospace;font-size:12px">&lt;a href="..."&gt;</code> → cria um link clicável (o botão "← Voltar")</li>
+              <li>As caixinhas ficam <strong>dentro umas das outras</strong> — isso se chama <strong>aninhamento</strong></li>
+            </ul>
+
+            <h3>👗 CSS — A Aparência</h3>
+            <p>CSS diz: <em>"pegue essa caixinha e pinte ela assim"</em>. A sintaxe é sempre:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">CSS — Estrutura básica</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cs">.nome-da-caixinha</span> {
+  <span class="cs">propriedade</span>: <span class="vl">valor</span>;
+}</pre></div>
+            </div>
+
+            <p><strong>O CSS da topbar no Nutri Amorim:</strong></p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">CSS — Topbar do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cs">.topbar</span> {
+  <span class="cs">background</span>: <span class="vl">var(--escuro)</span>;  <span class="cm">/* fundo verde escuro */</span>
+  <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>;         <span class="cm">/* espaço interno nas laterais */</span>
+  <span class="cs">height</span>: <span class="num">56px</span>;             <span class="cm">/* altura fixa */</span>
+  <span class="cs">display</span>: <span class="vl">flex</span>;            <span class="cm">/* organiza filhos lado a lado */</span>
+  <span class="cs">align-items</span>: <span class="vl">center</span>;     <span class="cm">/* centraliza verticalmente */</span>
+  <span class="cs">position</span>: <span class="vl">sticky</span>;        <span class="cm">/* fica grudada no topo ao rolar */</span>
+}</pre></div>
+            </div>
+
+            <h3>🧠 JavaScript — O Comportamento</h3>
+            <p>JavaScript entra quando algo precisa <strong>acontecer</strong>. Quando você clica numa aba do Nutri Amorim, este código roda:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript — Troca de abas</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="kw">function</span> <span class="fn">showPanel</span>(id, el) {
+  <span class="cm">// 1. Esconde TODOS os painéis</span>
+  document.<span class="fn">querySelectorAll</span>(<span class="str">'.panel'</span>).<span class="fn">forEach</span>(p =&gt;
+    p.classList.<span class="fn">remove</span>(<span class="str">'active'</span>)
+  );
+  <span class="cm">// 2. Remove destaque de TODAS as abas</span>
+  document.<span class="fn">querySelectorAll</span>(<span class="str">'.tab-btn'</span>).<span class="fn">forEach</span>(b =&gt;
+    b.classList.<span class="fn">remove</span>(<span class="str">'active'</span>)
+  );
+  <span class="cm">// 3. Mostra SÓ o painel clicado</span>
+  document.<span class="fn">getElementById</span>(<span class="str">'panel-'</span> + id).classList.<span class="fn">add</span>(<span class="str">'active'</span>);
+  <span class="cm">// 4. Destaca a aba clicada</span>
+  <span class="kw">if</span> (el) el.classList.<span class="fn">add</span>(<span class="str">'active'</span>);
+}</pre></div>
+            </div>
+
+            <div class="destaque dica">
+              <div class="destaque-icon">🔦</div>
+              <div class="destaque-txt"><strong>Analogia do interruptor:</strong> Primeiro apaga todas as luzes, depois acende só a que você pediu. É exatamente o que esse código faz com os painéis.</div>
+            </div>
+
+            <h3>🔗 Como os três trabalham juntos</h3>
+            <p>A aba "Flashcards" do Nutri Amorim funciona com os três ao mesmo tempo:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Botão da aba</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"tab-btn active"</span> <span class="at">onclick</span>=<span class="str">"showPanel('flashcards', this)"</span><span class="tg">&gt;</span>
+  🃏 Flashcards
+<span class="tg">&lt;/div&gt;</span></pre></div>
+            </div>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">CSS — Estilo da aba ativa</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cs">.tab-btn.active</span> {
+  <span class="cs">color</span>: <span class="vl">var(--verde)</span>;
+  <span class="cs">border-bottom-color</span>: <span class="vl">var(--verde)</span>;
+}</pre></div>
+            </div>
+
+          </div><!-- /aula-conteudo -->
+
+          <!-- QUIZ -->
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Qual tecnologia é responsável por fazer o flashcard VIRAR quando você clica nele?</div>
+            <div class="quiz-opcoes" id="quiz-1">
+              <button class="quiz-opcao" onclick="responder(1,'A','C')"><span class="quiz-letra">A</span> HTML — porque define a estrutura do card</button>
+              <button class="quiz-opcao" onclick="responder(1,'B','C')"><span class="quiz-letra">B</span> CSS — porque define a animação de rotação</button>
+              <button class="quiz-opcao" onclick="responder(1,'C','C')"><span class="quiz-letra">C</span> JavaScript — porque detecta o clique e aciona o giro</button>
+              <button class="quiz-opcao" onclick="responder(1,'D','C')"><span class="quiz-letra">D</span> Os três juntos — não é possível sem os três</button>
+            </div>
+            <div class="quiz-feedback" id="fb-1"></div>
+          </div>
+
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
+            <button class="btn-concluir" id="btn-1" onclick="concluir(1)" disabled>✓ Marcar como concluída</button>
+          </div>
+
+        </div><!-- /aula-body -->
+      </div><!-- /aula-card -->
+
+      <!-- AULA 2 -->
+      <div class="aula-card" id="aula-2" data-aula="2">
+        <div class="aula-header" onclick="toggleAula(2)">
+          <div class="aula-num">2</div>
+          <div class="aula-info">
+            <div class="aula-titulo">A Estrutura do Arquivo HTML</div>
+            <div class="aula-desc">Por que o arquivo tem &lt;head&gt;, &lt;body&gt;, &lt;style&gt; e &lt;script&gt;?</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-2">🔒 Bloqueada</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+
+            <h2>A Anatomia de um Arquivo HTML</h2>
+            <p>O arquivo do Nutri Amorim tem uma estrutura específica. Cada bloco tem um propósito:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Esqueleto completo</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;!DOCTYPE html&gt;</span>         <span class="cm">&lt;!-- diz ao browser: isso é HTML5 --&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang</span>=<span class="str">"pt-BR"</span><span class="tg">&gt;</span>       <span class="cm">&lt;!-- raiz de tudo, idioma PT --&gt;</span>
+
+  <span class="tg">&lt;head&gt;</span>                 <span class="cm">&lt;!-- cabeça: configurações (não aparece) --&gt;</span>
+    <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>  <span class="cm">&lt;!-- aceita acentos e emojis --&gt;</span>
+    <span class="tg">&lt;title&gt;</span>Nutri Amorim<span class="tg">&lt;/title&gt;</span>  <span class="cm">&lt;!-- nome na aba do browser --&gt;</span>
+    <span class="tg">&lt;style&gt;</span>
+      <span class="cm">/* TODO o CSS fica aqui */</span>
+    <span class="tg">&lt;/style&gt;</span>
+  <span class="tg">&lt;/head&gt;</span>
+
+  <span class="tg">&lt;body&gt;</span>                 <span class="cm">&lt;!-- corpo: tudo que aparece na tela --&gt;</span>
+    <span class="cm">&lt;!-- HTML da página aqui --&gt;</span>
+
+    <span class="tg">&lt;script&gt;</span>
+      <span class="cm">// TODO o JavaScript fica aqui</span>
+    <span class="tg">&lt;/script&gt;</span>
+  <span class="tg">&lt;/body&gt;</span>
+
+<span class="tg">&lt;/html&gt;</span></pre></div>
+            </div>
+
+            <h3>📦 O &lt;head&gt; — Configurações invisíveis</h3>
+            <p>O <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;head&gt;</code> não aparece na tela. Ele configura o documento. No Nutri Amorim:</p>
+            <ul>
+              <li><strong>charset UTF-8</strong> → garante que ç, ã, é e emojis apareçam certo</li>
+              <li><strong>viewport</strong> → faz o site se adaptar ao celular (responsividade)</li>
+              <li><strong>link Google Fonts</strong> → carrega as fontes Playfair Display e DM Sans</li>
+              <li><strong>&lt;style&gt;</strong> → todo o CSS do site fica aqui dentro</li>
+            </ul>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Head do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;head&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset</span>=<span class="str">"UTF-8"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">name</span>=<span class="str">"viewport"</span> <span class="at">content</span>=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;title&gt;</span>Central de Estudos — Nutri Amorim<span class="tg">&lt;/title&gt;</span>
+  <span class="tg">&lt;link</span> <span class="at">href</span>=<span class="str">"https://fonts.googleapis.com/css2?family=Playfair..."</span> <span class="at">rel</span>=<span class="str">"stylesheet"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;style&gt;</span>
+    <span class="cm">/* aqui vem todo o CSS */</span>
+  <span class="tg">&lt;/style&gt;</span>
+<span class="tg">&lt;/head&gt;</span></pre></div>
+            </div>
+
+            <h3>🖥️ O &lt;body&gt; — Tudo que você vê</h3>
+            <p>O <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;body&gt;</code> é onde vive tudo que aparece na tela. Topbar, abas, cards, flashcards — tudo está dentro do body.</p>
+
+            <h3>⚙️ Por que o &lt;script&gt; fica no final do &lt;body&gt;?</h3>
+            <p>Repare: o JavaScript sempre fica no final, antes de fechar o <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;/body&gt;</code>. Isso não é acidente — é uma decisão técnica importante:</p>
+
+            <div class="destaque atencao">
+              <div class="destaque-icon">⚠️</div>
+              <div class="destaque-txt"><strong>Se o script viesse no &lt;head&gt;</strong>, o JavaScript tentaria encontrar os elementos HTML (botões, cards, painéis) antes deles existirem na tela — e daria erro. No final do body, o HTML já foi todo carregado quando o JS roda.</div>
+            </div>
+
+            <h3>🎨 O que são Variáveis CSS? (var(--verde))</h3>
+            <p>Você viu <code style="font-family:'Fira Code',monospace;font-size:12px">var(--verde)</code> em vários lugares. Isso é uma <strong>variável CSS</strong> — uma cor definida uma vez e usada em todo lugar:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">CSS — Variáveis do Nutri Amorim</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cs">:root</span> {
+  <span class="cs">--verde</span>: <span class="vl">#2d6a4f</span>;         <span class="cm">/* verde escuro principal */</span>
+  <span class="cs">--verde-claro</span>: <span class="vl">#52b788</span>;   <span class="cm">/* verde médio */</span>
+  <span class="cs">--verde-neon</span>: <span class="vl">#74c69d</span>;    <span class="cm">/* verde brilhante */</span>
+  <span class="cs">--escuro</span>: <span class="vl">#1a2e1f</span>;        <span class="cm">/* quase preto esverdeado */</span>
+  <span class="cs">--creme</span>: <span class="vl">#f8f4ef</span>;         <span class="cm">/* fundo bege claro */</span>
+}
+
+<span class="cm">/* Uso em qualquer lugar: */</span>
+<span class="cs">.topbar</span> { <span class="cs">background</span>: <span class="vl">var(--escuro)</span>; }
+<span class="cs">.btn-verde</span> { <span class="cs">background</span>: <span class="vl">var(--verde)</span>; }</pre></div>
+            </div>
+
+            <div class="destaque info">
+              <div class="destaque-icon">💡</div>
+              <div class="destaque-txt"><strong>Vantagem:</strong> Se quiser mudar a cor verde de todo o site, muda em um único lugar no <code style="font-family:'Fira Code',monospace;font-size:12px">:root</code>. Sem variáveis, teria que mudar em centenas de lugares.</div>
+            </div>
+
+          </div>
+
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Por que o JavaScript do Nutri Amorim fica no final do &lt;body&gt; e não no &lt;head&gt;?</div>
+            <div class="quiz-opcoes" id="quiz-2">
+              <button class="quiz-opcao" onclick="responder(2,'A','B')"><span class="quiz-letra">A</span> É uma convenção estética sem impacto técnico</button>
+              <button class="quiz-opcao" onclick="responder(2,'B','B')"><span class="quiz-letra">B</span> Para garantir que o HTML exista antes do JS tentar usá-lo</button>
+              <button class="quiz-opcao" onclick="responder(2,'C','B')"><span class="quiz-letra">C</span> Porque o script no head carregaria mais lento</button>
+              <button class="quiz-opcao" onclick="responder(2,'D','B')"><span class="quiz-letra">D</span> Para que o CSS seja lido antes do JavaScript</button>
+            </div>
+            <div class="quiz-feedback" id="fb-2"></div>
+          </div>
+
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~12 min de leitura</div>
+            <button class="btn-concluir" id="btn-2" onclick="concluir(2)" disabled>✓ Marcar como concluída</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AULA 3 -->
+      <div class="aula-card" id="aula-3" data-aula="3">
+        <div class="aula-header" onclick="toggleAula(3)">
+          <div class="aula-num">3</div>
+          <div class="aula-info">
+            <div class="aula-titulo">Os Bugs que Encontramos e Como Corrigimos</div>
+            <div class="aula-desc">event.currentTarget, Unexpected token — o que causou e como pensar em erros</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-3">🔒 Bloqueada</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+
+            <h2>Depuração — A Arte de Encontrar e Corrigir Erros</h2>
+            <p>Durante o desenvolvimento do Nutri Amorim, dois bugs apareceram. Cada um ensina algo importante sobre como o código funciona.</p>
+
+            <h3>🐛 Bug 1 — As abas não ficavam ativas ao clicar</h3>
+            <p>O código original era assim:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript — Código com bug</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="kw">function</span> <span class="fn">showPanel</span>(id) {
+  document.<span class="fn">querySelectorAll</span>(<span class="str">'.panel'</span>).<span class="fn">forEach</span>(p =&gt; p.classList.<span class="fn">remove</span>(<span class="str">'active'</span>));
+  document.<span class="fn">querySelectorAll</span>(<span class="str">'.tab-btn'</span>).<span class="fn">forEach</span>(b =&gt; b.classList.<span class="fn">remove</span>(<span class="str">'active'</span>));
+  document.<span class="fn">getElementById</span>(<span class="str">'panel-'</span> + id).classList.<span class="fn">add</span>(<span class="str">'active'</span>);
+  event.currentTarget.classList.<span class="fn">add</span>(<span class="str">'active'</span>); <span class="cm">// ← PROBLEMA AQUI</span>
+}</pre></div>
+            </div>
+
+            <p>O problema: <code style="font-family:'Fira Code',monospace;font-size:12px">event.currentTarget</code> é uma variável <strong>global</strong> do navegador — ela existia em versões antigas do Chrome, mas parou de funcionar nos navegadores modernos.</p>
+
+            <div class="destaque atencao">
+              <div class="destaque-icon">⚠️</div>
+              <div class="destaque-txt"><strong>Lição:</strong> Nunca dependa de variáveis globais implícitas. Sempre passe o que você precisa como parâmetro explícito.</div>
+            </div>
+
+            <p><strong>A correção:</strong> passamos o próprio elemento clicado como parâmetro <code style="font-family:'Fira Code',monospace;font-size:12px">this</code>:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML + JavaScript — Solução</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">&lt;!-- HTML: passa "this" (o próprio botão clicado) --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">onclick</span>=<span class="str">"showPanel('flashcards', this)"</span><span class="tg">&gt;</span>Flashcards<span class="tg">&lt;/div&gt;</span>
+
+<span class="cm">// JS: recebe o elemento como parâmetro "el"</span>
+<span class="kw">function</span> <span class="fn">showPanel</span>(id, el) {
+  <span class="cm">// ... esconde tudo ...</span>
+  <span class="kw">if</span> (el) el.classList.<span class="fn">add</span>(<span class="str">'active'</span>); <span class="cm">// ✓ confiável</span>
+}</pre></div>
+            </div>
+
+            <h3>🐛 Bug 2 — Unexpected token ';' (2 vezes!)</h3>
+            <p>O JavaScript travava com erro de sintaxe. A causa: um trecho de código foi duplicado por engano dentro dos dados:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript — Dado corrompido</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">// ❌ ERRADO — linha duplicada e quebrada</span>
+bioestatistica: [
+  { tema: <span class="str">'Prevalência'</span>, bioestatistica: [  <span class="cm">// ← linha fantasma</span>
+  { tema: <span class="str">'Prevalência'</span>, enunciado: <span class="str">'...'</span> },   <span class="cm">// ← linha correta</span>
+
+<span class="cm">// ✓ CORRETO — linha fantasma removida</span>
+bioestatistica: [
+  { tema: <span class="str">'Prevalência'</span>, enunciado: <span class="str">'...'</span> },</pre></div>
+            </div>
+
+            <p>Aconteceu duas vezes, em seções diferentes. A ferramenta de diagnóstico que usamos foi o <strong>Node.js</strong> pelo terminal:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Terminal — Como diagnosticar erros de JS</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm"># Extrai o JS do HTML e verifica a sintaxe</span>
+node --check arquivo.js
+
+<span class="cm"># Saída quando tem erro:</span>
+<span class="cm"># /tmp/test.js:414</span>
+<span class="cm"># };</span>
+<span class="cm"># SyntaxError: Unexpected token ';'</span>
+
+<span class="cm"># Saída quando está ok:</span>
+<span class="cm"># (silêncio = sem erros)</span></pre></div>
+            </div>
+
+            <div class="destaque info">
+              <div class="destaque-icon">🔍</div>
+              <div class="destaque-txt"><strong>Lição de depuração:</strong> o número da linha no erro (414) aponta <em>onde o JavaScript percebeu</em> o problema — mas o erro real costuma estar algumas linhas antes. Sempre olhe para cima do número indicado.</div>
+            </div>
+
+          </div>
+
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Qual foi a raiz do Bug 1 (abas não ficando ativas)?</div>
+            <div class="quiz-opcoes" id="quiz-3">
+              <button class="quiz-opcao" onclick="responder(3,'A','B')"><span class="quiz-letra">A</span> O CSS da classe .active estava errado</button>
+              <button class="quiz-opcao" onclick="responder(3,'B','B')"><span class="quiz-letra">B</span> Dependência de variável global (event.currentTarget) que parou de funcionar nos browsers modernos</button>
+              <button class="quiz-opcao" onclick="responder(3,'C','B')"><span class="quiz-letra">C</span> A função showPanel não estava sendo chamada</button>
+              <button class="quiz-opcao" onclick="responder(3,'D','B')"><span class="quiz-letra">D</span> O HTML não tinha o atributo onclick nos botões</button>
+            </div>
+            <div class="quiz-feedback" id="fb-3"></div>
+          </div>
+
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
+            <button class="btn-concluir" id="btn-3" onclick="concluir(3)" disabled>✓ Marcar como concluída</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /aulas-grid mod1 -->
+  </div><!-- /modulo 1 -->
+
+  <!-- MÓDULO 2 -->
+  <div class="modulo">
+    <div class="modulo-header">
+      <div class="modulo-icon">⚙️</div>
+      <div class="modulo-titulo">Módulo 2 — Funcionalidades</div>
+      <div class="modulo-count" id="count-mod2">0 / 3 aulas</div>
+    </div>
+    <div class="aulas-grid">
+
+      <!-- AULA 4 -->
+      <div class="aula-card bloqueada" id="aula-4" data-aula="4">
+        <div class="aula-header" onclick="toggleAula(4)">
+          <div class="aula-num">4</div>
+          <div class="aula-info">
+            <div class="aula-titulo">Como os Flashcards Funcionam por Dentro</div>
+            <div class="aula-desc">Arrays, objetos, funções e o flip 3D com CSS — em breve</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-4">🔒 Em breve</span>
+          <span class="aula-chevron">›</span>
+        </div>
+      </div>
+
+      <!-- AULA 5 -->
+      <div class="aula-card bloqueada" id="aula-5" data-aula="5">
+        <div class="aula-header" onclick="toggleAula(5)">
+          <div class="aula-num">5</div>
+          <div class="aula-info">
+            <div class="aula-titulo">localStorage — Como o Site Lembra de Você</div>
+            <div class="aula-desc">Como o progresso e as dicas de memorização são salvos — em breve</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-5">🔒 Em breve</span>
+          <span class="aula-chevron">›</span>
+        </div>
+      </div>
+
+      <!-- AULA 6 -->
+      <div class="aula-card bloqueada" id="aula-6" data-aula="6">
+        <div class="aula-header" onclick="toggleAula(6)">
+          <div class="aula-num">6</div>
+          <div class="aula-info">
+            <div class="aula-titulo">Responsividade — Como o Site se Adapta ao Celular</div>
+            <div class="aula-desc">Media queries, breakpoints e por que usamos @media — em breve</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-6">🔒 Em breve</span>
+          <span class="aula-chevron">›</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RODAPÉ INFO -->
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+    <span style="font-size:20px">🚀</span>
+    <div style="font-size:13px;color:var(--verde)"><strong>As aulas 4, 5 e 6 serão desbloqueadas conforme você avança.</strong> Cada nova conversa pode adicionar uma aula nova aqui. Seu progresso fica salvo automaticamente!</div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ── ESTADO ──────────────────────────────────────────────────
+const TOTAL_AULAS = 6;
+const AULAS_DESBLOQUEADAS = [1, 2, 3]; // módulo 2 ainda em breve
+let progresso = JSON.parse(localStorage.getItem('prog_programacao') || '{}');
+// progresso = { concluidas: [1, 2], quizFeitos: {1: true} }
+if (!progresso.concluidas) progresso.concluidas = [];
+if (!progresso.quizFeitos) progresso.quizFeitos = {};
+
+// ── INICIALIZAÇÃO ────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  atualizarEstadoGeral();
+  progresso.concluidas.forEach(n => aplicarConcluida(n));
+  // Abre a primeira aula não concluída automaticamente
+  const proxima = AULAS_DESBLOQUEADAS.find(n => !progresso.concluidas.includes(n));
+  if (proxima) toggleAula(proxima);
+});
+
+// ── TOGGLE AULA ──────────────────────────────────────────────
+function toggleAula(n) {
+  if (!AULAS_DESBLOQUEADAS.includes(n)) return;
+  const card = document.getElementById('aula-' + n);
+  const aberta = card.classList.contains('aberta');
+  // Fecha todas
+  document.querySelectorAll('.aula-card').forEach(c => c.classList.remove('aberta'));
+  // Abre esta se estava fechada
+  if (!aberta) card.classList.add('aberta');
+}
+
+// ── RESPONDER QUIZ ───────────────────────────────────────────
+function responder(aulaNum, opcao, certa) {
+  if (progresso.quizFeitos[aulaNum]) return;
+  const container = document.getElementById('quiz-' + aulaNum);
+  const fb = document.getElementById('fb-' + aulaNum);
+  const btns = container.querySelectorAll('.quiz-opcao');
+  const letras = ['A','B','C','D'];
+  const acertou = opcao === certa;
+
+  btns.forEach((btn, i) => {
+    const letra = letras[i];
+    if (letra === certa) btn.classList.add('certa');
+    else if (letra === opcao && !acertou) btn.classList.add('errada');
+    else btn.classList.add('neutra');
+  });
+
+  fb.className = 'quiz-feedback show ' + (acertou ? 'certa' : 'errada');
+  fb.textContent = acertou
+    ? '✅ Correto! Você pode marcar a aula como concluída.'
+    : '❌ Não foi dessa vez — mas a resposta correta está destacada em verde. Releia e tente fixar!';
+
+  progresso.quizFeitos[aulaNum] = true;
+  salvar();
+
+  // Libera botão de concluir
+  const btn = document.getElementById('btn-' + aulaNum);
+  if (btn && !progresso.concluidas.includes(aulaNum)) {
+    btn.disabled = false;
+  }
+}
+
+// ── CONCLUIR AULA ────────────────────────────────────────────
+function concluir(n) {
+  if (progresso.concluidas.includes(n)) return;
+  progresso.concluidas.push(n);
+  salvar();
+  aplicarConcluida(n);
+  atualizarEstadoGeral();
+
+  // Desbloqueio sequencial dentro do módulo 1
+  const proxima = AULAS_DESBLOQUEADAS.find(num => !progresso.concluidas.includes(num));
+  if (proxima) {
+    setTimeout(() => toggleAula(proxima), 400);
+  }
+}
+
+function aplicarConcluida(n) {
+  const card = document.getElementById('aula-' + n);
+  if (!card) return;
+  card.classList.add('concluida');
+  card.classList.remove('ativa');
+  const badge = document.getElementById('badge-aula-' + n);
+  if (badge) { badge.textContent = '✓ Concluída'; badge.className = 'aula-badge feita'; }
+  const btn = document.getElementById('btn-' + n);
+  if (btn) { btn.textContent = '✓ Concluída'; btn.className = 'btn-concluir ja-feita'; btn.disabled = true; }
+
+  // Desbloqueia a próxima do módulo 1
+  const idx = AULAS_DESBLOQUEADAS.indexOf(n);
+  const prox = AULAS_DESBLOQUEADAS[idx + 1];
+  if (prox) {
+    const proxCard = document.getElementById('aula-' + prox);
+    if (proxCard) {
+      proxCard.classList.remove('bloqueada');
+      proxCard.classList.add('ativa');
+      const proxBadge = document.getElementById('badge-aula-' + prox);
+      if (proxBadge && proxBadge.textContent.includes('Bloqueada')) {
+        proxBadge.textContent = 'Nova';
+        proxBadge.className = 'aula-badge nova';
+      }
+    }
+  }
+}
+
+// ── PROGRESSO GERAL ──────────────────────────────────────────
+function atualizarEstadoGeral() {
+  const feitas = progresso.concluidas.length;
+  const pct = Math.round((feitas / TOTAL_AULAS) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-sub').textContent = feitas + ' de ' + TOTAL_AULAS + ' aulas concluídas';
+  document.getElementById('prog-pct').textContent = pct + '% concluído';
+  document.getElementById('prog-feitas').textContent = feitas;
+  document.getElementById('prog-restantes').textContent = TOTAL_AULAS - feitas;
+  document.getElementById('badge-prog').textContent = 'Aula ' + Math.min(feitas + 1, TOTAL_AULAS) + ' de ' + TOTAL_AULAS;
+
+  const proxima = AULAS_DESBLOQUEADAS.find(n => !progresso.concluidas.includes(n));
+  const proxEl = document.getElementById('prog-prox');
+  if (feitas === TOTAL_AULAS) proxEl.textContent = '🎉 Curso completo!';
+  else if (proxima) proxEl.textContent = 'Próxima: Aula ' + proxima + ' 👇';
+
+  // Contagem por módulo
+  const mod1 = progresso.concluidas.filter(n => [1,2,3].includes(n)).length;
+  const mod2 = progresso.concluidas.filter(n => [4,5,6].includes(n)).length;
+  document.getElementById('count-mod1').textContent = mod1 + ' / 3 aulas';
+  document.getElementById('count-mod2').textContent = mod2 + ' / 3 aulas';
+}
+
+// ── SALVAR ───────────────────────────────────────────────────
+function salvar() {
+  localStorage.setItem('prog_programacao', JSON.stringify(progresso));
+}
+
+// ── COPIAR CÓDIGO ────────────────────────────────────────────
+function copiar(btn, texto) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const conteudo = texto || pre.innerText;
+  navigator.clipboard.writeText(conteudo).then(() => {
+    const original = btn.textContent;
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => btn.textContent = original, 2000);
+  });
+}
+</script>
+</body>
+</html>
