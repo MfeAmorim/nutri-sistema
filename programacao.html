@@ -227,7 +227,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     <div class="modulo-header">
       <div class="modulo-icon">🏗️</div>
       <div class="modulo-titulo">Módulo 1 — Os Fundamentos</div>
-      <div class="modulo-count" id="count-mod1">0 / 5 aulas</div>
+      <div class="modulo-count" id="count-mod1">0 / 6 aulas</div>
     </div>
     <div class="aulas-grid">
 
@@ -752,6 +752,185 @@ node --check arquivo.js
         </div>
       </div>
 
+
+      <!-- AULA 6 — Espaçamento -->
+      <div class="aula-card" id="aula-6" data-aula="6">
+        <div class="aula-header" onclick="toggleAula(6)">
+          <div class="aula-num">6</div>
+          <div class="aula-info">
+            <div class="aula-titulo">📐 Espaçamento — Quando e Quanto Dar em Cada Lugar</div>
+            <div class="aula-desc">Indentação, espaços entre tags, margin, padding — as regras que todo programador segue</div>
+          </div>
+          <span class="aula-badge lock" id="badge-aula-6">🔒 Bloqueada</span>
+          <span class="aula-chevron">›</span>
+        </div>
+        <div class="aula-body">
+          <div class="aula-conteudo">
+
+            <h2>Espaçamento no Código — As Regras que Ninguém Ensina</h2>
+            <p>Espaçamento no código serve para <strong>uma coisa só: facilitar a leitura</strong>. O browser ignora completamente quantos espaços você coloca — ele vai renderizar igual. Mas para você e para qualquer outro programador que ler seu código, faz toda a diferença.</p>
+
+            <div class="destaque info">
+              <div class="destaque-icon">💡</div>
+              <div class="destaque-txt">O browser não liga para espaços extras. <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;Oi&lt;/h1&gt;</code> e <code style="font-family:'Fira Code',monospace;font-size:12px">&lt;h1&gt;   Oi   &lt;/h1&gt;</code> produzem o mesmo resultado na tela. Os espaços são para <strong>você</strong>, não para o browser.</div>
+            </div>
+
+            <h3>📏 Regra 1 — Indentação: 2 espaços por nível</h3>
+            <p>Cada vez que uma tag fica dentro de outra, você avança 2 espaços. Isso se chama <strong>indentação</strong> e mostra visualmente quem está dentro de quem.</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Indentação correta</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="tg">&lt;body&gt;</span>                        <span class="cm">&lt;!-- nível 0 — sem espaço --&gt;</span>
+  <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>          <span class="cm">&lt;!-- nível 1 — 2 espaços --&gt;</span>
+    <span class="tg">&lt;a</span> <span class="at">href</span>=<span class="str">"#"</span><span class="tg">&gt;</span>Voltar<span class="tg">&lt;/a&gt;</span>       <span class="cm">&lt;!-- nível 2 — 4 espaços --&gt;</span>
+    <span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"titulo"</span><span class="tg">&gt;</span>        <span class="cm">&lt;!-- nível 2 — 4 espaços --&gt;</span>
+      <span class="tg">&lt;span&gt;</span>Nutri Amorim<span class="tg">&lt;/span&gt;</span>  <span class="cm">&lt;!-- nível 3 — 6 espaços --&gt;</span>
+    <span class="tg">&lt;/div&gt;</span>
+  <span class="tg">&lt;/div&gt;</span>
+<span class="tg">&lt;/body&gt;</span></pre></div>
+            </div>
+
+            <div class="destaque dica">
+              <div class="destaque-icon">🔦</div>
+              <div class="destaque-txt"><strong>Dica do VS Code:</strong> aperte <strong>Tab</strong> em vez de ficar contando espaços. O VS Code já adiciona 2 espaços automaticamente. E se quiser indentar várias linhas de uma vez, seleciona tudo e aperta Tab.</div>
+            </div>
+
+            <h3>📏 Regra 2 — Tags curtas ficam na mesma linha</h3>
+            <p>Se o conteúdo da tag é pequeno — uma palavra, um número, um ícone — fica tudo na mesma linha:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Curto = mesma linha</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Certo — conteúdo curto, tudo numa linha --&gt;</span>
+<span class="tg">&lt;h1&gt;</span>Central de Estudos<span class="tg">&lt;/h1&gt;</span>
+<span class="tg">&lt;p&gt;</span>Bem-vindo ao Nutri Amorim<span class="tg">&lt;/p&gt;</span>
+<span class="tg">&lt;span&gt;</span>🃏<span class="tg">&lt;/span&gt;</span>
+
+<span class="cm">&lt;!-- ❌ Desnecessário — conteúdo curto em 3 linhas --&gt;</span>
+<span class="tg">&lt;h1&gt;</span>
+  Central de Estudos
+<span class="tg">&lt;/h1&gt;</span></pre></div>
+            </div>
+
+            <h3>📏 Regra 3 — Tags longas ou com filhos: quebra linha</h3>
+            <p>Se a tag tem vários elementos filhos dentro, cada filho ganha sua própria linha:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Longo = quebra linha</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Certo — div com filhos, cada um na sua linha --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"card"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;h2&gt;</span>Flashcards<span class="tg">&lt;/h2&gt;</span>
+  <span class="tg">&lt;p&gt;</span>Revise seus conteúdos<span class="tg">&lt;/p&gt;</span>
+  <span class="tg">&lt;button&gt;</span>Iniciar<span class="tg">&lt;/button&gt;</span>
+<span class="tg">&lt;/div&gt;</span>
+
+<span class="cm">&lt;!-- ❌ Difícil de ler — tudo amontoado --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"card"</span><span class="tg">&gt;&lt;h2&gt;</span>Flashcards<span class="tg">&lt;/h2&gt;&lt;p&gt;</span>Revise<span class="tg">&lt;/p&gt;&lt;button&gt;</span>Iniciar<span class="tg">&lt;/button&gt;&lt;/div&gt;</span></pre></div>
+            </div>
+
+            <h3>📏 Regra 4 — CSS: uma propriedade por linha</h3>
+            <p>No CSS, cada propriedade fica na sua própria linha. Nunca escreva tudo numa linha só — fica impossível de achar o que você quer editar:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">CSS — Espaçamento correto</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">/* ✅ Certo — uma propriedade por linha */</span>
+<span class="cs">.topbar</span> {
+  <span class="cs">background</span>: <span class="vl">#1a2e1f</span>;
+  <span class="cs">height</span>: <span class="num">56px</span>;
+  <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>;
+  <span class="cs">display</span>: <span class="vl">flex</span>;
+}
+
+<span class="cm">/* ❌ Difícil de editar — tudo numa linha */</span>
+<span class="cs">.topbar</span> { <span class="cs">background</span>: <span class="vl">#1a2e1f</span>; <span class="cs">height</span>: <span class="num">56px</span>; <span class="cs">padding</span>: <span class="num">0</span> <span class="num">32px</span>; <span class="cs">display</span>: <span class="vl">flex</span>; }</pre></div>
+            </div>
+
+            <h3>📏 Regra 5 — Linha em branco entre blocos</h3>
+            <p>Deixe uma linha em branco entre seções diferentes. Isso divide visualmente o código em partes, igual parágrafo num texto:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">HTML — Linhas em branco entre seções</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">&lt;!-- ✅ Com linha em branco — fácil de navegar --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"topbar"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;span&gt;</span>Logo<span class="tg">&lt;/span&gt;</span>
+<span class="tg">&lt;/div&gt;</span>
+                              <span class="cm">&lt;!-- linha em branco aqui --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"conteudo"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;h1&gt;</span>Bem-vindo<span class="tg">&lt;/h1&gt;</span>
+<span class="tg">&lt;/div&gt;</span>
+                              <span class="cm">&lt;!-- linha em branco aqui --&gt;</span>
+<span class="tg">&lt;div</span> <span class="at">class</span>=<span class="str">"rodape"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;p&gt;</span>Nutri Amorim 2026<span class="tg">&lt;/p&gt;</span>
+<span class="tg">&lt;/div&gt;</span></pre></div>
+            </div>
+
+            <h3>📏 Regra 6 — JavaScript: espaço antes da chave e entre operadores</h3>
+            <p>No JavaScript há dois padrões importantes que todo programador segue:</p>
+
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript — Espaçamento padrão</span><button class="code-copy" onclick="copiar(this)">Copiar</button></div>
+              <div class="code-body"><pre><span class="cm">// ✅ Certo — espaço antes da chave e entre operadores</span>
+<span class="kw">function</span> <span class="fn">calcular</span>(peso, altura) {
+  <span class="kw">const</span> imc = peso / (altura * altura);
+  <span class="kw">if</span> (imc &gt; <span class="num">25</span>) {
+    <span class="kw">return</span> <span class="str">"acima do peso"</span>;
+  }
+}
+
+<span class="cm">// ❌ Sem espaços — difícil de ler</span>
+<span class="kw">function</span> <span class="fn">calcular</span>(peso,altura){
+  <span class="kw">const</span> imc=peso/(altura*altura);
+  <span class="kw">if</span>(imc&gt;<span class="num">25</span>){<span class="kw">return</span> <span class="str">"acima do peso"</span>;}
+}</pre></div>
+            </div>
+
+            <h3>🤖 O VS Code faz muito disso automaticamente</h3>
+            <p>Você não precisa memorizar tudo isso de uma vez. O VS Code tem um recurso chamado <strong>Format Document</strong> que arruma o espaçamento do seu arquivo inteiro automaticamente:</p>
+            <ul>
+              <li>Windows: <strong>Shift + Alt + F</strong></li>
+              <li>Mac: <strong>Shift + Option + F</strong></li>
+              <li>Ou clique direito no editor → <strong>Format Document</strong></li>
+            </ul>
+
+            <div class="destaque dica">
+              <div class="destaque-icon">🔦</div>
+              <div class="destaque-txt"><strong>Hábito profissional:</strong> antes de salvar qualquer arquivo, aperte Shift+Alt+F para formatar. Com o tempo isso vira reflexo automático e seu código sempre fica organizado.</div>
+            </div>
+
+            <h3>📋 Resumo das regras</h3>
+            <table class="aula-tabela">
+              <thead><tr><th>Situação</th><th>Regra</th></tr></thead>
+              <tbody>
+                <tr><td>Tag dentro de outra</td><td>Avança 2 espaços (Tab)</td></tr>
+                <tr><td>Conteúdo curto</td><td>Fica na mesma linha que a tag</td></tr>
+                <tr><td>Tag com vários filhos</td><td>Cada filho na sua própria linha</td></tr>
+                <tr><td>Propriedades CSS</td><td>Uma por linha, dentro das chaves</td></tr>
+                <tr><td>Seções diferentes</td><td>Linha em branco entre elas</td></tr>
+                <tr><td>JavaScript</td><td>Espaço antes de { e entre operadores</td></tr>
+                <tr><td>Qualquer dúvida</td><td>Shift+Alt+F no VS Code resolve</td></tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class="aula-quiz">
+            <div class="quiz-titulo">✏️ Teste do Conhecimento</div>
+            <div class="quiz-pergunta">Você escreveu um CSS com várias propriedades numa linha só. O que acontece no browser e qual o problema real?</div>
+            <div class="quiz-opcoes" id="quiz-6">
+              <button class="quiz-opcao" onclick="responder(6,'A','B')"><span class="quiz-letra">A</span> O browser não consegue ler o CSS e ignora os estilos</button>
+              <button class="quiz-opcao" onclick="responder(6,'B','B')"><span class="quiz-letra">B</span> O browser renderiza igual — o problema é só para quem lê o código, fica difícil de editar</button>
+              <button class="quiz-opcao" onclick="responder(6,'C','B')"><span class="quiz-letra">C</span> O site carrega mais lento por causa da formatação</button>
+              <button class="quiz-opcao" onclick="responder(6,'D','B')"><span class="quiz-letra">D</span> O CSS numa linha só funciona mas o HTML em linha não funciona</button>
+            </div>
+            <div class="quiz-feedback" id="fb-6"></div>
+          </div>
+
+          <div class="aula-footer">
+            <div class="aula-tempo">⏱️ ~10 min de leitura</div>
+            <button class="btn-concluir" id="btn-6" onclick="concluir(6)" disabled>✓ Marcar como concluída</button>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /aulas-grid mod1 -->
   </div><!-- /modulo 1 -->
 
@@ -1186,8 +1365,8 @@ node --check arquivo.js
 
 <script>
 // ── ESTADO ──────────────────────────────────────────────────
-const TOTAL_AULAS = 18;
-const AULAS_DESBLOQUEADAS = [1, 2, 3, 4, 5]; // módulo 2 ainda em breve
+const TOTAL_AULAS = 19;
+const AULAS_DESBLOQUEADAS = [1, 2, 3, 4, 5, 6]; // módulo 2 ainda em breve
 let progresso = JSON.parse(localStorage.getItem('prog_programacao') || '{}');
 // progresso = { concluidas: [1, 2], quizFeitos: {1: true} }
 if (!progresso.concluidas) progresso.concluidas = [];
@@ -1303,7 +1482,7 @@ function atualizarEstadoGeral() {
   else if (proxima) proxEl.textContent = 'Próxima: Aula ' + proxima + ' 👇';
 
   // Contagem por módulo
-  const mod1 = progresso.concluidas.filter(n => [1,2,3,4,5].includes(n)).length;
+  const mod1 = progresso.concluidas.filter(n => [1,2,3,4,5,6].includes(n)).length;
   const mod2 = progresso.concluidas.filter(n => [6,7,8].includes(n)).length;
   document.getElementById('count-mod1').textContent = mod1 + ' / 5 aulas';
   document.getElementById('count-mod2').textContent = mod2 + ' / 3 aulas';
