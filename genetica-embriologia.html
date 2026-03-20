@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genética e Embriologia Aplicada à Nutrição — Nutri Amorim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 3000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+}
+
+    .btn-export-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .btn-export-pdf { background: #dc2626; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-pdf:hover { background: #b91c1c; transform: translateY(-1px); }
+    .btn-export-xls { background: #16a34a; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+    .btn-export-xls:hover { background: #15803d; transform: translateY(-1px); }
+    .progress-salvo { font-size: 12px; color: #7a8a7c; text-align: center; margin-top: 8px; }
+    .banner-progresso { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
+    .banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Genética e Embriologia Aplicada à Nutrição</div>
+    <div class="badge">1º Módulo 2026</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🧬</div>
+    <div>
+      <div class="hero-tag">1º Módulo 2026 · Nutrição · Unicesumar</div>
+      <h1>Genética e Embriologia Aplicada à Nutrição</h1>
+      <p>Conteúdo organizado por relevância para o nutricionista.<br>Genética, célula, metabolismo, membrana, mitocôndria e desenvolvimento humano.</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Diretamente cobrado em provas e aplicado na prática em saúde</div>
+  </div>
+
+  <!-- 1. IMPORTÂNCIA DA GENÉTICA NA NUTRIÇÃO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">🧬</div>
+      <div class="card-titulo">
+        <h3>Importância da Genética na Nutrição</h3>
+        <p>Influência do DNA no metabolismo, expressão gênica e doenças — base da nutrigenômica</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Por que a Genética importa para o Nutricionista?</h4>
+      <p>A genética influencia diretamente o <strong>metabolismo</strong>, a <strong>expressão gênica</strong> e o desenvolvimento de doenças. Alterações no DNA podem impactar a absorção de nutrientes e o desenvolvimento humano. O entendimento genético permite compreender por que indivíduos respondem de forma diferente à mesma dieta.</p>
+
+      <h4>Nutrigenômica x Nutrigenética x Epigenética</h4>
+      <table class="tabela">
+        <tr><th>Área</th><th>Definição</th><th>Exemplo prático</th></tr>
+        <tr><td><strong>Nutrigenômica</strong></td><td>Estuda como os nutrientes <em>modulam</em> a expressão dos genes</td><td>Ácido fólico ativa genes de reparo do DNA</td></tr>
+        <tr><td><strong>Nutrigenética</strong></td><td>Estuda como variações genéticas individuais <em>alteram</em> a resposta ao nutriente</td><td>Gene MTHFR afeta metabolismo do folato</td></tr>
+        <tr><td><strong>Epigenética</strong></td><td>Alterações na expressão gênica sem mudar a sequência do DNA</td><td>Dieta materna programa metabolismo do filho</td></tr>
+      </table>
+
+      <h4>DNA, RNA e Síntese Proteica — Resumo</h4>
+      <ul>
+        <li><strong>DNA:</strong> molécula de dupla-fita que armazena a informação genética no núcleo (e mitocôndria).</li>
+        <li><strong>Transcrição:</strong> DNA → mRNA (RNA mensageiro) — ocorre no núcleo.</li>
+        <li><strong>Tradução:</strong> mRNA + ribossomos → proteínas (enzimas, transportadores, hormônios).</li>
+        <li><strong>Mutação:</strong> alteração na sequência do DNA que pode modificar a proteína e causar doenças metabólicas.</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Aplicação clínica:</strong> Variações no gene LCT determinam a produção de lactase e explicam a intolerância à lactose em adultos. Variações no gene MTHFR reduzem a atividade da enzima metilenotetra-hidrofolato redutase, aumentando a necessidade de folato — conduta: aumentar ingestão de folato/ácido fólico.</p>
+      </div>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Mutações e doenças nutricionais:</strong> Mutações em genes de enzimas metabólicas causam erros inatos do metabolismo como <strong>fenilcetonúria</strong> (fenilalanina hidroxilase), <strong>galactosemia</strong> (enzima GALT) e <strong>doença celíaca</strong> (predisposição HLA-DQ2/DQ8). Todas exigem intervenção dietética específica e permanente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CÉLULAS E METABOLISMO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🔬</div>
+      <div class="card-titulo">
+        <h3>Células e Metabolismo</h3>
+        <p>Unidade funcional dos seres vivos — organelas, catabolismo e anabolismo</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>A Célula como Unidade Funcional</h4>
+      <p>As células são a unidade funcional dos seres vivos. Seus processos metabólicos são fundamentais para <strong>produção de energia</strong> e manutenção da saúde, sendo essenciais para a nutrição. O metabolismo é o conjunto de todas as reações químicas intracelulares.</p>
+
+      <h4>Catabolismo vs Anabolismo</h4>
+      <table class="tabela">
+        <tr><th>Processo</th><th>O que faz</th><th>Resultado</th><th>Exemplos</th></tr>
+        <tr><td><strong>Catabolismo</strong></td><td>Degrada moléculas complexas em simples</td><td>Libera energia (ATP)</td><td>Glicólise, beta-oxidação, proteólise</td></tr>
+        <tr><td><strong>Anabolismo</strong></td><td>Sintetiza moléculas complexas a partir de simples</td><td>Consome energia (ATP)</td><td>Glicogênese, lipogênese, síntese proteica</td></tr>
+      </table>
+
+      <h4>Organelas e sua Relevância para a Nutrição</h4>
+      <table class="tabela">
+        <tr><th>Organela</th><th>Função principal</th><th>Importância nutricional</th></tr>
+        <tr><td><strong>Núcleo</strong></td><td>Armazena DNA; controla expressão gênica</td><td>Regula síntese de enzimas digestivas e metabólicas</td></tr>
+        <tr><td><strong>Mitocôndria</strong></td><td>Produção de ATP (respiração celular)</td><td>Centro do metabolismo energético dos nutrientes</td></tr>
+        <tr><td><strong>Ribossomos</strong></td><td>Síntese proteica (tradução)</td><td>Produzem enzimas digestivas e transportadores</td></tr>
+        <tr><td><strong>Ret. Endoplasmático</strong></td><td>Síntese e modificação de proteínas e lipídios</td><td>Metabolismo de gorduras e processamento proteico</td></tr>
+        <tr><td><strong>Aparelho de Golgi</strong></td><td>Processa e embala proteínas para exportação</td><td>Secreção de enzimas digestivas pancreáticas</td></tr>
+        <tr><td><strong>Lisossomos</strong></td><td>Digestão intracelular (enzimas hidrolíticas)</td><td>Reciclagem de nutrientes; catabolismo de macromoléculas</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Metabolismo e Alimentação:</strong> Cada macronutriente tem via metabólica principal: carboidratos → glicólise (citoplasma) → Ciclo de Krebs (mitocôndria); lipídios → beta-oxidação (mitocôndria); proteínas → transaminação e desaminação. Todas convergem para produção de ATP — a "moeda energética" da célula.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MEMBRANA PLASMÁTICA E NUTRIENTES -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🔁</div>
+      <div class="card-titulo">
+        <h3>Membrana Plasmática e Absorção de Nutrientes</h3>
+        <p>Transporte passivo e ativo — osmose, difusão e cotransportadores intestinais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Estrutura e Função da Membrana</h4>
+      <p>A membrana controla a entrada e saída de nutrientes por meio de <strong>transporte passivo e ativo</strong>, garantindo equilíbrio celular e absorção adequada de substâncias. Formada por bicamada fosfolipídica com proteínas transportadoras, receptores e canais iônicos (Modelo do Mosaico Fluido).</p>
+
+      <h4>Mecanismos de Transporte — Comparativo</h4>
+      <table class="tabela">
+        <tr><th>Mecanismo</th><th>Energia (ATP)?</th><th>Sentido</th><th>Nutrientes envolvidos</th></tr>
+        <tr><td><strong>Difusão simples</strong></td><td>Não (passivo)</td><td>A favor do gradiente</td><td>O₂, CO₂, álcool, vitaminas lipossolúveis (A, D, E, K)</td></tr>
+        <tr><td><strong>Difusão facilitada</strong></td><td>Não (passivo)</td><td>A favor do gradiente</td><td>Glicose (GLUT), frutose (GLUT5), aminoácidos</td></tr>
+        <tr><td><strong>Osmose</strong></td><td>Não (passivo)</td><td>Hipotônico → Hipertônico</td><td>Água — regulação do equilíbrio hídrico</td></tr>
+        <tr><td><strong>Transporte ativo</strong></td><td>Sim (gasta ATP)</td><td>Contra o gradiente</td><td>Na⁺/K⁺, Ca²⁺, Fe²⁺, glicose no intestino (SGLT1)</td></tr>
+        <tr><td><strong>Endocitose</strong></td><td>Sim</td><td>Entrada de moléculas grandes</td><td>Lipoproteínas (LDL), vitamina B12-Fator Intrínseco</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Absorção intestinal na prática:</strong> A glicose entra no enterócito via <strong>SGLT1</strong> (cotransportador Na⁺/glicose — ativo) e sai para o sangue via <strong>GLUT2</strong> (difusão facilitada — passivo). O ferro ferroso (Fe²⁺) é absorvido ativamente pelo DMT1 — por isso a vitamina C, ao reduzir Fe³⁺ → Fe²⁺, aumenta significativamente sua absorção.</p>
+      </div>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Osmose e hidratação:</strong> Quando o meio extracelular é hipertônico (desidratação), a água sai das células → enrugam. Quando hipotônico (excesso de água sem eletrólitos), a água entra → podem lisar. O controle osmótico é fundamental no manejo nutricional de pacientes hospitalizados e em soluções de reidratação oral.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MITOCÔNDRIA E ENERGIA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">⚡</div>
+      <div class="card-titulo">
+        <h3>Mitocôndria e Produção de Energia</h3>
+        <p>ATP, respiração celular aeróbica, Ciclo de Krebs e cadeia transportadora de elétrons</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>A Mitocôndria — "Usina Celular"</h4>
+      <p>A mitocôndria é responsável pela produção de <strong>ATP</strong>, energia essencial para todas as funções metabólicas e processos nutricionais. Possui dupla membrana: a membrana interna é onde ocorre a cadeia transportadora de elétrons (CTE) e a síntese de ATP por fosforilação oxidativa.</p>
+
+      <h4>Etapas da Respiração Celular Aeróbica</h4>
+      <table class="tabela">
+        <tr><th>Etapa</th><th>Local</th><th>Produto principal</th><th>ATP gerado</th></tr>
+        <tr><td><strong>Glicólise</strong></td><td>Citoplasma</td><td>2 Piruvato + 2 NADH</td><td>2 ATP (líquido)</td></tr>
+        <tr><td><strong>Oxidação do Piruvato</strong></td><td>Matriz mitocondrial</td><td>2 Acetil-CoA + 2 NADH + 2 CO₂</td><td>—</td></tr>
+        <tr><td><strong>Ciclo de Krebs</strong></td><td>Matriz mitocondrial</td><td>6 NADH + 2 FADH₂ + 2 GTP + 4 CO₂</td><td>2 ATP</td></tr>
+        <tr><td><strong>Cadeia Respiratória (CTE)</strong></td><td>Membrana interna mitocondrial</td><td>H₂O + gradiente de prótons</td><td>~32 ATP</td></tr>
+      </table>
+      <p><strong>Total por molécula de glicose: ~36–38 ATP</strong></p>
+
+      <h4>Por que o Nutricionista precisa conhecer a Mitocôndria?</h4>
+      <ul>
+        <li><strong>Metabolismo energético:</strong> como carboidratos, gorduras e proteínas são convertidos em ATP</li>
+        <li><strong>Cofatores vitamínicos:</strong> B1, B2, B3, B5 são coenzimas do Ciclo de Krebs e da CTE — deficiências comprometem a produção de energia</li>
+        <li><strong>Doenças mitocondriais:</strong> mutações no DNA mitocondrial causam doenças com comprometimento energético que exigem suporte nutricional específico</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Lipídios x Carboidratos — rendimento:</strong> 1 mol de glicose → ~36 ATP. 1 mol de ácido palmítico (gordura) → ~129 ATP. Os lipídios rendem mais ATP por molécula pois têm mais carbonos reduzidos (mais C-H, menos oxigênio). Por isso são mais eficientes como reserva energética: ~9 kcal/g vs 4 kcal/g dos carboidratos.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media" style="margin-top:32px">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Importante para compreensão do desenvolvimento e doenças genéticas</div>
+  </div>
+
+  <!-- 5. NUTRIÇÃO E DESENVOLVIMENTO HUMANO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🤰</div>
+      <div class="card-titulo">
+        <h3>Nutrição e Desenvolvimento Embrionário/Fetal</h3>
+        <p>Janela dos 1.000 dias, nutrientes críticos e programação metabólica fetal</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Nutrição Adequada no Desenvolvimento</h4>
+      <p>A nutrição adequada é fundamental durante o desenvolvimento <strong>embrionário e fetal</strong>, influenciando a formação de tecidos, órgãos e prevenção de doenças. A <strong>"janela dos 1.000 dias"</strong> (da concepção até os 2 anos) é o período de maior vulnerabilidade e plasticidade metabólica.</p>
+
+      <h4>Nutrientes Críticos por Fase do Desenvolvimento</h4>
+      <table class="tabela">
+        <tr><th>Nutriente</th><th>Função no desenvolvimento</th><th>Deficiência causa</th></tr>
+        <tr><td><strong>Ácido fólico</strong></td><td>Fechamento do tubo neural; síntese de DNA</td><td>Defeitos do tubo neural: anencefalia, espinha bífida</td></tr>
+        <tr><td><strong>Ferro</strong></td><td>Eritropoiese; transporte de O₂ ao feto</td><td>Anemia materna; baixo peso ao nascer; prematuridade</td></tr>
+        <tr><td><strong>Iodo</strong></td><td>Síntese de hormônios tireoidianos (T3, T4)</td><td>Cretinismo; hipotireoidismo congênito; retardo mental</td></tr>
+        <tr><td><strong>Cálcio + Vitamina D</strong></td><td>Mineralização óssea e dentária fetal</td><td>Raquitismo; osteomalácia materna</td></tr>
+        <tr><td><strong>DHA (ômega-3)</strong></td><td>Desenvolvimento cerebral e da retina</td><td>Déficits neurocognitivos e visuais</td></tr>
+        <tr><td><strong>Zinco</strong></td><td>Divisão celular; síntese proteica; expressão gênica</td><td>Malformações fetais; crescimento retardado</td></tr>
+      </table>
+
+      <h4>Fases do Desenvolvimento e Períodos Críticos</h4>
+      <ul>
+        <li><strong>Período pré-embrionário (1ª–2ª semana):</strong> fertilização, clivagem e implantação. Lei do "tudo ou nada".</li>
+        <li><strong>Período embrionário (3ª–8ª semana):</strong> organogênese — formação de todos os órgãos. <em>Período mais crítico para malformações congênitas.</em></li>
+        <li><strong>Período fetal (9ª semana ao nascimento):</strong> crescimento e maturação dos órgãos já formados.</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Hipótese de Barker (Programação Metabólica Fetal):</strong> Desnutrição intrauterina pode "programar" o metabolismo fetal aumentando o risco de obesidade, diabetes tipo 2, hipertensão e doenças cardiovasculares na vida adulta. A nutrição nos 1.000 primeiros dias é determinante para a saúde ao longo de todo o ciclo de vida.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MUTAÇÕES E DOENÇAS METABÓLICAS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">⚠️</div>
+      <div class="card-titulo">
+        <h3>Mutações Genéticas e Doenças Metabólicas</h3>
+        <p>Erros inatos do metabolismo, síndromes genéticas e intervenções nutricionais</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que são Mutações Genéticas?</h4>
+      <p>Alterações genéticas podem causar doenças metabólicas e síndromes, exigindo intervenções nutricionais específicas. Mutações são alterações na sequência do DNA — podem ser <strong>herdadas</strong> (germinativas) ou <strong>adquiridas</strong> (somáticas). Tipos principais:</p>
+      <ul>
+        <li><strong>Substituição de bases:</strong> troca de um nucleotídeo → pode alterar o aminoácido da proteína</li>
+        <li><strong>Deleção/inserção:</strong> remoção ou adição de nucleotídeos → muda o quadro de leitura (frameshift)</li>
+        <li><strong>Trissomia:</strong> cromossomo extra (ex: Síndrome de Down — trissomia do 21)</li>
+      </ul>
+
+      <h4>Principais Doenças Metabólicas de Origem Genética com Conduta Nutricional</h4>
+      <table class="tabela">
+        <tr><th>Doença</th><th>Mecanismo</th><th>Conduta nutricional</th></tr>
+        <tr><td><strong>Fenilcetonúria (PKU)</strong></td><td>Def. de fenilalanina hidroxilase (gene PAH)</td><td>Dieta restrita em fenilalanina; fórmulas metabólicas especiais</td></tr>
+        <tr><td><strong>Galactosemia</strong></td><td>Def. de galactose-1-P uridiltransferase (gene GALT)</td><td>Exclusão total de lactose e galactose — inclusive leite materno</td></tr>
+        <tr><td><strong>Doença celíaca</strong></td><td>Predisposição HLA-DQ2/DQ8 + resposta imune ao glúten</td><td>Dieta 100% isenta de glúten (trigo, centeio, cevada) — permanente</td></tr>
+        <tr><td><strong>Intolerância à lactose</strong></td><td>Redução da expressão do gene LCT (lactase)</td><td>Restrição de lactose; iogurte e queijos curados são tolerados</td></tr>
+        <tr><td><strong>Síndrome de Down</strong></td><td>Trissomia do cromossomo 21</td><td>Controle do peso; atenção à constipação e hipotireoidismo</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Triagem Neonatal (Teste do Pezinho):</strong> Detecta precocemente fenilcetonúria, hipotireoidismo congênito, anemia falciforme, fibrose cística e outras condições. A intervenção nutricional nas <strong>primeiras semanas de vida</strong> previne danos neurológicos e metabólicos irreversíveis. Obrigatório no Brasil pelo Programa Nacional de Triagem Neonatal.</p>
+      </div>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Epigenética e Nutrição:</strong> A metilação do DNA — mecanismo epigenético — é diretamente regulada por nutrientes doadores de grupos metil: folato, vitamina B12, metionina e colina. Déficits desses nutrientes podem alterar expressão de genes do câncer, metabolismo e imunidade, sem mudar a sequência do DNA.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Genética e Embriologia Aplicada à Nutrição</h2>
+    <p>25 questões de múltipla escolha com gabarito comentado</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 25 questões</span>
+      <span class="chip chip-green">🧬 Genética e Metabolismo</span>
+      <span class="chip chip-green">🔁 Membrana e Transporte</span>
+      <span class="chip chip-orange">⚡ Mitocôndria e Energia</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 25</div>
+  </div>
+
+    <div id="bannerProgresso" class="banner-progresso" style="display:none">
+    <p>📌 Você tem progresso salvo neste simulado. Deseja continuar?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="continuarProgresso()">✅ Continuar</button>
+      <button onclick="descartarProgresso()" style="background:#dc2626">🗑️ Recomeçar</button>
+    </div>
+  </div>
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <div class="btn-export-group" style="justify-content:flex-end">
+      <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+      <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+    </div>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const questoes = [
+  {
+    tema: 'Genética e Nutrição',
+    enunciado: 'A genética influencia o metabolismo nutricional porque:',
+    opcoes: [
+      'Determina apenas o tamanho corporal do indivíduo, sem interferir no metabolismo.',
+      'Alterações no DNA podem modificar enzimas, transportadores e hormônios que controlam a absorção e o metabolismo dos nutrientes.',
+      'O DNA é a única fonte de energia para as células intestinais.',
+      'A expressão gênica é idêntica em todos os indivíduos, não explicando diferenças metabólicas.'
+    ],
+    correta: 1,
+    gabarito: 'O DNA codifica enzimas metabólicas, transportadores de nutrientes e hormônios. Mutações ou variações nesses genes alteram como os nutrientes são absorvidos, metabolizados e utilizados. Ex: mutação na lactase → intolerância à lactose; mutação na fenilalanina hidroxilase → fenilcetonúria. A genética explica grande parte das diferenças individuais de resposta à dieta.'
+  },
+  {
+    tema: 'Genética e Nutrição',
+    enunciado: 'A diferença entre Nutrigenômica e Nutrigenética é:',
+    opcoes: [
+      'São sinônimas — ambas estudam a relação entre genes e alimentos.',
+      'Nutrigenômica estuda como os nutrientes modulam a expressão gênica; Nutrigenética estuda como variações genéticas individuais afetam a resposta aos nutrientes.',
+      'Nutrigenômica estuda doenças hereditárias; Nutrigenética estuda o impacto da dieta no câncer.',
+      'Nutrigenômica é aplicada apenas em gestantes; Nutrigenética em idosos.'
+    ],
+    correta: 1,
+    gabarito: 'Nutrigenômica: do nutriente ao gene — os alimentos modulam (ligam/desligam) genes. Nutrigenética: do gene ao nutriente — variações genéticas individuais determinam resposta diferente ao mesmo nutriente. Ex de nutrigenética: portadores do alelo APOE4 metabolizam gorduras saturadas de forma mais aterogênica; portadores de variante MTHFR têm metabolismo reduzido do folato.'
+  },
+  {
+    tema: 'Célula e Metabolismo',
+    enunciado: 'A membrana plasmática exerce função essencial na nutrição porque:',
+    opcoes: [
+      'É responsável pela produção de ATP que alimenta os processos digestivos.',
+      'Controla seletivamente a entrada e saída de nutrientes e íons, garantindo o equilíbrio celular e a absorção adequada.',
+      'Armazena vitaminas lipossolúveis para uso em momentos de jejum.',
+      'Produz enzimas digestivas que são lançadas no lúmen intestinal.'
+    ],
+    correta: 1,
+    gabarito: 'A membrana plasmática (bicamada fosfolipídica + proteínas) controla tudo que entra e sai da célula. Proteínas transportadoras (GLUT, SGLT) permitem entrada seletiva de glicose; canais iônicos regulam Na⁺, K⁺, Ca²⁺; receptores reconhecem insulina. Sem esse controle, a homeostase nutricional celular seria impossível. É a "alfândega" que decide o que entra e o que sai da célula.'
+  },
+  {
+    tema: 'Transporte de Nutrientes',
+    enunciado: 'A diferença fundamental entre transporte ativo e passivo é:',
+    opcoes: [
+      'O transporte passivo ocorre sempre contra o gradiente de concentração; o ativo, a favor.',
+      'O transporte ativo consome energia (ATP) e pode mover substâncias contra o gradiente; o passivo não gasta energia e ocorre a favor do gradiente.',
+      'O transporte ativo é exclusivo para vitaminas; o passivo, para minerais.',
+      'Ambos gastam ATP, mas o ativo usa mais energia que o passivo.'
+    ],
+    correta: 1,
+    gabarito: 'Transporte passivo (difusão simples, facilitada e osmose): sem ATP, a favor do gradiente — do maior para o menor. Transporte ativo: gasta ATP; move substâncias CONTRA o gradiente (de menor para maior concentração). Exemplos de transporte ativo: bomba Na⁺/K⁺ ATPase; absorção intestinal de glicose pelo SGLT1; absorção de Fe²⁺ pelo DMT1; absorção de cálcio no intestino.'
+  },
+  {
+    tema: 'Transporte de Nutrientes',
+    enunciado: 'A osmose é definida como o movimento:',
+    opcoes: [
+      'De solutos do meio mais concentrado para o menos concentrado, através de qualquer membrana.',
+      'De água através de membrana semipermeável, do meio hipotônico (menos concentrado em solutos) para o hipertônico (mais concentrado).',
+      'De íons Na⁺ e K⁺ contra o gradiente, com gasto de ATP.',
+      'De glicose por difusão facilitada, mediado por proteínas GLUT.'
+    ],
+    correta: 1,
+    gabarito: 'Osmose = movimento de ÁGUA (não de solutos) através de membrana semipermeável, de onde há menor concentração de solutos (hipotônico) para onde há maior concentração (hipertônico). É transporte passivo — não gasta ATP. Fundamental para: absorção de água no intestino grosso, hidratação celular e regulação do volume celular. Base das soluções de reidratação oral.'
+  },
+  {
+    tema: 'Transporte de Nutrientes',
+    enunciado: 'No intestino delgado, a glicose é absorvida pelos enterócitos por meio de:',
+    opcoes: [
+      'Difusão simples, pois a glicose é uma molécula pequena e polar.',
+      'Cotransporte ativo sódio-glicose (SGLT1) na membrana apical, e difusão facilitada (GLUT2) na membrana basolateral para liberação ao sangue portal.',
+      'Endocitose, pois a glicose é grande demais para atravessar a membrana.',
+      'Osmose, pois a glicose acompanha o fluxo de água que atravessa o enterócito.'
+    ],
+    correta: 1,
+    gabarito: 'Absorção intestinal de glicose usa dois transportadores: 1) SGLT1 (Na⁺/glicose cotransportador) na membrana apical — absorção ATIVA acoplada ao gradiente de Na⁺ (criado pela bomba Na⁺/K⁺). 2) GLUT2 na membrana basolateral — saída PASSIVA para o sangue portal (difusão facilitada). Frutose usa GLUT5 (passivo) na membrana apical e também GLUT2 na basolateral.'
+  },
+  {
+    tema: 'Mitocôndria e Energia',
+    enunciado: 'A mitocôndria é chamada de "usina da célula" porque:',
+    opcoes: [
+      'Armazena glicogênio para fornecer glicose em momentos de jejum.',
+      'É a organela responsável pela síntese de todas as proteínas celulares.',
+      'É o principal local de produção de ATP por respiração celular aeróbica, por meio do Ciclo de Krebs e da cadeia transportadora de elétrons.',
+      'Produz hormônios como a insulina que regulam o metabolismo energético.'
+    ],
+    correta: 2,
+    gabarito: 'A mitocôndria realiza a respiração celular aeróbica: Ciclo de Krebs (matriz) gera NADH e FADH₂; a cadeia transportadora de elétrons (membrana interna) usa esses portadores para criar gradiente de H⁺ e sintetizar ATP (fosforilação oxidativa). Resultado: ~36–38 ATP por glicose. Sem mitocôndrias, as células dependeriam apenas da glicólise (2 ATP) — insuficiente para manter a maioria das funções celulares.'
+  },
+  {
+    tema: 'Mitocôndria e Energia',
+    enunciado: 'A ordem correta das etapas da respiração celular aeróbica é:',
+    opcoes: [
+      'Ciclo de Krebs → Glicólise → Cadeia Transportadora de Elétrons',
+      'Glicólise (citoplasma) → Ciclo de Krebs (matriz mitocondrial) → Cadeia Transportadora de Elétrons (membrana interna mitocondrial)',
+      'Cadeia Transportadora → Glicólise → Ciclo de Krebs',
+      'Glicólise → Cadeia Transportadora → Ciclo de Krebs'
+    ],
+    correta: 1,
+    gabarito: 'Sequência correta: 1ª) Glicólise no citoplasma → 2 piruvato + 2 ATP + 2 NADH. 2ª) Piruvato → Acetil-CoA (oxidação do piruvato, matriz mitocondrial). 3ª) Ciclo de Krebs (matriz mitocondrial) → NADH, FADH₂, GTP + CO₂ liberado. 4ª) Cadeia Transportadora de Elétrons/Fosforilação Oxidativa (membrana interna) → H₂O + ~32 ATP. Total: ~36–38 ATP por molécula de glicose.'
+  },
+  {
+    tema: 'Mitocôndria e Energia',
+    enunciado: 'As vitaminas do complexo B são essenciais para o metabolismo energético porque:',
+    opcoes: [
+      'Fornecem calorias diretamente ao processo de respiração celular.',
+      'Atuam como coenzimas em reações do Ciclo de Krebs e da cadeia transportadora de elétrons — sem elas, a produção de ATP é comprometida.',
+      'São componentes estruturais da membrana mitocondrial interna.',
+      'Inibem enzimas do catabolismo, preservando as reservas energéticas do organismo.'
+    ],
+    correta: 1,
+    gabarito: 'B1 (tiamina) → coenzima da piruvato desidrogenase; B2 (riboflavina) → componente do FAD/FADH₂; B3 (niacina) → componente do NAD⁺/NADH; B5 (ácido pantotênico) → componente da Coenzima A. Deficiência de tiamina (beribéri) compromete oxidação do piruvato → acúmulo de lactato → acidose. As vitaminas B são cofatores vitais e não fornecem calorias diretamente.'
+  },
+  {
+    tema: 'Célula e Metabolismo',
+    enunciado: 'A diferença entre catabolismo e anabolismo é:',
+    opcoes: [
+      'Catabolismo ocorre apenas durante o exercício físico; anabolismo, durante o repouso.',
+      'Catabolismo degrada moléculas complexas em simples, liberando energia; anabolismo sintetiza moléculas complexas a partir de simples, consumindo energia.',
+      'Catabolismo e anabolismo são sinônimos para o metabolismo basal.',
+      'Catabolismo produz proteínas; anabolismo degrada carboidratos.'
+    ],
+    correta: 1,
+    gabarito: 'Catabolismo (degradação): glicólise, beta-oxidação, proteólise → quebra de moléculas grandes → liberação de ATP. Anabolismo (síntese): glicogênese, lipogênese, síntese proteica → construção de moléculas complexas → consumo de ATP. Ambos ocorrem simultaneamente. O balanço entre eles determina o estado nutricional: anabolismo > catabolismo = crescimento/ganho de massa; catabolismo > anabolismo = emagrecimento/desnutrição.'
+  },
+  {
+    tema: 'Célula e Metabolismo',
+    enunciado: 'Qual organela está diretamente envolvida na síntese e secreção das enzimas digestivas pancreáticas (como lipase e amilase)?',
+    opcoes: [
+      'Mitocôndria, pois fornece ATP para a digestão.',
+      'Lisossomos, pois contêm enzimas hidrolíticas para digestão intracelular.',
+      'Retículo Endoplasmático Rugoso e Aparelho de Golgi — sintetizam, processam e empacotam as proteínas secretoras.',
+      'Núcleo, pois contém o DNA que codifica as sequências das enzimas.'
+    ],
+    correta: 2,
+    gabarito: 'Proteínas secretadas (enzimas pancreáticas) seguem a via secretória clássica: síntese no Retículo Endoplasmático Rugoso (pelos ribossomos ligados) → processamento e empacotamento no Aparelho de Golgi → vesículas secretoras → exocitose para o duodeno. O núcleo fornece o molde (DNA → mRNA), mas não sintetiza proteínas diretamente. A mitocôndria fornece ATP para o processo, mas não participa da síntese proteica.'
+  },
+  {
+    tema: 'Transporte de Nutrientes',
+    enunciado: 'A vitamina C melhora a absorção de ferro não-heme porque:',
+    opcoes: [
+      'Forma quelatos com o ferro, facilitando sua difusão simples pela membrana do enterócito.',
+      'Reduz o ferro da forma Fe³⁺ (férrico, pouco absorvível) para Fe²⁺ (ferroso), que é a forma aceita pelo transportador ativo DMT1.',
+      'Aumenta a produção de ácido clorídrico gástrico, melhorando a digestão das proteínas que ligam o ferro.',
+      'Estimula a bomba Na⁺/K⁺ do enterócito, aumentando a absorção de todos os minerais.'
+    ],
+    correta: 1,
+    gabarito: 'O ferro não-heme dos vegetais está na forma Fe³⁺ (férrico), que o transportador intestinal DMT1 (Divalent Metal Transporter 1) NÃO consegue absorver. A vitamina C (ácido ascórbico) atua como agente redutor: Fe³⁺ + vitamina C → Fe²⁺. Assim, o ferro torna-se substrato para o DMT1, aumentando a absorção. Por isso recomenda-se consumir fontes vegetais de ferro com sucos cítricos ou alimentos ricos em vitamina C.'
+  },
+  {
+    tema: 'Desenvolvimento Embrionário',
+    enunciado: 'O ácido fólico é indicado no período periconcepcional principalmente porque:',
+    opcoes: [
+      'Previne a anemia ferropriva da gestante no primeiro trimestre.',
+      'É essencial para o fechamento do tubo neural, que ocorre entre a 3ª e 4ª semana — antes de muitas mulheres saberem que estão grávidas.',
+      'Estimula a produção de colostro e prepara as glândulas mamárias para a lactação.',
+      'Reduz a tontura matinal (náuseas), melhorando o estado nutricional geral da gestante.'
+    ],
+    correta: 1,
+    gabarito: 'O tubo neural — que origina o cérebro e medula espinhal — fecha entre o 21º e 28º dia após a concepção, quando muitas mulheres ainda não sabem que estão grávidas. Por isso a suplementação PERICONCEPCIONAL (400–800 mcg/dia, antes da gravidez confirmada) é fundamental. Deficiência de folato neste período causa defeitos do tubo neural: anencefalia (incompatível com a vida) e espinha bífida (mielomeningocele).'
+  },
+  {
+    tema: 'Desenvolvimento Embrionário',
+    enunciado: 'A deficiência de iodo durante a gestação está associada a:',
+    opcoes: [
+      'Defeitos do tubo neural, como anencefalia e espinha bífida.',
+      'Cretinismo — combinação de hipotireoidismo congênito, retardo mental irreversível, surdez e nanismo.',
+      'Síndrome de Down, pois o iodo é necessário para a segregação cromossômica.',
+      'Hipoglicemia neonatal grave, pois o iodo ativa enzimas do metabolismo da glicose.'
+    ],
+    correta: 1,
+    gabarito: 'O iodo é indispensável para síntese dos hormônios tireoidianos T3 e T4. No feto, esses hormônios são fundamentais para o desenvolvimento cerebral. Deficiência grave de iodo → hipotireoidismo fetal → cretinismo (retardo mental irreversível, surdez, nanismo, bócio). O Brasil adota iodação universal do sal como estratégia de saúde pública, eliminando o cretinismo endêmico nas últimas décadas.'
+  },
+  {
+    tema: 'Desenvolvimento Embrionário',
+    enunciado: 'A "Hipótese de Barker" ou "Programação Metabólica Fetal" postula que:',
+    opcoes: [
+      'O peso ao nascer é determinado exclusivamente pelo patrimônio genético do pai.',
+      'A desnutrição intrauterina pode programar o metabolismo fetal de forma a aumentar o risco de obesidade, diabetes tipo 2, hipertensão e doenças cardiovasculares na vida adulta.',
+      'Recém-nascidos macrossômicos (acima do peso) são imunes a doenças metabólicas na vida adulta.',
+      'A alimentação nos primeiros 5 anos de vida é mais determinante para a saúde adulta do que a nutrição intrauterina.'
+    ],
+    correta: 1,
+    gabarito: 'David Barker (1989) demonstrou que baixo peso ao nascer (reflexo de desnutrição intrauterina) estava associado a maior mortalidade cardiovascular décadas depois. Mecanismo: o feto adapta seu metabolismo ao ambiente de escassez (maior eficiência em poupar gordura, insulinorresistência). Quando nasce em ambiente de abundância, essas adaptações tornam-se fatores de risco. Base do conceito dos "1.000 primeiros dias" como janela de oportunidade.'
+  },
+  {
+    tema: 'Mutações e Doenças',
+    enunciado: 'A fenilcetonúria (PKU) é causada por uma mutação no gene PAH e requer intervenção nutricional porque:',
+    opcoes: [
+      'Causa deficiência de fenilalanina — aminoácido essencial que precisa ser suplementado.',
+      'O defeito enzimático acumula fenilalanina no sangue e cérebro, sendo neurotóxica; a dieta restrita em fenilalanina é o único tratamento eficaz.',
+      'Provoca intolerância ao glúten, exigindo dieta sem trigo, centeio e cevada.',
+      'Causa deficiência de insulina, necessitando controle glicêmico rigoroso pela dieta.'
+    ],
+    correta: 1,
+    gabarito: 'PKU: mutação no gene PAH → ausência/redução da fenilalanina hidroxilase → fenilalanina não é convertida em tirosina → acúmulo de fenilalanina e seus metabólitos tóxicos no cérebro → retardo mental irreversível se não tratada. Conduta: dieta pobre em fenilalanina (restrição de carnes, leite, ovos, leguminosas) + fórmulas de aminoácidos sem fenilalanina + suplementação de tirosina. Diagnóstico: teste do pezinho obrigatório no Brasil desde 1992.'
+  },
+  {
+    tema: 'Mutações e Doenças',
+    enunciado: 'Na doença celíaca, a intervenção nutricional é a exclusão do glúten porque:',
+    opcoes: [
+      'O glúten é tóxico para todas as pessoas, mas os celíacos são mais sensíveis a seus efeitos.',
+      'Indivíduos com predisposição genética (HLA-DQ2/DQ8) desenvolvem resposta imune ao glúten, causando atrofia das vilosidades intestinais e má absorção — a retirada do glúten é o único tratamento.',
+      'O glúten bloqueia os transportadores de glicose (GLUT), causando hipoglicemia pós-prandial.',
+      'A exclusão do glúten é temporária — apenas enquanto houver inflamação intestinal ativa.'
+    ],
+    correta: 1,
+    gabarito: 'Doença celíaca: condição autoimune em indivíduos geneticamente predispostos (HLA-DQ2 em ~95% dos casos). O glúten (gliadina do trigo, hordeína da cevada, secalina do centeio) ativa resposta imune → inflamação + atrofia das vilosidades intestinais → má absorção de praticamente todos os nutrientes. Tratamento: dieta isenta de glúten PELO RESTO DA VIDA — não existe tratamento farmacológico substituto. A adesão promove regeneração das vilosidades em meses.'
+  },
+  {
+    tema: 'Genética e Nutrição',
+    enunciado: 'Sobre epigenética e nutrição, é CORRETO afirmar:',
+    opcoes: [
+      'A epigenética estuda mutações permanentes do DNA causadas pela dieta.',
+      'A dieta pode modificar a expressão gênica por meio de mecanismos como metilação do DNA e acetilação de histonas, sem alterar a sequência do DNA.',
+      'A epigenética demonstra que os genes não têm influência sobre o metabolismo nutricional.',
+      'Apenas o DNA nuclear sofre modificações epigenéticas; o DNA mitocondrial é imune.'
+    ],
+    correta: 1,
+    gabarito: 'Epigenética = modificações herdáveis na expressão gênica que NÃO alteram a sequência do DNA. Mecanismos: metilação do DNA (gene silenciado quando metilado), acetilação/desacetilação de histonas (modifica acesso ao DNA). Nutrientes que regulam a metilação: folato, B12, metionina, colina (doadores de grupos metil). A dieta materna pode modificar o epigenoma do filho — base da programação metabólica fetal.'
+  },
+  {
+    tema: 'Célula e Metabolismo',
+    enunciado: 'A relação entre metabolismo celular e alimentação pode ser descrita como:',
+    opcoes: [
+      'Os alimentos apenas fornecem vitaminas; a energia vem exclusivamente do metabolismo basal.',
+      'Os macronutrientes ingeridos são substratos para as vias metabólicas celulares que produzem ATP, e os micronutrientes atuam como cofatores enzimáticos nessas reações.',
+      'A alimentação influencia apenas o anabolismo; o catabolismo ocorre independentemente da dieta.',
+      'Somente carboidratos são metabolizados para produção de ATP; lipídios e proteínas têm função exclusivamente estrutural.'
+    ],
+    correta: 1,
+    gabarito: 'A alimentação fornece: 1) macronutrientes como substrato energético (glicose, ácidos graxos, aminoácidos → vias catabólicas → ATP); 2) micronutrientes (vitaminas B como cofatores enzimáticos; minerais como ativadores enzimáticos; antioxidantes que protegem as organelas). Sem ingestão adequada de macronutrientes, o organismo cataboliza proteínas e gorduras endógenas para suprir energia — comprometendo estrutura e função celular.'
+  },
+  {
+    tema: 'Mitocôndria e Energia',
+    enunciado: 'Por que os lipídios fornecem mais ATP por grama do que os carboidratos?',
+    opcoes: [
+      'Porque os lipídios contêm mais oxigênio em sua estrutura, acelerando a respiração celular.',
+      'Porque os lipídios são moléculas mais reduzidas (maior proporção C-H, menor oxigênio), gerando mais NADH e FADH₂ na beta-oxidação e, consequentemente, mais ATP.',
+      'Porque os lipídios não precisam passar pelo Ciclo de Krebs, sendo diretamente convertidos em ATP.',
+      'Porque os lipídios têm maior peso molecular, o que aumenta proporcionalmente a produção de ATP.'
+    ],
+    correta: 1,
+    gabarito: 'Lipídios são moléculas altamente reduzidas (pouco oxigênio, muitos C-H) → beta-oxidação gera grande quantidade de NADH e FADH₂ → muito ATP. Ácido palmítico (C16) → ~129 ATP. Glicose (C6H12O6) → ~36–38 ATP. Por grama: lipídios ≈ 9 kcal/g vs carboidratos ≈ 4 kcal/g. Isso explica por que o tecido adiposo é a principal reserva energética do organismo — muito mais eficiente que o glicogênio.'
+  },
+  {
+    tema: 'Transporte de Nutrientes',
+    enunciado: 'As vitaminas lipossolúveis (A, D, E, K) são absorvidas por qual mecanismo?',
+    opcoes: [
+      'Transporte ativo dependente de ATP, pois são moléculas grandes e precisam de carreadores específicos.',
+      'Difusão simples pela bicamada fosfolipídica, pois são apolares e se dissolvem na membrana lipídica. Dependem da presença de gorduras na refeição e da bile para emulsificação prévia.',
+      'Difusão facilitada mediada por proteínas GLUT, semelhante à glicose.',
+      'Endocitose mediada por receptores, pois formam grandes quilomícrons que não atravessam membranas.'
+    ],
+    correta: 1,
+    gabarito: 'Vitaminas lipossolúveis (A, D, E, K) são apolares — se dissolvem livremente na bicamada fosfolipídica (também apolar) por difusão simples, sem gasto de ATP e sem transportadores proteicos. Pré-requisitos: 1) presença de gorduras na refeição (estimula secreção biliar e formação de micelas); 2) bile para emulsificação; 3) lipase pancreática. Por isso recomenda-se consumi-las com refeições que contenham gordura — dietas muito hipogordurosas prejudicam sua absorção.'
+  },
+  {
+    tema: 'Desenvolvimento Embrionário',
+    enunciado: 'O período embrionário (3ª a 8ª semana) é considerado o mais crítico para malformações congênitas porque:',
+    opcoes: [
+      'É quando ocorre o maior ganho de peso fetal, aumentando a demanda nutricional materna.',
+      'Neste período ocorre a organogênese — formação de todos os órgãos e sistemas. Exposição a teratógenos (deficiências nutricionais, álcool, medicamentos) pode causar malformações estruturais permanentes.',
+      'A placenta ainda não está formada, impedindo a transferência de nutrientes.',
+      'É quando ocorre a diferenciação das células germinativas, determinando o sexo do bebê.'
+    ],
+    correta: 1,
+    gabarito: 'Organogênese (3ª–8ª semana): cada órgão tem seu "período crítico" de diferenciação celular. Nesse período, cada sistema é mais vulnerável a agentes teratogênicos. Exemplos: tubo neural (3ª–4ª semana) → folato; coração (3ª–6ª semana) → vitamina B6, colina; palato (6ª–9ª semana). Após a 8ª semana, os órgãos já estão formados — a fase fetal é de crescimento e maturação, não organogênese. O álcool é um dos teratógenos mais potentes neste período.'
+  },
+  {
+    tema: 'Mutações e Doenças',
+    enunciado: 'A galactosemia clássica é uma doença metabólica hereditária que exige:',
+    opcoes: [
+      'Restrição de glicose e frutose, pois a galactose se converte em frutose no organismo afetado.',
+      'Exclusão total e permanente de galactose e lactose da dieta — incluindo leite materno — pois o acúmulo de galactose-1-fosfato é tóxico para fígado, cérebro e rins.',
+      'Suplementação de lactase exógena, pois o problema é a falta de digestão da lactose.',
+      'Dieta hipoproteica, pois as proteínas do leite contêm galactose em sua estrutura.'
+    ],
+    correta: 1,
+    gabarito: 'Galactosemia clássica: mutação no gene GALT → deficiência da enzima galactose-1-fosfato uridiltransferase → acúmulo de galactose-1-fosfato e galactitol → toxicidade hepática (icterícia, cirrose), neurológica (retardo mental) e ocular (catarata). Tratamento: exclusão TOTAL e IMEDIATA de galactose e lactose — inclusive leite materno (substituir por fórmulas à base de soja ou aminoácidos). Diagnóstico pelo teste do pezinho — intervenção nas primeiras horas/dias de vida é fundamental.'
+  },
+  {
+    tema: 'Célula e Metabolismo',
+    enunciado: 'Os lisossomos contribuem para o metabolismo nutricional porque:',
+    opcoes: [
+      'Sintetizam ácidos graxos para armazenamento no tecido adiposo.',
+      'Realizam digestão intracelular — contêm enzimas hidrolíticas que quebram macromoléculas em monômeros (aminoácidos, monossacarídeos, ácidos graxos) que retornam ao metabolismo celular.',
+      'São responsáveis pela absorção de vitaminas hidrossolúveis no intestino delgado.',
+      'Produzem hormônios como glucagon e insulina para regulação glicêmica.'
+    ],
+    correta: 1,
+    gabarito: 'Lisossomos: vesículas com pH ácido contendo mais de 50 hidrolases ácidas (proteases, lipases, nucleases, glicosidases). Funções: autofagia (digerem organelas danificadas — reciclagem intracelular) e heterofagia (digerem material captado por endocitose). Os produtos — aminoácidos, glicose, ácidos graxos, nucleotídeos — são liberados no citoplasma e reutilizados como substrato energético ou estrutural. Especialmente importantes durante jejum prolongado, quando a autofagia aumenta para suprir nutrientes.'
+  },
+  {
+    tema: 'Genética e Nutrição',
+    enunciado: 'O Teste do Pezinho (triagem neonatal) é relevante para o nutricionista porque:',
+    opcoes: [
+      'Avalia o estado nutricional do recém-nascido por meio do perfil de aminoácidos plasmáticos.',
+      'Detecta precocemente erros inatos do metabolismo (como PKU, galactosemia e hipotireoidismo congênito) que exigem intervenção dietética imediata para prevenir danos irreversíveis.',
+      'Determina o tipo de aleitamento mais adequado com base no perfil genético do bebê.',
+      'Identifica intolerâncias alimentares que guiarão a introdução alimentar após os 6 meses.'
+    ],
+    correta: 1,
+    gabarito: 'O Teste do Pezinho obrigatório no Brasil (PNTN) detecta: PKU, hipotireoidismo congênito, anemia falciforme, fibrose cística, hiperplasia adrenal congênita e deficiência de biotinidase. Para PKU e galactosemia, a intervenção dietética NAS PRIMEIRAS SEMANAS DE VIDA é determinante para prevenir retardo mental irreversível. O nutricionista é peça-chave na educação familiar e no acompanhamento dessas dietas restritivas ao longo de toda a vida.'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = [];
+
+function renderQuestao(idx) {
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const container = document.getElementById('quiz-container');
+  const div = document.createElement('div');
+  div.className = 'questao-card';
+  div.id = 'questao-card-' + idx;
+  div.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">Questão ${idx + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn" id="op-${idx}-${i}" onclick="responder(${idx}, ${i})">
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito" id="gabarito-${idx}">💬 ${q.gabarito}</div>
+  `;
+  container.innerHTML = '';
+  container.appendChild(div);
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function responder(idx, opcaoIdx) {
+  if (respondidas.includes(idx)) return;
+  respondidas.push(idx);
+  salvarProgresso();
+  const q = questoes[idx];
+  const letras = ['A','B','C','D'];
+  const card = document.getElementById('questao-card-' + idx);
+  const gabarito = document.getElementById('gabarito-' + idx);
+  for (let i = 0; i < q.opcoes.length; i++) {
+    const btn = document.getElementById('op-' + idx + '-' + i);
+    btn.disabled = true;
+    if (i === q.correta) btn.classList.add('correta');
+  }
+  const selecionado = document.getElementById('op-' + idx + '-' + opcaoIdx);
+  if (opcaoIdx === q.correta) {
+    acertos++;
+    card.classList.add('acertou');
+    gabarito.className = 'q-gabarito show-acertou';
+    gabarito.innerHTML = '✅ Correto! ' + q.gabarito;
+  } else {
+    erros++;
+    selecionado.classList.add('incorreta');
+    card.classList.add('errou');
+    gabarito.className = 'q-gabarito show-errou';
+    gabarito.innerHTML = '❌ Incorreto. Resposta correta: <strong>' + letras[q.correta] + '</strong>. ' + q.gabarito;
+  }
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = false;
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  if (questaoAtual < questoes.length) {
+    renderQuestao(questaoAtual);
+  } else {
+    mostrarResultado();
+  }
+}
+
+function atualizarProgresso() {
+  const pct = (respondidas.length / questoes.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = respondidas.length + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const pct = Math.round((acertos / questoes.length) * 100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '👍' : '📚';
+  let msg = pct >= 80 ? 'Excelente desempenho!' : pct >= 60 ? 'Bom resultado, continue revisando!' : 'Continue estudando — você chega lá!';
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Você completou todas as questões de Genética e Embriologia Aplicada à Nutrição.</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${pct}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('btn-proximo').disabled = true;
+  atualizarProgresso();
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = [];
+  renderQuestao(0);
+  atualizarProgresso();
+}
+
+renderQuestao(0);
+
+// ═══════════════════════════════════════════════
+// SALVAR PROGRESSO NO localStorage
+// ═══════════════════════════════════════════════
+const QUIZ_KEY = 'quiz_' + window.location.pathname.split('/').pop().replace('.html','');
+
+function salvarProgresso() {
+  try {
+    localStorage.setItem(QUIZ_KEY, JSON.stringify({
+      respondidas, acertos, erros,
+      qAtual: typeof qAtual !== 'undefined' ? qAtual : (typeof questaoAtual !== 'undefined' ? questaoAtual : 0),
+      salvoEm: new Date().toISOString()
+    }));
+  } catch(e) {}
+}
+
+function carregarProgresso() {
+  try {
+    const salvo = localStorage.getItem(QUIZ_KEY);
+    if (!salvo) return false;
+    const d = JSON.parse(salvo);
+    const totalResp = Array.isArray(d.respondidas) ? d.respondidas.filter(x => x !== undefined && x !== null).length
+                    : Object.keys(d.respondidas || {}).length;
+    if (totalResp === 0) return false;
+    return d;
+  } catch(e) { return false; }
+}
+
+function limparProgresso() {
+  try { localStorage.removeItem(QUIZ_KEY); } catch(e) {}
+}
+
+function continuarProgresso() {
+  const d = carregarProgresso();
+  if (!d) return;
+  respondidas = d.respondidas || [];
+  acertos = d.acertos || 0;
+  erros = d.erros || 0;
+  questaoAtual = d.qAtual || respondidas.length;
+  document.getElementById('bannerProgresso').style.display = 'none';
+  if (questaoAtual >= questoes.length) { mostrarResultado(); return; }
+  renderQuestao(questaoAtual);
+}
+
+function descartarProgresso() {
+  limparProgresso();
+  document.getElementById('bannerProgresso').style.display = 'none';
+  reiniciarQuiz();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const d = carregarProgresso();
+  if (d) document.getElementById('bannerProgresso').style.display = 'flex';
+});
+
+// ═══════════════════════════════════════════════
+// EXPORTAR PDF
+// ═══════════════════════════════════════════════
+function exportarPDF() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+
+  const respostasPDF = questoes.map((q, i) => {
+    let resp, certa;
+    if (Array.isArray(respondidas)) {
+      resp = respondidas[i]; certa = q.correta;
+    } else {
+      resp = respondidas[String(i)] !== undefined ? respondidas[String(i)] : respondidas[i];
+      certa = q.correta;
+    }
+    const acertou = resp === certa;
+    const letras = ['A','B','C','D'];
+    return { q, i, resp, certa, acertou, letras };
+  });
+
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Resultado — ${materia}</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 30px; color: #1a2e1f; }
+    h1 { color: #2d6a4f; font-size: 22px; margin-bottom: 4px; }
+    .sub { color: #7a8a7c; font-size: 13px; margin-bottom: 24px; }
+    .stats { display: flex; gap: 20px; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 20px; text-align: center; min-width: 100px; }
+    .stat-val { font-size: 28px; font-weight: 800; color: #2d6a4f; }
+    .stat-label { font-size: 11px; text-transform: uppercase; color: #7a8a7c; letter-spacing: 1px; }
+    .stat.err { background: #fff5f5; border-color: #fecaca; } .stat.err .stat-val { color: #dc2626; }
+    .stat.pct { background: #fefce8; border-color: #fde68a; } .stat.pct .stat-val { color: #ca8a04; }
+    .questao { margin-bottom: 20px; padding: 16px; border-radius: 8px; border: 1px solid #e0ebe0; page-break-inside: avoid; }
+    .questao.acertou { background: #f0fdf4; border-color: #86efac; }
+    .questao.errou { background: #fff5f5; border-color: #fca5a5; }
+    .q-num { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #7a8a7c; margin-bottom: 6px; }
+    .q-text { font-size: 14px; font-weight: 600; color: #1a2e1f; margin-bottom: 10px; line-height: 1.5; }
+    .q-resp { font-size: 13px; margin-bottom: 4px; }
+    .q-resp.certa { color: #16a34a; font-weight: 700; }
+    .q-resp.errada { color: #dc2626; font-weight: 700; text-decoration: line-through; }
+    .q-gabarito { font-size: 12px; color: #2d6a4f; background: #f0fdf4; border-radius: 6px; padding: 8px 12px; margin-top: 8px; line-height: 1.5; }
+    .rodape { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e0ebe0; font-size: 12px; color: #9ca3af; text-align: center; }
+    @media print { body { padding: 16px; } }
+  </style></head><body>
+  <h1>📊 Resultado do Simulado</h1>
+  <div class="sub">${materia} · ${data} às ${hora}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${acertos}</div><div class="stat-label">Acertos</div></div>
+    <div class="stat err"><div class="stat-val">${erros}</div><div class="stat-label">Erros</div></div>
+    <div class="stat pct"><div class="stat-val">${taxa}%</div><div class="stat-label">Aproveitamento</div></div>
+    <div class="stat"><div class="stat-val">${questoes.length}</div><div class="stat-label">Total</div></div>
+  </div>
+  ${respostasPDF.map(({q,i,resp,certa,acertou,letras}) => `
+    <div class="questao ${resp !== undefined ? (acertou ? 'acertou' : 'errou') : ''}">
+      <div class="q-num">Questão ${i+1} · ${q.tema} · ${resp !== undefined ? (acertou ? '✅ Correta' : '❌ Incorreta') : '⚪ Não respondida'}</div>
+      <div class="q-text">${q.enunciado}</div>
+      ${q.opcoes.map((op,oi) => `<div class="q-resp ${oi===certa ? 'certa' : (oi===resp && !acertou ? 'errada' : '')}">${letras[oi]}) ${op}</div>`).join('')}
+      <div class="q-gabarito">💬 ${q.gabarito}</div>
+    </div>`).join('')}
+  <div class="rodape">Nutri Amorim · Conhecimento na Prática · Gerado em ${data}</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(() => { win.focus(); win.print(); }, 600);
+}
+
+// ═══════════════════════════════════════════════
+// EXPORTAR EXCEL (CSV)
+// ═══════════════════════════════════════════════
+function exportarExcel() {
+  const materia = document.title.replace(' — Nutri Amorim','').replace(' - Nutri Amorim','');
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const letras = ['A','B','C','D'];
+
+  let csv = '\uFEFF'; // BOM para Excel reconhecer UTF-8
+  csv += `Matéria;${materia}\n`;
+  csv += `Data;${data}\n`;
+  csv += `Acertos;${acertos}\n`;
+  csv += `Erros;${erros}\n`;
+  csv += `Total;${questoes.length}\n`;
+  csv += `Aproveitamento;${taxa}%\n\n`;
+  csv += `Nº;Tema;Enunciado;Sua Resposta;Resposta Correta;Resultado;Gabarito\n`;
+
+  questoes.forEach((q, i) => {
+    let resp;
+    if (Array.isArray(respondidas)) {
+      resp = respondidas[i];
+    } else {
+      resp = respondidas[String(i)] !== undefined ? respondidas[String(i)] : respondidas[i];
+    }
+    const certa = q.correta;
+    const acertou = resp === certa;
+    const respostaTexto = resp !== undefined ? `${letras[resp]}) ${q.opcoes[resp]}` : 'Não respondida';
+    const certaTexto = `${letras[certa]}) ${q.opcoes[certa]}`;
+    const resultado = resp !== undefined ? (acertou ? 'Correta' : 'Incorreta') : 'Não respondida';
+    const enunciado = q.enunciado.replace(/;/g, ',').replace(/\n/g,'');
+    const gabarito = q.gabarito.replace(/;/g, ',').replace(/\n/g,'');
+    csv += `${i+1};"${q.tema}";"${enunciado}";"${respostaTexto}";"${certaTexto}";"${resultado}";"${gabarito}"\n`;
+  });
+
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resultado_${materia.toLowerCase().replace(/\s+/g,'_')}_${data.replace(/\//g,'-')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+</script>
+</body>
+</html>
