@@ -437,8 +437,8 @@
     <div class="nav-item" onclick="window.location.href='configuracoes.html'"><span class="nav-icon">⚙️</span> Configurações</div>
 
     <div class="nav-section-toggle" id="nutricao-toggle" onclick="toggleNutricao()">
-      <span style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.25)">Nutrição</span>
-      <span id="nutricao-arrow" style="color:rgba(255,255,255,0.3);font-size:12px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
+      <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Nutrição</span>
+      <span id="nutricao-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
     <div id="nutricao-menu" style="display:none">
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
@@ -4307,9 +4307,9 @@ document.getElementById('pdf-modal').addEventListener('click', function(e) {
 function toggleNutricao() {
   const menu = document.getElementById('nutricao-menu');
   const arrow = document.getElementById('nutricao-arrow');
-  const open = menu.style.display !== 'none';
-  menu.style.display = open ? 'none' : 'block';
-  arrow.style.transform = open ? 'rotate(-90deg)' : 'rotate(0deg)';
+  const open = menu.style.display === 'none' || menu.style.display === '';
+  menu.style.display = open ? 'block' : 'none';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(-90deg)';
 }
 
 
