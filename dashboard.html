@@ -491,10 +491,23 @@
     <div class="nav-item" onclick="showTab('perfil')"><span class="nav-icon">👤</span> Meu Perfil</div>
     <div class="nav-item" onclick="window.location.href='configuracoes.html'"><span class="nav-icon">⚙️</span> Configurações</div>
 
-    <div class="nav-section-toggle" id="nutricao-toggle" onclick="(function(){var m=document.getElementById('nutricao-menu');var a=document.getElementById('nutricao-arrow');var open=m.style.display==='none'||m.style.display==='';m.style.display=open?'block':'none';a.style.transform=open?'rotate(0deg)':'rotate(-90deg)';})()">
+    <div class="nav-section-toggle" id="nutricao-toggle">
       <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Nutrição</span>
       <span id="nutricao-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
+    <script>
+    document.getElementById('nutricao-toggle').addEventListener('click', function() {
+      var m = document.getElementById('nutricao-menu');
+      var a = document.getElementById('nutricao-arrow');
+      if (m.style.display === 'none' || m.style.display === '') {
+        m.style.display = 'block';
+        a.style.transform = 'rotate(0deg)';
+      } else {
+        m.style.display = 'none';
+        a.style.transform = 'rotate(-90deg)';
+      }
+    });
+    </script>
     <div id="nutricao-menu" style="display:none">
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
     <div class="nav-item" onclick="showTab('prontuario')"><span class="nav-icon">📋</span> Prontuário Médico</div>
@@ -2016,9 +2029,6 @@
       </div>
     </div>
 
-  </div>
-</div>
-
     <div class="tab-content" id="tab-suporte">
       <div class="content">
         <div style="max-width:760px;margin:0 auto">
@@ -2170,6 +2180,9 @@
         </div>
       </div>
     </div>
+
+  </div>
+</div>
 
 <script>
 // ── Estado ──
