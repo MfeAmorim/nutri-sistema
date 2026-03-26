@@ -436,7 +436,7 @@
     <div class="nav-item" onclick="showTab('perfil')"><span class="nav-icon">👤</span> Meu Perfil</div>
     <div class="nav-item" onclick="window.location.href='configuracoes.html'"><span class="nav-icon">⚙️</span> Configurações</div>
 
-    <div class="nav-section-toggle" id="nutricao-toggle" onclick="toggleNutricao()">
+    <div class="nav-section-toggle" id="nutricao-toggle" onclick="(function(){var m=document.getElementById('nutricao-menu');var a=document.getElementById('nutricao-arrow');var open=m.style.display==='none'||m.style.display==='';m.style.display=open?'block':'none';a.style.transform=open?'rotate(0deg)':'rotate(-90deg)';})()">
       <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Nutrição</span>
       <span id="nutricao-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
