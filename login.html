@@ -155,6 +155,8 @@
     .termo-check input { accent-color:var(--verde); margin-top:2px; flex-shrink:0; width:15px; height:15px; }
     .termo-check a { color:var(--verde); }
 
+    .btn-publico { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #166534; border: 1.5px solid #86efac; margin-top:10px; font-weight:600; }
+    .btn-publico:hover { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #4ade80; transform:translateY(-1px); box-shadow:0 6px 20px rgba(74,222,128,0.25); }
     @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     @keyframes spin   { to{transform:rotate(360deg)} }
 
@@ -218,6 +220,8 @@
       <button class="btn btn-verde" onclick="fazerLogin()">Entrar na minha conta</button>
       <div class="divider">ou</div>
       <button class="btn btn-outline" onclick="switchTab('cadastro')">Criar nova conta</button>
+      <div class="divider">ou</div>
+      <button class="btn btn-publico" onclick="acessarSemConta()">🌐 Acessar sem conta</button>
     </div>
 
     <!-- ═══ FORM CADASTRO ═══ -->
@@ -445,9 +449,16 @@ document.addEventListener('keydown', e => {
   if (ativo.id === 'form-login') fazerLogin(); else fazerCadastro();
 });
 
+// ── ACESSAR SEM CONTA ──
+function acessarSemConta() {
+  window.location.href = 'dashboard.html?publico=1';
+}
+
 // ── REDIRECIONAR SE JÁ LOGADO ──
-window._sb.auth.getSession().then(({ data }) => {
-  if (data.session) window.location.href = 'dashboard.html';
+document.addEventListener('DOMContentLoaded', function() {
+  window._sb.auth.getSession().then(({ data }) => {
+    if (data.session) window.location.href = 'dashboard.html';
+  });
 });
 
 // ── MODO VIA URL (?modo=cadastro) ──

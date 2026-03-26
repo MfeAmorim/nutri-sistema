@@ -9,9 +9,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root { --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d; --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+    :root { --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d; --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d; --bg-page: #f8f4ef; --bg-card: #fff; --border-card: #e8efe8; --text-muted: #7a8a7c; --input-bg: #fff; --input-border: #dde8de; }
+    body.tema-escuro { --bg-page: #0f1a12; --bg-card: #1a2e1f; --border-card: #2a4030; --creme: #1a2e1f; --creme2: #243528; --texto: #d4e8d8; --text-muted: #7a9a7c; --input-bg: #1f3326; --input-border: #2d4a35; }
+    body.tema-escuro .topbar { background: #1a2e1f; border-color: #2a4030; }
+    body.tema-escuro .main { background: var(--bg-page); }
+    body.tema-escuro .form-section, body.tema-escuro .stat-card, body.tema-escuro .pront-card, body.tema-escuro .plano-item, body.tema-escuro .home-card { background: var(--bg-card); border-color: var(--border-card); }
+    body.tema-escuro .home-card-title { color: #d4e8d8; }
+    body.tema-escuro .home-card-desc { color: var(--text-muted); }
+    body.tema-escuro .field input, body.tema-escuro .field select, body.tema-escuro .field textarea { background: var(--input-bg); border-color: var(--input-border); color: var(--texto); }
+    body.tema-escuro .page-title, body.tema-escuro .stat-val, body.tema-escuro .pront-card-info h4 { color: #d4e8d8; }
+    body.tema-escuro .home-welcome { background: linear-gradient(135deg, #0f1a12, #1a3020); }
+    body.tema-escuro .home-footer { background: linear-gradient(135deg, #0f1a12, #1a2e1f); border-top-color: #2a4030; }
+    body.tema-escuro .home-footer-brand p, body.tema-escuro .home-footer-col-title, body.tema-escuro .home-footer-link, body.tema-escuro .home-footer-cert, body.tema-escuro .home-footer-copy, body.tema-escuro .home-footer-v-label { color: rgba(255,255,255,0.5); }
+    body.tema-escuro .home-footer-brand-name { color: var(--verde-neon); }
+    body.tema-escuro .post-card-home { background: var(--bg-card); border-color: var(--border-card); }
+    body.tema-escuro .rec-form-card { background: linear-gradient(135deg,#1a2e1f,#1f3326); border-color: #2d4a35; }
+    body.tema-escuro .rec-field input, body.tema-escuro .rec-field select, body.tema-escuro .rec-field textarea { background: #1f3326; border-color: #2d4a35; color: #d4e8d8; }
+    body.tema-escuro .search-bar input { background: var(--input-bg); border-color: var(--input-border); color: var(--texto); }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg-page); color: var(--texto); display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; transition: background 0.3s; }
+    .nav-section-toggle { display:flex; align-items:center; justify-content:space-between; padding: 8px 24px 4px; cursor:pointer; user-select:none; transition: background 0.15s; border-radius: 4px; margin: 8px 8px 0; }
+    .nav-section-toggle:hover { background: rgba(255,255,255,0.05); }
     body.admin-mode .main { padding-top: 48px; }
+    body { background: var(--bg-page); }
 
     /* SIDEBAR */
     .sidebar { background: var(--escuro); display: flex; flex-direction: column; padding: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
@@ -35,7 +54,7 @@
     .btn-logout:hover { background: rgba(220,38,38,0.15); color: #fca5a5; border-color: rgba(220,38,38,0.3); }
 
     /* MAIN */
-    .main { overflow-y: auto; min-width: 0; }
+    .main { overflow-y: auto; min-width: 0; background: var(--bg-page); transition: background 0.3s; }
     .topbar { background: #fff; border-bottom: 1px solid #e8efe8; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
     .page-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--escuro); }
     .topbar-actions { display: flex; gap: 12px; align-items: center; }
@@ -239,14 +258,15 @@
     /* HOME — wrappers de seção */
     .home-section-wrap { max-width: 760px; margin: 0 auto 40px; }
     .home-section-wrap--top { margin-bottom: 0; }
-    .home-section-wrap--footer { margin-bottom: 0; padding-bottom: 0; }
+    .home-section-wrap--footer { margin-bottom: 0; padding-bottom: 0; margin-left: -40px; margin-right: -40px; }
+    @media (max-width: 1024px) { .home-section-wrap--footer { margin-left: -16px; margin-right: -16px; } }
     .home-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .home-section-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--escuro); margin-bottom: 2px; }
     .home-section-sub { font-size: 13px; color: #7a8a7c; }
     .posts-container { display: flex; flex-direction: column; gap: 24px; }
 
     /* HOME — rodapé */
-    .home-footer { background: linear-gradient(135deg, #e8f5e9, #f0fdf4); border: 1.5px solid #c8e6c9; border-radius: 16px; padding: 32px; margin-top: 8px; }
+    .home-footer { background: linear-gradient(135deg, #e8f5e9, #f0fdf4); border-top: 2px solid #c8e6c9; border-bottom: none; border-left: none; border-right: none; border-radius: 0; padding: 32px 40px; margin-top: 8px; }
     .home-footer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #c8e6c9; }
     .home-footer-brand { flex: 1; min-width: 200px; }
     .home-footer-brand-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: #1a2e1f; margin-bottom: 6px; }
@@ -405,26 +425,38 @@
     <div class="user-email" id="sb-email">—</div>
   </div>
   <div class="sidebar-nav">
+
     <div class="nav-section">Menu</div>
     <div class="nav-item active" onclick="showTab('home')"><span class="nav-icon">🏠</span> Página Inicial</div>
-    <div class="nav-item" onclick="showTab('resultados')"><span class="nav-icon">📊</span> Resultados</div>
     <div class="nav-item" onclick="showTab('perfil')"><span class="nav-icon">👤</span> Meu Perfil</div>
+    <div class="nav-item" onclick="window.location.href='configuracoes.html'"><span class="nav-icon">⚙️</span> Configurações</div>
+
+    <div class="nav-section-toggle" id="nutricao-toggle" onclick="toggleNutricao()">
+      <span style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.25)">Nutrição</span>
+      <span id="nutricao-arrow" style="color:rgba(255,255,255,0.3);font-size:12px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
+    </div>
+    <div id="nutricao-menu" style="display:none">
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
-    <div class="nav-section">Nutrição</div>
     <div class="nav-item" onclick="showTab('prontuario')"><span class="nav-icon">📋</span> Prontuário Médico</div>
     <div class="nav-item" onclick="showTab('prontuarios-salvos')"><span class="nav-icon" style="filter:hue-rotate(200deg) saturate(2)">🗃️</span> Minhas Fichas <span class="nav-badge" id="badge-salvos">0</span></div>
+    <div class="nav-item" onclick="showTab('resultados')"><span class="nav-icon">📊</span> Resultados</div>
     <div class="nav-item" onclick="showTab('tabela')"><span class="nav-icon">🥦</span> Tabela Alimentar</div>
-    <div class="nav-item" onclick="showTab('metas')"><span class="nav-icon">📐</span> Calcular Metas</div>
     <div class="nav-item" onclick="showTab('recordatorio')"><span class="nav-icon">⏱️</span> Recordatório 24h</div>
     <div class="nav-item" onclick="showTab('plano')"><span class="nav-icon">🎯</span> Plano Alimentar</div>
+    <div class="nav-item" onclick="showTab('metas')"><span class="nav-icon">📐</span> Calcular Metas</div>
+    </div>
+
     <div class="nav-section">Atendimento</div>
     <div class="nav-item" onclick="showTab('chatbot')"><span class="nav-icon">🤖</span> Assistente IA</div>
-    <div class="nav-item" onclick="window.open('chatbot-cliente.html','_blank')"><span class="nav-icon">🔗</span> Link do Chatbot</div>
+    <div class="nav-item" onclick="window.open('https://wa.me/5562998540552','_blank')"><span class="nav-icon">💬</span> WhatsApp</div>
+    <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin')"><span class="nav-icon">🛡️</span> Administrador</div>
+    <div class="nav-item" onclick="showTab('suporte')"><span class="nav-icon">🆘</span> SOS — Apoio</div>
+
     <div class="nav-section">Estudos</div>
     <div class="nav-item" onclick="showTab('conhecimento')"><span class="nav-icon">📚</span> Conhecimento na Prática</div>
     <div class="nav-item" onclick="window.open('central-estudos.html','_blank')"><span class="nav-icon">🧠</span> Central de Estudos</div>
     <div class="nav-item" onclick="showTab('sobre')"><span class="nav-icon">🌿</span> Sobre Mim</div>
-    <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin')"><span class="nav-icon">🛡️</span> Painel Admin</div>
+
   </div>
   <div class="sidebar-footer">
     <button class="btn-logout" onclick="logout()">Sair da Conta</button>
@@ -553,7 +585,6 @@
             </div>
           </div>
         </div>
-        <div style="height:32px"></div>
       </div>
 
     </div>
@@ -1928,6 +1959,130 @@
   </div>
 </div>
 
+    <div class="tab-content" id="tab-suporte">
+      <div class="content">
+        <div style="max-width:760px;margin:0 auto">
+
+          <div style="background:linear-gradient(135deg,#7f1d1d,#dc2626);border-radius:20px;padding:36px;margin-bottom:28px;text-align:center">
+            <div style="font-size:52px;margin-bottom:12px">🆘</div>
+            <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:26px;margin-bottom:8px">Redes de Apoio</h2>
+            <p style="color:rgba(255,255,255,0.75);font-size:14px;line-height:1.8;max-width:480px;margin:0 auto">Se você está passando por um momento difícil, não precisa enfrentar isso sozinho. Conecte-se com as redes de apoio abaixo — estamos aqui por você. 💚</p>
+          </div>
+
+          <!-- Cards de apoio -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/SEUNUMERO" target="_blank" class="sos-card" style="background:linear-gradient(135deg,#dcfce7,#f0fdf4);border:2px solid #86efac;border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;transition:all .2s;gap:10px" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(34,197,94,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+              <span style="font-size:44px">💬</span>
+              <div>
+                <div style="font-size:16px;font-weight:700;color:#14532d;margin-bottom:4px">WhatsApp</div>
+                <div style="font-size:12px;color:#166534;line-height:1.5">Fale diretamente pelo WhatsApp. Resposta rápida e acolhedora.</div>
+              </div>
+              <span style="background:#22c55e;color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:4px">Conversar agora →</span>
+            </a>
+
+            <!-- E-mail -->
+            <a href="/cdn-cgi/l/email-protection#0e607b7a7c676f63617c676338374e69636f6762206d6163" class="sos-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd;border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;transition:all .2s;gap:10px" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(59,130,246,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+              <span style="font-size:44px">✉️</span>
+              <div>
+                <div style="font-size:16px;font-weight:700;color:#1e3a8a;margin-bottom:4px">E-mail</div>
+                <div style="font-size:12px;color:#1d4ed8;line-height:1.5">Envie uma mensagem com calma. Respondemos com cuidado e atenção.</div>
+              </div>
+              <span style="background:#3b82f6;color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:4px">Enviar e-mail →</span>
+            </a>
+
+            <!-- Instagram -->
+            <a href="https://instagram.com/nutriamorim" target="_blank" class="sos-card" style="background:linear-gradient(135deg,#fdf2f8,#fce7f3);border:2px solid #f9a8d4;border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;transition:all .2s;gap:10px" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(236,72,153,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+              <span style="font-size:44px">📸</span>
+              <div>
+                <div style="font-size:16px;font-weight:700;color:#831843;margin-bottom:4px">Instagram</div>
+                <div style="font-size:12px;color:#be185d;line-height:1.5">Siga e envie mensagem direta. Conteúdo de saúde e bem-estar todos os dias.</div>
+              </div>
+              <span style="background:#ec4899;color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:4px">Ver perfil →</span>
+            </a>
+
+            <!-- Chatbot IA -->
+            <div class="sos-card" onclick="showTab('chatbot')" style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:2px solid #c4b5fd;border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:all .2s;gap:10px" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(139,92,246,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+              <span style="font-size:44px">🤖</span>
+              <div>
+                <div style="font-size:16px;font-weight:700;color:#4c1d95;margin-bottom:4px">Assistente IA</div>
+                <div style="font-size:12px;color:#6d28d9;line-height:1.5">Converse com nosso chatbot inteligente. Disponível 24h para te ouvir e orientar.</div>
+              </div>
+              <span style="background:#8b5cf6;color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:4px">Abrir chatbot →</span>
+            </div>
+
+          </div>
+
+          <!-- Rodapé SOS -->
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);border-radius:16px;padding:24px 28px;display:flex;align-items:center;gap:16px">
+            <span style="font-size:36px;flex-shrink:0">🌿</span>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Você não está sozinho</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7">Nossa equipe está disponível para acolher você com empatia e profissionalismo. Não hesite em entrar em contato pelo canal que você se sentir mais confortável.</div>
+            </div>
+          </div>
+
+        </div>
+          <div style="background:#fff;border:1px solid #e8efe8;border-radius:16px;padding:28px 32px;margin-bottom:20px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--escuro);margin-bottom:20px">📬 Canais de Atendimento</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <a href="/cdn-cgi/l/email-protection#b4dac1c0c6ddd5d9dbc6ddd9f4d3d9d5ddd89ad7dbd9" style="display:flex;align-items:center;gap:14px;padding:16px;background:var(--creme);border:1.5px solid #e8efe8;border-radius:12px;text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='#2d6a4f'" onmouseout="this.style.borderColor='#e8efe8'">
+                <span style="font-size:28px">✉️</span>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:var(--escuro)">E-mail</div>
+                  <div style="font-size:12px;color:#7a8a7c;margin-top:2px"><span class="__cf_email__" data-cfemail="8be5fefff9e2eae6e4f9e2e6cbece6eae2e7a5e8e4e6">[email&#160;protected]</span></div>
+                </div>
+              </a>
+              <a href="https://wa.me/5562998540552" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:#f0fdf4;border:1.5px solid #c8e6c9;border-radius:12px;text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='#2d6a4f'" onmouseout="this.style.borderColor='#c8e6c9'">
+                <span style="font-size:28px">💬</span>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:var(--escuro)">WhatsApp</div>
+                  <div style="font-size:12px;color:#7a8a7c;margin-top:2px">(62) 99854-0552</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Redes Sociais -->
+          <div style="background:#fff;border:1px solid #e8efe8;border-radius:16px;padding:28px 32px;margin-bottom:20px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--escuro);margin-bottom:20px">🌐 Redes Sociais</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <a href="https://instagram.com/nutriamorim" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:linear-gradient(135deg,#fdf2f8,#fce7f3);border:1.5px solid #f9a8d4;border-radius:12px;text-decoration:none;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                <span style="font-size:26px">📸</span>
+                <div>
+                  <div style="font-size:13px;font-weight:700;color:#9d174d">Instagram</div>
+                  <div style="font-size:12px;color:#be185d;margin-top:2px">@nutriamorim</div>
+                </div>
+                <span style="margin-left:auto;font-size:12px;color:#be185d;font-weight:600">Seguir →</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div style="background:var(--escuro);border-radius:16px;padding:24px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Horário de atendimento</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.7)">Segunda a Sexta · 08h às 18h</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px">Goiânia — GO · Brasil</div>
+            </div>
+            <div style="font-size:40px">🌿</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ABA CONFIGURAÇÕES ═══ -->
+    <div class="tab-content" id="tab-configuracoes">
+      <div class="content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:20px">
+        <div style="font-size:64px">⚙️</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:26px;color:var(--escuro)">Configurações</h2>
+        <p style="font-size:14px;color:#7a8a7c;max-width:360px;line-height:1.7">Gerencie seu perfil, segurança, tema e preferências da plataforma.</p>
+        <a href="configuracoes.html" style="background:var(--verde);color:#fff;border:none;padding:14px 36px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.background='#1a2e1f'" onmouseout="this.style.background='var(--verde)'">⚙️ Abrir Configurações</a>
+      </div>
+    </div>
+
     <!-- ═══ ABA ADMIN ═══ -->
     <div class="tab-content" id="tab-admin">
       <div class="content">
@@ -1956,8 +2111,7 @@
       </div>
     </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
 // ── Estado ──
 const DADOS_PLANILHA = [];
@@ -2023,6 +2177,7 @@ async function init() {
     document.getElementById('p-telefone').value = p.telefone || '';
     document.getElementById('p-nascimento').value = p.nascimento || '';
     document.getElementById('p-objetivo').value = p.objetivo || '';
+
     document.getElementById('termo-data').textContent = p.termo_aceito_em ? new Date(p.termo_aceito_em).toLocaleDateString('pt-BR') : '—';
     if (p.avatar_url) {
       ['sb-avatar-img','p-avatar-img','mobile-avatar-img'].forEach(id => { const img = document.getElementById(id); if (img) { img.src = p.avatar_url; img.style.display='block'; } });
@@ -2910,7 +3065,7 @@ function showTab(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
   if (tab) tab.classList.add('active');
-  const labels = { home:'Página Inicial', resultados:'Resultados', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim' };
+  const labels = { home:'Página Inicial', resultados:'Resultados', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', metas:'Calcular Metas', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim', suporte:'🆘 SOS — Redes de Apoio', configuracoes:'Configurações' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
   if (name === 'plano') setTimeout(() => inicializarPlanoLinhas(), 100);
@@ -3906,12 +4061,6 @@ function clicarNotificacao(id) {
   renderizarNotificacoes();
 }
 
-function marcarTodasLidas() {
-  window._notificacoes.forEach(n => n.lida = true);
-  try { localStorage.setItem('na_notif_' + (currentUser?.id||''), JSON.stringify(window._notificacoes.slice(0, 20))); } catch(e) {}
-  renderizarNotificacoes();
-}
-
 function toggleNotifPanel(e) {
   e.stopPropagation();
   const panel = document.getElementById('notif-panel');
@@ -4148,6 +4297,23 @@ document.getElementById('pdf-modal').addEventListener('click', function(e) {
 </div>
 
 <script>
+
+// ── NUTRIÇÃO TOGGLE ──
+function toggleNutricao() {
+  const menu = document.getElementById('nutricao-menu');
+  const arrow = document.getElementById('nutricao-arrow');
+  const open = menu.style.display !== 'none';
+  menu.style.display = open ? 'none' : 'block';
+  arrow.style.transform = open ? 'rotate(-90deg)' : 'rotate(0deg)';
+}
+
+
+// ── APLICAR TEMA SALVO (sincronizado com configuracoes.html) ──
+(function() {
+  const t = localStorage.getItem('nutri-tema');
+  if (t === 'escuro') document.body.classList.add('tema-escuro');
+})();
+
 let _editRecIdx = -1;
 function editarItemRec(i) {
   _editRecIdx = i;
@@ -4169,6 +4335,4 @@ async function salvarEdicaoRec() {
   item.nome     = document.getElementById('edit-rec-nome').value.trim();
   item.data     = document.getElementById('edit-rec-data').value;
   item.horario  = document.getElementById('edit-rec-horario').value;
-  item.refeicao = document.getElementById('edit-rec-refeicao').value;
-  item.qtd      = parseFloat(document.getElementById('edit-rec-qtd').value) || 1;
-  item.tipo     = document.getElementById('edit-rec-tipo'
+  item.refeicao = document.getElementById('edit-rec-ref
