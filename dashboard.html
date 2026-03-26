@@ -347,6 +347,10 @@
       .pront-card-actions { justify-content: flex-start; margin-top: 12px; }
       .home-cards { grid-template-columns: repeat(2, 1fr); }
       .rec-form-grid, .rec-form-grid-2, .rec-form-grid-3 { grid-template-columns: 1fr 1fr; }
+      /* Admin — tablet */
+      #tab-admin .content { padding: 20px 16px; }
+      #admin-lista-usuarios > div { flex-wrap: wrap !important; gap: 12px !important; }
+      #admin-lista-usuarios > div > div[style*="flex-shrink:0"] { margin-left: auto; }
     }
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -382,6 +386,57 @@
 
       /* Resumo do plano — grid menor */
       #plano-content div[style*="grid-template-columns:repeat(auto-fill"] { grid-template-columns: repeat(2, 1fr) !important; }
+
+      /* Admin — mobile */
+      #tab-admin .content { padding: 16px 12px; }
+      #tab-admin [style*="padding:28px 32px;margin-bottom:24px"] { padding: 18px 16px !important; flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+      #tab-admin [style*="display:grid;grid-template-columns:repeat(3,1fr)"] { gap: 8px !important; }
+      #tab-admin [style*="display:grid;grid-template-columns:repeat(3,1fr)"] .stat-card { padding: 12px 10px !important; }
+      #tab-admin [style*="display:grid;grid-template-columns:repeat(3,1fr)"] .stat-val { font-size: 20px !important; }
+      #tab-admin [style*="display:grid;grid-template-columns:repeat(3,1fr)"] .stat-icon { font-size: 20px !important; margin-bottom: 6px !important; }
+      #tab-admin [style*="display:flex;gap:12px;margin-bottom:20px"] { flex-direction: column !important; }
+      #admin-lista-usuarios > div { flex-direction: column !important; align-items: flex-start !important; padding: 14px 12px !important; }
+      #admin-lista-usuarios > div > div[style*="flex:1"] { width: 100% !important; }
+      #admin-lista-usuarios > div > div[style*="flex-shrink:0"] { width: 100% !important; }
+      #admin-lista-usuarios > div > div[style*="flex-shrink:0"] button { width: 100% !important; padding: 12px !important; font-size: 14px !important; }
+    }
+
+    /* ══ PAINEL ADMIN ══ */
+    .admin-wrap { max-width: 960px; margin: 0 auto; }
+    .admin-header { background: linear-gradient(135deg,#1a2e1f,#2d6a4f); border-radius: 16px; padding: 28px 32px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+    .admin-header-icon { font-size: 36px; flex-shrink: 0; }
+    .admin-header-title { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 4px; }
+    .admin-header-sub { color: rgba(255,255,255,0.5); font-size: 13px; }
+    .admin-stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+    .admin-search-row { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; }
+    .admin-refresh-btn { background: var(--verde); color: #fff; border: none; padding: 11px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.2s; }
+    .admin-refresh-btn:hover { background: var(--escuro); }
+    .admin-lista { display: flex; flex-direction: column; gap: 14px; }
+    .admin-user-card { background: #fff; border: 1px solid #e8efe8; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; transition: box-shadow .2s, border-color .2s; }
+    .admin-user-card:hover { box-shadow: 0 4px 16px rgba(45,106,79,0.1); border-color: #c8e6c9; }
+    .admin-user-info { flex: 1; min-width: 0; }
+    .admin-user-actions { flex-shrink: 0; }
+
+    @media (max-width: 1024px) {
+      .admin-wrap { max-width: 100%; }
+      .admin-user-card { flex-wrap: wrap; }
+      .admin-user-actions { margin-left: auto; }
+    }
+    @media (max-width: 600px) {
+      .admin-header { flex-direction: column; align-items: flex-start; padding: 18px 16px; gap: 10px; }
+      .admin-stats-grid { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .admin-stats-grid .stat-card { padding: 12px 8px; }
+      .admin-stats-grid .stat-val { font-size: 20px; }
+      .admin-stats-grid .stat-icon { font-size: 20px; margin-bottom: 6px; }
+      .admin-stats-grid .stat-label { font-size: 10px; }
+      .admin-search-row { flex-direction: column; }
+      .admin-search-row input { width: 100%; }
+      .admin-refresh-btn { width: 100%; text-align: center; }
+      .admin-user-card { flex-direction: column; align-items: flex-start; padding: 14px 12px; }
+      .admin-user-info { width: 100%; }
+      .admin-user-actions { width: 100%; }
+      .admin-user-actions button { width: 100% !important; padding: 12px !important; font-size: 14px !important; justify-content: center; }
+      .admin-user-actions span { display: block; width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -2091,25 +2146,25 @@
     <!-- ═══ ABA ADMIN ═══ -->
     <div class="tab-content" id="tab-admin">
       <div class="content">
-        <div style="max-width:960px;margin:0 auto">
-          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;gap:16px">
-            <span style="font-size:36px">🛡️</span>
+        <div class="admin-wrap">
+          <div class="admin-header">
+            <span class="admin-header-icon">🛡️</span>
             <div>
-              <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:22px;margin-bottom:4px">Painel Administrativo</h2>
-              <p style="color:rgba(255,255,255,0.5);font-size:13px">Gerencie usuários e acesse seus dashboards completos</p>
+              <h2 class="admin-header-title">Painel Administrativo</h2>
+              <p class="admin-header-sub">Gerencie usuários e acesse seus dashboards completos</p>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+          <div class="admin-stats-grid">
             <div class="stat-card verde"><div class="stat-icon">👥</div><div class="stat-val" id="admin-total">—</div><div class="stat-label">Usuários</div></div>
             <div class="stat-card verde"><div class="stat-icon">✅</div><div class="stat-val" id="admin-ativos">—</div><div class="stat-label">Com Perfil</div></div>
             <div class="stat-card verde"><div class="stat-icon">📋</div><div class="stat-val" id="admin-pronts">—</div><div class="stat-label">Prontuários</div></div>
           </div>
-          <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center">
+          <div class="admin-search-row">
             <input id="admin-busca" type="text" placeholder="🔍 Buscar por nome ou e-mail..." oninput="filtrarUsuariosAdmin()"
               style="flex:1;padding:11px 14px;border:1.5px solid #dde8de;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none">
-            <button onclick="carregarUsuariosAdmin()" style="background:var(--verde);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔄 Atualizar</button>
+            <button onclick="carregarUsuariosAdmin()" class="admin-refresh-btn">🔄 Atualizar</button>
           </div>
-          <div id="admin-lista-usuarios" style="display:flex;flex-direction:column;gap:14px">
+          <div id="admin-lista-usuarios" class="admin-lista">
             <div class="empty-state"><div class="empty-icon">⏳</div><h4>Carregando usuários...</h4></div>
           </div>
         </div>
@@ -4186,9 +4241,9 @@ function renderizarListaAdmin(lista) {
     const btn = u.user_id!==currentUser.id
       ? `<button onclick="abrirUsuarioAdmin('${u.user_id}')" style="background:linear-gradient(135deg,var(--verde),var(--verde-claro));color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif">🚀 Abrir Dashboard</button>`
       : `<span style="font-size:12px;color:#9ca3af;padding:10px 18px;display:block">Você mesmo</span>`;
-    return `<div style="background:#fff;border:1px solid #e8efe8;border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s,border-color .2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(45,106,79,0.1)';this.style.borderColor='#c8e6c9'" onmouseout="this.style.boxShadow='';this.style.borderColor='#e8efe8'">
+    return `<div class="admin-user-card">
       ${av}
-      <div style="flex:1;min-width:0">
+      <div class="admin-user-info">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">
           <span style="font-size:15px;font-weight:700;color:var(--escuro)">${nome}</span>
           ${u.is_admin?'<span style="font-size:10px;background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:10px;font-weight:700">🛡️ ADMIN</span>':''}
@@ -4196,7 +4251,7 @@ function renderizarListaAdmin(lista) {
         <div style="font-size:12px;color:#7a8a7c;margin-bottom:8px">${u.email||'—'}${u.telefone?' · '+u.telefone:''}</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">${tags}</div>
       </div>
-      <div style="flex-shrink:0">${btn}</div>
+      <div class="admin-user-actions">${btn}</div>
     </div>`;
   }).join('');
 }
