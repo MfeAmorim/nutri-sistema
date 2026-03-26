@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana de Conhecimentos Gerais — Módulo 1 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
+  --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d;
+  --laranja: #e07b39; --azul: #2563eb; --vermelho: #dc2626;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); }
+
+.topbar { background: var(--escuro); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.topbar-left { display: flex; align-items: center; gap: 16px; }
+.back-btn { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.55); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.15s; }
+.back-btn:hover { color: #fff; }
+.divider { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.topbar-title { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; }
+.badge { background: rgba(116,198,157,0.2); border: 1px solid rgba(116,198,157,0.4); color: var(--verde-neon); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+
+.tabs-nav { background: #fff; border-bottom: 2px solid var(--creme2); display: flex; padding: 0 32px; overflow-x: auto; position: sticky; top: 56px; z-index: 99; }
+.tab-btn { padding: 0 20px; height: 48px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #7a8a7c; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; margin-bottom: -2px; }
+.tab-btn:hover { color: var(--escuro); }
+.tab-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+.panel { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.hero { background: var(--escuro); border-radius: 20px; padding: 40px 44px; margin-bottom: 28px; display: flex; align-items: center; gap: 28px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(116,198,157,0.12) 0%, transparent 70%); }
+.hero-icon { font-size: 56px; flex-shrink: 0; }
+.hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+.hero h1 { font-family: 'Playfair Display', serif; color: #fff; font-size: 26px; margin-bottom: 8px; }
+.hero p { color: rgba(255,255,255,0.5); font-size: 14px; line-height: 1.6; }
+
+.prioridade { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.prioridade-dot { width: 10px; height: 10px; border-radius: 50%; }
+.prioridade-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.prio-alta .prioridade-dot { background: var(--vermelho); }
+.prio-alta .prioridade-label { color: var(--vermelho); }
+.prio-media .prioridade-dot { background: var(--laranja); }
+.prio-media .prioridade-label { color: var(--laranja); }
+.prio-baixa .prioridade-dot { background: var(--verde-claro); }
+.prio-baixa .prioridade-label { color: var(--verde-claro); }
+
+.card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; margin-bottom: 20px; overflow: hidden; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; transition: background 0.15s; border-bottom: 1px solid transparent; }
+.card-header:hover { background: #f8fbf8; }
+.card-header.open { border-bottom-color: #e0ebe0; }
+.card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.card-icon.verde { background: rgba(45,106,79,0.1); }
+.card-icon.laranja { background: rgba(224,123,57,0.1); }
+.card-icon.azul { background: rgba(37,99,235,0.1); }
+.card-icon.vermelho { background: rgba(220,38,38,0.1); }
+.card-icon.roxo { background: rgba(124,58,237,0.1); }
+.card-titulo { flex: 1; }
+.card-titulo h3 { font-size: 16px; font-weight: 700; color: var(--escuro); margin-bottom: 3px; }
+.card-titulo p { font-size: 12px; color: #7a8a7c; }
+.card-chevron { font-size: 18px; color: #7a8a7c; transition: transform 0.25s; }
+.card-chevron.open { transform: rotate(180deg); }
+.card-body { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+.card-body.open { max-height: 4000px; padding: 20px 24px 24px; }
+
+.card-body h4 { font-size: 14px; font-weight: 700; color: var(--verde); margin: 18px 0 8px; }
+.card-body h4:first-child { margin-top: 0; }
+.card-body p { font-size: 14px; color: var(--texto); line-height: 1.75; margin-bottom: 10px; }
+.card-body ul, .card-body ol { padding-left: 20px; margin-bottom: 12px; }
+.card-body li { font-size: 14px; color: var(--texto); line-height: 1.7; margin-bottom: 4px; }
+.destaque { background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.destaque p { margin: 0; font-size: 13px; }
+.alerta { background: #fff5f0; border-left: 4px solid var(--laranja); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 12px 0; }
+.alerta p { margin: 0; font-size: 13px; }
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.tabela th { background: var(--escuro); color: #fff; padding: 8px 12px; text-align: left; font-weight: 600; }
+.tabela td { padding: 8px 12px; border-bottom: 1px solid #e8f0e8; vertical-align: top; }
+.tabela tr:nth-child(even) td { background: #f8fbf8; }
+
+/* QUIZ */
+.quiz-header { background: var(--escuro); border-radius: 20px; padding: 32px 36px; margin-bottom: 24px; }
+.quiz-header h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+.quiz-header p { color: rgba(255,255,255,0.5); font-size: 13px; }
+.chips { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.chip { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.chip-green { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+.chip-orange { background: rgba(220,38,38,0.2); color: #fca5a5; }
+.chip-total { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+.quiz-progress { background: #fff; border: 1px solid #e0ebe0; border-radius: 12px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.progress-bar-wrap { flex: 1; background: var(--creme2); border-radius: 99px; height: 8px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde), var(--verde-neon)); border-radius: 99px; transition: width 0.5s ease; }
+.progress-text { font-size: 12px; font-weight: 700; color: var(--escuro); white-space: nowrap; }
+
+.questao-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 18px; padding: 28px 32px; margin-bottom: 20px; animation: fadeIn 0.3s ease; }
+.questao-card.acertou { border-color: #86efac; background: linear-gradient(135deg, #f0fdf4, #fff); }
+.questao-card.errou { border-color: #fca5a5; background: linear-gradient(135deg, #fff5f5, #fff); }
+.q-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.q-num { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.q-tema { font-size: 11px; font-weight: 600; color: #7a8a7c; background: var(--creme2); padding: 4px 10px; border-radius: 20px; }
+.q-enunciado { font-size: 15px; color: var(--escuro); font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+.opcao-btn { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 13px 18px; font-size: 14px; color: #374151; cursor: pointer; text-align: left; transition: all 0.15s; font-family: 'DM Sans', sans-serif; display: flex; align-items: flex-start; gap: 12px; width: 100%; margin-bottom: 10px; }
+.opcao-btn:hover:not(:disabled) { border-color: var(--verde-claro); background: #f0fdf4; }
+.opcao-btn:hover:not(:disabled) .opcao-letra { background: var(--verde); color: #fff; }
+.opcao-letra { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; color: var(--escuro); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; transition: all 0.15s; }
+.opcao-btn.correta { border-color: #16a34a; background: #dcfce7; color: #14532d; font-weight: 600; }
+.opcao-btn.correta .opcao-letra { background: #16a34a; color: #fff; }
+.opcao-btn.incorreta { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.opcao-btn.incorreta .opcao-letra { background: #dc2626; color: #fff; }
+.opcao-btn:disabled { cursor: default; }
+.q-gabarito { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; display: none; line-height: 1.6; }
+.q-gabarito.show-acertou { background: #dcfce7; color: #15803d; display: block; }
+.q-gabarito.show-errou { background: #fee2e2; color: #dc2626; display: block; }
+
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; gap: 12px; flex-wrap: wrap; }
+.btn-nav { display: flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.btn-proximo { background: var(--escuro); color: #fff; }
+.btn-proximo:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-proximo:disabled { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.btn-reiniciar { background: var(--creme2); color: var(--texto); border: 2px solid #d1d5db; }
+.btn-reiniciar:hover { background: #e5e7eb; }
+
+.resultado { background: #fff; border: 1px solid #e0ebe0; border-radius: 20px; padding: 44px 36px; text-align: center; animation: fadeIn 0.4s ease; }
+.resultado-emoji { font-size: 64px; margin-bottom: 12px; }
+.resultado h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--escuro); margin-bottom: 8px; }
+.resultado p { font-size: 15px; color: #7a8a7c; margin-bottom: 28px; }
+.resultado-stats { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+.r-stat { padding: 16px 24px; border-radius: 14px; min-width: 90px; text-align: center; }
+.r-stat-val { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.r-stat.verde { background: #dcfce7; } .r-stat.verde .r-stat-val { color: #16a34a; } .r-stat.verde .r-stat-label { color: #15803d; }
+.r-stat.vermelho { background: #fee2e2; } .r-stat.vermelho .r-stat-val { color: #dc2626; } .r-stat.vermelho .r-stat-label { color: #991b1b; }
+.r-stat.dourado { background: #fefce8; } .r-stat.dourado .r-stat-val { color: #ca8a04; } .r-stat.dourado .r-stat-label { color: #92400e; }
+
+.btn-export-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.btn-export-pdf { background: #dc2626; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.btn-export-pdf:hover { background: #b91c1c; transform: translateY(-1px); }
+.btn-export-xls { background: #16a34a; color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.btn-export-xls:hover { background: #15803d; transform: translateY(-1px); }
+.banner-progresso { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
+.banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+@media (max-width: 640px) {
+  .panel { padding: 20px 16px; }
+  .hero { padding: 24px 20px; flex-direction: column; text-align: center; }
+  .questao-card { padding: 20px; }
+  .topbar { padding: 0 16px; }
+  .topbar-title { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="dashboard.html" class="back-btn">← Voltar</a>
+    <div class="divider"></div>
+    <div class="topbar-title">Semana de Conhecimentos Gerais — Módulo 1 2026</div>
+    <div class="badge">1º Módulo 2026</div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
+  <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (9)</div>
+</div>
+
+<!-- ══════════ PANEL RESUMO ══════════ -->
+<div id="panel-resumo" class="panel active">
+
+  <div class="hero">
+    <div class="hero-icon">🎬</div>
+    <div>
+      <div class="hero-tag">Semana de Conhecimentos Gerais · Módulo 1 · 2026</div>
+      <h1>Cinema Brasileiro — Produção, Indústria e Imaginário</h1>
+      <p>4 artigos científicos · Período: 09/03/2026 a 12/04/2026<br>Cinema de Guerrilha · Arquétipos · Campos e Redes · Cinema em Coletivo</p>
+    </div>
+  </div>
+
+  <div class="prioridade prio-alta">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Alta — Artigos base das questões da atividade avaliativa</div>
+  </div>
+
+  <!-- ARTIGO 1: LEROUX -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon vermelho">⚔️</div>
+      <div class="card-titulo">
+        <h3>Cinema de Guerrilha da Baixada (CGB)</h3>
+        <p>Leroux (2017) · Polêmica, v.17, n.1 · Táticas entre o popular e o artístico</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O que é o Cinema de Guerrilha da Baixada (CGB)?</h4>
+      <p>O CGB é um grupo de produção audiovisual que opera na Baixada Fluminense e utiliza táticas específicas para superar a falta de financiamento e garantir a circulação de suas obras. Através de uma disciplina rigorosa de envio para festivais, o grupo acumulou centenas de participações e dezenas de prêmios no Brasil e no exterior.</p>
+
+      <h4>Contexto Histórico — Democratização do Cinema</h4>
+      <p>Historicamente, o cinema brasileiro foi marcado por forte elitismo: o acesso aos meios de produção exigia grande capital, formação em cursos caros (muitas vezes no exterior) e uma rede de contatos influentes. Na virada do século XXI, a incorporação de tecnologias audiovisuais mais baratas no cotidiano de classes populares permitiu o surgimento de uma nova geração de produtores autodidatas.</p>
+
+      <h4>Táticas de Distribuição e Exibição do CGB</h4>
+      <table class="tabela">
+        <tr><th>Tática</th><th>Descrição</th></tr>
+        <tr><td><strong>Pesquisa de editais e festivais</strong></td><td>Uso de sites como Ancine e Porta Curtas para mapear oportunidades de exibição</td></tr>
+        <tr><td><strong>Presença física em festivais</strong></td><td>A ausência dos realizadores em festivais distantes pode prejudicar as chances de premiação — a presença fortalece vínculos e visibilidade</td></tr>
+        <tr><td><strong>Economia da dádiva</strong></td><td>Lógica de trocas simbólicas e não monetárias para viabilizar produções com recursos escassos</td></tr>
+        <tr><td><strong>Cidade como cenário</strong></td><td>Uso do espaço urbano e periférico como locação, reduzindo custos e valorizando o contexto local</td></tr>
+      </table>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção:</strong> O CGB NÃO foca na exibição em grandes circuitos comerciais de shoppings. Sua estratégia é voltada para festivais, circuitos alternativos e a lógica da "economia da dádiva" — completamente oposta ao modelo comercial.</p>
+      </div>
+
+      <h4>Característica Fundamental do Cinema de Guerrilha</h4>
+      <p>A característica central que define o "cinema de guerrilha" no estudo do CGB é a <strong>fabricação de um repertório de táticas para viabilizar a criação com o que se tem</strong>. O grupo opera de forma autodidata, sem dependência de editais governamentais, sem equipamentos de última geração e sem especialização técnica prévia em escolas formais.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Macete para a prova:</strong> As afirmativas corretas sobre o CGB são: (I) usa Ancine e Porta Curtas para pesquisar editais/festivais; (II) a ausência física em festivais distantes é um entrave; (IV) "economia da dádiva" e uso da cidade como cenário são táticas. A afirmativa III (foco em shoppings) é FALSA.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTIGO 2: ANAZ -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon roxo">🧠</div>
+      <div class="card-titulo">
+        <h3>Processo Criativo no Audiovisual — Do Roteiro ao Imaginário</h3>
+        <p>Anaz (2018) · Galaxia, n.38 · Arquétipos, imaginário e indústria audiovisual</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Processo de Criação: Coletivo, Segmentado e Complexo</h4>
+      <p>Diferentemente das artes visuais e da literatura — onde um ou poucos criadores controlam todo o processo —, na indústria do audiovisual o processo de criação é <strong>coletivo e segmentado</strong>. Envolve a articulação de roteiristas, diretores, produtores, executivos, editores e elencos, além de tecnologias e decisões corporativas que refletem interesses artísticos, comerciais e institucionais.</p>
+
+      <h4>O Fluxograma do Roteiro — Duas Instâncias Principais</h4>
+      <table class="tabela">
+        <tr><th>Instância</th><th>Agentes Envolvidos</th><th>Dinâmica</th></tr>
+        <tr><td><strong>Processo de Decisão Corporativa</strong> (pré-produção)</td><td>Roteirista comissionado, executivos do estúdio/produtora/emissora, diretor, produtores executivos</td><td>Do first draft até o "sinal verde" para produção; várias versões revisadas (tratamentos)</td></tr>
+        <tr><td><strong>Etapa de Produção</strong></td><td>Roteirista inicial + novos roteiristas, diretor, elenco, produtores</td><td>Decisões corporativas continuam impactando; adequação à classificação etária e interesses institucionais</td></tr>
+      </table>
+
+      <h4>Arte vs. Mercado na Indústria Audiovisual</h4>
+      <p>Na lógica de negócios, decisões sobre conteúdo e formato ocorrem <strong>fora dos âmbitos do roteirista e do diretor</strong>, pautadas pelo interesse econômico de obter a maior lucratividade e/ou prestígio. A mentalidade comercial é aplicada em diferentes graus por diferentes participantes: pode amenizar "ousadias" das primeiras versões do roteiro ou redirecionar a produção para segmentos alternativos quando as pressões de mercado exigem.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Relação de Causalidade (Questão 6):</strong> A asserção I (processo sob lógica do mercado → modificações narrativas) é VERDADEIRA. A asserção II (indústria coletiva e segmentada, com marketing e executivos decidindo) também é VERDADEIRA. E a II É justificativa correta da I — porque é exatamente a natureza coletiva/segmentada com interesses institucionais que gera as modificações mercadológicas.</p>
+      </div>
+
+      <h4>O Roteiro como "Espinha Dorsal"</h4>
+      <p>O roteiro é não só o ponto de partida como a espinha dorsal de todo o processo criativo. Ele oferece ao processo a <strong>estrutura arquetípica</strong> que orienta todas as etapas seguintes. O imaginário compartilhado por um filme tem sua estrutura estabelecida pelo roteiro, mas ganha novas camadas na filmagem, edição, marketing e transmídia.</p>
+
+      <h4>O Conceito de Arquétipo (Jung e Durand)</h4>
+      <table class="tabela">
+        <tr><th>Perspectiva</th><th>Definição do Arquétipo</th></tr>
+        <tr><td><strong>Jung</strong></td><td>Possibilidade de manifestação e concretização de imagens e símbolos. Imagem primordial, universal e a-histórica — um "molde vazio" que pode ser preenchido por diferentes imagens em diferentes culturas, mas remetendo ao mesmo significado</td></tr>
+        <tr><td><strong>Durand</strong></td><td>Insere o arquétipo no "trajeto antropológico" — elemento intermediário que conecta as pulsões biopsíquicas do homem (gestos postural, digestivo e copulativo) às coerções do mundo externo (natural e cultural)</td></tr>
+      </table>
+
+      <h4>Pontos Essenciais sobre os Arquétipos</h4>
+      <ul>
+        <li><strong>O arquétipo em si é irrepresentável</strong> (Jung, 1970) — o que se identifica é a <em>imagem arquetípica</em> (o molde preenchido)</li>
+        <li><strong>Ambivalência intrínseca:</strong> ex. arquétipo materno = mãe amante (positivo) + mãe medonha (negativo)</li>
+        <li>Os arquétipos existem <em>a priori</em> no inconsciente, mas só podem ser identificados <em>a posteriori</em>, a partir de sua manifestação</li>
+        <li>O significado arquetípico <strong>não é arbitrário</strong> — está ligado à <em>pregnância simbólica</em> da imagem (ao contrário da palavra e dos signos)</li>
+        <li><strong>Estereótipo</strong> é uma degradação do arquétipo: representa apenas um aspecto, eliminando sua dinâmica e bivalência interna</li>
+        <li>Um personagem pode conter vários arquétipos; um mesmo arquétipo pode aparecer em vários personagens</li>
+      </ul>
+
+      <div class="alerta">
+        <p>⚠️ <strong>Cuidado nas alternativas:</strong> "O arquétipo e o personagem são unidades idênticas" — FALSO. "O arquétipo tem sentido fixo e positivo" — FALSO (tem ambivalência). "É construção arbitrária dos roteiristas de Hollywood" — FALSO (não é arbitrário). "Diferencia-se do estereótipo por ser representação simplificada" — FALSO (é o estereótipo que simplifica, não o arquétipo).</p>
+      </div>
+
+      <h4>Mitema — Elemento Básico do Processo Criativo</h4>
+      <p>O <strong>mitema</strong> é a menor unidade semântica que remete aos mitos que assediam a narrativa. Identificado pela mitocrítica (método científico formulado por Durand nos anos 1970), o mitema atravessa todas as etapas do processo criativo — dos roteiros iniciais ao marketing e transmídia — e é proposto como base para o estudo do processo criativo na indústria audiovisual.</p>
+    </div>
+  </div>
+
+  <!-- ARTIGO 3: TAÑO, CÂNDIDO, TORKOMIAN -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🕸️</div>
+      <div class="card-titulo">
+        <h3>Campos, Redes e Políticas Públicas no Cinema Brasileiro</h3>
+        <p>Taño, Cândido & Torkomian (2025) · Pol. Cult. Rev., v.18, n.1 · 1995–2018</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Objetivo e Método do Estudo</h4>
+      <p>O estudo analisa a influência do Estado na consolidação do campo da produção cinematográfica brasileira entre 1995 e 2018, por meio das redes formadas pelas empresas de produção e pós-produção de áudio e imagem. Articula a teoria de campos (Fligstein & McAdam, 2012) com a análise de redes sociais (Burt; Granovetter). A amostra foi de 150 filmes e 290 organizações.</p>
+
+      <h4>Teoria de Campos — Fligstein & McAdam (2012)</h4>
+      <table class="tabela">
+        <tr><th>Tipo de Relação entre Campos</th><th>Descrição</th></tr>
+        <tr><td><strong>Campos contidos</strong></td><td>Um campo está dentro do outro (hierarquia interna). Ex.: subcampos de produção e pós-produção estão contidos no campo da produção cinematográfica</td></tr>
+        <tr><td><strong>Campos adjacentes</strong></td><td>Campos que se relacionam lateralmente com diferencial de poder. Ex.: campos de áudio e imagem são subcampos adjacentes e dependentes</td></tr>
+      </table>
+
+      <p><strong>Campo vs. Rede:</strong> Um campo é um <em>espaço intersubjetivo, mais abstrato</em>, onde sentidos sociais são construídos. As redes referem-se a <em>interações mais concretas e diretas</em>. A combinação das duas abordagens permite análise das relações diretas entre atores e de como o Estado regula esses espaços.</p>
+
+      <h4>Premissas Adotadas no Artigo (Questão 3)</h4>
+      <ul>
+        <li><strong>I — CORRETA:</strong> O campo da produção cinematográfica contém os subcampos de produção e pós-produção</li>
+        <li><strong>II — CORRETA:</strong> Os campos de áudio e imagem são considerados subcampos adjacentes e dependentes, com estrutura hierárquica em relação às empresas produtoras</li>
+        <li><strong>III — INCORRETA:</strong> NÃO existe autonomia absoluta de cada subcampo — o Estado regula e influencia os campos por meio de políticas públicas setoriais</li>
+      </ul>
+
+      <div class="destaque">
+        <p>💡 <strong>Resposta da Questão 3:</strong> Estão corretas apenas as afirmativas I e II.</p>
+      </div>
+
+      <h4>Três Períodos Analisados e Políticas Públicas</h4>
+      <table class="tabela">
+        <tr><th>Período</th><th>Governo</th><th>Característica Principal</th><th>Políticas Relevantes</th></tr>
+        <tr><td>1995–2002</td><td>FHC</td><td>Campo emergente; reestruturação após fim da Embrafilme</td><td>Lei do Audiovisual (8.685/95); Lei Rouanet (8.313/91) — incentivo indireto via renúncia fiscal</td></tr>
+        <tr><td>2003–2010</td><td>Lula</td><td>Crescimento e emergência do campo; mais empresas e interações</td><td>MP 2.228-1/01 (criou CSC, Ancine, SAv); Condecine; Fundo Setorial do Audiovisual (FSA, 2006)</td></tr>
+        <tr><td>2011–2018</td><td>Dilma/Temer</td><td>Campo mais diversificado; dispersão do poder</td><td>Lei da TV Paga (12.485/11); Programa Brasil de Todas as Telas; Cinema Perto de Você</td></tr>
+      </table>
+
+      <h4>Redes Difusas — Principal Conclusão do Artigo</h4>
+      <p>Nos três períodos analisados, a maior parte das interações entre produtoras e empresas de pós-produção são de "força simples" (laços que raramente se repetem com alta frequência entre os mesmos atores). Isso configura uma rede difusa.</p>
+
+      <table class="tabela">
+        <tr><th>Aspecto</th><th>Rede Difusa</th></tr>
+        <tr><td><strong>Vantagem</strong></td><td>Inclui maior número de atores; amplia diversidade cultural e oportunidades de criação artística; evita fechamento do sistema em grupos restritos</td></tr>
+        <tr><td><strong>Desvantagem</strong></td><td>Gera instabilidade administrativa; dificulta consolidação de práticas industriais permanentes; inconstância no funcionamento do campo</td></tr>
+      </table>
+
+      <div class="destaque">
+        <p>💡 <strong>Resposta da Questão 8:</strong> A principal vantagem das "redes difusas" é o aumento da diversidade e das oportunidades de criação artística — não a criação de sistema fechado, não a estabilização, não a redução de empresas e nem a concentração de renda.</p>
+      </div>
+
+      <h4>Embrafilme e a Retomada (1995)</h4>
+      <p>A <strong>Embrafilme</strong> foi extinta em 1990 pelo governo Collor, causando colapso do setor. A partir de 1995, o setor se reorganizou com apoio indireto do Estado (leis de incentivo fiscal). A Retomada do cinema brasileiro marca o início do período analisado. A Ancine (criada em 2001) tornou-se central no fomento, fiscalização e regulação da atividade cinematográfica.</p>
+    </div>
+  </div>
+
+  <!-- ARTIGO 4: SATLER & MARTINS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🎭</div>
+      <div class="card-titulo">
+        <h3>O Cinema Feito em Coletivo — Sistema CooperAÇÃO</h3>
+        <p>Satler & Martins (2015) · Artefactum, v.7, n.2 · "Pegar no chifre do boi"</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>O Sistema CooperAÇÃO — Amigos do Cinema</h4>
+      <p>Grupo de atores, técnicos e diletantes que se reúne no mínimo uma vez por ano para realizar filmes de ficção em Goiânia (GO). Fundado em 1999 para inscrever um filme no Festival Internacional de Cinema e Vídeo Ambiental (FICA), em Goiás. Já lançou quinze produções (curtas, médias e longas).</p>
+
+      <p>O Sistema CooperAÇÃO se define como <em>"um grupo de amigos que produzem de modo independente. Técnicos e atores unidos com um só objetivo, estudar cinema"</em> — tendo como meta estar sempre exercitando e ao mesmo tempo fazer uma vitrine cultural.</p>
+
+      <h4>A Metáfora do "Chifre do Boi"</h4>
+      <p>Martins Muniz, fundador e diretor do grupo, afirma que aprender a prática fílmica exige "pegar no chifre do boi" — regionalização do ditado "pegar o touro pelos chifres". No contexto goiano, o boi (não o touro) é o animal próximo das narrativas caipiras. A metáfora representa <strong>dominar o desconhecido, fazer o que for preciso, sem escolher função ou papel</strong>, para finalizar o filme.</p>
+
+      <h4>Características do Método de Produção</h4>
+      <table class="tabela">
+        <tr><th>Característica</th><th>Descrição</th></tr>
+        <tr><td><strong>Sem remuneração (voluntário)</strong></td><td>Não há cachê — a recompensa é o aprendizado prático</td></tr>
+        <tr><td><strong>Aprendizado laboratorial</strong></td><td>Estudar cinema é realizá-lo, exercitá-lo, experimentá-lo — na prática, não na teoria</td></tr>
+        <tr><td><strong>Horizontalidade</strong></td><td>Relações não hierárquicas; cada um contribui com o que pode; ator também monta cenário, carrega equipamento, etc.</td></tr>
+        <tr><td><strong>Roteiro entregue na hora</strong></td><td>Atores recebem o texto minutos antes da gravação — "a vantagem de estar com o ator na hora"</td></tr>
+        <tr><td><strong>Improvisação necessária</strong></td><td>Ausências de atores forçam mudanças no roteiro; o grupo precisa reinventar constantemente</td></tr>
+        <tr><td><strong>Críticas abertas</strong></td><td>Qualquer participante do set pode opinar sobre a atuação; ator precisa filtrar e saber argumentar</td></tr>
+      </table>
+
+      <h4>Definição de Coletivo (Paim, 2012)</h4>
+      <p>Coletivos são <em>"agrupamentos de artistas ou multidisciplinares que, sob um mesmo nome, atuam propositalmente de forma conjunta, criativa, autoconsciente e não hierárquica. O processo de criação pode ser inteira ou parcialmente compartilhado"</em>. Alguns possuem formação fixa; outros, um núcleo central que agrega parceiros conforme os projetos.</p>
+
+      <h4>O Filme "O Capitão do Mato" (Martins Muniz, 2013)</h4>
+      <p>Primeiro filme do grupo a contar com apoio de leis de incentivo (que se materializou depois das filmagens). História fictícia inspirada nas origens dos quilombos em Goiás, com elementos de comédia. O ator Jefferson Lobato abandonou o projeto no meio das filmagens — outro ator (Marcos Barbosa) assumiu seu lugar, mas a cena de Lobato foi mantida na montagem final, gerando descontinuidade narrativa.</p>
+
+      <div class="destaque">
+        <p>💡 <strong>Lição central do artigo:</strong> No Sistema CooperAÇÃO, a opção por não remunerar possibilita a horizontalidade das relações, mas fragiliza o compromisso. O grupo precisa reinventar o roteiro constantemente. O compromisso de finalizar o filme é maior do que os acertos de continuísmo — é o "chifre do boi" aplicado à gestão do coletivo.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prioridade prio-media">
+    <div class="prioridade-dot"></div>
+    <div class="prioridade-label">Prioridade Média — Quadro comparativo e palavras-chave para fixação</div>
+  </div>
+
+  <!-- CARD COMPARATIVO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon laranja">📊</div>
+      <div class="card-titulo">
+        <h3>Quadro Comparativo — Os 4 Artigos</h3>
+        <p>Síntese e palavras-chave para revisão rápida antes da prova</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <h4>Comparação Geral</h4>
+      <table class="tabela">
+        <tr><th>Artigo</th><th>Foco</th><th>Conceito Central</th><th>Questões</th></tr>
+        <tr><td><strong>Leroux (2017)</strong></td><td>Cinema de Guerrilha da Baixada (CGB)</td><td>Táticas de produção/distribuição com recursos escassos</td><td>1 e 5</td></tr>
+        <tr><td><strong>Anaz (2018)</strong></td><td>Processo criativo na indústria audiovisual</td><td>Arquétipo, imaginário, roteiro como espinha dorsal</td><td>2, 4, 6, 7 e 10</td></tr>
+        <tr><td><strong>Taño et al. (2025)</strong></td><td>Campos, redes e políticas públicas</td><td>Redes difusas, campos contidos/adjacentes, Estado indutor</td><td>3 e 8</td></tr>
+        <tr><td><strong>Satler & Martins (2015)</strong></td><td>Cinema em coletivo (CooperAÇÃO)</td><td>Aprendizado laboratorial, horizontalidade, "chifre do boi"</td><td>Complementar</td></tr>
+      </table>
+
+      <h4>Palavras-Chave Essenciais</h4>
+      <ul>
+        <li><strong>CGB / Cinema de Guerrilha da Baixada</strong> — Leroux; táticas; "economia da dádiva"; Ancine; Porta Curtas</li>
+        <li><strong>Arquétipo</strong> — Jung; molde vazio; irrepresentável; imagem arquetípica; ambivalência; pregnância simbólica</li>
+        <li><strong>Trajeto antropológico</strong> — Durand; conexão entre biopsíquico e mundo externo</li>
+        <li><strong>Mitema</strong> — menor unidade semântica mítica; mitocrítica; Durand</li>
+        <li><strong>Estrutura arquetípica</strong> — roteiro como espinha dorsal; herói vence o monstro</li>
+        <li><strong>First draft / Shooting script</strong> — fluxograma do roteiro na indústria</li>
+        <li><strong>Campos contidos / adjacentes</strong> — Fligstein & McAdam (2012)</li>
+        <li><strong>Redes difusas</strong> — força simples; diversidade; instabilidade</li>
+        <li><strong>Embrafilme / Ancine / FSA</strong> — políticas públicas para o cinema brasileiro</li>
+        <li><strong>Retomada (1995)</strong> — reestruturação do cinema após Collor</li>
+        <li><strong>Sistema CooperAÇÃO</strong> — Satler & Martins; Martins Muniz; "pegar no chifre do boi"</li>
+        <li><strong>Coletivo</strong> — Paim (2012); não hierárquico; processo compartilhado</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- fim panel-resumo -->
+
+<!-- ══════════ PANEL QUIZ ══════════ -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-header">
+    <h2>✏️ Questões — Semana de Conhecimentos Gerais Módulo 1 2026</h2>
+    <p>9 questões baseadas na atividade avaliativa oficial (questão 9 anulada)</p>
+    <div class="chips">
+      <span class="chip chip-total">📋 9 questões</span>
+      <span class="chip chip-green">🎬 Cinema Guerrilha</span>
+      <span class="chip chip-green">🧠 Arquétipos</span>
+      <span class="chip chip-orange">🕸️ Campos e Redes</span>
+    </div>
+  </div>
+
+  <div class="quiz-progress">
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-text" id="progress-text">0 / 9</div>
+  </div>
+
+  <div id="bannerProgresso" class="banner-progresso" style="display:none">
+    <p>📌 Você tem progresso salvo neste simulado. Deseja continuar?</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="continuarProgresso()">✅ Continuar</button>
+      <button onclick="descartarProgresso()" style="background:#dc2626">🗑️ Recomeçar</button>
+    </div>
+  </div>
+  <div id="quiz-container"></div>
+
+  <div class="quiz-nav">
+    <button class="btn-nav btn-reiniciar" onclick="reiniciarQuiz()">🔄 Reiniciar</button>
+    <div class="btn-export-group" style="justify-content:flex-end">
+      <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+      <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+    </div>
+    <button class="btn-nav btn-proximo" id="btn-proximo" onclick="proximaQuestao()" disabled>Próxima →</button>
+  </div>
+
+</div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+const STORAGE_KEY = 'quiz_cg_mod1_2026';
+
+const questoes = [
+  {
+    tema: 'Cinema de Guerrilha (Leroux)',
+    enunciado: 'A produção do Cinema de Guerrilha da Baixada (CGB) utiliza táticas específicas para superar a falta de financiamento. Sobre as táticas de distribuição e exibição do CGB, considere: I. O grupo utiliza sites como Ancine e Porta Curtas para pesquisar editais e festivais. II. A ausência física dos realizadores em festivais distantes é um entrave que pode prejudicar as chances de premiação. III. O foco do grupo é a exibição exclusiva em grandes circuitos comerciais de shoppings para garantir retorno financeiro. IV. A "economia da dádiva" e o uso da cidade como cenário são táticas que compensam a escassez de recursos. É correto apenas o que se afirma em:',
+    opcoes: [
+      'I, II e IV.',
+      'I e III.',
+      'II e IV.',
+      'III e IV.'
+    ],
+    correta: 0,
+    gabarito: 'Corretas: I (uso de Ancine e Porta Curtas), II (presença física em festivais importa para premiação) e IV ("economia da dádiva" e cidade como cenário são táticas centrais). A III é FALSA: o CGB não foca em shoppings — sua estratégia é oposta ao circuito comercial, baseada em festivais, circuitos alternativos e lógica de trocas simbólicas não monetárias.'
+  },
+  {
+    tema: 'Arquétipos (Anaz)',
+    enunciado: 'O conceito junguiano de arquétipo é definido como uma possibilidade de manifestação e concretização de imagens e símbolos, funcionando como uma "forma básica" ou "molde vazio" que pode ser preenchido por diferentes imagens em diferentes culturas. Sobre a aplicação dos arquétipos nas narrativas audiovisuais, é correto afirmar que:',
+    opcoes: [
+      'O arquétipo e o personagem são unidades idênticas e indissociáveis.',
+      'O arquétipo é uma forma herdada que possui um único sentido fixo e positivo.',
+      'O arquétipo em si é irrepresentável, sendo identificável apenas a imagem arquetípica.',
+      'O arquétipo é uma construção arbitrária estabelecida pelos roteiristas de Hollywood.'
+    ],
+    correta: 2,
+    gabarito: 'Segundo Jung (1970), o arquétipo em si é irrepresentável — o que é identificável é a imagem arquetípica, isto é, o molde preenchido por imagens simbólicas em diferentes culturas com significados similares. As demais alternativas são falsas: arquétipo e personagem não são idênticos (um personagem pode ter vários arquétipos); o arquétipo tem ambivalência intrínseca (não sentido único positivo); e seu significado não é arbitrário, pois está ligado à pregnância simbólica da imagem.'
+  },
+  {
+    tema: 'Campos e Redes (Taño et al.)',
+    enunciado: 'Segundo a teoria de campos de Fligstein e McAdam (2012), as relações entre campos podem ser de dois tipos: campos contidos ou campos adjacentes. Sobre a aplicação da teoria de campos ao cinema brasileiro no artigo, identifique as premissas adotadas: I. O campo da produção cinematográfica contém os subcampos de produção e pós-produção. II. Os campos de áudio e imagem são considerados subcampos adjacentes e dependentes. III. Existe uma autonomia absoluta de cada subcampo, sem qualquer interferência do Estado. Estão corretas as afirmativas:',
+    opcoes: [
+      'I, apenas.',
+      'I e II, apenas.',
+      'I e III, apenas.',
+      'II e III, apenas.'
+    ],
+    correta: 1,
+    gabarito: 'I é correta: o campo da produção cinematográfica contém os subcampos de produção e pós-produção (campos contidos). II é correta: os campos de áudio e imagem são subcampos adjacentes e dependentes, com hierarquia em relação às produtoras. III é INCORRETA: o artigo demonstra que o Estado, por meio de políticas públicas setoriais (Ancine, FSA, leis de incentivo), regula e influencia os campos — não existe autonomia absoluta.'
+  },
+  {
+    tema: 'Arquétipos (Anaz)',
+    enunciado: 'O arquétipo na perspectiva de Gilbert Durand diferencia-se da visão puramente junguiana ao ser inserido no "trajeto antropológico", funcionando como conector entre as pulsões biopsíquicas do homem e as coerções do mundo externo. A respeito das características dos arquétipos nas narrativas audiovisuais, avalie: I. O arquétipo é uma "forma vazia" ou "molde" que pode ser preenchido por diferentes imagens simbólicas. II. A ambivalência é intrínseca ao arquétipo, como no caso do arquétipo materno (mãe amante vs. mãe medonha). III. Os arquétipos são identificados a priori no roteiro, independentemente de sua manifestação final na tela. IV. O significado arquetípico não é arbitrário, pois está ligado à pregnância simbólica da imagem. É correto apenas o que se afirma em:',
+    opcoes: [
+      'I e II.',
+      'III e IV.',
+      'I, II e III.',
+      'I, II e IV.'
+    ],
+    correta: 3,
+    gabarito: 'I é correta (arquétipo como molde vazio). II é correta (ambivalência — arquétipo materno traz a mãe amante e a mãe medonha). IV é correta (significado não arbitrário, baseado na pregnância simbólica). III é INCORRETA: os arquétipos existem a priori no inconsciente, mas só podem ser identificados a posteriori, a partir de sua manifestação — não são identificados a priori no roteiro independentemente de sua manifestação.'
+  },
+  {
+    tema: 'Cinema de Guerrilha (Leroux)',
+    enunciado: 'O cinema brasileiro foi historicamente marcado por forte elitismo no acesso aos meios de produção. Na virada do século XXI, tecnologias mais baratas permitiram o surgimento de novos produtores. Considerando a transição do modelo de produção cinematográfica, a característica fundamental que define o "cinema de guerrilha" conforme o estudo de caso do CGB é a:',
+    opcoes: [
+      'dependência de editais governamentais de fomento à cultura regional.',
+      'busca por equipamentos de última geração para emular o padrão global.',
+      'especialização técnica prévia dos membros em escolas formais de cinema.',
+      'fabricação de um repertório de táticas para viabilizar a criação com o que se tem.'
+    ],
+    correta: 3,
+    gabarito: 'A característica fundamental do CGB é a fabricação de táticas para viabilizar a criação com recursos escassos. O grupo opera de forma autodidata, sem dependência de editais governamentais, sem equipamentos de ponta e sem formação técnica prévia em escolas formais. As demais alternativas descrevem exatamente o oposto do modelo de guerrilha: dependência estatal, alta tecnologia e formação formal contradizem a lógica tática e autônoma do CGB.'
+  },
+  {
+    tema: 'Processo Criativo (Anaz)',
+    enunciado: 'No processo de criação do audiovisual, as decisões corporativas frequentemente ocorrem fora dos âmbitos do roteirista e do diretor, pautando-se pelo interesse econômico. Avalie as asserções e a relação entre elas: I. O processo de criação audiovisual desenvolve-se sob a lógica do mercado, o que pode levar à modificação de elementos narrativos originais para garantir que o filme seja mais "palatável" ao público. PORQUE II. A indústria do audiovisual opera de forma coletiva e segmentada, onde decisões sobre o roteiro revisado envolvem equipes de marketing e executivos de estúdio cujos interesses são institucionais e comerciais. Assinale a opção correta:',
+    opcoes: [
+      'As asserções I e II são proposições verdadeiras, e a II é uma justificativa correta da I.',
+      'As asserções I e II são proposições verdadeiras, mas a II não é uma justificativa correta da I.',
+      'A asserção I é uma proposição verdadeira, e a II é uma proposição falsa.',
+      'A asserção I é uma proposição falsa, e a II é uma verdadeira.'
+    ],
+    correta: 0,
+    gabarito: 'Ambas as asserções são verdadeiras. A I afirma que o processo se desenvolve sob lógica de mercado, levando a modificações narrativas — correta (Anaz, 2018). A II descreve a natureza coletiva e segmentada da indústria, com executivos e marketing participando das decisões — correta. E a II justifica a I: é exatamente porque a indústria é coletiva/segmentada, com múltiplos agentes de interesses comerciais e institucionais, que as modificações mercadológicas ocorrem.'
+  },
+  {
+    tema: 'Processo Criativo (Anaz)',
+    enunciado: 'Diferentemente das obras da literatura e artes visuais, em que apenas um ou poucos criadores atuam ao longo de todo o processo criativo, na indústria do audiovisual o processo desenvolve-se de forma coletiva e segmentada. Com base na natureza coletiva da produção audiovisual, assinale a opção que identifica corretamente a "espinha dorsal" desse processo criativo:',
+    opcoes: [
+      'O plano de marketing, que define o potencial de lucro.',
+      'O roteiro, que oferece uma estrutura arquetípica orientadora.',
+      'A edição final, onde a narrativa ganha suas características definitivas.',
+      'O processo de decisão corporativa, que controla todas as etapas de criação.'
+    ],
+    correta: 1,
+    gabarito: 'Segundo Anaz (2018), o roteiro é não só o ponto de partida como a "espinha dorsal" de todo o processo criativo na indústria do audiovisual. O roteiro oferece ao processo de criação, como um todo, uma estrutura arquetípica que irá orientá-lo. O marketing, a edição e as decisões corporativas são importantes, mas nenhuma função controla todas as etapas — nem mesmo executivos ou produtores participam de todas elas, salvo exceções.'
+  },
+  {
+    tema: 'Campos e Redes (Taño et al.)',
+    enunciado: 'O estudo do cinema brasileiro entre 1995 e 2018 revela que o campo se organiza fundamentalmente em "redes difusas", onde a maior parte das interações é de "força simples". Embora essa característica possa gerar instabilidade administrativa, ela é vista como positiva sob o prisma da diversidade cultural. Segundo a conclusão do artigo, qual é a principal vantagem da configuração de "redes difusas" para o campo cinematográfico nacional?',
+    opcoes: [
+      'A criação de um sistema fechado e protegido contra novos entrantes.',
+      'A estabilização definitiva do funcionamento do campo econômico.',
+      'A redução drástica do número de empresas atuantes no setor.',
+      'O aumento da diversidade e das oportunidades de criação artística.'
+    ],
+    correta: 3,
+    gabarito: 'Segundo Taño et al. (2025), a dispersão das redes difusas, por um lado, inclui maior número de atores e amplia as possibilidades de produção — o que em um campo cultural é bastante relevante tanto no âmbito da oportunidade de criação quanto da diversidade. Por outro lado, abre espaço para a inconstância, dificultando a estabilização do campo. A principal vantagem é, portanto, a diversidade e as oportunidades de criação — não a estabilização, nem o fechamento do sistema.'
+  },
+  {
+    tema: 'Processo Criativo (Anaz)',
+    enunciado: 'O fluxograma do roteiro na indústria audiovisual compreende duas instâncias principais após a aquisição da obra: uma relativa à pré-produção e ao processo de decisão corporativa e outra referente à etapa de produção. Durante o "processo de decisão corporativa", quem são os agentes primários envolvidos até o "sinal verde" para a produção?',
+    opcoes: [
+      'Exclusivamente o roteirista inicial e o diretor de fotografia.',
+      'O roteirista comissionado, executivos do estúdio, diretor e produtores executivos.',
+      'A equipe de marketing e o público-alvo em sessões de teste.',
+      'O elenco principal e os editores de som.'
+    ],
+    correta: 1,
+    gabarito: 'Segundo Anaz (2018), no processo de decisão corporativa até o "sinal verde" para a produção, envolvem-se principalmente: o roteirista (normalmente comissionado para fazer um determinado número de versões revisadas), os executivos do estúdio/produtora/emissora e suas equipes, o diretor e os produtores executivos. A partir da aprovação, o roteiro entra na fase de produção, quando outros agentes (novos roteiristas, elenco) também podem contribuir.'
+  }
+];
+
+let questaoAtual = 0;
+let acertos = 0;
+let erros = 0;
+let respondidas = {};
+
+function salvarProgresso() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ questaoAtual, acertos, erros, respondidas }));
+  } catch(e) {}
+}
+
+function carregarProgresso() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && data.respondidas && Object.keys(data.respondidas).length > 0) return data;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function continuarProgresso() {
+  const saved = carregarProgresso();
+  if (saved) {
+    questaoAtual = saved.questaoAtual || 0;
+    acertos = saved.acertos || 0;
+    erros = saved.erros || 0;
+    respondidas = saved.respondidas || {};
+  }
+  document.getElementById('bannerProgresso').style.display = 'none';
+  renderizarQuestao();
+}
+
+function descartarProgresso() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  document.getElementById('bannerProgresso').style.display = 'none';
+  renderizarQuestao();
+}
+
+function iniciarQuiz() {
+  const saved = carregarProgresso();
+  if (saved) {
+    document.getElementById('bannerProgresso').style.display = 'flex';
+    renderizarQuestao();
+  } else {
+    renderizarQuestao();
+  }
+}
+
+function renderizarQuestao() {
+  const container = document.getElementById('quiz-container');
+  if (questaoAtual >= questoes.length) { mostrarResultado(); return; }
+
+  const q = questoes[questaoAtual];
+  const jaRespondida = respondidas[questaoAtual] !== undefined;
+  const respostaDada = respondidas[questaoAtual];
+  const letras = ['A','B','C','D'];
+
+  const card = document.createElement('div');
+  card.className = 'questao-card' + (jaRespondida ? (respostaDada === q.correta ? ' acertou' : ' errou') : '');
+  card.innerHTML = `
+    <div class="q-meta">
+      <span class="q-num">📝 Questão ${questaoAtual + 1} de ${questoes.length}</span>
+      <span class="q-tema">${q.tema}</span>
+    </div>
+    <div class="q-enunciado">${q.enunciado}</div>
+    ${q.opcoes.map((op, i) => `
+      <button class="opcao-btn ${jaRespondida ? (i === q.correta ? 'correta' : (i === respostaDada ? 'incorreta' : '')) : ''}"
+        onclick="responder(${i})" ${jaRespondida ? 'disabled' : ''}>
+        <span class="opcao-letra">${letras[i]}</span>
+        <span>${op}</span>
+      </button>
+    `).join('')}
+    <div class="q-gabarito ${jaRespondida ? (respostaDada === q.correta ? 'show-acertou' : 'show-errou') : ''}">
+      ${jaRespondida ? (respostaDada === q.correta ? '✅ Correto! ' : '❌ Incorreto. ') + q.gabarito : q.gabarito}
+    </div>
+  `;
+
+  container.innerHTML = '';
+  container.appendChild(card);
+  atualizarProgresso();
+  document.getElementById('btn-proximo').disabled = !jaRespondida;
+}
+
+function responder(indice) {
+  if (respondidas[questaoAtual] !== undefined) return;
+  const q = questoes[questaoAtual];
+  respondidas[questaoAtual] = indice;
+  if (indice === q.correta) acertos++; else erros++;
+  salvarProgresso();
+  renderizarQuestao();
+}
+
+function proximaQuestao() {
+  questaoAtual++;
+  salvarProgresso();
+  renderizarQuestao();
+  window.scrollTo({ top: document.getElementById('quiz-container').offsetTop - 80, behavior: 'smooth' });
+}
+
+function atualizarProgresso() {
+  const n = Object.keys(respondidas).length;
+  const pct = Math.round((n / questoes.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = n + ' / ' + questoes.length;
+}
+
+function mostrarResultado() {
+  const total = questoes.length;
+  const taxa = Math.round((acertos / total) * 100);
+  let emoji = '🏆', msg = 'Excelente! Você domina a matéria!';
+  if (taxa < 50) { emoji = '📚'; msg = 'Continue estudando! Revise os cards de resumo.'; }
+  else if (taxa < 70) { emoji = '💪'; msg = 'Bom progresso! Revise os tópicos errados.'; }
+  else if (taxa < 90) { emoji = '🌟'; msg = 'Muito bem! Quase lá — reforce os pontos perdidos.'; }
+
+  document.getElementById('quiz-container').innerHTML = `
+    <div class="resultado">
+      <div class="resultado-emoji">${emoji}</div>
+      <h2>${msg}</h2>
+      <p>Semana de Conhecimentos Gerais — Módulo 1 2026 · Cinema Brasileiro</p>
+      <div class="resultado-stats">
+        <div class="r-stat verde"><div class="r-stat-val">${acertos}</div><div class="r-stat-label">Acertos</div></div>
+        <div class="r-stat vermelho"><div class="r-stat-val">${erros}</div><div class="r-stat-label">Erros</div></div>
+        <div class="r-stat dourado"><div class="r-stat-val">${taxa}%</div><div class="r-stat-label">Aproveitamento</div></div>
+      </div>
+      <div class="btn-export-group">
+        <button class="btn-export-pdf" onclick="exportarPDF()">📄 Baixar PDF</button>
+        <button class="btn-export-xls" onclick="exportarExcel()">📊 Baixar Excel</button>
+      </div>
+    </div>
+  `;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+function reiniciarQuiz() {
+  questaoAtual = 0; acertos = 0; erros = 0; respondidas = {};
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  document.getElementById('btn-proximo').disabled = true;
+  renderizarQuestao();
+}
+
+function exportarPDF() {
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const hora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  const letras = ['A','B','C','D'];
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Resultado — Semana de Conhecimentos Gerais Módulo 1 2026</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:800px;margin:0 auto;padding:30px;color:#1a2e1f}
+    h1{color:#2d6a4f;font-size:22px;margin-bottom:4px}
+    .sub{color:#7a8a7c;font-size:13px;margin-bottom:24px}
+    .stats{display:flex;gap:20px;margin-bottom:28px;flex-wrap:wrap}
+    .stat{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:14px 20px;text-align:center;min-width:100px}
+    .stat-val{font-size:28px;font-weight:800;color:#2d6a4f}
+    .stat-label{font-size:11px;text-transform:uppercase;color:#7a8a7c;letter-spacing:1px}
+    .stat.err{background:#fff5f5;border-color:#fecaca}.stat.err .stat-val{color:#dc2626}
+    .stat.pct{background:#fefce8;border-color:#fde68a}.stat.pct .stat-val{color:#ca8a04}
+    .questao{margin-bottom:20px;padding:16px;border-radius:8px;border:1px solid #e0ebe0;page-break-inside:avoid}
+    .questao.acertou{background:#f0fdf4;border-color:#86efac}
+    .questao.errou{background:#fff5f5;border-color:#fca5a5}
+    .q-num{font-size:11px;font-weight:700;text-transform:uppercase;color:#7a8a7c;margin-bottom:6px}
+    .q-text{font-size:14px;font-weight:600;color:#1a2e1f;margin-bottom:10px;line-height:1.5}
+    .q-resp{font-size:13px;margin-bottom:4px}
+    .q-resp.certa{color:#16a34a;font-weight:700}
+    .q-resp.errada{color:#dc2626;font-weight:700;text-decoration:line-through}
+    .q-gabarito{font-size:12px;color:#2d6a4f;background:#f0fdf4;border-radius:6px;padding:8px 12px;margin-top:8px;line-height:1.5}
+    .rodape{margin-top:32px;padding-top:16px;border-top:1px solid #e0ebe0;font-size:12px;color:#9ca3af;text-align:center}
+    @media print{body{padding:16px}}
+  </style></head><body>
+  <h1>📊 Resultado do Simulado</h1>
+  <div class="sub">Semana de Conhecimentos Gerais — Módulo 1 2026 · Cinema Brasileiro · ${data} às ${hora}</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">${acertos}</div><div class="stat-label">Acertos</div></div>
+    <div class="stat err"><div class="stat-val">${erros}</div><div class="stat-label">Erros</div></div>
+    <div class="stat pct"><div class="stat-val">${taxa}%</div><div class="stat-label">Aproveitamento</div></div>
+    <div class="stat"><div class="stat-val">${questoes.length}</div><div class="stat-label">Total</div></div>
+  </div>
+  ${questoes.map((q,i) => {
+    const resp = respondidas[i];
+    const acertou = resp === q.correta;
+    return `<div class="questao ${resp!==undefined?(acertou?'acertou':'errou'):''}">
+      <div class="q-num">Questão ${i+1} · ${q.tema} · ${resp!==undefined?(acertou?'✅ Correta':'❌ Incorreta'):'⚪ Não respondida'}</div>
+      <div class="q-text">${q.enunciado.substring(0,200)}...</div>
+      ${q.opcoes.map((op,oi)=>`<div class="q-resp ${oi===q.correta?'certa':(oi===resp&&!acertou?'errada':'')}">${letras[oi]}) ${op}</div>`).join('')}
+      <div class="q-gabarito">💬 ${q.gabarito}</div>
+    </div>`;
+  }).join('')}
+  <div class="rodape">Semana de Conhecimentos Gerais · Módulo 1 2026 · Gerado em ${data}</div>
+  </body></html>`);
+  win.document.close();
+  setTimeout(()=>{ win.focus(); win.print(); }, 600);
+}
+
+function exportarExcel() {
+  const taxa = Math.round((acertos / questoes.length) * 100);
+  const data = new Date().toLocaleDateString('pt-BR');
+  const letras = ['A','B','C','D'];
+  let csv = '\uFEFF';
+  csv += `Matéria;Semana de Conhecimentos Gerais — Módulo 1 2026\n`;
+  csv += `Data;${data}\nAcertos;${acertos}\nErros;${erros}\nTotal;${questoes.length}\nAproveitamento;${taxa}%\n\n`;
+  csv += `Nº;Tema;Enunciado;Sua Resposta;Resposta Correta;Resultado;Gabarito\n`;
+  questoes.forEach((q,i) => {
+    const resp = respondidas[i];
+    const acertou = resp === q.correta;
+    const respostaTexto = resp!==undefined?`${letras[resp]}) ${q.opcoes[resp]}`:'Não respondida';
+    const certaTexto = `${letras[q.correta]}) ${q.opcoes[q.correta]}`;
+    const resultado = resp!==undefined?(acertou?'Correta':'Incorreta'):'Não respondida';
+    const enunciado = q.enunciado.substring(0,150).replace(/;/g,',').replace(/\n/g,'');
+    const gabarito = q.gabarito.replace(/;/g,',').replace(/\n/g,'');
+    csv += `${i+1};"${q.tema}";"${enunciado}...";"${respostaTexto}";"${certaTexto}";"${resultado}";"${gabarito}"\n`;
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `resultado_cg_mod1_2026_${data.replace(/\//g,'-')}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+iniciarQuiz();
+</script>
+</body>
+</html>

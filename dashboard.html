@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — Nutri Amorim</title>
+  <title>Página Inicial — Nutri Amorim</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -366,7 +366,8 @@
   </div>
   <div class="sidebar-nav">
     <div class="nav-section">Menu</div>
-    <div class="nav-item active" onclick="showTab('home')"><span class="nav-icon">🏠</span> Início</div>
+    <div class="nav-item active" onclick="showTab('home')"><span class="nav-icon">🏠</span> Página Inicial</div>
+    <div class="nav-item" onclick="showTab('resultados')"><span class="nav-icon">📊</span> Resultados</div>
     <div class="nav-item" onclick="showTab('perfil')"><span class="nav-icon">👤</span> Meu Perfil</div>
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
     <div class="nav-section">Nutrição</div>
@@ -417,8 +418,385 @@
 
   <div class="content">
 
-    <!-- ══ HOME ══ -->
+    <!-- ══ PÁGINA INICIAL ══ -->
     <div class="tab-content active" id="tab-home">
+      <!-- IDs ocultos para compatibilidade com o resto do código -->
+      <span id="st-prontuario" style="display:none">—</span>
+      <span id="st-salvos" style="display:none">0</span>
+
+      <div style="max-width:760px;margin:0 auto">
+        <div style="background:linear-gradient(135deg,var(--escuro),#2d6a4f);border-radius:20px;padding:40px 36px;margin-bottom:24px;text-align:center">
+          <div style="font-size:52px;margin-bottom:12px">🌿</div>
+          <h2 style="font-family:'Playfair Display',serif;color:#fff;font-size:28px;margin-bottom:8px">Bem-vindo ao Nutri Amorim</h2>
+          <p style="color:rgba(255,255,255,0.65);font-size:14px;line-height:1.7;max-width:480px;margin:0 auto">Sua plataforma nutricional completa. Use o menu lateral para navegar pelas seções ou acesse rapidamente abaixo.</p>
+        </div>
+        <div class="home-cards">
+          <div class="home-card" onclick="showTab('resultados')" style="border-color:#74c69d;background:linear-gradient(135deg,#f0fdf4,#e8f5e9)">
+            <div class="home-card-icon">📊</div>
+            <div class="home-card-title" style="color:var(--verde)">Resultados</div>
+            <div class="home-card-desc">Resumo das suas metas e consumo</div>
+          </div>
+          <div class="home-card" onclick="showTab('prontuario')"><div class="home-card-icon">📋</div><div class="home-card-title">Prontuário Médico</div><div class="home-card-desc">Ficha de anamnese completa</div></div>
+          <div class="home-card" onclick="showTab('prontuarios-salvos')" style="border-color:#bfdbfe"><div class="home-card-icon">🗃️</div><div class="home-card-title" style="color:#1d4ed8">Minhas Fichas</div><div class="home-card-desc">Acesse e edite suas fichas</div></div>
+          <div class="home-card" onclick="showTab('recordatorio')"><div class="home-card-icon">⏱️</div><div class="home-card-title">Recordatório 24h</div><div class="home-card-desc">Registre o que comeu hoje</div></div>
+          <div class="home-card" onclick="showTab('tabela')"><div class="home-card-icon">🥦</div><div class="home-card-title">Tabela Alimentar</div><div class="home-card-desc">Calcule kcal e proteína</div></div>
+          <div class="home-card" onclick="showTab('plano')"><div class="home-card-icon">🎯</div><div class="home-card-title">Plano Alimentar</div><div class="home-card-desc">Metas e distribuição</div></div>
+          <div class="home-card" onclick="showTab('chatbot')"><div class="home-card-icon">🤖</div><div class="home-card-title">Assistente IA</div><div class="home-card-desc">Dúvidas e agendamentos</div></div>
+          <div class="home-card" onclick="showTab('conhecimento')" style="border-color:var(--verde-neon)"><div class="home-card-icon">📚</div><div class="home-card-title" style="color:var(--verde)">Conhecimento na Prática</div><div class="home-card-desc">Resumos e questões da faculdade</div></div>
+          <div class="home-card" onclick="window.open('central-estudos.html','_blank')" style="border-color:#7c3aed"><div class="home-card-icon">🧠</div><div class="home-card-title" style="color:#7c3aed">Central de Estudos</div><div class="home-card-desc">Flashcards, simulado, progresso e mais</div></div>
+          <div class="home-card" onclick="showTab('sobre')" style="border-color:#a7f3d0"><div class="home-card-icon">🌿</div><div class="home-card-title" style="color:var(--verde)">Sobre Mim</div><div class="home-card-desc">História do projeto</div></div>
+        </div>
+      </div>
+
+      <!-- ══ POSTS INFORMATIVOS ══ -->
+      <div style="max-width:760px;margin:0 auto 40px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:20px;color:var(--escuro);margin-bottom:2px">Conteúdo em Destaque</h3>
+            <p style="font-size:13px;color:#7a8a7c">Aprenda nutrição passo a passo</p>
+          </div>
+        </div>
+        <div id="posts-container" style="display:flex;flex-direction:column;gap:24px"></div>
+      </div>
+    </div>
+
+    <style>
+      .post-card-home { background:#fff; border:1px solid #e8efe8; border-radius:16px; overflow:hidden; }
+      .post-card-home .pch-top { background:#0d1f15; padding:16px 20px 12px; }
+      .pch-tag { display:inline-block; background:rgba(116,198,157,0.15); color:#74c69d; font-size:11px; font-weight:500; padding:3px 10px; border-radius:20px; letter-spacing:.8px; text-transform:uppercase; margin-bottom:8px; }
+      .pch-title { font-family:'Playfair Display',serif; font-size:20px; color:#fff; margin-bottom:2px; }
+      .pch-sub { font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:10px; }
+      .pch-prog { height:2px; background:rgba(255,255,255,0.08); border-radius:1px; overflow:hidden; }
+      .pch-prog-fill { height:100%; background:#74c69d; border-radius:1px; transition:width .4s ease; }
+      .pch-dots { display:flex; gap:5px; }
+      .pch-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); cursor:pointer; transition:background .3s; }
+      .pch-dot.active { background:#74c69d; }
+      .pch-dot.done { background:rgba(116,198,157,0.4); }
+      .pch-body { display:grid; grid-template-columns:1fr 1fr; min-height:320px; }
+      .pch-visual { background:#111c14; display:flex; align-items:center; justify-content:center; padding:20px; border-right:0.5px solid rgba(255,255,255,0.06); }
+      .pch-text { padding:24px 20px; display:flex; flex-direction:column; justify-content:space-between; }
+      .pch-step-num { font-size:11px; font-weight:500; color:#74c69d; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+      .pch-step-title { font-family:'Playfair Display',serif; font-size:17px; color:var(--escuro); margin-bottom:10px; line-height:1.3; }
+      .pch-step-text { font-size:13px; color:#5a6a5c; line-height:1.75; margin-bottom:12px; }
+      .pch-detail { background:#f8fdf8; border:0.5px solid #e8efe8; border-left:2px solid #74c69d; border-radius:0 8px 8px 0; padding:9px 12px; margin-bottom:12px; }
+      .pch-detail-title { font-size:11px; font-weight:600; color:#2d6a4f; text-transform:uppercase; letter-spacing:.8px; margin-bottom:3px; }
+      .pch-detail-text { font-size:12px; color:#5a6a5c; line-height:1.6; }
+      .pch-chips { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+      .pch-chip { display:inline-flex; align-items:center; gap:3px; background:#f1f5f1; border:0.5px solid #e8efe8; border-radius:20px; padding:3px 9px; font-size:11px; color:#5a6a5c; }
+      .pch-chip b { color:#2d6a4f; font-weight:600; }
+      .pch-nav { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:auto; }
+      .pch-btn { padding:7px 14px; border-radius:8px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid #e8efe8; background:#f8fdf8; color:var(--escuro); transition:all .15s; font-family:'DM Sans',sans-serif; }
+      .pch-btn:hover { background:#e8efe8; }
+      .pch-btn.pch-next { background:#2d6a4f; border-color:#2d6a4f; color:#fff; }
+      .pch-btn.pch-next:hover { background:#1a4030; }
+      .pch-btn:disabled { opacity:.3; cursor:default; pointer-events:none; }
+      .pch-counter { font-size:11px; color:#9ca3af; }
+      @keyframes pchFade { from{opacity:0;transform:translateX(10px)} to{opacity:1;transform:translateX(0)} }
+      .pch-anim { animation:pchFade .3s ease forwards; }
+      @media (max-width:600px) { .pch-body { grid-template-columns:1fr; } .pch-visual { min-height:220px; border-right:none; border-bottom:0.5px solid rgba(255,255,255,0.06); } }
+    </style>
+
+    <script>
+    const POST_DATA = [
+      {
+        id:'dna',
+        tag:'Genética',
+        title:'Do DNA à Proteína',
+        sub:'Como a célula transforma código genético em função',
+        steps:[
+          {
+            num:'Etapa 1 de 6', title:'O DNA: o manual de instruções da vida',
+            text:'Dentro do núcleo de cada célula existe uma molécula chamada DNA. Ela tem forma de dupla hélice — como uma escada torcida — e carrega todas as informações para construir e manter um ser vivo.',
+            detail:{title:'Por que é uma dupla hélice?', text:'Duas fitas complementares se enrolam juntas. Se uma for danificada, a outra serve de molde para o reparo — como ter duas cópias de um documento importante.'},
+            chips:[{b:'3,2 bilhões',t:'pares de bases no genoma humano'},{b:'2 metros',t:'de DNA em cada célula'},{b:'37 trilhões',t:'células no corpo humano'}],
+            draw:'drawPostDNA'
+          },
+          {
+            num:'Etapa 2 de 6', title:'As bases nitrogenadas: o alfabeto do DNA',
+            text:'O DNA é escrito com 4 letras: Adenina (A), Timina (T), Guanina (G) e Citosina (C). Elas sempre se pareiam: A com T, e G com C. Essa regra garante que as duas fitas sejam complementares.',
+            detail:{title:'Como viram informação?', text:'Sequências de 3 bases (códons) codificam um aminoácido. Ex: AUG = metionina. É como um código Morse: combinações simples criam mensagens complexas.'},
+            chips:[{b:'4 bases',t:'formam todo o código genético'},{b:'64 códons',t:'combinações possíveis de 3 bases'}],
+            draw:'drawPostBases'
+          },
+          {
+            num:'Etapa 3 de 6', title:'Transcrição: copiando a mensagem',
+            text:'A célula não usa o DNA diretamente — ele é precioso demais. Uma enzima chamada ARN-polimerase lê o DNA e cria uma cópia temporária chamada mRNA (RNA mensageiro).',
+            detail:{title:'Por que fazer uma cópia?', text:'O DNA fica guardado no núcleo como um original. O mRNA é a fotocópia que vai para a fábrica (ribossomo) e pode ser descartada depois — o original fica protegido.'},
+            chips:[{b:'ARN-polimerase',t:'enzima que faz a cópia'},{b:'U substitui T',t:'no RNA, Timina vira Uracila'},{b:'~40 bases/s',t:'velocidade de síntese'}],
+            draw:'drawPostTranscricao'
+          },
+          {
+            num:'Etapa 4 de 6', title:'O mRNA viaja até o ribossomo',
+            text:'Após ser produzido no núcleo, o mRNA atravessa os poros da membrana nuclear e vai ao citoplasma, onde estão os ribossomos — as "fábricas de proteínas" da célula.',
+            detail:{title:'O que é o ribossomo?', text:'É uma estrutura formada por proteínas e rRNA. Ele lê o mRNA códon por códon e monta a proteína encaixando os aminoácidos certos — como uma linha de montagem molecular.'},
+            chips:[{b:'Poros nucleares',t:'passagem do mRNA'},{b:'Citoplasma',t:'onde a tradução ocorre'},{b:'Milhões',t:'de ribossomos por célula'}],
+            draw:'drawPostViagem'
+          },
+          {
+            num:'Etapa 5 de 6', title:'Tradução: montando a proteína',
+            text:'O ribossomo lê o mRNA de 3 em 3 bases (um códon). Para cada códon, um tRNA traz o aminoácido correspondente. Eles vão se ligando, formando a cadeia da proteína.',
+            detail:{title:'O papel do tRNA', text:'O tRNA é o adaptador: de um lado reconhece o códon no mRNA, do outro carrega o aminoácido certo. São como peças de encaixe altamente específicas.'},
+            chips:[{b:'20 aminoácidos',t:'tipos diferentes existentes'},{b:'1 por segundo',t:'velocidade de adição'},{b:'AUG',t:'códon de início'}],
+            draw:'drawPostTraducao'
+          },
+          {
+            num:'Etapa 6 de 6', title:'Dobramento: a proteína ganha forma e função',
+            text:'A cadeia de aminoácidos se dobra em uma estrutura 3D única, determinada pela sequência. Essa forma é o que permite à proteína realizar sua função — transportar oxigênio, combater vírus ou catalisar reações.',
+            detail:{title:'O que pode dar errado?', text:'Mutações no DNA podem trocar um aminoácido, alterando o dobramento. A anemia falciforme, por exemplo, é causada pela troca de apenas 1 aminoácido na hemoglobina.'},
+            chips:[{b:'>100.000',t:'proteínas diferentes no corpo'},{b:'Hemoglobina',t:'transporta oxigênio'},{b:'Anticorpos',t:'defendem o organismo'}],
+            draw:'drawPostProteina'
+          }
+        ]
+      }
+    ];
+
+    const postStates = {};
+
+    function drawPostDNA(el) {
+      const bc={A:'#e76f51',T:'#f4a261',G:'#2a9d8f',C:'#4a9aba'};
+      const pairs=['AT','TA','GC','CG','AT','GC','TA','CG','AT','GC','TA','CG'];
+      const n=12, cx=130; let s='';
+      for(let i=0;i<n;i++){
+        const t=i/(n-1), y=16+t*250, w=Math.sin(t*Math.PI*3)*52;
+        const x1=cx-w, x2=cx+w;
+        if(i<n-1){
+          const t2=(i+1)/(n-1), y2=16+t2*250, w2=Math.sin(t2*Math.PI*3)*52;
+          s+=`<line x1="${cx-w}" y1="${y}" x2="${cx-w2}" y2="${y2}" stroke="#52b788" stroke-width="3" stroke-linecap="round" opacity="0.7"/>`;
+          s+=`<line x1="${cx+w}" y1="${y}" x2="${cx+w2}" y2="${y2}" stroke="#52b788" stroke-width="3" stroke-linecap="round" opacity="0.7"/>`;
+        }
+        const b1=pairs[i][0], b2=pairs[i][1];
+        s+=`<line x1="${x1+8}" y1="${y}" x2="${x2-8}" y2="${y}" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+        s+=`<circle cx="${x1}" cy="${y}" r="9" fill="${bc[b1]}" opacity="0.9"/>`;
+        s+=`<text x="${x1}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b1}</text>`;
+        s+=`<circle cx="${x2}" cy="${y}" r="9" fill="${bc[b2]}" opacity="0.9"/>`;
+        s+=`<text x="${x2}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b2}</text>`;
+      }
+      s+=`<text x="130" y="282" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">Dupla hélice do DNA</text>`;
+      el.innerHTML=`<svg width="260" height="290" viewBox="0 0 260 290">${s}</svg>`;
+    }
+
+    function drawPostBases(el) {
+      const bc={A:'#e76f51',T:'#f4a261',G:'#2a9d8f',C:'#4a9aba'};
+      let s=`<text x="130" y="20" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif">Pareamento obrigatório</text>`;
+      [{b1:'A',b2:'T',c1:'#e76f51',c2:'#f4a261',y:38,desc:'Adenina — Timina (2 ligações)'},{b1:'G',b2:'C',c1:'#2a9d8f',c2:'#4a9aba',y:108,desc:'Guanina — Citosina (3 ligações)'}].forEach(({b1,b2,c1,c2,y,desc})=>{
+        s+=`<rect x="16" y="${y}" width="228" height="54" rx="10" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="0.5"/>`;
+        s+=`<circle cx="52" cy="${y+20}" r="18" fill="${c1}" opacity="0.9"/><text x="52" y="${y+20}" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b1}</text>`;
+        s+=`<line x1="74" y1="${y+20}" x2="100" y2="${y+20}" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4 2"/>`;
+        s+=`<line x1="74" y1="${y+24}" x2="100" y2="${y+24}" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="4 2"/>`;
+        s+=`<circle cx="122" cy="${y+20}" r="18" fill="${c2}" opacity="0.9"/><text x="122" y="${y+20}" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b2}</text>`;
+        s+=`<text x="158" y="${y+22}" dominant-baseline="central" font-size="11" fill="rgba(255,255,255,0.45)" font-family="DM Sans,sans-serif">sempre juntos</text>`;
+        s+=`<text x="32" y="${y+46}" font-size="10" fill="rgba(255,255,255,0.28)" font-family="DM Sans,sans-serif">${desc}</text>`;
+      });
+      s+=`<text x="130" y="183" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.4)" font-family="DM Sans,sans-serif">Exemplo de códon:</text>`;
+      s+=`<rect x="46" y="193" width="168" height="48" rx="10" fill="rgba(45,106,79,0.3)" stroke="#52b788" stroke-width="0.5"/>`;
+      ['A','U','G'].forEach((b,i)=>{
+        const x=64+i*46;
+        s+=`<circle cx="${x}" cy="217" r="14" fill="${bc[b]||'#7b5ea7'}" opacity="0.9"/>`;
+        s+=`<text x="${x}" y="217" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b}</text>`;
+      });
+      s+=`<text x="130" y="234" text-anchor="middle" font-size="10" fill="#74c69d" font-family="DM Sans,sans-serif">AUG = Metionina (sinal de início)</text>`;
+      s+=`<text x="130" y="272" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Sans,sans-serif">No RNA: U (Uracila) substitui T (Timina)</text>`;
+      el.innerHTML=`<svg width="260" height="285" viewBox="0 0 260 285">${s}</svg>`;
+    }
+
+    function drawPostTranscricao(el) {
+      let s=`<text x="130" y="18" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">Dentro do núcleo</text>`;
+      s+=`<rect x="8" y="26" width="244" height="240" rx="14" fill="rgba(45,106,79,0.06)" stroke="rgba(116,198,157,0.18)" stroke-width="0.5"/>`;
+      s+=`<text x="20" y="44" font-size="10" fill="rgba(116,198,157,0.45)" font-family="DM Sans,sans-serif">Núcleo</text>`;
+      s+=`<text x="18" y="66" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">Fita de DNA:</text>`;
+      const bc={A:'#e76f51',T:'#f4a261',G:'#2a9d8f',C:'#4a9aba'};
+      ['A','T','G','C','A','T','G'].forEach((b,i)=>{
+        const x=18+i*32;
+        s+=`<rect x="${x}" y="74" width="27" height="21" rx="5" fill="${bc[b]}" opacity="0.55"/>`;
+        s+=`<text x="${x+13}" y="84" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b}</text>`;
+      });
+      s+=`<rect x="66" y="54" width="86" height="52" rx="10" fill="#7b5ea7" opacity="0.85"/>`;
+      s+=`<text x="109" y="74" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="white" font-family="DM Sans,sans-serif">ARN-Pol.</text>`;
+      s+=`<text x="109" y="91" text-anchor="middle" dominant-baseline="central" font-size="9" fill="rgba(255,255,255,0.6)" font-family="DM Sans,sans-serif">lendo DNA</text>`;
+      s+=`<text x="18" y="124" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">mRNA sendo criado:</text>`;
+      ['A','U','G','C'].forEach((b,i)=>{
+        const x=18+i*32;
+        s+=`<rect x="${x}" y="132" width="27" height="21" rx="5" fill="${bc[b]}" opacity="0.9"/>`;
+        s+=`<text x="${x+13}" y="142" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b}</text>`;
+      });
+      s+=`<text x="162" y="143" dominant-baseline="central" font-size="13" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">→ ...</text>`;
+      s+=`<defs><marker id="pa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#74c69d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+      s+=`<line x1="130" y1="160" x2="130" y2="188" stroke="#74c69d" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#pa)"/>`;
+      s+=`<text x="130" y="178" text-anchor="middle" font-size="10" fill="rgba(116,198,157,0.55)" font-family="DM Sans,sans-serif">sai pelo poro nuclear</text>`;
+      s+=`<rect x="28" y="194" width="204" height="26" rx="8" fill="rgba(116,198,157,0.1)" stroke="rgba(116,198,157,0.28)" stroke-width="0.5"/>`;
+      s+=`<text x="130" y="207" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#74c69d" font-family="DM Sans,sans-serif">mRNA pronto</text>`;
+      s+=`<text x="130" y="242" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.22)" font-family="DM Sans,sans-serif">T no DNA → U no mRNA (Uracila)</text>`;
+      s+=`<text x="130" y="257" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.18)" font-family="DM Sans,sans-serif">O DNA original fica protegido no núcleo</text>`;
+      el.innerHTML=`<svg width="260" height="280" viewBox="0 0 260 280">${s}</svg>`;
+    }
+
+    function drawPostViagem(el) {
+      let s='';
+      s+=`<rect x="8" y="8" width="244" height="130" rx="14" fill="rgba(45,106,79,0.07)" stroke="rgba(116,198,157,0.2)" stroke-width="0.5"/>`;
+      s+=`<text x="20" y="28" font-size="10" fill="rgba(116,198,157,0.45)" font-family="DM Sans,sans-serif">Núcleo</text>`;
+      s+=`<ellipse cx="110" cy="80" rx="68" ry="36" fill="rgba(45,106,79,0.15)" stroke="rgba(116,198,157,0.22)" stroke-width="0.5"/>`;
+      s+=`<text x="110" y="77" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.45)" font-family="DM Sans,sans-serif">DNA protegido</text>`;
+      s+=`<text x="110" y="93" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Sans,sans-serif">no núcleo</text>`;
+      s+=`<rect x="82" y="128" width="56" height="18" rx="6" fill="rgba(116,198,157,0.18)" stroke="rgba(116,198,157,0.38)" stroke-width="0.5"/>`;
+      s+=`<text x="110" y="137" text-anchor="middle" dominant-baseline="central" font-size="9" fill="#74c69d" font-family="DM Sans,sans-serif">Poro nuclear</text>`;
+      s+=`<defs><marker id="pav" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#f4a261" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+      s+=`<path d="M110 146 Q110 165 110 178" stroke="#f4a261" stroke-width="2" stroke-dasharray="5 3" fill="none" marker-end="url(#pav)"/>`;
+      s+=`<rect x="65" y="152" width="90" height="17" rx="8" fill="rgba(244,162,97,0.12)" stroke="rgba(244,162,97,0.28)" stroke-width="0.5"/>`;
+      s+=`<text x="110" y="160" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#f4a261" font-family="DM Sans,sans-serif">mRNA saindo</text>`;
+      s+=`<text x="20" y="200" font-size="10" fill="rgba(255,255,255,0.28)" font-family="DM Sans,sans-serif">Citoplasma</text>`;
+      s+=`<rect x="28" y="210" width="180" height="44" rx="12" fill="rgba(123,94,167,0.2)" stroke="rgba(123,94,167,0.38)" stroke-width="0.5"/>`;
+      s+=`<text x="118" y="228" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(200,180,230,0.9)" font-family="DM Sans,sans-serif">Ribossomo</text>`;
+      s+=`<text x="118" y="244" text-anchor="middle" font-size="10" fill="rgba(200,180,230,0.5)" font-family="DM Sans,sans-serif">aguardando o mRNA</text>`;
+      s+=`<text x="130" y="278" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.22)" font-family="DM Sans,sans-serif">mRNA = fotocópia · DNA = original guardado</text>`;
+      el.innerHTML=`<svg width="260" height="290" viewBox="0 0 260 290">${s}</svg>`;
+    }
+
+    function drawPostTraducao(el) {
+      const bc={A:'#e76f51',U:'#f4a261',G:'#2a9d8f',C:'#4a9aba'};
+      let s=`<text x="130" y="18" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">Tradução no ribossomo</text>`;
+      s+=`<rect x="16" y="26" width="228" height="56" rx="12" fill="rgba(123,94,167,0.25)" stroke="rgba(123,94,167,0.38)" stroke-width="0.5"/>`;
+      s+=`<text x="130" y="48" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(200,180,230,0.9)" font-family="DM Sans,sans-serif">Ribossomo</text>`;
+      s+=`<text x="130" y="65" text-anchor="middle" font-size="10" fill="rgba(200,180,230,0.5)" font-family="DM Sans,sans-serif">lendo o mRNA de 3 em 3 bases</text>`;
+      s+=`<text x="16" y="102" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">mRNA (lido em códons de 3 bases):</text>`;
+      [['A','U','G'],['C','C','A'],['U','U','C']].forEach((cod,ci)=>{
+        cod.forEach((b,bi)=>{
+          const x=16+ci*82+bi*26;
+          s+=`<rect x="${x}" y="110" width="22" height="20" rx="4" fill="${bc[b]}" opacity="${ci===0?1:0.55}"/>`;
+          s+=`<text x="${x+11}" y="120" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="white" font-family="DM Sans,sans-serif">${b}</text>`;
+        });
+      });
+      s+=`<rect x="14" y="108" width="72" height="24" rx="6" fill="none" stroke="rgba(116,198,157,0.55)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+      s+=`<text x="52" y="144" text-anchor="middle" font-size="9" fill="rgba(116,198,157,0.55)" font-family="DM Sans,sans-serif">códon atual = 1 aminoácido</text>`;
+      s+=`<defs><marker id="pat" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#f4a261" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>`;
+      s+=`<polygon points="52,152 64,152 58,168" fill="#f4a261" opacity="0.75"/>`;
+      s+=`<text x="82" y="156" font-size="10" fill="rgba(244,162,97,0.65)" font-family="DM Sans,sans-serif">tRNA traz o</text>`;
+      s+=`<text x="82" y="168" font-size="10" fill="rgba(244,162,97,0.65)" font-family="DM Sans,sans-serif">aminoácido certo</text>`;
+      s+=`<text x="16" y="192" font-size="10" fill="rgba(255,255,255,0.3)" font-family="DM Sans,sans-serif">Cadeia de aminoácidos crescendo:</text>`;
+      ['#e76f51','#f4a261','#2a9d8f','#4a9aba','#7b5ea7'].forEach((c,i)=>{
+        const x=22+i*44;
+        s+=`<circle cx="${x+14}" cy="212" r="14" fill="${c}" opacity="0.88"/>`;
+        s+=`<text x="${x+14}" y="212" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="600" fill="white" font-family="DM Sans,sans-serif">AA${i+1}</text>`;
+        if(i>0) s+=`<line x1="${x}" y1="212" x2="${x-12}" y2="212" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>`;
+      });
+      s+=`<text x="242" y="213" dominant-baseline="central" font-size="13" fill="rgba(255,255,255,0.22)" font-family="DM Sans,sans-serif">→</text>`;
+      s+=`<text x="130" y="250" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.25)" font-family="DM Sans,sans-serif">Cada 3 bases do mRNA = 1 aminoácido</text>`;
+      s+=`<text x="130" y="265" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.2)" font-family="DM Sans,sans-serif">A cadeia para em UAA, UAG ou UGA</text>`;
+      el.innerHTML=`<svg width="260" height="278" viewBox="0 0 260 278">${s}</svg>`;
+    }
+
+    function drawPostProteina(el) {
+      const colors=['#e76f51','#f4a261','#2a9d8f','#4a9aba','#7b5ea7','#e76f51','#f4a261','#2a9d8f','#4a9aba','#7b5ea7','#e76f51','#2a9d8f'];
+      const pts=[[50,240],[80,200],[110,170],[130,140],[160,160],[190,130],[210,160],[220,190],[200,220],[170,200],[145,220],[120,245]];
+      let path=`M${pts[0][0]},${pts[0][1]}`;
+      for(let i=1;i<pts.length;i++){const p=pts[i-1],n=pts[i];path+=` Q${p[0]},${p[1]} ${(p[0]+n[0])/2},${(p[1]+n[1])/2}`;}
+      const bonds=[[1,8],[2,9],[3,10],[5,11]];
+      let s='';
+      s+=`<text x="130" y="20" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.35)" font-family="DM Sans,sans-serif">Dobramento 3D da proteína</text>`;
+      bonds.forEach(([a,b])=>{s+=`<line x1="${pts[a][0]}" y1="${pts[a][1]}" x2="${pts[b][0]}" y2="${pts[b][1]}" stroke="rgba(255,255,255,0.07)" stroke-width="1" stroke-dasharray="3 3"/>`;});
+      s+=`<path d="${path}" fill="none" stroke="rgba(116,198,157,0.2)" stroke-width="10" stroke-linecap="round"/>`;
+      s+=`<path d="${path}" fill="none" stroke="#52b788" stroke-width="2.5" stroke-linecap="round"/>`;
+      pts.forEach((p,i)=>{
+        s+=`<circle cx="${p[0]}" cy="${p[1]}" r="13" fill="${colors[i]}" opacity="0.9"/>`;
+        s+=`<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="600" fill="white" font-family="DM Sans,sans-serif">AA</text>`;
+      });
+      s+=`<text x="130" y="272" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.38)" font-family="DM Sans,sans-serif">Estrutura 3D = Função específica</text>`;
+      s+=`<text x="130" y="288" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.22)" font-family="DM Sans,sans-serif">Cada cor = tipo diferente de aminoácido</text>`;
+      el.innerHTML=`<svg width="260" height="300" viewBox="0 0 260 300">${s}</svg>`;
+    }
+
+    const drawFns = { drawPostDNA, drawPostBases, drawPostTranscricao, drawPostViagem, drawPostTraducao, drawPostProteina };
+
+    function renderPost(postId) {
+      const post = POST_DATA.find(p=>p.id===postId);
+      if(!post) return;
+      const state = postStates[postId];
+      const cur = state.cur;
+      const s = post.steps[cur];
+      const total = post.steps.length;
+
+      const card = document.getElementById('post-card-'+postId);
+      if(!card) return;
+
+      // progress
+      card.querySelector('.pch-prog-fill').style.width = ((cur+1)/total*100)+'%';
+
+      // dots
+      card.querySelector('.pch-dots').innerHTML = post.steps.map((_,i)=>
+        `<div class="pch-dot ${i===cur?'active':i<cur?'done':''}" onclick="goPost('${postId}',${i})"></div>`
+      ).join('');
+
+      // visual
+      const vizEl = card.querySelector('.pch-visual');
+      drawFns[s.draw](vizEl);
+
+      // text
+      const chipsHtml = s.chips.map(c=>`<div class="pch-chip"><b>${c.b}</b> ${c.t}</div>`).join('');
+      const isLast = cur === total-1;
+      card.querySelector('.pch-text').innerHTML = `
+        <div class="pch-anim">
+          <div class="pch-step-num">${s.num}</div>
+          <div class="pch-step-title">${s.title}</div>
+          <div class="pch-step-text">${s.text}</div>
+          <div class="pch-detail">
+            <div class="pch-detail-title">${s.detail.title}</div>
+            <div class="pch-detail-text">${s.detail.text}</div>
+          </div>
+          <div class="pch-chips">${chipsHtml}</div>
+        </div>
+        <div class="pch-nav">
+          <button class="pch-btn" onclick="goPost('${postId}',${cur-1})" ${cur===0?'disabled':''}>← Anterior</button>
+          <span class="pch-counter">${cur+1} / ${total}</span>
+          <button class="pch-btn pch-next" onclick="goPost('${postId}',${isLast?0:cur+1})">
+            ${isLast?'↺ Recomeçar':'Próximo →'}
+          </button>
+        </div>
+      `;
+    }
+
+    function goPost(postId, idx) {
+      const post = POST_DATA.find(p=>p.id===postId);
+      if(!post || idx<0 || idx>=post.steps.length) return;
+      postStates[postId].cur = idx;
+      renderPost(postId);
+    }
+
+    function initPosts() {
+      const container = document.getElementById('posts-container');
+      if(!container) return;
+      container.innerHTML = '';
+      POST_DATA.forEach(post => {
+        postStates[post.id] = { cur:0 };
+        const div = document.createElement('div');
+        div.className = 'post-card-home';
+        div.id = 'post-card-'+post.id;
+        div.innerHTML = `
+          <div class="pch-top">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <span class="pch-tag">${post.tag}</span>
+              <div class="pch-dots"></div>
+            </div>
+            <div class="pch-title">${post.title}</div>
+            <div class="pch-sub">${post.sub}</div>
+            <div class="pch-prog"><div class="pch-prog-fill"></div></div>
+          </div>
+          <div class="pch-body">
+            <div class="pch-visual"></div>
+            <div class="pch-text"></div>
+          </div>
+        `;
+        container.appendChild(div);
+        renderPost(post.id);
+      });
+    }
+
+    // Inicializa quando a aba home é exibida
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initPosts, 300);
+    });
+    </script>
+
+    <!-- ══ RESULTADOS ══ -->
+    <div class="tab-content" id="tab-resultados">
       <div class="stats-grid home-stats-top">
         <div class="stat-card verde" style="cursor:pointer" onclick="showTab('metas')">
           <div class="stat-label" style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7a8a7c;margin-bottom:2px">Meta Calórica Diária</div>
@@ -448,24 +826,13 @@
           <div style="font-size:14px;color:#74c69d;font-weight:700;margin-top:8px">Proteína: <span id="st-prot">0g</span></div>
         </div>
       </div>
-
-      <!-- IDs ocultos para compatibilidade com o resto do código -->
-      <span id="st-prontuario" style="display:none">—</span>
-      <span id="st-salvos" style="display:none">0</span>
-
       <div class="form-section">
-        <h3>Bem-vindo! 👋</h3>
-        <p class="subtitle">Use o menu lateral para navegar pelas seções. Comece pelo Prontuário Médico para registrar suas informações.</p>
+        <h3>Resumo Nutricional 📊</h3>
+        <p class="subtitle">Acompanhe suas metas e o consumo registrado no recordatório.</p>
         <div class="home-cards">
-          <div class="home-card" onclick="showTab('prontuario')"><div class="home-card-icon">📋</div><div class="home-card-title">Prontuário Médico</div><div class="home-card-desc">Ficha de anamnese completa</div></div>
-          <div class="home-card" onclick="showTab('prontuarios-salvos')" style="border-color:#bfdbfe"><div class="home-card-icon">🗃️</div><div class="home-card-title" style="color:#1d4ed8">Minhas Fichas</div><div class="home-card-desc">Acesse e edite suas fichas</div></div>
-          <div class="home-card" onclick="showTab('recordatorio')"><div class="home-card-icon">⏱️</div><div class="home-card-title">Recordatório 24h</div><div class="home-card-desc">Registre o que comeu hoje</div></div>
-          <div class="home-card" onclick="showTab('tabela')"><div class="home-card-icon">🥦</div><div class="home-card-title">Tabela Alimentar</div><div class="home-card-desc">Calcule kcal e proteína</div></div>
-          <div class="home-card" onclick="showTab('plano')"><div class="home-card-icon">🎯</div><div class="home-card-title">Plano Alimentar</div><div class="home-card-desc">Metas e distribuição</div></div>
-          <div class="home-card" onclick="showTab('chatbot')"><div class="home-card-icon">🤖</div><div class="home-card-title">Assistente IA</div><div class="home-card-desc">Dúvidas e agendamentos</div></div>
-          <div class="home-card" onclick="showTab('conhecimento')" style="border-color:var(--verde-neon)"><div class="home-card-icon">📚</div><div class="home-card-title" style="color:var(--verde)">Conhecimento na Prática</div><div class="home-card-desc">Resumos e questões da faculdade</div></div>
-          <div class="home-card" onclick="window.open('central-estudos.html','_blank')" style="border-color:#7c3aed"><div class="home-card-icon">🧠</div><div class="home-card-title" style="color:#7c3aed">Central de Estudos</div><div class="home-card-desc">Flashcards, simulado, progresso e mais</div></div>
-          <div class="home-card" onclick="showTab('sobre')" style="border-color:#a7f3d0"><div class="home-card-icon">🌿</div><div class="home-card-title" style="color:var(--verde)">Sobre Mim</div><div class="home-card-desc">História do projeto</div></div>
+          <div class="home-card" onclick="showTab('metas')"><div class="home-card-icon">🎯</div><div class="home-card-title">Calcular Metas</div><div class="home-card-desc">Ajuste suas metas calóricas</div></div>
+          <div class="home-card" onclick="showTab('recordatorio')"><div class="home-card-icon">⏱️</div><div class="home-card-title">Recordatório 24h</div><div class="home-card-desc">Ver registros detalhados</div></div>
+          <div class="home-card" onclick="showTab('plano')"><div class="home-card-icon">📋</div><div class="home-card-title">Plano Alimentar</div><div class="home-card-desc">Distribuição de macros</div></div>
         </div>
       </div>
     </div>
@@ -1360,6 +1727,14 @@
                 <div style="font-size:30px;margin-bottom:10px">💡</div>
                 <div style="font-size:15px;font-weight:700;color:var(--escuro);margin-bottom:4px">Mentalidade Criativa e Empreendedora</div>
                 <div style="font-size:12px;color:#7a8a7c;margin-bottom:10px">Empreendedorismo, criatividade, mindset, MEI, Canvas e validação</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="background:#dcfce7;color:#15803d;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">📖 Resumo</span><span style="background:#dbeafe;color:#1d4ed8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">✏️ 25 questões</span></div>
+              </div>
+            </a>
+            <a href="conhecimentos-gerais-2026.html" style="text-decoration:none">
+              <div style="background:#fff;border:1.5px solid #e0ebe0;border-radius:14px;padding:20px;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='var(--verde-claro)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#e0ebe0';this.style.transform='none'">
+                <div style="font-size:30px;margin-bottom:10px">🌍</div>
+                <div style="font-size:15px;font-weight:700;color:var(--escuro);margin-bottom:4px">Semana de Conhecimentos Gerais 2026</div>
+                <div style="font-size:12px;color:#7a8a7c;margin-bottom:10px">Atualidades, cultura geral, ciências, história e temas interdisciplinares</div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="background:#dcfce7;color:#15803d;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">📖 Resumo</span><span style="background:#dbeafe;color:#1d4ed8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">✏️ 25 questões</span></div>
               </div>
             </a>
@@ -2437,10 +2812,11 @@ function showTab(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
   if (tab) tab.classList.add('active');
-  const labels = { home:'Início', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim' };
+  const labels = { home:'Página Inicial', resultados:'Resultados', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
   if (name === 'plano') setTimeout(() => inicializarPlanoLinhas(), 100);
+  if (name === 'home') setTimeout(() => { if(typeof initPosts==='function') initPosts(); }, 100);
 }
 
 document.addEventListener('input', function(e) {
