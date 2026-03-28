@@ -150,6 +150,62 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     .banner-progresso p { font-size: 13px; color: #15803d; font-weight: 600; margin: 0; }
     .banner-progresso button { background: var(--verde); color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
+    /* PROVAS */
+    .provas-nav { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+    .prova-tab { padding: 10px 22px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; border: 2px solid #e0ebe0; background: #fff; color: #7a8a7c; transition: all 0.2s; }
+    .prova-tab.active { background: var(--escuro); color: #fff; border-color: var(--escuro); }
+    .prova-tab:hover:not(.active) { border-color: var(--verde); color: var(--verde); }
+    .prova-panel { display: none; }
+    .prova-panel.active { display: block; animation: fadeIn 0.25s ease; }
+    .prova-hero { background: linear-gradient(135deg, var(--escuro) 0%, #2d5a40 100%); border-radius: 20px; padding: 32px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
+    .prova-hero::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(116,198,157,0.15) 0%, transparent 70%); }
+    .prova-hero-tag { font-size: 10px; font-weight: 700; color: var(--verde-neon); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .prova-hero h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 22px; margin-bottom: 6px; }
+    .prova-hero p { color: rgba(255,255,255,0.5); font-size: 13px; }
+    .prova-chips { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .prova-chip { padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .pc-verde { background: rgba(116,198,157,0.2); color: var(--verde-neon); }
+    .pc-laranja { background: rgba(224,123,57,0.2); color: #e07b39; }
+    .pc-azul { background: rgba(37,99,235,0.2); color: #60a5fa; }
+
+    .prova-secao { margin-bottom: 32px; }
+    .prova-secao-titulo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--creme2); }
+    .prova-secao-titulo h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--escuro); }
+    .prova-secao-titulo .secao-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(45,106,79,0.1); color: var(--verde); }
+
+    .mapa-card { background: #fff; border: 1px solid #e0ebe0; border-radius: 16px; padding: 24px 28px; margin-bottom: 16px; }
+    .mapa-card h4 { font-size: 15px; font-weight: 700; color: var(--escuro); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .mapa-conceito { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .mapa-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: #f8fbf8; border-radius: 10px; border-left: 4px solid var(--verde-claro); }
+    .mapa-item.laranja { border-left-color: var(--laranja); }
+    .mapa-item.azul { border-left-color: var(--azul); }
+    .mapa-item.vermelho { border-left-color: var(--vermelho); }
+    .mapa-seta { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+    .mapa-texto { font-size: 13px; color: var(--texto); line-height: 1.6; }
+    .mapa-texto strong { color: var(--escuro); }
+    .mapa-central { text-align: center; background: var(--escuro); color: #fff; border-radius: 14px; padding: 18px 24px; margin-bottom: 16px; }
+    .mapa-central h4 { font-family: 'Playfair Display', serif; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .mapa-central p { font-size: 12px; color: rgba(255,255,255,0.55); margin: 0; }
+    .mapa-grade { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media(max-width:600px) { .mapa-grade { grid-template-columns: 1fr; } }
+    .mapa-node { background: #fff; border: 2px solid #e0ebe0; border-radius: 12px; padding: 14px 16px; text-align: center; }
+    .mapa-node .node-icon { font-size: 22px; margin-bottom: 6px; }
+    .mapa-node .node-title { font-size: 13px; font-weight: 700; color: var(--escuro); margin-bottom: 4px; }
+    .mapa-node .node-desc { font-size: 11px; color: #7a8a7c; line-height: 1.5; }
+    .mapa-node.destaque-node { border-color: var(--verde-claro); background: #f0fdf4; }
+    .linha-conexao { text-align: center; font-size: 20px; color: var(--verde-claro); margin: 4px 0; }
+
+    .q-prova-card { background: #fff; border: 2px solid #e0ebe0; border-radius: 16px; padding: 22px 26px; margin-bottom: 14px; }
+    .q-prova-num { display: inline-block; background: #f0fdf4; border: 1px solid rgba(45,106,79,0.2); color: var(--verde); font-size: 11px; font-weight: 800; padding: 3px 12px; border-radius: 20px; margin-bottom: 10px; }
+    .q-prova-enunciado { font-size: 14px; font-weight: 600; color: var(--escuro); line-height: 1.7; margin-bottom: 12px; }
+    .q-prova-opcoes { list-style: none; padding: 0; }
+    .q-prova-opcoes li { font-size: 13px; color: var(--texto); padding: 7px 12px; border-radius: 8px; margin-bottom: 6px; display: flex; gap: 10px; }
+    .q-prova-opcoes li.correta-prova { background: #dcfce7; color: #14532d; font-weight: 700; border: 1px solid #86efac; }
+    .q-prova-opcoes li .op-letra { font-weight: 800; color: var(--verde); min-width: 20px; }
+    .q-prova-opcoes li.correta-prova .op-letra { color: #14532d; }
+    .q-prova-gabarito { margin-top: 10px; background: #f0fdf4; border-left: 4px solid var(--verde-claro); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12px; color: #15803d; line-height: 1.6; }
+  
+
   </style>
 </head>
 <body>
@@ -166,6 +222,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
 <div class="tabs-nav">
   <div class="tab-btn active" onclick="showPanel('resumo')">📖 Resumo por Tópicos</div>
   <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
+  <div class="tab-btn" onclick="showPanel('provas')">📝 Provas</div>
 </div>
 
 <!-- ══════════ PANEL RESUMO ══════════ -->
@@ -457,7 +514,568 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
 
 </div>
 
+<!-- ══════════ PANEL PROVAS ══════════ -->
+<div id="panel-provas" class="panel">
+
+  <div class="provas-nav">
+    <div class="prova-tab active" onclick="showProva('prova1', this)">📋 Atividade 1</div>
+    <div class="prova-tab" onclick="showProva('prova2', this)">📋 Atividade 2</div>
+    <div class="prova-tab" onclick="showProva('prova3', this)">📋 Atividade 3</div>
+  </div>
+
+
+  <!-- ══ ATIVIDADE 1 ══ -->
+  <div id="prova1" class="prova-panel active">
+    <div class="prova-hero">
+      <div class="prova-hero-tag">Genética e Embriologia · Atividade 1 — Período: 23/02/2026 a 05/04/2026</div>
+      <h2>Atividade 1 — Síndromes Cromossômicas e Nutrição</h2>
+      <p>1 questão dissertativa com 3 itens (a, b, c) · Nota máxima: 0,50</p>
+      <div class="prova-chips">
+        <span class="prova-chip pc-verde">🧬 Síndromes Cromossômicas</span>
+        <span class="prova-chip pc-azul">🥦 Nutrição Clínica</span>
+        <span class="prova-chip pc-laranja">📝 Dissertativa</span>
+      </div>
+    </div>
+
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Questão da Atividade</h3>
+        <span class="secao-badge">📝 Dissertativa</span>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">1ª Questão</span>
+        <div class="q-prova-enunciado">
+          As síndromes cromossômicas resultam de alterações no número ou na estrutura dos cromossomos, sendo fundamentais para a compreensão dos processos celulares que regem o desenvolvimento e funcionamento do organismo. Essas condições podem originar-se por anomalias em processos como a mitose e a meiose, em que a distribuição dos cromossomos não ocorre de maneira adequada. Alterações como a não disjunção cromossômica podem levar à síndrome de Down (trissomia 21), enquanto a monossomia do cromossomo X está associada à síndrome de Turner.
+          <br><br>Responda aos itens a seguir:
+        </div>
+
+        <div class="mapa-card" style="margin-top:0">
+          <h4>🅐 Item a — Causas e tipo de divisão celular</h4>
+          <div class="mapa-item">
+            <span class="mapa-seta">❓</span>
+            <div class="mapa-texto" style="font-weight:600">Quais as causas da geração da trissomia do cromossomo 21 (Síndrome de Down) e da monossomia do cromossomo sexual X (Síndrome de Turner)? Em qual tipo de divisão celular ocorre o processo que pode levar às síndromes cromossômicas?</div>
+          </div>
+          <div class="mapa-item" style="border-left-color:var(--verde);margin-top:10px">
+            <span class="mapa-seta">✅</span>
+            <div class="mapa-texto"><strong>Resposta modelo:</strong> Ambas são causadas por <strong>não disjunção cromossômica durante a meiose</strong>. Na Síndrome de Down, ocorre não disjunção do cromossomo 21, resultando em trissomia (3 cópias do cromossomo 21 → cariótipo 47,XX ou 47,XY). Na Síndrome de Turner, ocorre não disjunção dos cromossomos sexuais, resultando em monossomia do X (cariótipo 45,X0 — apenas um cromossomo X). O processo ocorre na <strong>meiose</strong> (divisão celular que forma os gametas — espermatozoides e ovócitos).</div>
+          </div>
+        </div>
+
+        <div class="mapa-card">
+          <h4>🅑 Item b — Síndrome de Down: consequências e intervenção nutricional</h4>
+          <div class="mapa-item">
+            <span class="mapa-seta">❓</span>
+            <div class="mapa-texto" style="font-weight:600">Quais as consequências da Síndrome de Down que necessitam de cuidados junto ao profissional de nutrição? Qual a principal intervenção realizada por esse profissional?</div>
+          </div>
+          <div class="mapa-item" style="border-left-color:var(--verde);margin-top:10px">
+            <span class="mapa-seta">✅</span>
+            <div class="mapa-texto"><strong>Resposta modelo:</strong> Pessoas com Síndrome de Down apresentam maior risco de <strong>obesidade</strong> (metabolismo basal reduzido, hipotireoidismo associado), <strong>constipação intestinal</strong> (hipotonia muscular intestinal), <strong>doença celíaca</strong> (maior prevalência), <strong>diabetes tipo 2</strong> e <strong>dificuldades na mastigação/deglutição</strong> (hipotonia orofacial). A principal intervenção do nutricionista é o <strong>controle do peso corporal</strong> por meio de dieta equilibrada em calorias, adequada em fibras (para constipação), com atenção especial ao rastreio de doença celíaca e dislipidemia.</div>
+          </div>
+        </div>
+
+        <div class="mapa-card">
+          <h4>🅒 Item c — Síndrome de Turner: por que só no sexo feminino?</h4>
+          <div class="mapa-item">
+            <span class="mapa-seta">❓</span>
+            <div class="mapa-texto" style="font-weight:600">No caso da Síndrome de Turner, explique o motivo de ocorrer apenas em pessoas do sexo feminino, assim como suas consequências e se há necessidade de acompanhamento nutricional.</div>
+          </div>
+          <div class="mapa-item" style="border-left-color:var(--verde);margin-top:10px">
+            <span class="mapa-seta">✅</span>
+            <div class="mapa-texto"><strong>Resposta modelo:</strong> A Síndrome de Turner ocorre apenas em pessoas do <strong>sexo feminino</strong> porque o cariótipo é <strong>45,X0</strong> — possuem apenas um cromossomo X e nenhum Y. Para que haja desenvolvimento masculino, é necessário o cromossomo Y (que porta o gene SRY). Sem Y, o desenvolvimento é feminino, mas com apenas um X → Turner. Consequências: <strong>baixa estatura</strong>, <strong>falência ovariana precoce</strong> (infertilidade, amenorreia), <strong>malformações cardíacas</strong> (coarctação da aorta), <strong>osteoporose</strong> (deficiência de estrogênio) e <strong>obesidade abdominal</strong>. O acompanhamento nutricional é necessário para: controle de peso, suporte ao tratamento com reposição hormonal, prevenção de osteoporose (cálcio + vitamina D), e adequação energética para a baixa estatura.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAPA ATIVIDADE 1 -->
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Atividade Mapa</h3>
+        <span class="secao-badge">🗺️ Mapa Conceitual</span>
+      </div>
+      <div class="mapa-card">
+        <h4>🧬 Mapa: Síndromes Cromossômicas × Intervenção Nutricional</h4>
+        <div class="mapa-central">
+          <h4>Não Disjunção na Meiose</h4>
+          <p>Distribuição incorreta de cromossomos → gameta com número anormal → síndrome cromossômica</p>
+        </div>
+        <div class="linha-conexao">↙ Trissomia 21 &nbsp;&nbsp;&nbsp; Monossomia X ↘</div>
+        <div class="mapa-grade" style="margin-top:10px">
+          <div class="mapa-node destaque-node">
+            <div class="node-icon">🔵</div>
+            <div class="node-title">Síndrome de Down (47,+21)</div>
+            <div class="node-desc">Obesidade · Hipotireoidismo · Constipação · Doença celíaca · Dislipidemia<br><strong>Nutri:</strong> Controle de peso + fibras + rastreio celíaca</div>
+          </div>
+          <div class="mapa-node destaque-node">
+            <div class="node-icon">🩷</div>
+            <div class="node-title">Síndrome de Turner (45,X0)</div>
+            <div class="node-desc">Baixa estatura · Infertilidade · Cardiopatia · Osteoporose · Obesidade abdominal<br><strong>Nutri:</strong> Ca + Vit D + controle peso</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- fim prova1 -->
+
+  <!-- ══ ATIVIDADE 2 ══ -->
+  <div id="prova2" class="prova-panel">
+    <div class="prova-hero">
+      <div class="prova-hero-tag">Genética e Embriologia · Atividade 2 — Período: 16/03/2026 a 26/04/2026</div>
+      <h2>Atividade 2 — Genética, Divisão Celular e Biologia Molecular</h2>
+      <p>10 questões de múltipla escolha · Nota máxima: 0,50</p>
+      <div class="prova-chips">
+        <span class="prova-chip pc-verde">🧬 Genética Mendeliana</span>
+        <span class="prova-chip pc-azul">🔬 Divisão Celular</span>
+        <span class="prova-chip pc-laranja">🧪 DNA e RNA</span>
+      </div>
+    </div>
+
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Questões da Atividade</h3>
+        <span class="secao-badge">✏️ Múltipla Escolha</span>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">1ª Questão</span>
+        <div class="q-prova-enunciado">A hipercolesterolemia familiar é uma condição genética de dominância incompleta. Homozigotos dominantes têm níveis normais de receptores LDL (baixo colesterol, sem necessidade de tratamento), heterozigotos têm metade dos receptores (colesterol elevado, controlável com dieta e medicação), e homozigotos recessivos têm ausência/níveis muito baixos de receptores (colesterol muito elevado).<br><br>
+        Uma mulher <strong>heterozigota</strong> pretende ter filho com um homem <strong>homozigoto dominante</strong>. Qual a probabilidade de terem filhos com níveis <u>normais</u> de receptores LDL (baixo colesterol, sem necessidade de tratamento)?</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> 0%.</li>
+          <li><span class="op-letra">B)</span> 25%.</li>
+          <li class="correta-prova"><span class="op-letra">C)</span> 50%.</li>
+          <li><span class="op-letra">D)</span> 75%.</li>
+          <li><span class="op-letra">E)</span> 100%.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Pai homozigoto dominante (AA) × Mãe heterozigota (Aa) → filhos: 50% AA (normal) e 50% Aa (heterozigoto, colesterol elevado). Portanto, 50% dos filhos terão níveis normais de receptores LDL sem necessidade de tratamento.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">2ª Questão</span>
+        <div class="q-prova-enunciado">A célula original possui 2n = 4 cromossomos. As figuras A e B representam etapas de processos de divisão celular. Analise as afirmativas:<br><br>
+        I. Ambas figuras estão em processo de meiose — figura A: etapa da meiose I; figura B: etapa da meiose II.<br>
+        II. A figura B representa a metáfase II da meiose II.<br>
+        III. A imagem A representa a anáfase da mitose, pois ocorre divisão de cromossomos homólogos.<br>
+        IV. Ambos os processos ocorrem em células somáticas e apresentam crossing-over na prófase II.<br><br>
+        É correto o que se afirma em:</div>
+        <ul class="q-prova-opcoes">
+          <li class="correta-prova"><span class="op-letra">A)</span> I e II, apenas.</li>
+          <li><span class="op-letra">B)</span> I, II e III, apenas.</li>
+          <li><span class="op-letra">C)</span> II, III e IV, apenas.</li>
+          <li><span class="op-letra">D)</span> II e IV, apenas.</li>
+          <li><span class="op-letra">E)</span> I e IV, apenas.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I é verdadeira: ambas as figuras mostram meiose (célula com 2n=4, resultado haploide). II é verdadeira: figura B mostra cromossomos duplicados alinhados em uma célula haploide = metáfase II. III é falsa: a figura A mostra separação de cromossomos homólogos, o que é característico da meiose I (anáfase I), não da mitose. IV é falsa: a meiose ocorre em células germinativas (não somáticas) e o crossing-over ocorre na prófase I, não II.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">3ª Questão</span>
+        <div class="q-prova-enunciado">Em uma atividade prática de identificação de aberrações cromossômicas, você recebeu o cariótipo de um feto. Após análise, verificou tratar-se de uma aneuploidia (perda ou adição de um cromossomo). O cariótipo mostra apenas um cromossomo sexual X (sem Y) e trissomia do cromossomo 21. Assinale o resultado correto:</div>
+        <ul class="q-prova-opcoes">
+          <li class="correta-prova"><span class="op-letra">A)</span> Síndrome de Down e sexo feminino.</li>
+          <li><span class="op-letra">B)</span> Síndrome de Patau e sexo feminino.</li>
+          <li><span class="op-letra">C)</span> Síndrome de Patau e sexo masculino.</li>
+          <li><span class="op-letra">D)</span> Síndrome de Edwards e sexo feminino.</li>
+          <li><span class="op-letra">E)</span> Síndrome de Edwards e sexo masculino.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 O cariótipo apresenta trissomia do cromossomo 21 = Síndrome de Down. Os cromossomos sexuais mostram apenas X (sem Y) = sexo feminino. Síndrome de Patau = trissomia 13; Síndrome de Edwards = trissomia 18.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">4ª Questão</span>
+        <div class="q-prova-enunciado">O albinismo é uma herança de dominância completa — pigmentação normal (A, dominante) e albinismo (a, recessivo). Paula, Pedro e Joana são filhos de uma <strong>mulher albina</strong> (aa) com um <strong>homem homozigoto de pigmentação normal</strong> (AA). Qual o genótipo dos três irmãos, respectivamente?</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> AA, Aa, aa.</li>
+          <li><span class="op-letra">B)</span> AA, AA, Aa.</li>
+          <li><span class="op-letra">C)</span> AA, Aa, Aa.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> Aa, Aa, Aa.</li>
+          <li><span class="op-letra">E)</span> Aa, Aa, aa.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Cruzamento: AA (pai) × aa (mãe) → 100% dos filhos são Aa (heterozigotos — pigmentação normal, portadores do alelo recessivo). Portanto Paula, Pedro e Joana são todos Aa. Nenhum filho pode ser AA (pois a mãe só doa alelo "a") nem aa (pois o pai só doa alelo "A").</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">5ª Questão</span>
+        <div class="q-prova-enunciado">A albumina humana é formada por <strong>585 aminoácidos</strong> (cadeia polipeptídica simples). Quantos RNAm, códons e RNAt são necessários para sintetizar essa proteína? (Não considerar o stop códon.)</div>
+        <ul class="q-prova-opcoes">
+          <li class="correta-prova"><span class="op-letra">A)</span> São necessários 1 RNAm, 585 códons e 585 RNAt.</li>
+          <li><span class="op-letra">B)</span> São necessários 1 RNAm, 1755 códons e 585 RNAt.</li>
+          <li><span class="op-letra">C)</span> São necessários 585 RNAm, 585 códons e 585 RNAt.</li>
+          <li><span class="op-letra">D)</span> São necessários 1 RNAm, 1755 códons e 1755 RNAt.</li>
+          <li><span class="op-letra">E)</span> São necessários 1755 RNAm, 1755 códons e 1755 RNAt.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Uma proteína é codificada por 1 gene → 1 RNAm. Cada aminoácido é codificado por 1 códon (triplete de 3 bases) → 585 códons. Cada códon é reconhecido por 1 RNAt (que carrega o aminoácido correspondente) → 585 RNAt. Portanto: 1 RNAm, 585 códons e 585 RNAt. (1755 seria o número de bases nitrogenadas: 585 × 3.)</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">6ª Questão</span>
+        <div class="q-prova-enunciado">Sobre o material genético e os nucleotídeos, avalie as afirmações como (V) verdadeiras e (F) falsas:<br><br>
+        I. Todos os nucleotídeos são formados por base nitrogenada, pentose e grupo fosfato, que confere carga negativa ao material genético.<br>
+        II. No DNA as bases são: adenina, uracila, guanina e citosina; no RNA: adenina, timina, guanina e citosina.<br>
+        III. Os nucleotídeos se conectam na mesma fita por ligações fosfodiéster e entre as fitas por ligações de hidrogênio, formando o DNA.<br>
+        IV. O RNA é constituído por uma fita em que ocorrem ligações fosfodiéster entre a pentose de um nucleotídeo com o grupo fosfato do seguinte.<br><br>
+        As afirmações I, II, III e IV são, respectivamente:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> F; V; F; V.</li>
+          <li><span class="op-letra">B)</span> F; V; V; F.</li>
+          <li><span class="op-letra">C)</span> V; F; F; V.</li>
+          <li><span class="op-letra">D)</span> V; V; F; F.</li>
+          <li class="correta-prova"><span class="op-letra">E)</span> V; F; V; V.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = V: nucleotídeos sempre têm base nitrogenada + pentose + fosfato; o grupo fosfato confere carga negativa. II = F: as bases do DNA são adenina, timina, guanina e citosina; as do RNA são adenina, URACILA, guanina e citosina (o DNA tem timina, não uracila; o RNA tem uracila, não timina — a questão inverteu). III = V: ligações fosfodiéster na mesma fita; ligações de hidrogênio entre as fitas complementares. IV = V: o RNA é fita simples com ligações fosfodiéster entre nucleotídeos.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">7ª Questão</span>
+        <div class="q-prova-enunciado">Sobre os reinos de seres vivos e os diferentes tipos celulares, analise:<br><br>
+        I. Células procariontes não possuem núcleo celular (carioteca) — bactérias são seus representantes.<br>
+        II. Células eucariontes possuem núcleo celular organizado, delimitando o DNA em seu interior.<br>
+        III. Os reinos animal e vegetal, apesar de distintos metabolicamente, são ambos eucariontes.<br>
+        IV. Além da ausência do núcleo, células procariontes não possuem organelas membranosas.<br><br>
+        É correto o que se afirma em:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> I, apenas.</li>
+          <li><span class="op-letra">B)</span> I e II, apenas.</li>
+          <li><span class="op-letra">C)</span> III e IV, apenas.</li>
+          <li><span class="op-letra">D)</span> II, III e IV, apenas.</li>
+          <li class="correta-prova"><span class="op-letra">E)</span> I, II, III e IV.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Todas são verdadeiras. I: bactérias são procariontes sem carioteca. II: eucariontes têm núcleo com membrana nuclear. III: animais e vegetais são eucariontes apesar das diferenças metabólicas (presença ou ausência de cloroplasto, parede celular, etc). IV: procariontes não possuem mitocôndrias, retículo endoplasmático, aparelho de Golgi nem lisossomos — apenas ribossomos (sem membrana).</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">8ª Questão</span>
+        <div class="q-prova-enunciado">Com base na Teoria Celular Moderna, analise:<br><br>
+        I. Todas as células se originam de células pré-existentes.<br>
+        II. Todos os seres vivos, com exceção das bactérias, são constituídos por células.<br>
+        III. As células são as unidades funcionais (metabolismo) e estruturais dos organismos vivos.<br>
+        IV. Apenas células animais e vegetais apresentam a mesma composição química.<br><br>
+        É correto o que se afirma em:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> I e II, apenas.</li>
+          <li class="correta-prova"><span class="op-letra">B)</span> I e III, apenas.</li>
+          <li><span class="op-letra">C)</span> I, III e IV, apenas.</li>
+          <li><span class="op-letra">D)</span> II, III e IV, apenas.</li>
+          <li><span class="op-letra">E)</span> II e VI, apenas.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = V: "Omnis cellula ex cellula" (Virchow, 1855). III = V: as células são unidades estruturais e funcionais de todo ser vivo. II = F: bactérias também são seres vivos constituídos por células (procariontes) — a Teoria Celular vale para TODOS os seres vivos. IV = F: todos os seres vivos compartilham a mesma composição química básica (DNA, proteínas, lipídios, carboidratos).</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">9ª Questão</span>
+        <div class="q-prova-enunciado">Sobre mutações gênicas:<br><br>
+        I. Mutações pontuais (substituição de um único nucleotídeo) podem causar alteração de nucleotídeos sem afetar a sequência de aminoácidos.<br><br>
+        PORQUE<br><br>
+        II. O código genético é redundante — mais de um códon pode codificar o mesmo aminoácido; assim, em alguns casos a substituição de uma base não altera a proteína final.<br><br>
+        Sobre as asserções, responda:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> As asserções I e II são proposições falsas.</li>
+          <li><span class="op-letra">B)</span> A asserção I é falsa e a II é verdadeira.</li>
+          <li><span class="op-letra">C)</span> A asserção I é verdadeira e a II é falsa.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> As asserções I e II são verdadeiras e a II é justificativa correta da I.</li>
+          <li><span class="op-letra">E)</span> As asserções I e II são verdadeiras, mas a II não é justificativa correta da I.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = V: mutações silenciosas (sinônimas) não alteram o aminoácido. II = V e justifica I: a degenerescência do código genético (redundância) permite que diferentes códons codifiquem o mesmo aminoácido — ex: UUU e UUC ambos codificam fenilalanina. Por isso, uma substituição de base pode manter o mesmo aminoácido e não alterar a proteína.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">10ª Questão</span>
+        <div class="q-prova-enunciado">A cadeia α da hemoglobina possui <strong>141 aminoácidos</strong>. Analise:<br><br>
+        I. Para a síntese da cadeia α-hemoglobina foram necessários um gene e um RNAm com <strong>142 códons</strong>.<br><br>
+        PORQUE<br><br>
+        II. Cada códon corresponde a um aminoácido incorporado na cadeia proteica, e ainda existe o códon de finalização (stop códon), que não codifica aminoácido mas sinaliza o fim da síntese.<br><br>
+        Assinale a alternativa correta:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> As asserções I e II são proposições falsas.</li>
+          <li><span class="op-letra">B)</span> A asserção I é falsa, e a II é verdadeira.</li>
+          <li><span class="op-letra">C)</span> A asserção I é verdadeira, e a II é falsa.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> As asserções I e II são verdadeiras, e a II é justificativa correta da I.</li>
+          <li><span class="op-letra">E)</span> As asserções I e II são verdadeiras, mas a II não é justificativa correta da I.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = V: 141 aminoácidos → 141 códons + 1 stop códon = 142 códons no RNAm total. II = V e justifica I: cada códon codifica 1 aminoácido, e o stop códon (UAA, UAG ou UGA) sinaliza o término — não incorpora aminoácido, mas é contado no RNAm. Por isso 141 aminoácidos = 142 códons no mRNA.</div>
+      </div>
+    </div>
+
+    <!-- MAPA ATIVIDADE 2 -->
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Atividade Mapa</h3>
+        <span class="secao-badge">🗺️ Mapa Conceitual</span>
+      </div>
+      <div class="mapa-card">
+        <h4>🧬 Mapa: Fluxo da Informação Genética — DNA → Proteína</h4>
+        <div class="mapa-item">
+          <span class="mapa-seta">🔵</span>
+          <div class="mapa-texto"><strong>DNA</strong> (dupla-fita, bases: A-T-G-C, ligações fosfodiéster na fita + hidrogênio entre fitas) → <strong>Transcrição</strong> (núcleo) → <strong>RNAm</strong> (fita simples, bases: A-U-G-C)</div>
+        </div>
+        <div class="mapa-item laranja">
+          <span class="mapa-seta">🟠</span>
+          <div class="mapa-texto"><strong>RNAm</strong> (1 por proteína) → leitura pelos ribossomos em <strong>códons</strong> (tripletes de 3 bases) → cada códon → 1 RNAt traz 1 aminoácido → <strong>Tradução</strong> → Proteína</div>
+        </div>
+        <div class="mapa-item azul">
+          <span class="mapa-seta">⚡</span>
+          <div class="mapa-texto"><strong>Código genético redundante:</strong> mais de 1 códon pode codificar o mesmo aminoácido → mutações silenciosas possíveis. Stop códon (UAA/UAG/UGA) = finaliza síntese, não incorpora aminoácido</div>
+        </div>
+        <div class="mapa-item vermelho">
+          <span class="mapa-seta">🔴</span>
+          <div class="mapa-texto"><strong>Divisão Celular:</strong> Mitose (células somáticas, 2n→2n, crescimento/reparo) · Meiose (células germinativas, 2n→n, formação de gametas) · Crossing-over ocorre na Prófase I da meiose</div>
+        </div>
+      </div>
+      <div class="mapa-card">
+        <h4>⚗️ Mapa: Genética Mendeliana — Cálculo de Probabilidades</h4>
+        <div class="mapa-item">
+          <span class="mapa-seta">🧮</span>
+          <div class="mapa-texto"><strong>Dominância completa:</strong> AA × aa → 100% Aa (heterozigotos). Ex: albinismo — pai AA × mãe aa → todos os filhos Aa (portadores, fenótipo normal)</div>
+        </div>
+        <div class="mapa-item laranja">
+          <span class="mapa-seta">🧮</span>
+          <div class="mapa-texto"><strong>Dominância incompleta:</strong> AA × Aa → 50% AA (normal) + 50% Aa (intermediário). Ex: hipercolesterolemia familiar — pai AA × mãe Aa → 50% filhos com colesterol normal</div>
+        </div>
+        <div class="mapa-item azul">
+          <span class="mapa-seta">🧮</span>
+          <div class="mapa-texto"><strong>Aa × Aa (portadores):</strong> 25% AA + 50% Aa + 25% aa → proporção fenotípica 3:1 (dominante:recessivo) → 1 em 4 filhos manifesta a condição recessiva</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- fim prova2 -->
+
+  <!-- ══ ATIVIDADE 3 ══ -->
+  <div id="prova3" class="prova-panel">
+    <div class="prova-hero">
+      <div class="prova-hero-tag">Genética e Embriologia · Atividade 3 — Período: 23/03/2026 a 26/04/2026</div>
+      <h2>Atividade 3 — Tipos Sanguíneos, Gametogênese e Embriologia</h2>
+      <p>10 questões de múltipla escolha · Nota máxima: 0,50</p>
+      <div class="prova-chips">
+        <span class="prova-chip pc-verde">🩸 Sistema ABO e Rh</span>
+        <span class="prova-chip pc-azul">🤰 Embriologia</span>
+        <span class="prova-chip pc-laranja">🧬 Gametogênese</span>
+      </div>
+    </div>
+
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Questões da Atividade</h3>
+        <span class="secao-badge">✏️ Múltipla Escolha</span>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">1ª Questão</span>
+        <div class="q-prova-enunciado">Um casal teve uma criança com tipo sanguíneo O e fator Rh⁻ (negativo). O pai é tipo A e Rh⁺ (positivo); a mãe é tipo B e Rh⁺. Analise:<br><br>
+        I. A criança pode ser filha do pai se ele for heterozigoto para o tipo sanguíneo e fator Rh. A mãe também deve ser heterozigota para ambas as características.<br>
+        II. Se o pai fosse tipo AB, poderíamos excluir a paternidade, independentemente do genótipo da mãe.<br>
+        III. A criança poderia não ser de nenhum dos pais se ambos fossem homozigotos dominantes para ambos os genótipos.<br>
+        IV. Se ambos os pais forem heterozigotos para ambas as características, a chance de terem outra criança com o mesmo genótipo é de 1/16.<br><br>
+        É correto o que se afirma em:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> I, apenas.</li>
+          <li><span class="op-letra">B)</span> I e III, apenas.</li>
+          <li><span class="op-letra">C)</span> II e III, apenas.</li>
+          <li><span class="op-letra">D)</span> I, II e IV, apenas.</li>
+          <li class="correta-prova"><span class="op-letra">E)</span> I, II, III e IV.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I=V: pai I^A i Rr × mãe I^B i Rr → filho I^O i rr (tipo O, Rh⁻) é possível. II=V: pai tipo AB (I^A I^B) sempre doa I^A ou I^B → impossível filho tipo O (ii). III=V: se pai AA RR e mãe BB RR, todos os filhos seriam AB Rh⁺ — impossível filho O Rh⁻. IV=V: para tipo O → prob. 1/4 (de Ii×Ii); para Rh⁻ → prob. 1/4 (de Rr×Rr); combinado: 1/4 × 1/4 = 1/16.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">2ª Questão</span>
+        <div class="q-prova-enunciado">Uma mãe relata que seu filho nasceu com meningocele (tubo neural não fechado). Médicos afirmaram que foi falta de suplementação de vitaminas. Assinale qual vitamina foi deficiente na alimentação dessa mãe, causando danos no desenvolvimento embrionário:</div>
+        <ul class="q-prova-opcoes">
+          <li class="correta-prova"><span class="op-letra">A)</span> Ácido fólico.</li>
+          <li><span class="op-letra">B)</span> Metilfosfato.</li>
+          <li><span class="op-letra">C)</span> Ácido acético.</li>
+          <li><span class="op-letra">D)</span> Metilfosfatina.</li>
+          <li><span class="op-letra">E)</span> Ácido fosfórico.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 O ácido fólico (vitamina B9) é essencial para o fechamento do tubo neural, que ocorre entre a 3ª e 4ª semana de gestação. Sua deficiência causa defeitos do tubo neural como anencefalia, meningocele e mielomeningocele (espinha bífida). A suplementação periconcepcional (400–800 mcg/dia) é recomendada antes e no início da gestação.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">3ª Questão</span>
+        <div class="q-prova-enunciado">O ácido retinoico (derivado da vitamina A) utilizado durante a gravidez pode causar anormalidades craniofaciais, cardiovasculares e malformações no tubo neural. Levando em consideração que essas estruturas têm origens nos folhetos embrionários, de qual(is) folheto(s) se originam as estruturas afetadas?</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> Ectoderma.</li>
+          <li><span class="op-letra">B)</span> Mesoderma.</li>
+          <li><span class="op-letra">C)</span> Endoderma.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> Mesoderma e ectoderma.</li>
+          <li><span class="op-letra">E)</span> Endoderma e mesoderma.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 O tubo neural (origem do cérebro e medula) e as estruturas craniofaciais (pele da face, crista neural) derivam do <strong>ectoderma</strong>. As estruturas cardiovasculares (coração, vasos) derivam do <strong>mesoderma</strong>. Portanto, o ácido retinoico afeta estruturas originadas de mesoderma e ectoderma.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">4ª Questão</span>
+        <div class="q-prova-enunciado">O albinismo é uma condição genética recessiva (gene recessivo condiciona falta de pigmentação). Qual a proporção fenotípica esperada de filhos de um casal em que <strong>ambos são portadores</strong> do gene do albinismo (heterozigotos)?</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> 3:2.</li>
+          <li><span class="op-letra">B)</span> 6:2.</li>
+          <li class="correta-prova"><span class="op-letra">C)</span> 1:2:1.</li>
+          <li><span class="op-letra">D)</span> 2:4:2.</li>
+          <li><span class="op-letra">E)</span> 4:2.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Cruzamento Aa × Aa → 25% AA (pigmentação normal, homozigoto) : 50% Aa (pigmentação normal, portador) : 25% aa (albino) = proporção genotípica 1:2:1. A proporção fenotípica seria 3:1 (normais:albinos), mas a questão pede a proporção genotípica que é 1:2:1.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">5ª Questão</span>
+        <div class="q-prova-enunciado">Na estrutura do espermatozoide: o acrossoma (na cabeça) possui enzimas hidrolíticas com função análoga ao lisossomo, formado pelo complexo de Golgi; e na peça intermediária (pescoço) há grande concentração de mitocôndrias responsáveis pelo ATP para o flagelo. De acordo com o texto e a figura (estruturas A, B, C, D e E), assinale a alternativa que indica a estrutura com enzimas hidrolíticas e as organelas responsáveis pelo ATP, respectivamente:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> A e B.</li>
+          <li class="correta-prova"><span class="op-letra">B)</span> A e E.</li>
+          <li><span class="op-letra">C)</span> B e D.</li>
+          <li><span class="op-letra">D)</span> C e D.</li>
+          <li><span class="op-letra">E)</span> D e E.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 A = acrossoma (cabeça do espermatozoide) → enzimas hidrolíticas (hialuronidase, acrosina) que penetram a zona pelúcida do ovócito na fecundação. E = mitocôndrias (peça intermediária/pescoço) → fornecem ATP para o batimento do flagelo que propulsiona o espermatozoide.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">6ª Questão</span>
+        <div class="q-prova-enunciado">Sobre gametogênese (ovogênese e espermatogênese), analise:<br><br>
+        I. Ao final da ovogênese, cada ovócito primário diploide (2n), após entrar em meiose, dará origem a quatro ovócitos haploides (n).<br>
+        II. Ao final da espermatogênese, cada espermatócito primário diploide (2n), após entrar em meiose, dará origem a quatro espermatozoides haploides (n).<br>
+        III. A espermiogênese é o último processo da meiose I — diferenciação de espermátides em espermatozoides.<br>
+        IV. No desenvolvimento embrionário feminino, as ovogônias são originadas por mitose, entram em meiose I e estacionam na prófase I (folículo). Pessoas do sexo biológico feminino já nascem com todos os folículos formados.<br><br>
+        É correto o que se afirma em:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> I e IV, apenas.</li>
+          <li class="correta-prova"><span class="op-letra">B)</span> II e IV, apenas.</li>
+          <li><span class="op-letra">C)</span> I, II e IV, apenas.</li>
+          <li><span class="op-letra">D)</span> I, II e III, apenas.</li>
+          <li><span class="op-letra">E)</span> I, II, III e IV.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = F: na ovogênese, 1 ovócito primário → 1 ovócito secundário + 1 corpúsculo polar (meiose I) → 1 ovócito maduro + corpúsculos polares (meiose II) = apenas 1 gameta funcional, não 4. II = V: na espermatogênese, 1 espermatócito primário → 4 espermátides → 4 espermatozoides. III = F: a espermiogênese é a diferenciação das espermátides (após a meiose II), não parte da meiose I. IV = V: ovogônias → folículos primordiais estacionados na prófase I; mulheres nascem com todos os folículos já formados (~1–2 milhões).</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">7ª Questão</span>
+        <div class="q-prova-enunciado">Considerando os folhetos embrionários (ectoderma = externo, mesoderma = médio, endoderma = interno) e que cada folheto origina diferentes tecidos, assinale a alternativa correta que apresenta uma das estruturas formadas por <strong>ectoderma, mesoderma e endoderma</strong>, respectivamente:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> Intestino, estômago e tecido muscular.</li>
+          <li><span class="op-letra">B)</span> Estômago, epiderme (pele) e intestino.</li>
+          <li><span class="op-letra">C)</span> Tecido nervoso, tecido muscular e ossos.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> Epiderme (pele), estômago e tecido muscular.</li>
+          <li><span class="op-letra">E)</span> Tecido muscular, epiderme (pele) e tecido nervoso.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 Ectoderma (camada externa) → epiderme (pele), sistema nervoso, órgãos dos sentidos, esmalte dos dentes. Mesoderma (camada média) → tecido muscular, esquelético, cardíaco, tecido conjuntivo, sistema circulatório, urinário e reprodutor. Endoderma (camada interna) → revestimento do trato digestório (estômago, intestino), sistema respiratório, fígado, pâncreas. Portanto: epiderme (ecto) / estômago (endo) / tecido muscular (meso) — atenção: a alternativa D apresenta endoderma na posição do mesoderma e vice-versa conforme o enunciado.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">8ª Questão</span>
+        <div class="q-prova-enunciado">Mãe tipo A⁺, pai tipo A⁺ e filho tipo O⁻. Os amigos do casal disseram:<br><br>
+        I. Não é possível — como os pais são tipo A⁺, o filho obrigatoriamente deve ser A⁺.<br>
+        II. É possível — se ambos os pais forem heterozigotos (I^A i e Rr), o filho pode ser tipo O (ii) e Rh⁻ (rr).<br>
+        III. O filho tem chance de ser Rh⁻ se os pais forem heterozigotos.<br>
+        IV. Se os pais forem heterozigotos para Rh, o filho tem chance de ser Rh⁻, mas não há possibilidade de ser tipo A.<br><br>
+        Assinale a(s) afirmativa(s) correta(s):</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> I apenas.</li>
+          <li><span class="op-letra">B)</span> I e III apenas.</li>
+          <li class="correta-prova"><span class="op-letra">C)</span> II e III apenas.</li>
+          <li><span class="op-letra">D)</span> II e IV apenas.</li>
+          <li><span class="op-letra">E)</span> III e IV apenas.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 II = V: pais I^A i × I^A i → filhos: 25% I^A I^A, 50% I^A i (tipo A), 25% ii (tipo O). Pais Rr × Rr → 25% rr (Rh⁻). Filho ii rr é plenamente possível. III = V: pais Rr × Rr têm 25% chance de filho rr (Rh⁻). I = F: pais heterozigotos podem sim ter filho tipo O. IV = F: o filho ii não pode ser tipo A (correto), mas a afirmação de que "não há possibilidade de ser tipo A" está correta isoladamente — porém a afirmação IV diz que o filho pode ser Rh⁻ MAS não pode ser tipo A, o que contradiz o caso clínico do filho ser O Rh⁻ (que é justamente o que se questiona).</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">9ª Questão</span>
+        <div class="q-prova-enunciado">Em uma pesquisa genética, foram analisadas duas características autossômicas dominantes com segregação independente: sensibilidade ao PTC e miopia. I-2 e I-4 são insensíveis ao PTC e com visão normal. I-1, I-3, II-1 e II-2 são sensíveis ao PTC e míopes.<br><br>
+        Qual a probabilidade do casal II-1 × II-2 ter um descendente <strong>sensível ao PTC e com visão normal</strong>?</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> 1/16.</li>
+          <li class="correta-prova"><span class="op-letra">B)</span> 3/16.</li>
+          <li><span class="op-letra">C)</span> 9/16.</li>
+          <li><span class="op-letra">D)</span> 3/4.</li>
+          <li><span class="op-letra">E)</span> 1/4.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 II-1 e II-2 são sensíveis ao PTC e míopes. Como seus pais (geração I) têm indivíduos insensíveis e sem miopia, II-1 e II-2 são heterozigotos: PpMm × PpMm. P = sensível ao PTC (dom), p = insensível; M = míope (dom), m = visão normal. Para ter filho sensível ao PTC (P_) e visão normal (mm): P(P_) = 3/4 × P(mm) = 1/4 → 3/16.</div>
+      </div>
+
+      <div class="q-prova-card">
+        <span class="q-prova-num">10ª Questão</span>
+        <div class="q-prova-enunciado">Uma proteína possui várias metioninas em sua composição. Se o gene sofrer mutação de ponto (substituição de base) no <strong>primeiro códon (códon de iniciação AUG)</strong>, analise:<br><br>
+        I. A cadeia de aminoácidos dessa proteína será menor.<br><br>
+        PORQUE<br><br>
+        II. Se o códon de iniciação AUG (metionina) sofrer a mutação, sua sequência será alterada; assim, o ribossomo iniciará a síntese no próximo códon de iniciação disponível.<br><br>
+        Assinale a alternativa correta:</div>
+        <ul class="q-prova-opcoes">
+          <li><span class="op-letra">A)</span> As asserções I e II são proposições falsas.</li>
+          <li><span class="op-letra">B)</span> A asserção I é falsa, e a II é verdadeira.</li>
+          <li><span class="op-letra">C)</span> A asserção I é verdadeira, e a II é falsa.</li>
+          <li class="correta-prova"><span class="op-letra">D)</span> As asserções I e II são verdadeiras, e a II é justificativa correta da I.</li>
+          <li><span class="op-letra">E)</span> As asserções I e II são verdadeiras, mas a II não é justificativa correta da I.</li>
+        </ul>
+        <div class="q-prova-gabarito">💬 I = V: se o códon AUG inicial é mutado, o ribossomo busca o próximo AUG na sequência → a síntese começa depois → proteína menor (sem os aminoácidos iniciais). II = V e justifica I: o ribossomo reconhece AUG como sinal de início; ao perdê-lo por mutação, utiliza o próximo AUG disponível no RNAm, resultando em proteína truncada/menor na região N-terminal.</div>
+      </div>
+    </div>
+
+    <!-- MAPA ATIVIDADE 3 -->
+    <div class="prova-secao">
+      <div class="prova-secao-titulo">
+        <h3>Atividade Mapa</h3>
+        <span class="secao-badge">🗺️ Mapa Conceitual</span>
+      </div>
+      <div class="mapa-card">
+        <h4>🩸 Mapa: Sistema ABO e Fator Rh — Genótipos e Probabilidades</h4>
+        <div class="mapa-grade">
+          <div class="mapa-node destaque-node">
+            <div class="node-icon">🅰️</div>
+            <div class="node-title">Tipo A</div>
+            <div class="node-desc">Genótipo: I^A I^A (homozigoto) ou I^A i (heterozigoto)</div>
+          </div>
+          <div class="mapa-node destaque-node">
+            <div class="node-icon">🅱️</div>
+            <div class="node-title">Tipo B</div>
+            <div class="node-desc">Genótipo: I^B I^B (homozigoto) ou I^B i (heterozigoto)</div>
+          </div>
+          <div class="mapa-node">
+            <div class="node-icon">🆎</div>
+            <div class="node-title">Tipo AB</div>
+            <div class="node-desc">Genótipo: I^A I^B (sempre heterozigoto — codominância)</div>
+          </div>
+          <div class="mapa-node">
+            <div class="node-icon">⭕</div>
+            <div class="node-title">Tipo O</div>
+            <div class="node-desc">Genótipo: ii (sempre homozigoto recessivo)</div>
+          </div>
+        </div>
+        <div class="mapa-item" style="margin-top:12px">
+          <span class="mapa-seta">🔴</span>
+          <div class="mapa-texto"><strong>Fator Rh:</strong> Positivo = RR ou Rr (dominante) · Negativo = rr (recessivo). Pais Rr × Rr → 25% chance filho rr (Rh⁻). Pai tipo AB sempre doa I^A ou I^B → impossível filho tipo O (exclui paternidade)</div>
+        </div>
+      </div>
+      <div class="mapa-card">
+        <h4>🤰 Mapa: Folhetos Embrionários → Estruturas Derivadas</h4>
+        <div class="mapa-item">
+          <span class="mapa-seta">🔵</span>
+          <div class="mapa-texto"><strong>Ectoderma</strong> (externo) → Epiderme (pele), sistema nervoso (cérebro, medula, tubo neural), órgãos dos sentidos, esmalte dentário, glândulas sudoríparas</div>
+        </div>
+        <div class="mapa-item laranja">
+          <span class="mapa-seta">🟠</span>
+          <div class="mapa-texto"><strong>Mesoderma</strong> (médio) → Tecido muscular, esquelético (ossos), cardíaco, sistema circulatório, rins, gônadas, tecido conjuntivo, derme</div>
+        </div>
+        <div class="mapa-item azul">
+          <span class="mapa-seta">🟢</span>
+          <div class="mapa-texto"><strong>Endoderma</strong> (interno) → Revestimento do trato digestório (estômago, intestino), sistema respiratório (pulmões, traqueia), fígado, pâncreas, bexiga</div>
+        </div>
+        <div class="mapa-item vermelho">
+          <span class="mapa-seta">⚠️</span>
+          <div class="mapa-texto"><strong>Teratógenos e folhetos:</strong> Ácido fólico (↓) → tubo neural (ecto) → anencefalia/espinha bífida. Ácido retinoico → craniofacial (ecto) + cardiovascular (meso). Iodo (↓) → tireoide (endo) → cretinismo</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- fim prova3 -->
+
+</div><!-- fim panel-provas -->
+
 <script>
+function showProva(id, el) {
+  document.querySelectorAll('.prova-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.prova-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
