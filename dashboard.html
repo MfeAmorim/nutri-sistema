@@ -532,6 +532,7 @@
     <div class="nav-section">Estudos</div>
     <div class="nav-item" onclick="showTab('conhecimento')"><span class="nav-icon">📚</span> Conhecimento na Prática</div>
     <div class="nav-item" onclick="window.open('central-estudos.html','_blank')"><span class="nav-icon">🧠</span> Central de Estudos</div>
+    <div class="nav-item" onclick="showTab('projetos-extensao')"><span class="nav-icon">🎓</span> Projetos de Extensão</div>
     <div class="nav-item" onclick="showTab('sobre')"><span class="nav-icon">🌿</span> Sobre Mim</div>
 
   </div>
@@ -601,6 +602,30 @@
             <p class="home-section-sub">Estudante Protagonista — Produção de Conteúdo Digital</p>
           </div>
           <span style="background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.8px;white-space:nowrap">✨ Em Destaque</span>
+        </div>
+
+        <!-- Mini-cards clicáveis para atividades extensionistas -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+          <div onclick="showTab('projetos-extensao')" style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #74c69d;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px"
+               onmouseover="this.style.boxShadow='0 6px 20px rgba(45,106,79,0.2)';this.style.transform='translateY(-2px)'"
+               onmouseout="this.style.boxShadow='none';this.style.transform='none'">
+            <div style="width:42px;height:42px;background:#2d6a4f;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🥦</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1a2e1f;margin-bottom:3px">Cozinha Sustentável</div>
+              <div style="font-size:11px;color:#7a8a7c">Partes Não Convencionais · ODS 2</div>
+              <div style="font-size:10px;color:#52b788;font-weight:600;margin-top:4px">▶ Ver projeto completo</div>
+            </div>
+          </div>
+          <div onclick="showTab('projetos-extensao')" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px"
+               onmouseover="this.style.boxShadow='0 6px 20px rgba(29,78,216,0.15)';this.style.transform='translateY(-2px)'"
+               onmouseout="this.style.boxShadow='none';this.style.transform='none'">
+            <div style="width:42px;height:42px;background:#1d4ed8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">♻️</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#1a2e1f;margin-bottom:3px">Economia Circular</div>
+              <div style="font-size:11px;color:#7a8a7c">Brinquedos Educativos · ODS 4 e 12</div>
+              <div style="font-size:10px;color:#1d4ed8;font-weight:600;margin-top:4px">▶ Ver projeto completo</div>
+            </div>
+          </div>
         </div>
 
         <!-- Card Alimentação Solidária — MAIS RECENTE -->
@@ -1015,6 +1040,7 @@
           <div class="home-card" onclick="showTab('tabela')"><div class="home-card-icon">🥦</div><div class="home-card-title">Tabela Alimentar</div><div class="home-card-desc">Calcule kcal e proteína</div></div>
           <div class="home-card" onclick="showTab('plano')"><div class="home-card-icon">🎯</div><div class="home-card-title">Plano Alimentar</div><div class="home-card-desc">Metas e distribuição</div></div>
           <div class="home-card" onclick="showTab('chatbot')"><div class="home-card-icon">🤖</div><div class="home-card-title">Assistente IA</div><div class="home-card-desc">Dúvidas e agendamentos</div></div>
+          <div class="home-card" onclick="showTab('projetos-extensao')" style="border-color:#74c69d;background:linear-gradient(135deg,#f0fdf4,#e8f5e9)"><div class="home-card-icon">🎓</div><div class="home-card-title" style="color:var(--verde)">Projetos de Extensão</div><div class="home-card-desc">Atividades extensionistas UniCesumar</div></div>
           <div class="home-card" onclick="showTab('conhecimento')" style="border-color:var(--verde-neon)"><div class="home-card-icon">📚</div><div class="home-card-title" style="color:var(--verde)">Conhecimento na Prática</div><div class="home-card-desc">Resumos e questões da faculdade</div></div>
           <div class="home-card" onclick="window.open('central-estudos.html','_blank')" style="border-color:#7c3aed"><div class="home-card-icon">🧠</div><div class="home-card-title" style="color:#7c3aed">Central de Estudos</div><div class="home-card-desc">Flashcards, simulado, progresso e mais</div></div>
           <div class="home-card" onclick="showTab('sobre')" style="border-color:#a7f3d0"><div class="home-card-icon">🌿</div><div class="home-card-title" style="color:var(--verde)">Sobre Mim</div><div class="home-card-desc">História do projeto</div></div>
@@ -2508,6 +2534,163 @@
       </div>
     </div>
 
+    </div>
+
+    <!-- ═══ ABA PROJETOS DE EXTENSÃO ═══ -->
+    <div class="tab-content" id="tab-projetos-extensao">
+      <div class="content">
+
+        <!-- Cabeçalho da aba -->
+        <div style="margin-bottom:32px">
+          <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--escuro);margin-bottom:6px">🎓 Projetos de Extensão</h2>
+          <p style="font-size:14px;color:#7a8a7c">Atividades extensionistas UniCesumar — registros, evidências e documentação.</p>
+        </div>
+
+        <!-- ── PROJETO 1: Cozinha Sustentável ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🥦</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Ensino Extensionista · ODS 2 — Fome Zero</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Cozinha Sustentável — Partes Não Convencionais dos Alimentos</div>
+              <div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap">
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">📅 Início: 28/07/2025</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">✅ Adesão: 23/12/2025</span>
+              </div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
+          </div>
+
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+
+            <!-- Objetivo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🎯 Objetivo</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">Identificar e promover o uso de partes não convencionais dos alimentos — cascas, talos, folhas e sementes — visando reduzir o desperdício alimentar e fomentar práticas sustentáveis na comunidade.</p>
+            </div>
+
+            <!-- Etapas -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Pesquisa</strong> — Identificar partes não convencionais e investigar propriedades nutricionais, benefícios e formas de preparo.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Guia Visual</strong> — Criar um guia atrativo com receitas, dicas e orientações práticas usando Canva ou editor similar.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Ação Comunitária</strong> — Abordar pessoas em escolas, bibliotecas, supermercados ou centros comunitários e apresentar o guia.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Evidências</strong> — Registrar fotos, coletar assinatura do responsável na ficha de frequência e submeter o Formulário de Comprovação.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Área para conteúdo editável -->
+            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:28px;text-align:center">
+              <div style="font-size:32px;margin-bottom:10px">📝</div>
+              <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para suas evidências</p>
+              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: guia criado, fotos da ação, ficha de frequência e comprovantes.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── PROJETO 2: Economia Circular e Brinquedos ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto Social · ODS 4 e ODS 12</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Economia Circular e Criatividade — Brinquedos Educativos</div>
+              <div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap">
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">📅 Início: 22/04/2024</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">✅ Adesão: 23/12/2025</span>
+              </div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
+          </div>
+
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+
+            <!-- Objetivo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🎯 Objetivo</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">Promover habilidades em economia circular, criatividade e responsabilidade social por meio da construção e doação de brinquedos educativos feitos com materiais reutilizados — estimulando sustentabilidade, empatia e cidadania.</p>
+            </div>
+
+            <!-- ODS -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:22px">📖</span>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:.5px">ODS 4</div>
+                  <div style="font-size:12px;color:#1e40af">Educação de Qualidade</div>
+                </div>
+              </div>
+              <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:22px">🔄</span>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px">ODS 12</div>
+                  <div style="font-size:12px;color:#78350f">Consumo Responsável</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Etapas -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Reunião de Materiais</strong> — Papel, papelão, embalagens, palitos, retalhos, sementes, tampas, rolos de papelão e latas.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Esboço e Planejamento</strong> — Desenhar o brinquedo, listar materiais e definir passo a passo considerando funcionalidade e segurança.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Produção do Brinquedo</strong> — Construção adaptando o plano conforme necessário, exercitando criatividade e resolução de problemas.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Vídeo de até 3 min</strong> — Mostrar o brinquedo, explicar o processo, materiais reutilizados e refletir sobre a experiência.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">5</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Doação</strong> — Entregar os brinquedos a escolas, creches, hospitais ou ONGs e documentar com foto da entrega.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vídeo explicativo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo Explicativo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/vzwFKL0dgu0" title="Economia Circular — Brinquedos Educativos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+            </div>
+
+            <!-- Área para conteúdo editável -->
+            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:28px;text-align:center">
+              <div style="font-size:32px;margin-bottom:10px">📝</div>
+              <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para suas evidências</p>
+              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: fotos do brinquedo, vídeo produzido, foto da doação e comprovantes.</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- ═══ ABA ADMIN ═══ -->
     <div class="tab-content" id="tab-admin">
       <div class="content">
@@ -3492,7 +3675,7 @@ function showTab(name) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const tab = document.getElementById('tab-' + name);
   if (tab) tab.classList.add('active');
-  const labels = { home:'Página Inicial', resultados:'Resultados', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', metas:'Calcular Metas', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', sobre:'Sobre Mim', suporte:'🆘 SOS — Redes de Apoio', configuracoes:'Configurações' };
+  const labels = { home:'Página Inicial', resultados:'Resultados', perfil:'Meu Perfil', termo:'Termo de Consentimento', prontuario:'Prontuário Médico', 'prontuarios-salvos':'Minhas Fichas', tabela:'Tabela Alimentar', metas:'Calcular Metas', recordatorio:'Recordatório 24h', plano:'Plano Alimentar', chatbot:'Assistente IA', conhecimento:'Conhecimento na Prática', 'projetos-extensao':'Projetos de Extensão', sobre:'Sobre Mim', suporte:'🆘 SOS — Redes de Apoio', configuracoes:'Configurações' };
   document.getElementById('page-title').textContent = labels[name] || name;
   document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick') === `showTab('${name}')`) n.classList.add('active'); });
   if (name === 'plano') setTimeout(() => inicializarPlanoLinhas(), 100);
