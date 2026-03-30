@@ -605,26 +605,16 @@
         </div>
 
         <!-- Mini-cards clicáveis para atividades extensionistas -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
-          <div onclick="showTab('projetos-extensao')" style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #74c69d;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px"
-               onmouseover="this.style.boxShadow='0 6px 20px rgba(45,106,79,0.2)';this.style.transform='translateY(-2px)'"
-               onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-            <div style="width:42px;height:42px;background:#2d6a4f;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🥦</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:#1a2e1f;margin-bottom:3px">Cozinha Sustentável</div>
-              <div style="font-size:11px;color:#7a8a7c">Partes Não Convencionais · ODS 2</div>
-              <div style="font-size:10px;color:#52b788;font-weight:600;margin-top:4px">▶ Ver projeto completo</div>
-            </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px">
+          <div class="home-card" onclick="showTab('projetos-extensao')" style="border-color:#74c69d;background:linear-gradient(135deg,#f0fdf4,#e8f5e9)">
+            <div class="home-card-icon">🥦</div>
+            <div class="home-card-title" style="color:var(--verde)">Cozinha Sustentável</div>
+            <div class="home-card-desc">Partes Não Convencionais · ODS 2</div>
           </div>
-          <div onclick="showTab('projetos-extensao')" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #93c5fd;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:14px"
-               onmouseover="this.style.boxShadow='0 6px 20px rgba(29,78,216,0.15)';this.style.transform='translateY(-2px)'"
-               onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-            <div style="width:42px;height:42px;background:#1d4ed8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">♻️</div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:#1a2e1f;margin-bottom:3px">Economia Circular</div>
-              <div style="font-size:11px;color:#7a8a7c">Brinquedos Educativos · ODS 4 e 12</div>
-              <div style="font-size:10px;color:#1d4ed8;font-weight:600;margin-top:4px">▶ Ver projeto completo</div>
-            </div>
+          <div class="home-card" onclick="showTab('projetos-extensao')" style="border-color:#93c5fd;background:linear-gradient(135deg,#eff6ff,#dbeafe)">
+            <div class="home-card-icon">♻️</div>
+            <div class="home-card-title" style="color:#1d4ed8">Economia Circular</div>
+            <div class="home-card-desc">Brinquedos Educativos · ODS 4 e 12</div>
           </div>
         </div>
 
@@ -2561,42 +2551,284 @@
             <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
           </div>
 
-          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px">
 
-            <!-- Objetivo -->
+            <!-- Sobre o Projeto -->
             <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🎯 Objetivo</div>
-              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">Identificar e promover o uso de partes não convencionais dos alimentos — cascas, talos, folhas e sementes — visando reduzir o desperdício alimentar e fomentar práticas sustentáveis na comunidade.</p>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.85">
+                O Brasil desperdiça cerca de <strong style="color:#1a2e1f">41 mil toneladas de alimentos por dia</strong>, e grande parte desse desperdício ocorre dentro das próprias casas — cascas de frutas jogadas fora, talos de couve descartados, folhas de cenoura ignoradas, sementes de abóbora que vão direto ao lixo. Essas partes, chamadas de <strong style="color:#1a2e1f">partes não convencionais dos alimentos (PNAs)</strong>, são ricas em fibras, vitaminas, minerais e antioxidantes, e podem ser transformadas em refeições nutritivas, saborosas e econômicas.<br><br>
+                Como parte da <strong style="color:#1a2e1f">Atividade Extensionista UniCesumar — ODS 2: Fome Zero</strong>, este projeto tem como missão identificar, estudar e divulgar o aproveitamento integral dos alimentos para a comunidade, promovendo educação alimentar, redução do desperdício e sustentabilidade na mesa do brasileiro.
+              </p>
             </div>
 
-            <!-- Etapas -->
+            <!-- ODS -->
+            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #bbf7d0;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px">
+              <div style="font-size:36px;flex-shrink:0">🌱</div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ODS 2 — Fome Zero e Agricultura Sustentável</div>
+                <p style="font-size:13px;color:#1a2e1f;line-height:1.6;margin:0">Garantir o acesso de todos a alimentos seguros, nutritivos e suficientes durante todo o ano — reduzindo o desperdício e valorizando o que já existe na própria natureza do alimento.</p>
+              </div>
+            </div>
+
+            <!-- Dado de impacto -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">41 mil</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">toneladas de alimentos desperdiçados por dia no Brasil</div>
+              </div>
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">30%</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">do alimento comprado vai ao lixo antes de ser consumido</div>
+              </div>
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">+40%</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">dos nutrientes do alimento estão nas partes que jogamos fora</div>
+              </div>
+            </div>
+
+            <!-- Cards visuais por parte do alimento -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">🥦 Partes Não Convencionais — O que aproveitar e como usar</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+                <!-- Cascas -->
+                <div style="background:#fff;border:1.5px solid #bbf7d0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#15803d,#22c55e);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🍋</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Cascas</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Frutas e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80" alt="Casca de banana" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Banana</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1604495772376-9657f0035efb?w=400&q=80" alt="Casca de maracujá" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Maracujá</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&q=80" alt="Casca de melancia" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Melancia</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=400&q=80" alt="Casca de batata-doce" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Batata-doce</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de banana:</strong> rica em potássio e magnésio. Pode virar biomassa (purê), farinha ou ser refogada com alho e azeite.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de maracujá:</strong> altíssima em pectina e fibras. Ideal para fazer doce, farinha hipoglicemiante ou geleia.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de melancia:</strong> fonte de citrulina. Pode ser refogada, virar conserva ou entrar em sucos detox.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de batata-doce:</strong> rica em antocianinas e fibras. Fica crocante ao forno com temperos como alho, cúrcuma e azeite.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Lave bem as cascas com solução de água + vinagre (1 colher por litro) antes de usar. Prefira produtos orgânicos ou sem agrotóxicos.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Talos -->
+                <div style="background:#fff;border:1.5px solid #86efac;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#166534,#16a34a);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🥦</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Talos</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Verduras e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&q=80" alt="Talo de brócolis" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Brócolis</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&q=80" alt="Talo de couve" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Couve</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?w=400&q=80" alt="Talo de beterraba" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Beterraba</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative;background:#d4ede0;display:flex;align-items:center;justify-content:center">
+                      <img src="https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&q=80" alt="Talo de acelga" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.innerHTML='<span style=\'font-size:32px\'>🥬</span>'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Acelga</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de couve:</strong> tão nutritivo quanto a folha — rico em cálcio e ferro. Refogue finamente picado com azeite e alho ou use em refogados.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de brócolis:</strong> parte mais fibrosa e saborosa. Descasque e use em sopas, purês, refogados ou chips assados.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de acelga e espinafre:</strong> ricos em água e minerais. Ideais para sucos verdes, refogados rápidos e recheios.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de beterraba:</strong> fonte de betalaínas e ferro. Pode ser salteado com manteiga, usado em saladas ou em sucos.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Talos mais duros (brócolis, couve-flor) ficam melhores cozidos ou assados. Talos mais finos (espinafre, acelga) podem ser usados crus em saladas.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Folhas -->
+                <div style="background:#fff;border:1.5px solid #a7f3d0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#065f46,#059669);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🥕</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Folhas</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Raízes e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&q=80" alt="Folha de cenoura" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Cenoura</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=400&q=80" alt="Folha de beterraba" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Beterraba</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?w=400&q=80" alt="Folha de rabanete" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Rabanete</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1568625365131-079e026a927d?w=400&q=80" alt="Folha de couve-flor" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Couve-flor</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de cenoura:</strong> rica em vitamina C e potássio — tem até mais cálcio que o leite por grama. Faça pesto, refogue com azeite ou use em omeletes.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de beterraba:</strong> fonte de ferro, magnésio e vitamina K. Refogue como refogado verde ou use em sopas.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de rabanete:</strong> levemente picante, rica em vitamina C. Excelente em saladas, refogados ou como substituta da rúcula.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de couve-flor:</strong> suave e nutritiva. Pode ser assada como chips, refogada ou usada em caldos e sopas.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#065f46;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Folhas de raízes (cenoura, beterraba) têm sabor levemente amargo — branquear rapidamente em água fervente por 1 min suaviza o amargor antes de refogar.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sementes e Bagaços -->
+                <div style="background:#fff;border:1.5px solid #fde68a;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#78350f,#d97706);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🎃</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Sementes & Bagaços</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Frutas e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#fde68a44">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1508302133-66c3756ece74?w=400&q=80" alt="Semente de abóbora" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Abóbora</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1582979512210-99b6a53386f9?w=400&q=80" alt="Bagaço de laranja" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Laranja</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1571575309572-94f13a5e1ec5?w=400&q=80" alt="Semente de melão" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Melão</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?w=400&q=80" alt="Bagaço de caju" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Caju</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Semente de abóbora:</strong> riquíssima em zinco, magnésio e ômega-3. Torrada com sal e temperos vira um snack poderoso.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Bagaço de laranja/limão:</strong> concentrado de pectina e flavonoides. Pode virar farinhas, bolos, geleias e aromatizantes naturais.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Semente de melão e melancia:</strong> fonte de ácido linoleico e proteína. Pode ser torrada, moída e adicionada a granolas ou iogurtes.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Bagaço de caju:</strong> fonte de vitamina C e fibras. Ideal para sucos, bolos, brigadeiro de caju e até carne de caju desfiada.</div>
+                    <div style="background:#fefce8;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#78350f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Sementes úmidas devem ser lavadas e secas ao sol ou em forno baixo (150°C) antes de tostar. Isso evita mofo e realça o sabor.</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Etapas do projeto -->
             <div>
               <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
               <div style="display:flex;flex-direction:column;gap:10px">
                 <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
                   <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Pesquisa</strong> — Identificar partes não convencionais e investigar propriedades nutricionais, benefícios e formas de preparo.</p>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Pesquisa</strong> — Identificar as principais partes não convencionais jogadas fora e levantar suas propriedades nutricionais, formas seguras de preparo e benefícios à saúde.</p>
                 </div>
                 <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
                   <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Guia Visual</strong> — Criar um guia atrativo com receitas, dicas e orientações práticas usando Canva ou editor similar.</p>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Guia Visual</strong> — Criar um guia ilustrado com cards por parte do alimento (casca, talo, folha, semente), incluindo receitas práticas e dicas de higienização, usando Canva ou editor similar.</p>
                 </div>
                 <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
                   <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Ação Comunitária</strong> — Abordar pessoas em escolas, bibliotecas, supermercados ou centros comunitários e apresentar o guia.</p>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Ação Comunitária</strong> — Levar o guia e as informações para a comunidade em escolas, feiras, supermercados, UBSs ou centros comunitários, educando sobre aproveitamento integral.</p>
                 </div>
                 <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
                   <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Evidências</strong> — Registrar fotos, coletar assinatura do responsável na ficha de frequência e submeter o Formulário de Comprovação.</p>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Evidências</strong> — Registrar fotos da ação, coletar assinatura do responsável na ficha de frequência e submeter o Formulário de Comprovação no portal UniCesumar.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Área para conteúdo editável -->
-            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:28px;text-align:center">
-              <div style="font-size:32px;margin-bottom:10px">📝</div>
-              <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para suas evidências</p>
-              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: guia criado, fotos da ação, ficha de frequência e comprovantes.</p>
+            <!-- Referências -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📚 Referências</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <a href="https://www.embrapa.br/busca-de-noticias/-/noticia/1584616/aproveitamento-integral-de-alimentos" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Embrapa — Aproveitamento Integral de Alimentos</span></a>
+                <a href="https://www.cfn.org.br" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>CFN — Conselho Federal de Nutricionistas</span></a>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px">📖 <span>PHILIPPI, Sonia T. <em>Nutrição e Técnica Dietética</em> — Manole, 3ª ed.</span></div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px">📖 <span>TACO — Tabela Brasileira de Composição de Alimentos, UNICAMP, 4ª ed.</span></div>
+              </div>
+            </div>
+
+            <!-- Espaço para vídeo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:32px;text-align:center">
+                <div style="font-size:36px;margin-bottom:10px">🎬</div>
+                <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para o vídeo</p>
+                <p style="font-size:13px;color:#7a8a7c">Quando produzir, adicione aqui o link do YouTube ou o arquivo de vídeo.</p>
+              </div>
+            </div>
+
+            <!-- Espaço para fotos -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📸 Galeria da Ação Comunitária</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 1</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 2</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 3</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 4</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 5</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 6</span>
+                </div>
+              </div>
+              <p style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px">Adicione as fotos da ação comunitária após realizá-la</p>
             </div>
 
           </div>
@@ -2685,6 +2917,255 @@
               <p style="font-size:13px;color:#7a8a7c">Adicione aqui: fotos do brinquedo, vídeo produzido, foto da doação e comprovantes.</p>
             </div>
 
+          </div>
+        </div>
+
+        <!-- ── PROJETO: Alimentação Solidária ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤝</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Atividade de Extensão UniCesumar</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Solidária — Doação de Alimentos para Instituições Sociais</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <video controls style="width:100%;height:100%;display:block;object-fit:cover">
+                  <source src="projeto_de_extensão_alimentação_solidaria.mp4" type="video/mp4">
+                  Seu navegador não suporta vídeo.
+                </video>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.85">
+                Como parte da <strong style="color:#1a2e1f">Atividade de Extensão UniCesumar</strong>, realizamos uma ação solidária de coleta e doação de alimentos em parceria com a <strong style="color:#1a2e1f">Irradiação Espírita Cristã (IEC)</strong> — instituição fundada em 20 de janeiro de 1951, em Goiânia, que há mais de 70 anos transforma vidas por meio de obras sociais, educação e assistência espiritual, atendendo milhares de famílias em situação de vulnerabilidade na região.<br><br>
+                A ação integrou a <strong style="color:#1a2e1f">Campanha de Fraternidade Auta de Souza (CFAS)</strong>. Mensalmente, a IEC atende cerca de <strong style="color:#1a2e1f">150 famílias cadastradas</strong> com cestas básicas, verduras, sopas e outros gêneros alimentícios, além de manter creches, escolas, abrigo de idosos e grupos de apoio comunitário.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#alimentacaosolidaria</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#irradiacaoespirista</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#doacaodealimentos</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Coleta e entrega de alimentos a famílias em vulnerabilidade</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Parceria com a Campanha de Fraternidade Auta de Souza</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Distribuição de panfletos e sensibilização comunitária</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Inspirar o ciclo do bem e o protagonismo estudantil</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📍 Local da Ação</div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:10px 12px;line-height:1.6">
+                  🏛️ <strong style="color:#1a2e1f">Irradiação Espírita Cristã</strong><br>
+                  <span style="color:#7a8a7c">Dispensário André Luiz</span><br>
+                  <span style="color:#7a8a7c">Rua 201, Nº 232 — Setor Leste Vila Nova</span><br>
+                  <span style="color:#7a8a7c">Goiânia — GO · <a href="https://www.iecv.org" target="_blank" style="color:#2d6a4f">www.iecv.org</a></span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📸 Galeria da Ação</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Total_de_alimento_arrecadados.jpg" alt="Total arrecadado" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px">
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🗓️ Dia do panfleto</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">📬 Entrega dos panfletos</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🛒 Coleta dos alimentos</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">📦 Total arrecadado</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🤝 Dia da entrega</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🌿 Ação solidária</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:4px">
+              <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:24px">📄</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#1a2e1f">Template do Projeto</div>
+                  <div style="font-size:11px;color:#7a8a7c">Alimentação Solidária — UniCesumar</div>
+                </div>
+              </div>
+              <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:24px">✅</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#1a2e1f">Termo de Uso de Imagem</div>
+                  <div style="font-size:11px;color:#7a8a7c">Assinado · Goiânia, 29/07/2025</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROJETO: Estudante Protagonista Pt. 3 — Sustentabilidade ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Atividade de Extensão · Faça Você Também</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Incentivo à Sustentabilidade e Responsabilidade Social</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/oZW1g-V7_tk" title="Incentivo à Sustentabilidade e Responsabilidade Social" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/oZW1g-V7_tk" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Atividade de extensão <strong style="color:#1a2e1f">Faça Você Também</strong> — UniCesumar.<br>
+                Este vídeo aborda a importância da <strong style="color:#1a2e1f">reciclagem</strong> e traz dicas práticas para reduzir o uso de copos descartáveis no dia a dia, incentivando hábitos mais conscientes e sustentáveis. A ação foi realizada na <strong style="color:#1a2e1f">SEDUC — Secretaria Estadual de Educação de Goiás</strong>, levando o tema da responsabilidade socioambiental para dentro do ambiente educacional.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#sustentabilidade</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#reciclagem</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#responsabilidadesocial</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">♻️ Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Redução do uso de copos descartáveis</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Práticas de reciclagem no cotidiano</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Consciência socioambiental no ambiente educacional</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📍 Local da Ação</div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:10px 12px;line-height:1.6">
+                  🏫 <strong style="color:#1a2e1f">SEDUC</strong><br>
+                  <span style="color:#7a8a7c">Secretaria Estadual de Educação de Goiás</span><br>
+                  <span style="color:#7a8a7c">Goiânia, GO</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROJETO: Estudante Protagonista Pt. 2 ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 2</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável ajuda curar e prevenir o câncer</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 20:50 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/vFju2ZBTEr4" title="Alimentação Saudável ajuda curar e prevenir o câncer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/vFju2ZBTEr4" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Atividade de extensão aluno protagonista — produção de conteúdo digital · <strong style="color:#1a2e1f">UniCesumar</strong>.<br>
+                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com hábitos saudáveis como a exposição solar em ambientes naturais — ilhas e praias.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#alimentacaosaudavel</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#cancer</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Exposição solar em ambientes naturais como fator complementar</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
+                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROJETO: Estudante Protagonista Pt. 1 ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 1</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável como Fator de Boa Saúde</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 22:50 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/rrYRt23xnHY" title="Vídeo do Projeto" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/rrYRt23xnHY" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com exposição solar em ambientes naturais — ilhas e praias.
+              </p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Banhos de sol em ambientes naturais como fator complementar</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
+                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
