@@ -24,6 +24,10 @@
     body.tema-escuro .home-footer { background: linear-gradient(135deg, #0f1a12, #1a2e1f); border-top-color: #2a4030; }
     body.tema-escuro .home-footer-brand p, body.tema-escuro .home-footer-col-title, body.tema-escuro .home-footer-link, body.tema-escuro .home-footer-cert, body.tema-escuro .home-footer-copy, body.tema-escuro .home-footer-v-label { color: rgba(255,255,255,0.5); }
     body.tema-escuro .home-footer-brand-name { color: var(--verde-neon); }
+    @media (max-width: 640px) {
+      .ext-proj-grid { grid-template-columns: 1fr !important; }
+      .ext-proj-col-left { border-right: none !important; border-bottom: 1px solid #e8efe8; }
+    }
     body.tema-escuro .post-card-home { background: var(--bg-card); border-color: var(--border-card); }
     body.tema-escuro .rec-form-card { background: linear-gradient(135deg,#1a2e1f,#1f3326); border-color: #2d4a35; }
     body.tema-escuro .rec-field input, body.tema-escuro .rec-field select, body.tema-escuro .rec-field textarea { background: #1f3326; border-color: #2d4a35; color: #d4e8d8; }
@@ -589,6 +593,94 @@
         <div id="posts-container" class="posts-container"></div>
       </div>
 
+      <!-- ══ PROJETOS DE EXTENSÃO ══ -->
+      <div class="home-section-wrap">
+        <div class="home-section-header">
+          <div>
+            <h3 class="home-section-title">🎓 Projetos de Extensão</h3>
+            <p class="home-section-sub">Estudante Protagonista — Produção de Conteúdo Digital</p>
+          </div>
+          <span style="background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.8px;white-space:nowrap">✨ Em Destaque</span>
+        </div>
+
+        <!-- Card do Projeto -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08)">
+
+          <!-- Cabeçalho verde -->
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div>
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável como Fator de Boa Saúde</div>
+            </div>
+          </div>
+
+          <!-- Vídeo em cima: largura total -->
+          <div style="padding:20px 24px 0">
+            <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+            <a href="https://youtu.be/rrYRt23xnHY" target="_blank" rel="noopener"
+               style="display:block;border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;text-decoration:none;border:1.5px solid #e8efe8;transition:box-shadow .2s"
+               onmouseover="this.style.boxShadow='0 6px 24px rgba(45,106,79,0.25)'"
+               onmouseout="this.style.boxShadow='none'">
+              <img src="https://img.youtube.com/vi/rrYRt23xnHY/maxresdefault.jpg"
+                   alt="Thumbnail do vídeo"
+                   style="width:100%;height:100%;object-fit:cover;display:block"
+                   onerror="this.src='https://img.youtube.com/vi/rrYRt23xnHY/hqdefault.jpg'">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.22)">
+                <div style="width:60px;height:60px;background:#ff0000;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,0.5)">
+                  <div style="width:0;height:0;border-top:13px solid transparent;border-bottom:13px solid transparent;border-left:22px solid #fff;margin-left:5px"></div>
+                </div>
+              </div>
+            </a>
+            <a href="https://youtu.be/rrYRt23xnHY" target="_blank" rel="noopener"
+               style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s"
+               onmouseover="this.style.background='#cc0000'"
+               onmouseout="this.style.background='#ff0000'">
+              ▶ Assistir no YouTube
+            </a>
+          </div>
+
+          <!-- Descrição em baixo: grid 3 colunas -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;padding:20px 24px 24px">
+
+            <!-- Sobre -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com exposição solar em ambientes naturais — ilhas e praias.
+              </p>
+            </div>
+
+            <!-- Pontos-chave -->
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+              <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+              <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
+                <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Banhos de sol em ambientes naturais como fator complementar</li>
+                <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
+              </ul>
+            </div>
+
+            <!-- Referências -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener"
+                   style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px;transition:background .15s"
+                   onmouseover="this.style.background='#e8f5ee'"
+                   onmouseout="this.style.background='#f8fdf8'">
+                  🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span>
+                </a>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">
+                  📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- fim grid descrição -->
+        </div><!-- fim card -->
+      </div>
+
       <!-- ══ ACESSO RÁPIDO ══ -->
       <div class="home-section-wrap">
         <div class="home-section-header">
@@ -699,58 +791,7 @@
     </style>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    const POST_DATA = [
-      {
-        id:'dna',
-        tag:'Genética',
-        title:'Do DNA à Proteína',
-        sub:'Como a célula transforma código genético em função',
-        steps:[
-          {
-            num:'Etapa 1 de 6', title:'O DNA: o manual de instruções da vida',
-            text:'Dentro do núcleo de cada célula existe uma molécula chamada DNA. Ela tem forma de dupla hélice — como uma escada torcida — e carrega todas as informações para construir e manter um ser vivo.',
-            detail:{title:'Por que é uma dupla hélice?', text:'Duas fitas complementares se enrolam juntas. Se uma for danificada, a outra serve de molde para o reparo — como ter duas cópias de um documento importante.'},
-            chips:[{b:'3,2 bilhões',t:'pares de bases no genoma humano'},{b:'2 metros',t:'de DNA em cada célula'},{b:'37 trilhões',t:'células no corpo humano'}],
-            draw:'drawPostDNA'
-          },
-          {
-            num:'Etapa 2 de 6', title:'As bases nitrogenadas: o alfabeto do DNA',
-            text:'O DNA é escrito com 4 letras: Adenina (A), Timina (T), Guanina (G) e Citosina (C). Elas sempre se pareiam: A com T, e G com C. Essa regra garante que as duas fitas sejam complementares.',
-            detail:{title:'Como viram informação?', text:'Sequências de 3 bases (códons) codificam um aminoácido. Ex: AUG = metionina. É como um código Morse: combinações simples criam mensagens complexas.'},
-            chips:[{b:'4 bases',t:'formam todo o código genético'},{b:'64 códons',t:'combinações possíveis de 3 bases'}],
-            draw:'drawPostBases'
-          },
-          {
-            num:'Etapa 3 de 6', title:'Transcrição: copiando a mensagem',
-            text:'A célula não usa o DNA diretamente — ele é precioso demais. Uma enzima chamada ARN-polimerase lê o DNA e cria uma cópia temporária chamada mRNA (RNA mensageiro).',
-            detail:{title:'Por que fazer uma cópia?', text:'O DNA fica guardado no núcleo como um original. O mRNA é a fotocópia que vai para a fábrica (ribossomo) e pode ser descartada depois — o original fica protegido.'},
-            chips:[{b:'ARN-polimerase',t:'enzima que faz a cópia'},{b:'U substitui T',t:'no RNA, Timina vira Uracila'},{b:'~40 bases/s',t:'velocidade de síntese'}],
-            draw:'drawPostTranscricao'
-          },
-          {
-            num:'Etapa 4 de 6', title:'O mRNA viaja até o ribossomo',
-            text:'Após ser produzido no núcleo, o mRNA atravessa os poros da membrana nuclear e vai ao citoplasma, onde estão os ribossomos — as "fábricas de proteínas" da célula.',
-            detail:{title:'O que é o ribossomo?', text:'É uma estrutura formada por proteínas e rRNA. Ele lê o mRNA códon por códon e monta a proteína encaixando os aminoácidos certos — como uma linha de montagem molecular.'},
-            chips:[{b:'Poros nucleares',t:'passagem do mRNA'},{b:'Citoplasma',t:'onde a tradução ocorre'},{b:'Milhões',t:'de ribossomos por célula'}],
-            draw:'drawPostViagem'
-          },
-          {
-            num:'Etapa 5 de 6', title:'Tradução: montando a proteína',
-            text:'O ribossomo lê o mRNA de 3 em 3 bases (um códon). Para cada códon, um tRNA traz o aminoácido correspondente. Eles vão se ligando, formando a cadeia da proteína.',
-            detail:{title:'O papel do tRNA', text:'O tRNA é o adaptador: de um lado reconhece o códon no mRNA, do outro carrega o aminoácido certo. São como peças de encaixe altamente específicas.'},
-            chips:[{b:'20 aminoácidos',t:'tipos diferentes existentes'},{b:'1 por segundo',t:'velocidade de adição'},{b:'AUG',t:'códon de início'}],
-            draw:'drawPostTraducao'
-          },
-          {
-            num:'Etapa 6 de 6', title:'Dobramento: a proteína ganha forma e função',
-            text:'A cadeia de aminoácidos se dobra em uma estrutura 3D única, determinada pela sequência. Essa forma é o que permite à proteína realizar sua função — transportar oxigênio, combater vírus ou catalisar reações.',
-            detail:{title:'O que pode dar errado?', text:'Mutações no DNA podem trocar um aminoácido, alterando o dobramento. A anemia falciforme, por exemplo, é causada pela troca de apenas 1 aminoácido na hemoglobina.'},
-            chips:[{b:'>100.000',t:'proteínas diferentes no corpo'},{b:'Hemoglobina',t:'transporta oxigênio'},{b:'Anticorpos',t:'defendem o organismo'}],
-            draw:'drawPostProteina'
-          }
-        ]
-      }
-    ];
+    const POST_DATA = [];
 
     const postStates = {};
 
