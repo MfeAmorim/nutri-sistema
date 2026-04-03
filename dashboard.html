@@ -638,10 +638,20 @@
           <div style="padding:20px 24px 0">
             <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
             <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-              <video controls style="width:100%;height:100%;display:block;object-fit:cover">
+              <!-- ✏️ OPÇÃO A: cole aqui o link do YouTube (embed) -->
+              <!-- <iframe src="https://www.youtube.com/embed/SEU_ID_AQUI" frameborder="0" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe> -->
+              <!-- ✏️ OPÇÃO B: suba o .mp4 para a mesma pasta do dashboard.html -->
+              <video id="video-solidaria-1" controls style="width:100%;height:100%;display:block;object-fit:cover"
+                onerror="this.style.display='none';document.getElementById('video-fallback-1').style.display='flex'">
                 <source src="projeto_de_extensão_alimentação_solidaria.mp4" type="video/mp4">
-                Seu navegador não suporta vídeo.
               </video>
+              <div id="video-fallback-1" style="display:none;position:absolute;inset:0;background:#0f1a12;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+                <span style="font-size:48px">🎬</span>
+                <p style="color:#74c69d;font-size:13px;font-weight:600;text-align:center;margin:0">Vídeo não encontrado</p>
+                <p style="color:rgba(255,255,255,0.4);font-size:11px;text-align:center;margin:0;max-width:220px">
+                  Coloque o arquivo <strong style="color:rgba(255,255,255,0.6)">projeto_de_extensão_alimentação_solidaria.mp4</strong><br>na mesma pasta do dashboard.html,<br>ou substitua por um link do YouTube
+                </p>
+              </div>
             </div>
           </div>
 
@@ -704,22 +714,22 @@
               <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📸 Galeria da Ação</div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
-                  <img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block">
+                  <img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🗓️</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia do panfleto</span></div>
                 </div>
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
-                  <img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block">
+                  <img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">📬</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Entrega dos panfletos</span></div>
                 </div>
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
-                  <img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block">
+                  <img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🛒</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Coleta dos alimentos</span></div>
                 </div>
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
                   <img src="Total_de_alimento_arrecadados.jpg" alt="Total de alimentos arrecadados" style="width:100%;height:100%;object-fit:cover;display:block">
                 </div>
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
-                  <img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block">
+                  <img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🤝</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia da entrega</span></div>
                 </div>
                 <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8">
-                  <img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.src='Imagem_do_WhatsApp_de_2025-06-17_às_18_48_57_de1ced9c.jpg'">
+                  <img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🌿</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Ação solidária</span></div>
                 </div>
               </div>
               <!-- Legenda das fotos -->
@@ -2937,10 +2947,20 @@
             <div>
               <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
               <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-                <video controls style="width:100%;height:100%;display:block;object-fit:cover">
-                  <source src="projeto_de_extensão_alimentação_solidaria.mp4" type="video/mp4">
-                  Seu navegador não suporta vídeo.
-                </video>
+                <!-- ✏️ OPÇÃO A: cole aqui o link do YouTube (embed) -->
+              <!-- <iframe src="https://www.youtube.com/embed/SEU_ID_AQUI" frameborder="0" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe> -->
+              <!-- ✏️ OPÇÃO B: suba o .mp4 para a mesma pasta do dashboard.html -->
+              <video id="video-solidaria-2" controls style="width:100%;height:100%;display:block;object-fit:cover"
+                onerror="this.style.display='none';document.getElementById('video-fallback-2').style.display='flex'">
+                <source src="projeto_de_extensão_alimentação_solidaria.mp4" type="video/mp4">
+              </video>
+              <div id="video-fallback-2" style="display:none;position:absolute;inset:0;background:#0f1a12;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+                <span style="font-size:48px">🎬</span>
+                <p style="color:#74c69d;font-size:13px;font-weight:600;text-align:center;margin:0">Vídeo não encontrado</p>
+                <p style="color:rgba(255,255,255,0.4);font-size:11px;text-align:center;margin:0;max-width:220px">
+                  Coloque o arquivo <strong style="color:rgba(255,255,255,0.6)">projeto_de_extensão_alimentação_solidaria.mp4</strong><br>na mesma pasta do dashboard.html,<br>ou substitua por um link do YouTube
+                </p>
+              </div>
               </div>
             </div>
             <div>
@@ -2979,12 +2999,12 @@
             <div>
               <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📸 Galeria da Ação</div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Total_de_alimento_arrecadados.jpg" alt="Total arrecadado" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block"></div>
-                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🗓️</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia do panfleto</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">📬</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Entrega dos panfletos</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🛒</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Coleta dos alimentos</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Total_de_alimento_arrecadados.jpg" alt="Total arrecadado" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">📦</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Total arrecadado</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🤝</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia da entrega</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🌿</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Ação solidária</span></div></div>
               </div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px">
                 <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🗓️ Dia do panfleto</p>

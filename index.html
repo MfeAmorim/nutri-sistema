@@ -412,15 +412,18 @@
 <script>
 const chars  = Array.from(document.querySelectorAll('.char'));
 const pupils = Array.from(document.querySelectorAll('[data-eye]'));
-let mouseX = 0, mouseY = 0;
+let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+let mouseTracking = true; // false durante interações sociais intensas
 
-/* Aparecem em cascata */
+/* ══ APARIÇÃO EM CASCATA ══ */
 chars.forEach((c, i) => setTimeout(() => c.classList.add('visible'), 300 + i * 160));
 
-/* Olhos seguem o mouse */
+/* ══ OLHOS SEGUEM O MOUSE ══ */
 document.addEventListener('mousemove', e => {
-  mouseX = e.clientX; mouseY = e.clientY; movePupils();
+  mouseX = e.clientX; mouseY = e.clientY;
+  if (mouseTracking) movePupils();
 });
+
 function movePupils() {
   pupils.forEach(p => {
     const s = p.parentElement;
@@ -433,13 +436,80 @@ function movePupils() {
   });
 }
 
-/* ── Interações ── */
-function lookAt(c, dir) {
+/* ══ FUNÇÕES BASE ══ */
+
+// Olhar em direção a coordenada absoluta (x, y)
+function lookAtPoint(c, tx, ty) {
+  Array.from(c.querySelectorAll('[data-eye]')).forEach(p => {
+    const s = p.parentElement;
+    const r = s.getBoundingClientRect();
+    const dx = tx - (r.left + r.width/2);
+    const dy = ty - (r.top  + r.height/2);
+    const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+    const mx = 2.2;
+    p.style.transform = `translate(calc(-50% + ${(dx/d)*Math.min(d*.15,mx)}px), calc(-50% + ${(dy/d)*Math.min(d*.15,mx)}px))`;
+  });
+}
+
+// Olhar para outro personagem
+function lookAtChar(c, target) {
+  const r = target.getBoundingClientRect();
+  lookAtPoint(c, r.left + r.width/2, r.top + r.height/2);
+}
+
+// Olhar para mouse
+function lookAtMouse(c) {
+  lookAtPoint(c, mouseX, mouseY);
+}
+
+function lookDir(c, dir) {
   Array.from(c.querySelectorAll('[data-eye]')).forEach(p => {
     p.style.transform = `translate(calc(-50% + ${dir === 'right' ? 2.1 : -2.1}px), calc(-50% + 0.5px))`;
   });
-  setTimeout(movePupils, 1900);
 }
+
+// Piscar um personagem
+function blink(c, delay=0) {
+  setTimeout(() => {
+    Array.from(c.querySelectorAll('.eyelid')).forEach(e => e.style.height = '100%');
+    setTimeout(() => {
+      Array.from(c.querySelectorAll('.eyelid')).forEach(e => e.style.height = '0');
+    }, 130);
+  }, delay);
+}
+
+// Piscar lento (cumplicidade / sonolento)
+function slowBlink(c, delay=0) {
+  setTimeout(() => {
+    Array.from(c.querySelectorAll('.eyelid')).forEach(e => {
+      e.style.transition = 'height 0.22s ease';
+      e.style.height = '100%';
+    });
+    setTimeout(() => {
+      Array.from(c.querySelectorAll('.eyelid')).forEach(e => {
+        e.style.transition = 'height 0.28s ease';
+        e.style.height = '0';
+        setTimeout(() => e.style.transition = '', 300);
+      });
+    }, 380);
+  }, delay);
+}
+
+// Piscar rápido tipo "wink" (só um olho)
+function wink(c, delay=0) {
+  setTimeout(() => {
+    const eyes = Array.from(c.querySelectorAll('.eyelid'));
+    if (!eyes.length) return;
+    const eye = eyes[Math.random() > 0.5 ? 0 : 1];
+    eye.style.transition = 'height 0.08s ease';
+    eye.style.height = '100%';
+    setTimeout(() => {
+      eye.style.height = '0';
+      setTimeout(() => eye.style.transition = '', 100);
+    }, 110);
+  }, delay);
+}
+
 function wave(idx) {
   const c = chars[idx]; if (!c) return;
   const arm = c.querySelector('.arm.right');
@@ -454,65 +524,288 @@ function waveLeft(idx) {
   arm.classList.remove('waving'); void arm.offsetWidth; arm.classList.add('waving');
   setTimeout(() => arm.classList.remove('waving'), 800);
 }
+
 function surprise(idx) {
   const c = chars[idx]; if (!c) return;
   c.style.animationPlayState = 'paused';
   c.style.transition = 'transform 0.22s cubic-bezier(0.2,1.8,0.5,1)';
   c.style.transform = 'scale(1.14) translateY(-14px)';
+  blink(c, 50);
   setTimeout(() => {
     c.style.transition = 'transform 0.3s ease';
     c.style.transform = 'scale(1) translateY(0)';
     setTimeout(() => c.style.animationPlayState = 'running', 350);
   }, 270);
 }
+
 function whisper(idx) {
   const c = chars[idx]; if (!c) return;
   const dir = idx < 3 ? 1 : -1;
   c.style.animationPlayState = 'paused';
   c.style.transition = 'transform 0.4s ease';
   c.style.transform = `scale(1) translateY(0) rotate(${dir * 10}deg)`;
-  lookAt(c, dir > 0 ? 'right' : 'left');
+  lookDir(c, dir > 0 ? 'right' : 'left');
   setTimeout(() => {
     c.style.transform = 'scale(1) translateY(0) rotate(0deg)';
     setTimeout(() => c.style.animationPlayState = 'running', 420);
   }, 920);
 }
+
+// Encolher com vergonha
+function shy(idx) {
+  const c = chars[idx]; if (!c) return;
+  c.style.animationPlayState = 'paused';
+  c.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1)';
+  c.style.transform = 'scale(0.88) translateY(6px)';
+  slowBlink(c, 100);
+  setTimeout(() => {
+    c.style.transition = 'transform 0.4s ease';
+    c.style.transform = 'scale(1) translateY(0)';
+    setTimeout(() => c.style.animationPlayState = 'running', 430);
+  }, 800);
+}
+
+// Sacudir a cabeça (não)
+function headShake(idx) {
+  const c = chars[idx]; if (!c) return;
+  const head = c.querySelector('.head-inner');
+  if (!head) return;
+  const orig = head.style.transition;
+  head.style.transition = 'transform 0.15s ease';
+  const seq = [8, -8, 6, -5, 3, 0];
+  seq.forEach((deg, i) => {
+    setTimeout(() => {
+      head.style.transform = `rotateY(${deg}deg)`;
+      if (i === seq.length - 1) setTimeout(() => head.style.transition = orig, 200);
+    }, i * 120);
+  });
+}
+
+// Acenar com a cabeça (sim)
+function headNod(idx) {
+  const c = chars[idx]; if (!c) return;
+  const head = c.querySelector('.head-inner');
+  if (!head) return;
+  head.style.transition = 'transform 0.18s ease';
+  const seq = [-12, 6, -8, 4, 0];
+  seq.forEach((deg, i) => {
+    setTimeout(() => {
+      head.style.transform = `rotateX(${deg}deg)`;
+      if (i === seq.length - 1) setTimeout(() => { head.style.transform = 'rotateX(0deg)'; }, 200);
+    }, i * 140);
+  });
+}
+
+/* ══ INTERAÇÕES SOCIAIS COMPOSTAS ══ */
+
+// Dois personagens se olham e piscam
 function glance(i, j) {
   const a = chars[i], b = chars[j]; if (!a || !b) return;
-  const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-  lookAt(a, ra.left < rb.left ? 'right' : 'left');
-  lookAt(b, rb.left < ra.left ? 'right' : 'left');
+  lookAtChar(a, b);
+  lookAtChar(b, a);
+  slowBlink(a, 400);
+  slowBlink(b, 600);
+  setTimeout(movePupils, 2200);
 }
 
+// Um acena, o outro responde acenando de volta
+function waveBack(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b);
+  lookAtChar(b, a);
+  wave(i);
+  setTimeout(() => {
+    waveLeft(j);
+    blink(a, 100);
+  }, 500);
+  setTimeout(movePupils, 2200);
+}
+
+// Um dá "olhão" pro mouse, outro vê e fica curioso (vira pra onde o primeiro olha)
+function curiousFollow(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtMouse(a);
+  blink(a, 150);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    setTimeout(() => {
+      lookAtMouse(b);
+      blink(b, 200);
+    }, 600);
+  }, 300);
+  setTimeout(movePupils, 2500);
+}
+
+// Personagem A aponta (braço) para o mouse, personagem B olha
+function pointAtMouse(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtMouse(a);
+  wave(i);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    setTimeout(() => {
+      lookAtMouse(b);
+      wink(b, 200);
+    }, 500);
+  }, 400);
+  setTimeout(movePupils, 2500);
+}
+
+// Cena de "fofoca": A inclina para B, B abre os olhos surpreso, C olha para os dois
+function gossip(i, j, k) {
+  const a = chars[i], b = chars[j], c = chars[k];
+  if (!a || !b) return;
+  lookAtChar(a, b);
+  whisper(i);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    surprise(j);
+    if (c) { setTimeout(() => lookAtChar(c, b), 300); }
+  }, 600);
+  setTimeout(movePupils, 3000);
+}
+
+// Dois fazem joinha ao mesmo tempo (acenam os dois braços), terceiro olha
+function highFive(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b);
+  lookAtChar(b, a);
+  wave(i); waveLeft(i);
+  setTimeout(() => { wave(j); waveLeft(j); }, 120);
+  blink(a, 300); blink(b, 500);
+  setTimeout(movePupils, 2200);
+}
+
+// Um personagem pisca pro mouse (cumplicidade com o usuário)
+function winkAtMouse(idx) {
+  const c = chars[idx]; if (!c) return;
+  lookAtMouse(c);
+  blink(c, 100);
+  wink(c, 350);
+  setTimeout(movePupils, 1800);
+}
+
+// "Olha lá!" — A aponta para o mouse com o olhar, B e C viram em cascata
+function chainLook(i, j, k) {
+  const a = chars[i], b = chars[j], cc = chars[k];
+  if (!a) return;
+  lookAtMouse(a);
+  if (b) setTimeout(() => { lookAtChar(b, a); setTimeout(() => lookAtMouse(b), 500); }, 400);
+  if (cc) setTimeout(() => { lookAtChar(cc, b || a); setTimeout(() => lookAtMouse(cc), 600); }, 900);
+  setTimeout(movePupils, 2800);
+}
+
+// Rejeição: A acena, B dá headShake (não) e desvia o olhar
+function reject(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b);
+  wave(i);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    headShake(j);
+    setTimeout(() => {
+      lookDir(b, b.getBoundingClientRect().left > a.getBoundingClientRect().left ? 'left' : 'right');
+    }, 700);
+  }, 500);
+  setTimeout(movePupils, 2500);
+}
+
+// Acordo: A faz headNod, B responde com headNod
+function agree(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b);
+  lookAtChar(b, a);
+  headNod(i);
+  setTimeout(() => headNod(j), 350);
+  blink(a, 200); blink(b, 600);
+  setTimeout(movePupils, 2200);
+}
+
+// Susto em cadeia: A se assusta, B vê e se assusta também
+function chainSurprise(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  surprise(i);
+  lookAtChar(b, a);
+  setTimeout(() => surprise(j), 400);
+  setTimeout(movePupils, 2200);
+}
+
+// Personagem fica tímido quando o mouse se aproxima muito
+function checkMouseProximity() {
+  chars.forEach((c, idx) => {
+    const r = c.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const dist = Math.sqrt((mouseX-cx)**2 + (mouseY-cy)**2);
+    if (dist < 90) {
+      shy(idx);
+    }
+  });
+}
+document.addEventListener('mousemove', () => {
+  checkMouseProximity();
+});
+
+/* ══ FILA DE INTERAÇÕES ══ */
 const interactions = [
-  () => wave(0),
-  () => whisper(1),
-  () => surprise(2),
-  () => wave(3),
-  () => glance(0, 1),
-  () => glance(4, 5),
-  () => whisper(4),
-  () => surprise(5),
-  () => glance(1, 2),
-  () => wave(5),
-  () => surprise(0),
-  () => { wave(2); setTimeout(() => wave(3), 380); },
-  () => glance(0, 5),
-  () => whisper(3),
-  () => glance(2, 4),
-  () => waveLeft(0),
-  () => { surprise(1); setTimeout(() => lookAt(chars[0], 'right'), 300); },
-  () => waveLeft(5),
+  () => waveBack(0, 1),
+  () => gossip(1, 2, 3),
+  () => chainLook(0, 2, 4),
+  () => winkAtMouse(3),
+  () => highFive(4, 5),
+  () => agree(0, 5),
+  () => pointAtMouse(2, 3),
+  () => curiousFollow(1, 4),
+  () => chainSurprise(3, 5),
+  () => glance(0, 3),
+  () => reject(2, 5),
+  () => gossip(4, 0, 1),
+  () => winkAtMouse(2),
+  () => waveBack(3, 4),
+  () => chainLook(5, 1, 3),
+  () => highFive(0, 2),
+  () => agree(1, 3),
+  () => curiousFollow(5, 2),
+  () => { surprise(0); setTimeout(() => { lookAtChar(chars[1], chars[0]); wink(chars[1], 200); }, 400); setTimeout(movePupils, 2200); },
+  () => { wave(4); setTimeout(() => waveBack(3, 4), 300); },
+  () => gossip(0, 5, 2),
+  () => chainSurprise(1, 0),
+  () => { slowBlink(chars[2], 0); slowBlink(chars[4], 200); setTimeout(movePupils, 1500); },
+  () => { winkAtMouse(5); setTimeout(() => lookAtChar(chars[4], chars[5]), 300); setTimeout(movePupils, 1800); },
+  () => reject(1, 2),
+  () => chainLook(3, 0, 5),
+  () => agree(2, 4),
 ];
 
-let idx = 0;
+// Embaralha as interações para variedade
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+let queue = shuffle([...interactions]);
+let qIdx = 0;
+
 function next() {
+  const delay = 1800 + Math.random() * 2400;
   setTimeout(() => {
-    interactions[idx % interactions.length]();
-    idx++; next();
-  }, 2000 + Math.random() * 2200);
+    if (qIdx >= queue.length) { queue = shuffle([...interactions]); qIdx = 0; }
+    queue[qIdx]();
+    qIdx++;
+    next();
+  }, delay);
 }
 setTimeout(next, 300 + chars.length * 160 + 700);
+
+// Piscar natural aleatório para todos os personagens
+function naturalBlink() {
+  const c = chars[Math.floor(Math.random() * chars.length)];
+  blink(c);
+  setTimeout(naturalBlink, 1200 + Math.random() * 2800);
+}
+setTimeout(naturalBlink, 2000);
 </script>
 </body>
 </html>

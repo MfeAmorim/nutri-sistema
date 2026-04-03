@@ -289,6 +289,40 @@
     .tomato .blush  { background:#ff8080; top:57%; }
     .tomato .body   { width:24px; height:7px; background:linear-gradient(to bottom,#a01010,#800a0a); border-radius:4px; }
 
+    @keyframes bubblePop {
+      0%   { opacity:0; transform: scale(0.4) translateX(-50%); }
+      18%  { opacity:1; transform: scale(1.1) translateX(-50%); }
+      25%  { transform: scale(1) translateX(-50%); }
+      80%  { opacity:1; transform: scale(1) translateX(-50%); }
+      100% { opacity:0; transform: scale(0.8) translateX(-50%); }
+    }
+    @keyframes dotBlink {
+      0%,100% { opacity:1; } 33% { opacity:0.2; } 66% { opacity:0.6; }
+    }
+    .whisper-bubble {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.93);
+      border: 1.5px solid rgba(116,198,157,0.65);
+      border-radius: 10px 10px 10px 2px;
+      padding: 4px 7px;
+      display: flex; gap: 3px; align-items: center;
+      pointer-events: none;
+      animation: bubblePop 2.4s ease forwards;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+      z-index: 99;
+    }
+    .whisper-bubble .dot {
+      width: 4px; height: 4px;
+      background: #2d6a4f;
+      border-radius: 50%;
+      animation: dotBlink 0.7s ease infinite;
+    }
+    .whisper-bubble .dot:nth-child(2) { animation-delay: 0.18s; }
+    .whisper-bubble .dot:nth-child(3) { animation-delay: 0.36s; }
+
     /* ══ CARD ══ */
     .logo { text-align:center; margin-bottom:20px; }
     .logo a { font-family:"Playfair Display",serif; font-size:34px; color:#fff; text-decoration:none; font-weight:900; }
@@ -434,6 +468,45 @@
     /* braços para cima (cheer) */
     .char.cheer .arm.left  { transform: rotate(-60deg) !important; }
     .char.cheer .arm.right { transform: rotate(60deg) !important; }
+
+    /* ══ COBRINDO OS OLHOS (campo senha) ══ */
+    /* braço esquerdo sobe cruzando o rosto */
+    .char.cover-eyes .arm.left {
+      opacity: 1 !important;
+      transform: rotate(-125deg) translateX(2px) !important;
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.34,1.4,0.64,1) !important;
+    }
+    /* braço direito sobe cruzando o rosto pelo outro lado */
+    .char.cover-eyes .arm.right {
+      opacity: 1 !important;
+      transform: rotate(125deg) translateX(-2px) !important;
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.34,1.4,0.64,1) !important;
+    }
+    /* head-inner fica de frente (não gira de costas) */
+    .char.cover-eyes .head-inner { transform: rotateY(0deg) !important; }
+    /* olhos fecham por cima dos braços */
+    .char.cover-eyes .eyelid { height: 100% !important; }
+    /* boca aparece */
+    .char.cover-eyes .mouth { opacity: 1 !important; }
+
+    /* ══ ESPIANDO (senha revelada) ══ */
+    /* braço esquerdo sobe (cobre metade) */
+    .char.peek-eyes .arm.left {
+      opacity: 1 !important;
+      transform: rotate(-125deg) translateX(2px) !important;
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.4,0.64,1) !important;
+    }
+    /* braço direito desce um pouco — espia por cima */
+    .char.peek-eyes .arm.right {
+      opacity: 1 !important;
+      transform: rotate(80deg) translateX(-1px) !important;
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34,1.4,0.64,1) !important;
+    }
+    .char.peek-eyes .head-inner { transform: rotateY(0deg) !important; }
+    /* olho direito abre (espia), esquerdo fecha */
+    .char.peek-eyes .eyelid:first-child { height: 100% !important; }
+    .char.peek-eyes .eyelid:last-child  { height: 0   !important; }
+    .char.peek-eyes .mouth { opacity: 1 !important; }
 
     /* cores dos braços por personagem */
     .pineapple .arm-seg, .pineapple .hand-line { background: #c8920a; }
@@ -1000,93 +1073,353 @@ const HINTS = {
   senha: ['Prometemos não olhar! 🙈','Segredo seguro aqui! 🔐','Pode digitar, a gente não vê! 😜','Estamos de costas! 🤫']
 };
 
-/* ── Olhares de curiosidade entre personagens ── */
-/* Faz um personagem olhar para o vizinho por 1.5s */
-function charGlanceAt(fromChar, direction) {
-  if (!introFinished || mode !== 'front') return;
-  const pupils = Array.from(fromChar.querySelectorAll('[data-eye]'));
-  pupils.forEach(p => {
-    const ox = direction === 'right' ? 2 : -2;
-    p.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + 0.5px))`;
+/* ══════════════════════════════════════
+   SISTEMA DE INTERAÇÕES SOCIAIS
+══════════════════════════════════════ */
+
+/* Olhar para coordenada absoluta */
+function lookAtPoint(c, tx, ty) {
+  if (!c) return;
+  Array.from(c.querySelectorAll('[data-eye]')).forEach(p => {
+    const s = p.parentElement;
+    const r = s.getBoundingClientRect();
+    const dx = tx - (r.left + r.width/2);
+    const dy = ty - (r.top  + r.height/2);
+    const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+    const mx = 2.2;
+    p.style.transform = `translate(calc(-50% + ${(dx/d)*Math.min(d*.18,mx)}px), calc(-50% + ${(dy/d)*Math.min(d*.18,mx)}px))`;
   });
-  setTimeout(() => {
-    if (mode === 'front') movePupils();
-  }, 1600);
 }
 
-/* Cochicho: um personagem se inclina para o vizinho */
-function charWhisper(idx) {
-  if (!introFinished || mode !== 'front') return;
-  const c = chars[idx];
+/* Olhar para outro personagem usando posição real */
+function lookAtChar(c, target) {
+  if (!c || !target) return;
+  const r = target.getBoundingClientRect();
+  lookAtPoint(c, r.left + r.width/2, r.top + r.height/2);
+}
+
+/* Olhar para o mouse */
+function lookAtMouse(c) { lookAtPoint(c, mouseX, mouseY); }
+
+/* Piscar normal */
+function blink(c, delay=0) {
   if (!c) return;
-  const dir = idx < chars.length - 1 ? 1 : -1;
-  const originalTransform = 'translateY(0) scale(1)';
-  c.style.transition = 'transform 0.4s ease';
-  c.style.transform = `translateY(0) scale(1) rotate(${dir * 8}deg)`;
-  setTimeout(() => { c.style.transform = originalTransform; }, 900);
-  charGlanceAt(c, dir > 0 ? 'right' : 'left');
-}
-
-/* Surpresa: personagem dá um soluço pra cima */
-function charSurprise(idx) {
-  if (!introFinished || mode !== 'front') return;
-  const c = chars[idx];
-  if (!c) return;
-  c.style.transition = 'transform 0.25s cubic-bezier(0.2,1.8,0.5,1)';
-  c.style.transform = 'translateY(-10px) scale(1.08)';
   setTimeout(() => {
-    c.style.transition = 'transform 0.3s ease';
-    c.style.transform = 'translateY(0) scale(1)';
-  }, 280);
+    Array.from(c.querySelectorAll('.eyelid')).forEach(e => e.style.height = '100%');
+    setTimeout(() => Array.from(c.querySelectorAll('.eyelid')).forEach(e => e.style.height = '0'), 120);
+  }, delay);
 }
 
-/* Acena: braço direito balança */
+/* Piscar lento (cumplicidade) */
+function slowBlink(c, delay=0) {
+  if (!c) return;
+  setTimeout(() => {
+    Array.from(c.querySelectorAll('.eyelid')).forEach(e => {
+      e.style.transition = 'height 0.22s ease'; e.style.height = '100%';
+    });
+    setTimeout(() => {
+      Array.from(c.querySelectorAll('.eyelid')).forEach(e => {
+        e.style.transition = 'height 0.28s ease'; e.style.height = '0';
+        setTimeout(() => e.style.transition = '', 300);
+      });
+    }, 380);
+  }, delay);
+}
+
+/* Piscadinha (wink) — só um olho */
+function wink(c, delay=0) {
+  if (!c) return;
+  setTimeout(() => {
+    const eyes = Array.from(c.querySelectorAll('.eyelid'));
+    if (!eyes.length) return;
+    const eye = eyes[Math.random() > 0.5 ? 0 : 1];
+    eye.style.transition = 'height 0.08s ease';
+    eye.style.height = '100%';
+    setTimeout(() => { eye.style.height = '0'; setTimeout(() => eye.style.transition = '', 100); }, 110);
+  }, delay);
+}
+
+/* Acenar (braço direito) */
 function charWave(idx) {
   if (!introFinished || mode !== 'front') return;
-  const c = chars[idx];
-  if (!c) return;
+  const c = chars[idx]; if (!c) return;
   const arm = c.querySelector('.arm.right');
   if (!arm) return;
-  arm.classList.remove('waving');
-  void arm.offsetWidth;
-  arm.classList.add('waving');
+  arm.classList.remove('waving'); void arm.offsetWidth; arm.classList.add('waving');
   setTimeout(() => arm.classList.remove('waving'), 750);
 }
 
-/* Cutuca vizinho: inclina para o lado e acena */
+/* Acenar (braço esquerdo) */
+function charWaveLeft(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx]; if (!c) return;
+  const arm = c.querySelector('.arm.left');
+  if (!arm) return;
+  arm.classList.remove('waving'); void arm.offsetWidth; arm.classList.add('waving');
+  setTimeout(() => arm.classList.remove('waving'), 750);
+}
+
+/* Surpresa */
+function charSurprise(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx]; if (!c) return;
+  c.style.transition = 'transform 0.25s cubic-bezier(0.2,1.8,0.5,1)';
+  c.style.transform = 'translateY(-10px) scale(1.08)';
+  blink(c, 50);
+  setTimeout(() => { c.style.transition = 'transform 0.3s ease'; c.style.transform = 'translateY(0) scale(1)'; }, 280);
+}
+
+/* Cochicho: inclina em direção ao vizinho */
+function charWhisper(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx]; if (!c) return;
+  const dir = idx < chars.length - 1 ? 1 : -1;
+  c.style.transition = 'transform 0.4s ease';
+  c.style.transform = `translateY(0) scale(1) rotate(${dir * 8}deg)`;
+  const neighbor = chars[dir > 0 ? idx + 1 : idx - 1];
+  lookAtChar(c, neighbor);
+  setTimeout(() => {
+    c.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+    setTimeout(() => { if (mode === 'front') movePupils(); }, 400);
+  }, 900);
+}
+
+/* Tímido: encolhe um pouco */
+function charShy(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx]; if (!c) return;
+  c.style.transition = 'transform 0.35s ease';
+  c.style.transform = 'translateY(4px) scale(0.9)';
+  slowBlink(c, 100);
+  setTimeout(() => { c.style.transition = 'transform 0.4s ease'; c.style.transform = 'translateY(0) scale(1)'; }, 800);
+}
+
+/* Acenar de volta: A acena, B responde */
+function charWaveBack(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b); charWave(i);
+  setTimeout(() => { lookAtChar(b, a); charWaveLeft(j); blink(a, 100); }, 480);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2200);
+}
+
+/* Fofoca: A cochicha com B, B reage surpreso, C espia */
+function charGossip(i, j, k) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j], c = chars[k];
+  if (!a || !b) return;
+  lookAtChar(a, b); charWhisper(i);
+  setTimeout(() => {
+    lookAtChar(b, a); charSurprise(j);
+    if (c) setTimeout(() => lookAtChar(c, b), 300);
+  }, 550);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2800);
+}
+
+/* Olhar em cascata: A olha pro mouse, B nota o A, B olha pro mouse */
+function charChainLook(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtMouse(a); blink(a, 150);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    setTimeout(() => { lookAtMouse(b); blink(b, 150); }, 550);
+  }, 350);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2600);
+}
+
+/* Pisc pro mouse (cumplicidade com o usuário) */
+function charWinkAtMouse(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx]; if (!c) return;
+  lookAtMouse(c); blink(c, 100); wink(c, 320);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 1800);
+}
+
+/* Acordo: os dois acenam cabeça (simulado com bounce suave) */
+function charAgree(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b); lookAtChar(b, a);
+  [a, b].forEach((c, idx) => {
+    setTimeout(() => {
+      c.style.transition = 'transform 0.18s ease';
+      c.style.transform = 'translateY(-5px) scale(1)';
+      setTimeout(() => { c.style.transform = 'translateY(2px) scale(1)';
+        setTimeout(() => { c.style.transform = 'translateY(0) scale(1)'; }, 180);
+      }, 190);
+    }, idx * 280);
+  });
+  blink(a, 200); blink(b, 500);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2000);
+}
+
+/* Rejeição: A acena, B vira e ignora */
+function charReject(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  lookAtChar(a, b); charWave(i);
+  setTimeout(() => {
+    lookAtChar(b, a);
+    setTimeout(() => {
+      // B vira levemente pro outro lado
+      const bDir = b.getBoundingClientRect().left > a.getBoundingClientRect().left ? 1 : -1;
+      b.style.transition = 'transform 0.3s ease';
+      b.style.transform = `translateY(0) scale(1) rotate(${bDir * 6}deg)`;
+      Array.from(b.querySelectorAll('[data-eye]')).forEach(p => {
+        p.style.transform = `translate(calc(-50% + ${bDir * 2}px), calc(-50% + 0.5px))`;
+      });
+      setTimeout(() => { b.style.transform = 'translateY(0) scale(1) rotate(0deg)'; }, 800);
+    }, 500);
+  }, 450);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2500);
+}
+
+/* Susto em cadeia: A se assusta, B vê e também */
+function charChainSurprise(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  charSurprise(i);
+  setTimeout(() => { lookAtChar(b, a); setTimeout(() => charSurprise(j), 300); }, 350);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2200);
+}
+
+/* Cutuca vizinho */
 function charPoke(fromIdx, toIdx) {
   if (!introFinished || mode !== 'front') return;
   charWhisper(fromIdx);
-  setTimeout(() => charGlanceAt(chars[toIdx], fromIdx < toIdx ? 'left' : 'right'), 300);
+  const b = chars[toIdx]; if (!b) return;
+  setTimeout(() => { lookAtChar(b, chars[fromIdx]); blink(b, 150); }, 300);
+  setTimeout(() => { if (mode === 'front') movePupils(); }, 2200);
 }
 
-/* Sequência de interações aleatórias */
+/* Piscar natural aleatório */
+function naturalBlink() {
+  if (mode === 'front' && introFinished) {
+    const all = [...chars, ...floaters];
+    blink(all[Math.floor(Math.random() * all.length)]);
+  }
+  setTimeout(naturalBlink, 1200 + Math.random() * 2500);
+}
+
+/* Cochicho no ouvido: A vira de perfil (so um olho a mostra), inclina para B e cochicha */
+function charEarWhisper(i, j) {
+  if (!introFinished || mode !== 'front') return;
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+  const aIsLeft = ra.left < rb.left;
+  const leanDeg  = aIsLeft ? 20 : -20;
+  // perfil: gira ~68deg no eixo Y, deixando so um olho visivel
+  const profileY = aIsLeft ? 68 : -68;
+
+  // Corpo de A inclina em direcao a B
+  a.style.transition = 'transform 0.48s cubic-bezier(0.34,1.2,0.64,1)';
+  a.style.transform = `translateY(-5px) scale(1) rotate(${leanDeg}deg)`;
+
+  // Cabeca de A vira de perfil — so um olho fica visivel
+  const headInnerA = a.querySelector('.head-inner');
+  if (headInnerA) {
+    headInnerA.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
+    headInnerA.style.transform  = `rotateY(${profileY}deg)`;
+  }
+
+  // B levemente inclinado enquanto ouve
+  b.style.transition = 'transform 0.4s ease';
+  b.style.transform = `translateY(-2px) scale(1) rotate(${aIsLeft ? -5 : 5}deg)`;
+  lookAtChar(b, a);
+
+  // Balao ... aparece sobre A relativo ao stage-wrap
+  const stageEl = document.querySelector('.stage-wrap') || document.querySelector('.pot-scene');
+  const bubble = document.createElement('div');
+  bubble.className = 'whisper-bubble';
+  bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  const stageR = stageEl.getBoundingClientRect();
+  const charR  = a.getBoundingClientRect();
+  bubble.style.position = 'absolute';
+  bubble.style.left   = (charR.left - stageR.left + charR.width/2) + 'px';
+  bubble.style.bottom = (stageR.bottom - charR.top + 6) + 'px';
+  stageEl.appendChild(bubble);
+
+  // B reage surpreso na metade
+  setTimeout(() => {
+    b.style.transition = 'transform 0.22s cubic-bezier(0.2,1.8,0.5,1)';
+    b.style.transform = 'translateY(-8px) scale(1.07)';
+    slowBlink(b, 60);
+    setTimeout(() => {
+      b.style.transition = 'transform 0.3s ease';
+      b.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+    }, 260);
+  }, 1200);
+
+  // A volta — cabeca retorna ao centro e corpo se endireita
+  setTimeout(() => {
+    if (headInnerA) {
+      headInnerA.style.transition = 'transform 0.4s cubic-bezier(0.4,0,0.2,1)';
+      headInnerA.style.transform  = 'rotateY(0deg)';
+    }
+    a.style.transition = 'transform 0.42s cubic-bezier(0.34,1.2,0.64,1)';
+    a.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+  }, 1800);
+
+  // Limpa
+  setTimeout(() => {
+    if (bubble.parentNode) bubble.parentNode.removeChild(bubble);
+    if (headInnerA) headInnerA.style.transition = '';
+    if (mode === 'front') movePupils();
+  }, 2800);
+}
+
+/* ── Lista de interações ── */
 const interactions = [
-  () => charGlanceAt(chars[0], 'right'),
-  () => charGlanceAt(chars[1], 'left'),
-  () => charWhisper(2),
-  () => charSurprise(3),
-  () => charWave(4),
-  () => charGlanceAt(chars[5], 'left'),
+  () => charWaveBack(0, 1),
+  () => charGossip(1, 2, 3),
+  () => charChainLook(0, 3),
+  () => charWinkAtMouse(2),
+  () => charAgree(3, 4),
   () => charPoke(1, 2),
-  () => charPoke(3, 4),
-  () => charSurprise(0),
-  () => charWave(2),
-  () => { charGlanceAt(chars[2], 'right'); charGlanceAt(chars[3], 'left'); },
-  () => charWhisper(4),
-  () => charWave(0),
-  () => charSurprise(5),
-  () => charPoke(0, 1),
+  () => charChainSurprise(4, 5),
+  () => charReject(0, 2),
+  () => charGossip(3, 5, 1),
+  () => charWaveBack(4, 0),
+  () => charChainLook(5, 2),
+  () => charWinkAtMouse(4),
+  () => charShy(3),
+  () => charAgree(0, 5),
+  () => charPoke(2, 3),
+  () => charChainSurprise(1, 4),
+  () => charEarWhisper(0, 1),
+  () => charEarWhisper(2, 3),
+  () => charEarWhisper(4, 5),
+  () => charEarWhisper(3, 2),
+  () => { charWave(0); setTimeout(() => charWaveBack(2, 0), 400); },
+  () => charGossip(0, 4, 2),
+  () => charWinkAtMouse(1),
+  () => { charShy(5); setTimeout(() => lookAtChar(chars[4], chars[5]), 300); setTimeout(() => { if (mode === 'front') movePupils(); }, 1800); },
+  () => charEarWhisper(1, 0),
+  () => charEarWhisper(5, 4),
 ];
 
+/* Embaralha para não repetir na mesma ordem */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 let interactionTimer = null;
+let _queue = shuffle([...interactions]);
+let _qIdx = 0;
+
 function scheduleInteraction() {
   if (interactionTimer) clearTimeout(interactionTimer);
-  const delay = 2500 + Math.random() * 2500;
+  const delay = 2200 + Math.random() * 2500;
   interactionTimer = setTimeout(() => {
     if (introFinished && mode === 'front') {
-      const fn = interactions[Math.floor(Math.random() * interactions.length)];
-      fn();
+      if (_qIdx >= _queue.length) { _queue = shuffle([...interactions]); _qIdx = 0; }
+      _queue[_qIdx]();
+      _qIdx++;
     }
     scheduleInteraction();
   }, delay);
@@ -1123,6 +1456,7 @@ function introSequence() {
     setHint('front');
     startMouse();
     scheduleInteraction();
+    naturalBlink();
   }, fim);
   /* floaters aparecem em cascata após a intro */
   floaters.forEach((f, i) => {
@@ -1153,19 +1487,31 @@ function movePupils() {
 function resetPupils() { pupils.forEach(p => p.style.transform='translate(-50%,-50%)'); }
 
 /* ── reações aos campos ── */
+function setCoverEyes() {
+  chars.forEach(c => { c.classList.remove('front','back','peek-eyes'); c.classList.add('cover-eyes'); });
+  floaters.forEach(f => { f.classList.remove('front','back','peek-eyes'); f.classList.add('cover-eyes'); });
+  resetPupils();
+}
+function setPeekEyes() {
+  chars.forEach(c => { c.classList.remove('front','back','cover-eyes'); c.classList.add('peek-eyes'); });
+  floaters.forEach(f => { f.classList.remove('front','back','cover-eyes'); f.classList.add('peek-eyes'); });
+  resetPupils();
+}
+function setFront() {
+  chars.forEach(c => { c.classList.remove('back','cover-eyes','peek-eyes'); c.classList.add('front'); });
+  floaters.forEach(f => { f.classList.remove('back','cover-eyes','peek-eyes'); f.classList.add('front'); });
+  movePupils();
+}
+
 function onFF(type) { /* onfocus */
   mode = type;
   if (interactionTimer) clearTimeout(interactionTimer);
   if (type === 'senha') {
-    /* SENHA → giram de COSTAS (head-inner rotateY 180deg) */
-    chars.forEach(c => { c.classList.remove('front'); c.classList.add('back'); });
-    floaters.forEach(f => { f.classList.remove('front'); f.classList.add('back'); });
-    resetPupils();
+    /* SENHA → cobrem os olhos com as maos, ficam de frente */
+    setCoverEyes();
   } else {
-    /* TEXTO → ficam de FRENTE (head-inner rotateY 0deg), olhos seguem mouse */
-    chars.forEach(c => { c.classList.remove('back'); c.classList.add('front'); });
-    floaters.forEach(f => { f.classList.remove('back'); f.classList.add('front'); });
-    movePupils();
+    /* TEXTO → ficam de FRENTE, olhos seguem mouse */
+    setFront();
   }
   setHint(type);
 }
@@ -1174,8 +1520,7 @@ function onFB() { /* onblur */
     const a = document.activeElement;
     if (!a || a.tagName !== 'INPUT') {
       mode = 'front';
-      chars.forEach(c => { c.classList.remove('back'); c.classList.add('front'); });
-      floaters.forEach(f => { f.classList.remove('back'); f.classList.add('front'); });
+      setFront();
       setHint('front');
       if (introFinished) scheduleInteraction();
     }
@@ -1185,7 +1530,7 @@ function onFB() { /* onblur */
 function cheerAll() {
   chars.forEach((c,i) => {
     setTimeout(() => {
-      c.classList.remove('back'); c.classList.add('front','cheer');
+      c.classList.remove('back','cover-eyes','peek-eyes'); c.classList.add('front','cheer');
       setTimeout(() => c.classList.remove('cheer'), 650);
     }, i*90);
   });
@@ -1202,6 +1547,14 @@ function togglePwd(id, btn) {
     ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
     : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
   btn.style.color = show ? 'var(--verde)' : '';
+  /* reacao dos personagens */
+  if (show) {
+    /* revelando senha → espiando (um olho abre) */
+    setPeekEyes();
+  } else {
+    /* escondendo senha → voltam a cobrir os olhos */
+    setCoverEyes();
+  }
 }
 
 function switchTab(tab) {
@@ -1211,7 +1564,7 @@ function switchTab(tab) {
   document.getElementById('form-'+tab).classList.add('active');
   esconderAlertas();
   mode = 'front';
-  chars.forEach(c=>{ c.classList.remove('back'); c.classList.add('front'); });
+  setFront();
   setHint('front');
 }
 
