@@ -354,6 +354,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
   <div class="tab-btn" onclick="showPanel('quiz')">✏️ Questões (25)</div>
   <div class="tab-btn" onclick="showPanel('provas')">📝 Provas</div>
   <div class="tab-btn" onclick="showPanel('mapa-ativ')">🗺️ MAPA</div>
+  <div class="tab-btn" onclick="showPanel('laboratorio')">🧪 Laboratório Mendel</div>
 </div>
 
 <!-- ══════════ PANEL RESUMO ══════════ -->
@@ -2419,6 +2420,419 @@ function exportarExcel() {
 
 </div><!-- fim panel-mapa-ativ -->
 
+
+<!-- ══════════ PANEL LABORATÓRIO MENDEL ══════════ -->
+<div id="panel-laboratorio" class="panel">
+
+  <div class="hero">
+    <div class="hero-icon">🧪</div>
+    <div>
+      <div class="hero-tag">Laboratório Interativo · Genética Mendeliana</div>
+      <h1>Laboratório de Mendel</h1>
+      <p>Faça cruzamentos, monte o quadro de Punnett e visualize o heredograma passo a passo — com os símbolos corretos da genética clínica.</p>
+    </div>
+  </div>
+
+  <!-- LEGENDA COMPLETA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">📋</div>
+      <div class="card-titulo">
+        <h3>Legenda — Símbolos do Heredograma</h3>
+        <p>Padrão internacional de representação em genética clínica</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="3" fill="none" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Homem</strong><br><span style="font-size:11px;color:#7a8a7c">Não afetado</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Mulher</strong><br><span style="font-size:11px;color:#7a8a7c">Não afetada</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="3" fill="#1a2e1f" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Homem</strong><br><span style="font-size:11px;color:#7a8a7c">Afetado</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="#1a2e1f" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Mulher</strong><br><span style="font-size:11px;color:#7a8a7c">Afetada</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="3" fill="none" stroke="#1a2e1f" stroke-width="2"/><line x1="16" y1="3" x2="16" y2="29" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Homem portador</strong><br><span style="font-size:11px;color:#7a8a7c">Heterozigoto</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="#1a2e1f" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="#1a2e1f"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Mulher portadora</strong><br><span style="font-size:11px;color:#7a8a7c">Heterozigota</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><polygon points="16,3 29,29 3,29" fill="none" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Sexo indefinido</strong><br><span style="font-size:11px;color:#7a8a7c">Triângulo</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="3" fill="none" stroke="#1a2e1f" stroke-width="2" stroke-dasharray="4 2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Genótipo inferido</strong><br><span style="font-size:11px;color:#7a8a7c">Tracejado</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="none" stroke="#1a2e1f" stroke-width="2"/><line x1="5" y1="5" x2="27" y2="27" stroke="#1a2e1f" stroke-width="2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Falecido</strong><br><span style="font-size:11px;color:#7a8a7c">Linha diagonal</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="48" height="32" viewBox="0 0 48 32"><rect x="2" y="4" width="18" height="18" rx="2" fill="none" stroke="#1a2e1f" stroke-width="1.5"/><circle cx="38" cy="13" r="9" fill="none" stroke="#1a2e1f" stroke-width="1.5"/><line x1="20" y1="13" x2="29" y2="13" stroke="#1a2e1f" stroke-width="1.5"/><line x1="11" y1="22" x2="11" y2="28" stroke="#1a2e1f" stroke-width="1.2"/><line x1="38" y1="22" x2="38" y2="28" stroke="#1a2e1f" stroke-width="1.2"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Casal</strong><br><span style="font-size:11px;color:#7a8a7c">Linha horizontal une</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="32" height="32" viewBox="0 0 32 32"><rect x="3" y="3" width="26" height="26" rx="3" fill="none" stroke="#1a2e1f" stroke-width="2"/><text x="16" y="21" text-anchor="middle" font-size="14" fill="#1a2e1f" font-family="sans-serif">?</text></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Genótipo desconhecido</strong><br><span style="font-size:11px;color:#7a8a7c">Interrogação</span></div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0">
+          <svg width="48" height="32" viewBox="0 0 48 32"><rect x="2" y="4" width="12" height="22" rx="2" fill="none" stroke="#1a2e1f" stroke-width="1.5"/><circle cx="36" cy="15" r="11" fill="none" stroke="#1a2e1f" stroke-width="1.5"/><line x1="14" y1="15" x2="25" y2="15" stroke="#1a2e1f" stroke-width="1.5"/></svg>
+          <div><strong style="font-size:13px;color:#1a2e1f">Gêmeos dizigóticos</strong><br><span style="font-size:11px;color:#7a8a7c">Linhas separadas</span></div>
+        </div>
+
+      </div>
+
+      <div class="destaque" style="margin-top:16px">
+        <p>💡 <strong>Cores no heredograma:</strong> <span style="color:#1a5c2e;font-weight:700">Verde = dominante homozigoto (AA)</span> · <span style="color:#7d4e00;font-weight:700">Amarelo = heterozigoto / portador (Aa)</span> · <span style="color:#7c1d22;font-weight:700">Vermelho = recessivo homozigoto (aa)</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LABORATÓRIO INTERATIVO -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">⚗️</div>
+      <div class="card-titulo">
+        <h3>Cruzamento Interativo + Quadro de Punnett</h3>
+        <p>Escolha o traço, defina os genitores e veja os resultados</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body" id="labCrossBody">
+
+      <!-- Traço -->
+      <h4>1 — Escolha o traço a estudar</h4>
+      <div id="labTraitRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
+      <div id="labTraitDesc" style="font-size:13px;color:#7a8a7c;margin-bottom:16px;padding:8px 12px;background:#f8fbf8;border-radius:8px;border-left:3px solid #52b788"></div>
+
+      <!-- Genitores -->
+      <h4>2 — Defina os genótipos dos genitores</h4>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
+        <div>
+          <p style="font-size:12px;font-weight:700;color:#2d6a4f;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" rx="2" fill="none" stroke="#2d6a4f" stroke-width="1.5"/></svg> Pai
+          </p>
+          <div id="labP1" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+        <div>
+          <p style="font-size:12px;font-weight:700;color:#2d6a4f;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#2d6a4f" stroke-width="1.5"/></svg> Mãe
+          </p>
+          <div id="labP2" style="display:flex;flex-direction:column;gap:6px"></div>
+        </div>
+      </div>
+
+      <div id="labCrossLine" style="text-align:center;padding:10px;background:#f8fbf8;border-radius:10px;border:1px solid #e0ebe0;font-size:15px;margin-bottom:16px;color:#7a8a7c">
+        Selecione traço e genótipos acima
+      </div>
+
+      <!-- Punnett -->
+      <h4>3 — Quadro de Punnett</h4>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;font-size:12px">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:2px;background:#d4edda;display:inline-block;border:1px solid #1a5c2e"></span>Dominante</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:2px;background:#fff3cd;display:inline-block;border:1px solid #7d4e00"></span>Portador/Het.</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:2px;background:#f8d7da;display:inline-block;border:1px solid #7c1d22"></span>Recessivo</span>
+      </div>
+      <div id="labPunnett" style="overflow-x:auto;margin-bottom:16px">
+        <p style="font-size:13px;color:#9ca3af">Configure os genitores para gerar o quadro.</p>
+      </div>
+
+      <!-- Resultados -->
+      <h4>4 — Proporções</h4>
+      <div id="labResults"><p style="font-size:13px;color:#9ca3af">Configure os genitores para ver os resultados.</p></div>
+
+    </div>
+  </div>
+
+  <!-- HEREDOGRAMA -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon azul">🌳</div>
+      <div class="card-titulo">
+        <h3>Heredograma — P → F1 → F2</h3>
+        <p>Árvore genealógica gerada automaticamente com base no cruzamento acima</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+      <div id="labHeredWrap" style="overflow-x:auto">
+        <p style="font-size:13px;color:#9ca3af">Configure o cruzamento no card acima primeiro.</p>
+      </div>
+      <div id="labHeredNote"></div>
+    </div>
+  </div>
+
+</div><!-- fim panel-laboratorio -->
+
+<style>
+.lab-trait-btn { border:2px solid #e0ebe0; border-radius:10px; padding:7px 14px; cursor:pointer; font-size:13px; background:#fff; transition:all .15s; color:#374151; font-family:inherit; }
+.lab-trait-btn:hover { border-color:#52b788; }
+.lab-trait-btn.sel { border-color:#2d6a4f; background:#f0fdf4; color:#2d6a4f; font-weight:700; }
+.lab-gopt { border:2px solid #e0ebe0; border-radius:10px; padding:9px 12px; cursor:pointer; font-size:13px; background:#fff; transition:all .15s; color:#374151; font-family:inherit; text-align:left; }
+.lab-gopt:hover { border-color:#52b788; }
+.lab-gopt.sel { border-color:#2d6a4f; background:#f0fdf4; color:#2d6a4f; font-weight:700; }
+.lab-gopt .g-sym { font-size:17px; font-weight:700; letter-spacing:1px; display:block; }
+.lab-gopt .g-lbl { font-size:11px; opacity:.7; display:block; margin-top:2px; }
+table.lab-pun { border-collapse:collapse; margin:0 auto; font-size:15px; }
+table.lab-pun td, table.lab-pun th { width:72px; height:72px; text-align:center; vertical-align:middle; border:1px solid #e0ebe0; }
+table.lab-pun .lab-hdr { background:#1a2e1f; color:#fff; font-size:20px; font-weight:700; }
+table.lab-pun .lab-corner { background:transparent; border:none; }
+.lcd { background:#d4edda; color:#1a5c2e; font-weight:700; }
+.lch { background:#fff3cd; color:#7d4e00; font-weight:700; }
+.lcr { background:#f8d7da; color:#7c1d22; font-weight:700; }
+.lab-res-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+.lab-res-card { border-radius:10px; padding:12px 14px; border:1px solid #e0ebe0; }
+.lab-res-card .big { font-size:22px; font-weight:800; }
+.lab-res-card .sm { font-size:11px; margin-top:2px; opacity:.75; }
+</style>
+
+<script>
+(function(){
+var TRAITS=[
+  {id:'cor',name:'Cor da semente',d:'Amarela',r:'Verde',D:'A',R:'a',desc:'Cor amarela (A) é dominante sobre verde (a). Primeiro traço estudado por Mendel nas ervilhas.'},
+  {id:'form',name:'Forma da semente',d:'Lisa',r:'Rugosa',D:'L',R:'l',desc:'Forma lisa (L) dominante sobre rugosa (l). Gene ligado à síntese do amido.'},
+  {id:'flor',name:'Cor da flor',d:'Roxa',r:'Branca',D:'R',R:'r',desc:'Flor roxa (R) dominante sobre branca (r). Dependente de pigmento antocianina.'},
+  {id:'alt',name:'Altura da planta',d:'Alta',r:'Anã',D:'T',R:'t',desc:'Alta (T) dominante sobre anã (t). Relação com produção de giberelina.'},
+  {id:'pod',name:'Forma da vagem',d:'Cheia',r:'Contraída',D:'V',R:'v',desc:'Vagem cheia (V) dominante sobre contraída (v).'},
+  {id:'dalt',name:'Daltonismo (X-ligado)',d:'Visão normal',r:'Daltônico',D:'X',R:'x',desc:'Recessivo ligado ao cromossomo X. Homens (X_Y) com x são afetados; mulheres precisam xx para ser afetadas. Portadora = XDXr.',linked:true},
+  {id:'hem',name:'Hemofilia (X-ligado)',d:'Normal',r:'Hemofílico',D:'H',R:'h',desc:'Recessivo ligado ao X. Homens xY são hemofílicos. Portadora não manifesta mas transmite.',linked:true},
+  {id:'pku',name:'Fenilcetonúria (PKU)',d:'Normal',r:'PKU',D:'F',R:'f',desc:'Doença recessiva autossômica. Deficiência de fenilalanina hidroxilase. Tratar com dieta restrita em fenilalanina.'},
+  {id:'alb',name:'Albinismo',d:'Pigmentação normal',r:'Albino',D:'A',R:'a',desc:'Autossômico recessivo. Deficiência de melanina. aa = albino; AA ou Aa = pigmentação normal.'},
+];
+
+var st={trait:null,p1:null,p2:null};
+
+function mkGeno(t,code){
+  if(!t)return'??';
+  if(t.linked){var m={DD:'X'+t.D+'X'+t.D,Dd:'X'+t.D+'X'+t.R,dd:'X'+t.R+'X'+t.R,DY:'X'+t.D+'Y',dY:'X'+t.R+'Y'};return m[code]||code;}
+  var m={DD:t.D+t.D,Dd:t.D+t.R,dd:t.R+t.R};return m[code]||code;
+}
+function genoLbl(t,code){
+  if(!t)return'';
+  if(t.linked){var m={DD:'Hom. dom. (fêmea)',Dd:'Heterozigota/portadora',dd:'Afetada (fêmea)',DY:'Normal (macho)',dY:'Afetado (macho)'};return m[code]||code;}
+  var m={DD:'Homozigoto dominante',Dd:'Heterozigoto',dd:'Homozigoto recessivo'};return m[code]||code;
+}
+function gametes(t,code){
+  if(!t)return[];
+  if(t.linked){var m={DD:['X'+t.D,'X'+t.D],Dd:['X'+t.D,'X'+t.R],dd:['X'+t.R,'X'+t.R],DY:['X'+t.D,'Y'],dY:['X'+t.R,'Y']};return m[code]||[];}
+  var m={DD:[t.D,t.D],Dd:[t.D,t.R],dd:[t.R,t.R]};return m[code]||[];
+}
+function combineG(a,b,t){
+  if(t&&t.linked){if(b==='Y')return a+b;var al=[a.replace('X',''),b.replace('X','')].sort(function(x,y){return x===x.toUpperCase()?-1:1;});return'X'+al[0]+'X'+al[1];}
+  return[a,b].sort(function(x,y){return x===x.toUpperCase()?-1:1;}).join('');
+}
+function cellCls(g,t){
+  if(!t)return'';
+  if(t.linked){if(g.includes('Y'))return g.includes(t.D)?'lcd':'lcr';var al=g.replace(/X/g,'').split('');if(al[0]===t.D&&al[1]===t.D)return'lcd';if(al[0]===t.D&&al[1]===t.R)return'lch';return'lcr';}
+  if(g===t.D+t.D)return'lcd';if(g===t.R+t.R)return'lcr';return'lch';
+}
+function isDom(g,t){var c=cellCls(g,t);return c==='lcd'||c==='lch';}
+function nodeStyle(g,t){
+  var c=cellCls(g,t);
+  if(c==='lcd')return{fill:'#1a5c2e',stroke:'#1a5c2e',text:'#fff'};
+  if(c==='lch')return{fill:'#fff3cd',stroke:'#7d4e00',text:'#7d4e00'};
+  return{fill:'#7c1d22',stroke:'#7c1d22',text:'#fff'};
+}
+
+function renderTraits(){
+  var wr=document.getElementById('labTraitRow');
+  if(!wr)return;
+  wr.innerHTML='';
+  TRAITS.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='lab-trait-btn'+(st.trait&&st.trait.id===t.id?' sel':'');
+    b.textContent=t.name+(t.linked?' *':'');
+    b.onclick=function(){st.trait=t;st.p1=null;st.p2=null;renderAll();};
+    wr.appendChild(b);
+  });
+  var desc=document.getElementById('labTraitDesc');
+  if(desc)desc.textContent=st.trait?st.trait.desc:'Selecione um traço acima.';
+}
+
+function renderParents(){
+  ['labP1','labP2'].forEach(function(id,pi){
+    var wr=document.getElementById(id);
+    if(!wr)return;
+    wr.innerHTML='';
+    if(!st.trait){wr.innerHTML='<p style="font-size:12px;color:#9ca3af">Escolha um traço primeiro</p>';return;}
+    var t=st.trait;
+    var codes=pi===0?(t.linked?['DD','Dd','dd']:['DD','Dd','dd']):(t.linked?['DY','dY']:['DD','Dd','dd']);
+    codes.forEach(function(code){
+      var cur=pi===0?st.p1:st.p2;
+      var b=document.createElement('button');
+      b.className='lab-gopt'+(cur===code?' sel':'');
+      b.innerHTML='<span class="g-sym">'+mkGeno(t,code)+'</span><span class="g-lbl">'+genoLbl(t,code)+'</span>';
+      b.onclick=function(){if(pi===0)st.p1=code;else st.p2=code;renderAll();};
+      wr.appendChild(b);
+    });
+  });
+}
+
+function renderCrossLine(){
+  var el=document.getElementById('labCrossLine');
+  if(!el)return;
+  if(!st.trait||!st.p1||!st.p2){el.innerHTML='Selecione traço e genótipos acima';el.style.color='#9ca3af';return;}
+  el.style.color='#1a2e1f';
+  el.innerHTML='<strong style="font-size:18px;letter-spacing:2px">'+mkGeno(st.trait,st.p1)+'</strong> <span style="color:#7a8a7c;margin:0 6px">×</span> <strong style="font-size:18px;letter-spacing:2px">'+mkGeno(st.trait,st.p2)+'</strong>';
+}
+
+function renderPunnett(){
+  var el=document.getElementById('labPunnett');
+  if(!el)return;
+  if(!st.trait||!st.p1||!st.p2){el.innerHTML='<p style="font-size:13px;color:#9ca3af">Configure os genitores para gerar o quadro.</p>';return;}
+  var t=st.trait,g1=gametes(t,st.p1),g2=gametes(t,st.p2);
+  var h='<table class="lab-pun"><tr><td class="lab-corner"></td>';
+  g2.forEach(function(g){h+='<th class="lab-hdr">'+g+'</th>';});
+  h+='</tr>';
+  g1.forEach(function(ga){
+    h+='<tr><th class="lab-hdr">'+ga+'</th>';
+    g2.forEach(function(gb){var c=combineG(ga,gb,t);h+='<td class="'+cellCls(c,t)+'">'+c+'</td>';});
+    h+='</tr>';
+  });
+  h+='</table>';
+  el.innerHTML=h;
+}
+
+function renderResults(){
+  var el=document.getElementById('labResults');
+  if(!el)return;
+  if(!st.trait||!st.p1||!st.p2){el.innerHTML='<p style="font-size:13px;color:#9ca3af">Configure os genitores para ver os resultados.</p>';return;}
+  var t=st.trait,g1=gametes(t,st.p1),g2=gametes(t,st.p2);
+  var combos=[];
+  g1.forEach(function(a){g2.forEach(function(b){combos.push(combineG(a,b,t));});});
+  var cnt={};combos.forEach(function(g){cnt[g]=(cnt[g]||0)+1;});
+  var total=combos.length;
+  var domN=combos.filter(function(g){return isDom(g,t);}).length;
+  var recN=total-domN;
+  var h='<p style="font-size:13px;font-weight:700;color:#7a8a7c;margin-bottom:6px">Proporção genotípica</p><div class="lab-res-grid">';
+  Object.keys(cnt).sort().forEach(function(g){
+    var c=cnt[g],cls=cellCls(g,t);
+    var bg=cls==='lcd'?'#d4edda':cls==='lch'?'#fff3cd':'#f8d7da';
+    var col=cls==='lcd'?'#1a5c2e':cls==='lch'?'#7d4e00':'#7c1d22';
+    h+='<div class="lab-res-card" style="background:'+bg+';border-color:'+col+'40"><div class="big" style="color:'+col+'">'+g+'</div><div class="sm" style="color:'+col+'">'+c+'/'+total+' = '+Math.round(c/total*100)+'%</div></div>';
+  });
+  h+='</div>';
+  h+='<p style="font-size:13px;font-weight:700;color:#7a8a7c;margin:12px 0 6px">Proporção fenotípica</p><div class="lab-res-grid">';
+  h+='<div class="lab-res-card" style="background:#d4edda;border-color:#1a5c2e40"><div class="big" style="color:#1a5c2e">'+domN+'/'+total+'</div><div class="sm" style="color:#1a5c2e">'+t.d+' — '+Math.round(domN/total*100)+'%</div></div>';
+  h+='<div class="lab-res-card" style="background:#f8d7da;border-color:#7c1d2240"><div class="big" style="color:#7c1d22">'+recN+'/'+total+'</div><div class="sm" style="color:#7c1d22">'+t.r+' — '+Math.round(recN/total*100)+'%</div></div>';
+  h+='</div>';
+  if(domN>0&&recN>0){var ratio=Math.round((domN/recN)*10)/10;h+='<div class="destaque" style="margin-top:12px"><p>📐 <strong>Razão fenotípica: '+ratio+':1</strong> ('+t.d+' : '+t.r+')</p></div>';}
+  else if(recN===0){h+='<div class="destaque" style="margin-top:12px"><p>📐 100% dos descendentes expressam o fenótipo <strong>'+t.d+'</strong></p></div>';}
+  else{h+='<div class="alerta" style="margin-top:12px"><p>📐 100% dos descendentes expressam o fenótipo recessivo <strong>'+t.r+'</strong></p></div>';}
+  el.innerHTML=h;
+}
+
+function drawSq(x,y,r,geno,t){
+  var s=nodeStyle(geno,t);
+  return'<rect x="'+(x-r)+'" y="'+(y-r)+'" width="'+(r*2)+'" height="'+(r*2)+'" rx="4" fill="'+s.fill+'" stroke="'+s.stroke+'" stroke-width="1.5"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="11" fill="'+s.text+'" font-family="\'DM Sans\',sans-serif" font-weight="700">'+geno+'</text>';
+}
+function drawCi(x,y,r,geno,t){
+  var s=nodeStyle(geno,t),isHet=cellCls(geno,t)==='lch';
+  var out='<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+(isHet?'none':s.fill)+'" stroke="'+s.stroke+'" stroke-width="1.5"/>';
+  if(isHet)out+='<circle cx="'+x+'" cy="'+y+'" r="'+(r*0.45)+'" fill="'+s.stroke+'"/>';
+  out+='<text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="11" fill="'+(isHet?s.stroke:s.text)+'" font-family="\'DM Sans\',sans-serif" font-weight="700">'+geno+'</text>';
+  return out;
+}
+
+function genoCodeFromSymbol(sym,t){
+  var codes=t.linked?['DD','Dd','dd','DY','dY']:['DD','Dd','dd'];
+  for(var i=0;i<codes.length;i++){if(mkGeno(t,codes[i])===sym)return codes[i];}
+  return null;
+}
+
+function renderHered(){
+  var wr=document.getElementById('labHeredWrap'),nt=document.getElementById('labHeredNote');
+  if(!wr)return;
+  if(!st.trait||!st.p1||!st.p2){wr.innerHTML='<p style="font-size:13px;color:#9ca3af">Configure o cruzamento no card acima primeiro.</p>';return;}
+  var t=st.trait,g1=gametes(t,st.p1),g2=gametes(t,st.p2);
+  var F1full=[];g1.forEach(function(a){g2.forEach(function(b){F1full.push(combineG(a,b,t));});});
+  var F1u=[];F1full.forEach(function(g){if(F1u.indexOf(g)<0)F1u.push(g);});
+  var R=22,PY=60,F1Y=190,F2Y=320,W=680;
+  var p1g=mkGeno(t,st.p1),p2g=mkGeno(t,st.p2);
+  var p1x=W/2-90,p2x=W/2+90;
+  var svg='<svg width="100%" viewBox="0 0 '+W+' 400" style="display:block;overflow:visible">';
+  // P labels
+  svg+='<text x="24" y="'+(PY+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#7a8a7c" font-family="\'DM Sans\',sans-serif">P</text>';
+  svg+=drawSq(p1x,PY,R,p1g,t);
+  svg+=drawCi(p2x,PY,R,p2g,t);
+  svg+='<line x1="'+(p1x+R)+'" y1="'+PY+'" x2="'+(p2x-R)+'" y2="'+PY+'" stroke="#bbb" stroke-width="1.2"/>';
+  var midX=(p1x+p2x)/2;
+  svg+='<line x1="'+midX+'" y1="'+PY+'" x2="'+midX+'" y2="'+(F1Y-R-10)+'" stroke="#bbb" stroke-width="1.2"/>';
+  // F1 labels
+  svg+='<text x="24" y="'+(F1Y+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#7a8a7c" font-family="\'DM Sans\',sans-serif">F1</text>';
+  var f1sp=Math.min(130,Math.floor((W-80)/Math.max(F1u.length,1)));
+  var f1start=(W-(F1u.length-1)*f1sp)/2;
+  if(F1u.length>1)svg+='<line x1="'+f1start+'" y1="'+(F1Y-R-10)+'" x2="'+(f1start+(F1u.length-1)*f1sp)+'" y2="'+(F1Y-R-10)+'" stroke="#bbb" stroke-width="1"/>';
+  F1u.forEach(function(g,i){
+    var fx=f1start+i*f1sp;
+    svg+='<line x1="'+fx+'" y1="'+(F1Y-R-10)+'" x2="'+fx+'" y2="'+(F1Y-R)+'" stroke="#bbb" stroke-width="1"/>';
+    if(i%2===0)svg+=drawSq(fx,F1Y,R,g,t);else svg+=drawCi(fx,F1Y,R,g,t);
+    svg+='<text x="'+fx+'" y="'+(F1Y+R+15)+'" text-anchor="middle" font-size="10" fill="#9ca3af" font-family="\'DM Sans\',sans-serif">F1.'+(i+1)+'</text>';
+  });
+  // F2 — cross two F1 individuals
+  svg+='<text x="24" y="'+(F2Y+5)+'" text-anchor="middle" font-size="13" font-weight="700" fill="#7a8a7c" font-family="\'DM Sans\',sans-serif">F2</text>';
+  var f1mIdx=0,f1fIdx=Math.min(1,F1u.length-1);
+  var f1mg=F1u[f1mIdx],f1fg=F1u[f1fIdx];
+  var f1mc=genoCodeFromSymbol(f1mg,t)||'Dd',f1fc=genoCodeFromSymbol(f1fg,t)||'Dd';
+  var f2g1=gametes(t,f1mc),f2g2=gametes(t,f1fc);
+  var F2full=[];f2g1.forEach(function(a){f2g2.forEach(function(b){F2full.push(combineG(a,b,t));});});
+  var F2u=[];F2full.forEach(function(g){if(F2u.indexOf(g)<0)F2u.push(g);});
+  var f1mx=f1start+f1mIdx*f1sp,f1fx=f1start+f1fIdx*f1sp,f1midX=(f1mx+f1fx)/2;
+  svg+='<line x1="'+(f1mx+R)+'" y1="'+F1Y+'" x2="'+(f1fx-R)+'" y2="'+F1Y+'" stroke="#bbb" stroke-width="1" stroke-dasharray="4 2"/>';
+  svg+='<line x1="'+f1midX+'" y1="'+F1Y+'" x2="'+f1midX+'" y2="'+(F2Y-R-10)+'" stroke="#bbb" stroke-width="1" stroke-dasharray="4 2"/>';
+  var f2sp=Math.min(110,Math.floor((W-80)/Math.max(F2u.length,1)));
+  var f2start=(W-(F2u.length-1)*f2sp)/2;
+  if(F2u.length>1)svg+='<line x1="'+f2start+'" y1="'+(F2Y-R-10)+'" x2="'+(f2start+(F2u.length-1)*f2sp)+'" y2="'+(F2Y-R-10)+'" stroke="#bbb" stroke-width="1" opacity=".5"/>';
+  F2u.forEach(function(g,i){
+    var fx=f2start+i*f2sp;
+    svg+='<line x1="'+fx+'" y1="'+(F2Y-R-10)+'" x2="'+fx+'" y2="'+(F2Y-R)+'" stroke="#bbb" stroke-width="1" opacity=".5"/>';
+    if(i%2===0)svg+=drawSq(fx,F2Y,R,g,t);else svg+=drawCi(fx,F2Y,R,g,t);
+  });
+  svg+='</svg>';
+  wr.innerHTML=svg;
+  if(nt)nt.innerHTML='<div class="destaque" style="margin-top:10px"><p>🌳 <strong>P</strong> = geração parental · <strong>F1</strong> = 1ª geração filial (descendentes diretos) · <strong>F2</strong> = 2ª geração filial (cruzamento entre F1, indicado pela linha tracejada)</p></div>';
+}
+
+function renderAll(){
+  renderTraits();
+  renderParents();
+  renderCrossLine();
+  renderPunnett();
+  renderResults();
+  renderHered();
+}
+
+// Init after DOM
+setTimeout(function(){renderAll();},100);
+
+})();
+</script>
 
 <script>
 function selecionarOpcao(li) {

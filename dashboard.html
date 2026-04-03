@@ -523,17 +523,53 @@
     <div class="nav-item" onclick="showTab('metas')"><span class="nav-icon">📐</span> Calcular Metas</div>
     </div>
 
-    <div class="nav-section">Atendimento</div>
+    <div class="nav-section-toggle" id="atendimento-toggle">
+      <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Atendimento</span>
+      <span id="atendimento-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
+    </div>
+    <script>
+    document.getElementById('atendimento-toggle').addEventListener('click', function() {
+      var m = document.getElementById('atendimento-menu');
+      var a = document.getElementById('atendimento-arrow');
+      if (m.style.display === 'none' || m.style.display === '') {
+        m.style.display = 'block';
+        a.style.transform = 'rotate(0deg)';
+      } else {
+        m.style.display = 'none';
+        a.style.transform = 'rotate(-90deg)';
+      }
+    });
+    </script>
+    <div id="atendimento-menu" style="display:none">
     <div class="nav-item" onclick="showTab('chatbot')"><span class="nav-icon">🤖</span> Assistente IA</div>
     <div class="nav-item" onclick="window.open('https://wa.me/5562998540552','_blank')"><span class="nav-icon">💬</span> WhatsApp</div>
     <div class="nav-item" id="nav-admin" style="display:none" onclick="showTab('admin')"><span class="nav-icon">🛡️</span> Administrador</div>
     <div class="nav-item" onclick="showTab('suporte')"><span class="nav-icon">🆘</span> SOS — Apoio</div>
+    </div>
 
-    <div class="nav-section">Estudos</div>
+    <div class="nav-section-toggle" id="estudos-toggle">
+      <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Estudos</span>
+      <span id="estudos-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
+    </div>
+    <script>
+    document.getElementById('estudos-toggle').addEventListener('click', function() {
+      var m = document.getElementById('estudos-menu');
+      var a = document.getElementById('estudos-arrow');
+      if (m.style.display === 'none' || m.style.display === '') {
+        m.style.display = 'block';
+        a.style.transform = 'rotate(0deg)';
+      } else {
+        m.style.display = 'none';
+        a.style.transform = 'rotate(-90deg)';
+      }
+    });
+    </script>
+    <div id="estudos-menu" style="display:none">
     <div class="nav-item" onclick="showTab('conhecimento')"><span class="nav-icon">📚</span> Conhecimento na Prática</div>
     <div class="nav-item" onclick="window.open('central-estudos.html','_blank')"><span class="nav-icon">🧠</span> Central de Estudos</div>
     <div class="nav-item" onclick="showTab('projetos-extensao')"><span class="nav-icon">🎓</span> Projetos de Extensão</div>
     <div class="nav-item" onclick="showTab('sobre')"><span class="nav-icon">🌿</span> Sobre Mim</div>
+    </div>
 
   </div>
   <div class="sidebar-footer">
