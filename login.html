@@ -21,7 +21,6 @@
       display: flex; align-items: center; justify-content: center;
       padding: 24px;
     }
-    /* ── PARTÍCULAS BG ── */
     body::before {
       content: "";
       position: fixed; inset: 0;
@@ -29,194 +28,873 @@
                   radial-gradient(ellipse at 80% 20%, rgba(116,198,157,0.06) 0%, transparent 50%);
       pointer-events: none;
     }
-
     .wrap { width:100%; max-width:460px; animation: fadeUp 0.5s ease forwards; }
 
-    /* LOGO */
-    .logo { text-align:center; margin-bottom:28px; }
+    /* ══ PALCO ══ */
+    .stage-wrap {
+      background: rgba(0,0,0,0.28);
+      border-radius: 20px 20px 0 0;
+      padding: 14px 16px 0;
+      display: flex; flex-direction: column; align-items: center;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(116,198,157,0.15);
+      border-bottom: none;
+      position: relative;
+      min-height: 150px;
+    }
+    .stage-hint {
+      font-size: 10px; letter-spacing: 0.5px;
+      color: rgba(116,198,157,0.55);
+      text-align: center;
+      padding: 5px 0 9px;
+      min-height: 22px;
+      transition: opacity 0.35s;
+    }
+
+    /* ══ CENA DO POTE ══ */
+    .pot-scene {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 115px;
+    }
+    /* o pote fica atrás (z-index baixo) */
+    .pot-svg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* personagens na frente */
+    .characters {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 7px;
+      align-items: flex-end;
+      padding-bottom: 4px;
+    }
+
+    /* ══ PERSONAGEM BASE ══ */
+    .char {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      /* estado inicial: invisível embaixo */
+      transform: translateY(80px) scale(0.65);
+      opacity: 0;
+      transition: none;
+    }
+    /* FASE 1 — comprimido dentro do pote */
+    .char.in-pot {
+      transform: translateY(54px) scale(0.72);
+      opacity: 1;
+      transition: transform 0.35s ease, opacity 0.3s ease;
+    }
+    /* FASE 2 — pulo para cima */
+    .char.jumping {
+      transform: translateY(-28px) scale(1.06);
+      opacity: 1;
+      transition: transform 0.36s cubic-bezier(0.2, 1.6, 0.5, 1), opacity 0.15s;
+    }
+    /* pousa de frente (padrão após intro) */
+    .char.front {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+    /* girou de costas (campo senha) */
+    .char.back {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      transition: transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+    }
+    /* comemoração */
+    .char.cheer { animation: cheerBounce 0.6s ease; }
+
+    /* ══ CABEÇA — flip 3D real ══ */
+    .head {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      perspective: 400px;
+      transform-style: preserve-3d;
+    }
+    .head-inner {
+      width: 100%; height: 100%;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: inherit;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      /* PADRÃO: de frente (0deg) */
+      transform: rotateY(0deg);
+    }
+
+    /* FRENTE: face visível, olhos abertos */
+    .char.front   .head-inner { transform: rotateY(0deg); }
+    .char.cheer   .head-inner { transform: rotateY(0deg); }
+
+    /* COSTAS: girado 180deg — não vê a senha */
+    .char.back    .head-inner { transform: rotateY(180deg); }
+    .char.in-pot  .head-inner { transform: rotateY(180deg); }
+    .char.jumping .head-inner { transform: rotateY(180deg); }
+
+    /* Face da frente — visível em 0deg */
+    .face-front {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    /* Face de costas — visível em 180deg (aparece quando girado) */
+    .face-back {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: rotateY(180deg);
+    }
+
+    /* olhos */
+    .eyes {
+      position: absolute;
+      display: flex; gap: 6px;
+      top: 36%;
+    }
+    .eye-socket {
+      width: 9px; height: 9px;
+      background: #fff;
+      border-radius: 50%;
+      position: relative; overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .pupil {
+      width: 5px; height: 5px;
+      background: #1a1a1a; border-radius: 50%;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      transition: transform 0.07s linear;
+    }
+    .pupil::after {
+      content:''; width:2px; height:2px;
+      background:rgba(255,255,255,0.85); border-radius:50%;
+      position:absolute; top:1px; left:1px;
+    }
+    /* pálpebra — fecha quando de costas/pote */
+    .eyelid {
+      position:absolute; top:0; left:0; right:0;
+      height: 0;
+      transition: height 0.3s ease;
+      border-radius: 50% 50% 0 0;
+    }
+    .char.in-pot  .eyelid { height:100%; }
+    .char.back    .eyelid { height:100%; }
+    .char.jumping .eyelid { height:100%; }
+    .char.front   .eyelid { height:0; }
+    .char.cheer   .eyelid { height:0; }
+
+    /* boca */
+    .mouth {
+      position:absolute; bottom:14%;
+      left:50%; transform:translateX(-50%);
+      width:10px; height:5px;
+      border-bottom:2px solid rgba(0,0,0,0.3);
+      border-left:1.5px solid rgba(0,0,0,0.2);
+      border-right:1.5px solid rgba(0,0,0,0.2);
+      border-radius:0 0 6px 6px;
+      opacity:0; transition:opacity 0.3s 0.2s;
+    }
+    .char.front .mouth { opacity:1; }
+    .char.cheer .mouth { opacity:1; }
+
+    /* blush */
+    .blush { position:absolute; width:8px; height:5px; border-radius:50%; opacity:0.35; top:55%; }
+    .blush.l { left:8%; }
+    .blush.r { right:8%; }
+
+    /* corpo */
+    .body { flex-shrink:0; border-radius:4px 4px 10px 10px; margin-top:-2px; }
+
+    /* ══ ABACAXI ══ */
+    .pineapple .head { width:44px; height:44px; background:radial-gradient(circle at 38% 32%,#f5d84a,#d4a017); box-shadow:inset -3px -3px 5px rgba(150,90,0,.25),0 2px 5px rgba(0,0,0,.2); }
+    .pineapple .head::after { content:''; position:absolute; inset:5px; background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(180,120,0,.15) 4px,rgba(180,120,0,.15) 5px),repeating-linear-gradient(-45deg,transparent,transparent 4px,rgba(180,120,0,.1) 4px,rgba(180,120,0,.1) 5px); border-radius:50%; pointer-events:none; }
+    .pineapple .eyelid { background:#d4a017; }
+    .pineapple .blush  { background:#d4a017; }
+    .pineapple .crown  { position:absolute; top:-20px; left:50%; transform:translateX(-50%); display:flex; gap:3px; align-items:flex-end; }
+    .pineapple .crown span { background:linear-gradient(to bottom,#2d7a2d,#1a5a1a); border-radius:2px 2px 0 0; flex-shrink:0; }
+    .pineapple .crown span:nth-child(1){ width:5px; height:13px; transform:rotate(-18deg); }
+    .pineapple .crown span:nth-child(2){ width:6px; height:19px; }
+    .pineapple .crown span:nth-child(3){ width:5px; height:15px; transform:rotate(10deg); }
+    .pineapple .crown span:nth-child(4){ width:4px; height:10px; transform:rotate(22deg); }
+    .pineapple .body { width:26px; height:16px; background:linear-gradient(to bottom,#3a8a3a,#2a6a2a); }
+
+    /* ══ MORANGO ══ */
+    .strawberry .head { width:42px; height:46px; background:radial-gradient(circle at 38% 32%,#ff5555,#c41a1a); border-radius:48% 48% 55% 55%; box-shadow:inset -3px -3px 5px rgba(120,0,0,.3),0 2px 5px rgba(0,0,0,.2); }
+    .strawberry .head::after { content:''; position:absolute; background:rgba(255,255,255,.25); width:7px; height:7px; border-radius:50%; top:16%; left:28%; filter:blur(1px); pointer-events:none; }
+    .strawberry .eyelid { background:#c41a1a; border-radius:50% 50% 0 0; }
+    .strawberry .blush  { background:#ff8080; top:57%; }
+    .strawberry .leaf   { position:absolute; top:-13px; left:50%; transform:translateX(-50%); display:flex; gap:1px; align-items:flex-end; }
+    .strawberry .leaf span { width:8px; height:10px; background:linear-gradient(to top,#1a7a1a,#2d9a2d); border-radius:50% 50% 10% 10%; }
+    .strawberry .leaf span:nth-child(1){ transform:rotate(-22deg); height:8px; }
+    .strawberry .leaf span:nth-child(3){ transform:rotate(22deg); height:8px; }
+    .strawberry .body { width:20px; height:10px; background:linear-gradient(to bottom,#9a1a1a,#7a1010); }
+
+    /* ══ BRÓCOLIS ══ */
+    .broccoli .head { width:48px; height:42px; background:radial-gradient(circle at 40% 35%,#56c956,#2d8a2d); border-radius:55% 55% 40% 40%; box-shadow:inset -3px -3px 5px rgba(0,80,0,.3),0 2px 5px rgba(0,0,0,.2); }
+    .broccoli .bumps { position:absolute; top:-13px; left:50%; transform:translateX(-50%); display:flex; gap:1px; align-items:flex-end; }
+    .broccoli .bumps span { width:14px; height:14px; background:radial-gradient(circle at 38% 35%,#56c956,#1a7a1a); border-radius:50%; box-shadow:inset -2px -2px 4px rgba(0,60,0,.3); }
+    .broccoli .bumps span:nth-child(2){ width:16px; height:16px; margin-top:-4px; }
+    .broccoli .eyelid { background:#2d8a2d; border-radius:50% 50% 0 0; }
+    .broccoli .eyes   { gap:7px; }
+    .broccoli .body   { width:13px; height:20px; background:linear-gradient(to bottom,#4a7a1a,#2a5010); border-radius:3px; }
+
+    /* ══ CENOURA ══ */
+    .carrot .head { width:38px; height:44px; background:radial-gradient(circle at 38% 32%,#ff9a30,#e06010); border-radius:50% 50% 48% 48%; box-shadow:inset -3px -3px 5px rgba(150,60,0,.3),0 2px 5px rgba(0,0,0,.2); }
+    .carrot .stripes { position:absolute; width:70%; left:15%; }
+    .carrot .stripes span { display:block; height:1.5px; background:rgba(140,50,0,.2); border-radius:2px; margin-bottom:5px; }
+    .carrot .top   { position:absolute; top:-15px; left:50%; transform:translateX(-50%); display:flex; gap:2px; align-items:flex-end; }
+    .carrot .top span { background:linear-gradient(to top,#1a7a1a,#2d9a2d); border-radius:2px; }
+    .carrot .top span:nth-child(1){ width:4px; height:12px; transform:rotate(-18deg); }
+    .carrot .top span:nth-child(2){ width:5px; height:17px; }
+    .carrot .top span:nth-child(3){ width:4px; height:11px; transform:rotate(18deg); }
+    .carrot .eyelid { background:#e06010; border-radius:50% 50% 0 0; }
+    .carrot .blush  { background:#ff6010; top:57%; }
+    .carrot .body   { width:15px; height:18px; background:linear-gradient(to bottom,#cc5010,#aa3a08); border-radius:3px 3px 10px 10px; }
+
+    /* ══ LARANJA ══ */
+    .orange .head { width:44px; height:44px; background:radial-gradient(circle at 38% 32%,#ffaa20,#e07800); box-shadow:inset -3px -3px 5px rgba(160,80,0,.3),0 2px 5px rgba(0,0,0,.2); }
+    .orange .head::after { content:''; position:absolute; inset:8px; border:1.5px solid rgba(255,160,0,.35); border-radius:50%; pointer-events:none; }
+    .orange .stem    { position:absolute; top:-9px; left:50%; transform:translateX(-50%); width:4px; height:9px; background:linear-gradient(to bottom,#2a5a10,#3a7a1a); border-radius:2px; }
+    .orange .leaf-sm { position:absolute; top:-7px; left:calc(50% + 3px); width:11px; height:7px; background:linear-gradient(to bottom right,#2a7a1a,#1a5a10); border-radius:50%; transform:rotate(-30deg); }
+    .orange .eyelid  { background:#e07800; }
+    .orange .blush   { background:#ffaa20; top:57%; }
+    .orange .body    { width:26px; height:7px; background:linear-gradient(to bottom,#c06800,#a05000); border-radius:4px; }
+
+    /* ══ TOMATE ══ */
+    .tomato .head { width:44px; height:42px; background:radial-gradient(circle at 38% 32%,#ff4040,#c01010); box-shadow:inset -3px -3px 5px rgba(120,0,0,.3),0 2px 5px rgba(0,0,0,.2); }
+    .tomato .head::after { content:''; position:absolute; background:rgba(255,255,255,.22); width:9px; height:9px; border-radius:50%; top:14%; left:26%; filter:blur(1px); pointer-events:none; }
+    .tomato .calyx { position:absolute; top:-11px; left:50%; transform:translateX(-50%); display:flex; }
+    .tomato .calyx span { width:9px; height:9px; background:linear-gradient(135deg,#1a7a1a,#2d9a2d); border-radius:50% 0 50% 0; transform:rotate(45deg); }
+    .tomato .calyx span:nth-child(2){ margin-top:-2px; transform:rotate(20deg); }
+    .tomato .calyx span:nth-child(3){ transform:rotate(90deg); }
+    .tomato .eyelid { background:#c01010; }
+    .tomato .blush  { background:#ff8080; top:57%; }
+    .tomato .body   { width:24px; height:7px; background:linear-gradient(to bottom,#a01010,#800a0a); border-radius:4px; }
+
+    /* ══ CARD ══ */
+    .logo { text-align:center; margin-bottom:20px; }
     .logo a { font-family:"Playfair Display",serif; font-size:34px; color:#fff; text-decoration:none; font-weight:900; }
     .logo a span { color:var(--vc); }
     .logo p { color:rgba(255,255,255,0.4); font-size:13px; margin-top:4px; letter-spacing:1px; }
 
-    /* CARD */
-    .card {
-      background:#fff; border-radius:20px; padding:36px;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.35);
-    }
+    .card { background:#fff; border-radius:0 0 20px 20px; padding:28px 36px 32px; box-shadow:0 32px 80px rgba(0,0,0,0.35); }
 
-    /* TABS */
-    .tabs { display:flex; background:#f0f5f0; border-radius:12px; padding:4px; margin-bottom:28px; }
-    .tab {
-      flex:1; padding:10px; text-align:center; font-size:14px; font-weight:600;
-      color:var(--cinza); cursor:pointer; border-radius:10px; transition:all 0.25s;
-      user-select:none;
-    }
+    .tabs { display:flex; background:#f0f5f0; border-radius:12px; padding:4px; margin-bottom:24px; }
+    .tab { flex:1; padding:10px; text-align:center; font-size:14px; font-weight:600; color:var(--cinza); cursor:pointer; border-radius:10px; transition:all 0.25s; user-select:none; }
     .tab.active { background:#fff; color:var(--escuro); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
-
-    /* FORMULÁRIOS */
     .form { display:none; }
     .form.active { display:block; }
     .form-title { font-family:"Playfair Display",serif; font-size:22px; font-weight:700; color:var(--escuro); margin-bottom:4px; }
-    .form-sub { font-size:13px; color:var(--cinza); margin-bottom:24px; }
+    .form-sub { font-size:13px; color:var(--cinza); margin-bottom:20px; }
 
-    /* AVATAR */
-    .avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:24px; }
-    .avatar-circle {
-      width:88px; height:88px; border-radius:50%;
-      background:var(--vp); border:3px solid var(--borda);
-      display:flex; align-items:center; justify-content:center;
-      font-size:34px; cursor:pointer; overflow:hidden;
-      transition:border-color 0.2s, transform 0.2s; position:relative;
-    }
+    .avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:20px; }
+    .avatar-circle { width:80px; height:80px; border-radius:50%; background:var(--vp); border:3px solid var(--borda); display:flex; align-items:center; justify-content:center; font-size:30px; cursor:pointer; overflow:hidden; transition:border-color .2s,transform .2s; position:relative; }
     .avatar-circle:hover { border-color:var(--vc); transform:scale(1.03); }
     .avatar-circle img { width:100%; height:100%; object-fit:cover; display:none; }
-    .avatar-overlay {
-      position:absolute; inset:0; background:rgba(0,0,0,0.4);
-      display:flex; align-items:center; justify-content:center;
-      opacity:0; transition:opacity 0.2s; border-radius:50%; color:#fff; font-size:20px;
-    }
+    .avatar-overlay { position:absolute; inset:0; background:rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; border-radius:50%; color:#fff; font-size:20px; }
     .avatar-circle:hover .avatar-overlay { opacity:1; }
     .avatar-hint { font-size:11px; color:var(--cinza); }
 
-    /* CAMPOS */
-    .field { margin-bottom:16px; }
-    .field label { display:block; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--verde); margin-bottom:6px; }
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--verde); margin-bottom:5px; }
     .input-wrap { position:relative; }
-    .input-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:16px; pointer-events:none; }
-    .field input {
-      width:100%; padding:13px 13px 13px 40px;
-      border:1.5px solid var(--borda); border-radius:8px;
-      font-family:"DM Sans",sans-serif; font-size:14px; color:var(--escuro);
-      background:#fff; transition:border-color 0.2s; outline:none;
-    }
-    .field input:focus { border-color:var(--verde); box-shadow:0 0 0 3px rgba(45,106,79,0.08); }
+    .input-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:15px; pointer-events:none; }
+    .field input { width:100%; padding:12px 12px 12px 38px; border:1.5px solid var(--borda); border-radius:8px; font-family:"DM Sans",sans-serif; font-size:14px; color:var(--escuro); background:#fff; transition:border-color .2s; outline:none; }
+    .field input:focus { border-color:var(--verde); box-shadow:0 0 0 3px rgba(45,106,79,.08); }
     .field input.no-icon { padding-left:13px; }
     .row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-
-    /* OLHO SENHA */
-    .btn-olho {
-      position:absolute; right:12px; top:50%; transform:translateY(-50%);
-      background:none; border:none; cursor:pointer; padding:4px;
-      color:var(--cinza); font-size:18px; line-height:1;
-      transition:color 0.2s; display:flex; align-items:center;
-    }
+    .btn-olho { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:4px; color:var(--cinza); line-height:1; transition:color .2s; display:flex; align-items:center; }
     .btn-olho:hover { color:var(--verde); }
     .field input.com-olho { padding-right:44px; }
-
-    /* FORGOT */
-    .forgot { text-align:right; margin-top:-8px; margin-bottom:16px; }
+    .forgot { text-align:right; margin-top:-6px; margin-bottom:14px; }
     .forgot a { font-size:12px; color:var(--verde); text-decoration:none; font-weight:600; }
-    .forgot a:hover { color:var(--vm); }
 
-    /* BOTÕES */
-    .btn {
-      width:100%; padding:14px; border:none; border-radius:8px;
-      font-family:"DM Sans",sans-serif; font-size:15px; font-weight:600;
-      cursor:pointer; transition:all 0.25s; display:flex; align-items:center; justify-content:center; gap:8px;
-    }
-    .btn-verde { background:var(--verde); color:#fff; }
-    .btn-verde:hover { background:var(--escuro); transform:translateY(-1px); box-shadow:0 6px 20px rgba(45,106,79,0.3); }
-    .btn-neon { background:var(--vc); color:var(--escuro); }
-    .btn-neon:hover { background:#52b788; transform:translateY(-1px); box-shadow:0 6px 20px rgba(116,198,157,0.4); }
-    .btn-outline { background:transparent; color:var(--cinza); border:1.5px solid var(--borda); margin-top:10px; }
-    .btn-outline:hover { border-color:var(--verde); color:var(--verde); background:#f9fcf9; }
+    .btn { width:100%; padding:13px; border:none; border-radius:8px; font-family:"DM Sans",sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .25s; display:flex; align-items:center; justify-content:center; gap:8px; }
+    .btn-verde  { background:var(--verde); color:#fff; }
+    .btn-verde:hover  { background:var(--escuro); transform:translateY(-1px); box-shadow:0 6px 20px rgba(45,106,79,.3); }
+    .btn-neon   { background:var(--vc); color:var(--escuro); }
+    .btn-neon:hover   { background:#52b788; transform:translateY(-1px); }
+    .btn-outline{ background:transparent; color:var(--cinza); border:1.5px solid var(--borda); margin-top:8px; }
+    .btn-outline:hover{ border-color:var(--verde); color:var(--verde); background:#f9fcf9; }
+    .btn-publico{ background:linear-gradient(135deg,#f0fdf4,#dcfce7); color:#166534; border:1.5px solid #86efac; margin-top:8px; font-weight:600; }
+    .btn-publico:hover{ background:linear-gradient(135deg,#dcfce7,#bbf7d0); border-color:#4ade80; transform:translateY(-1px); }
 
-    /* DIVIDER */
-    .divider { display:flex; align-items:center; gap:12px; margin:16px 0; color:var(--cinza); font-size:12px; }
-    .divider::before, .divider::after { content:""; flex:1; height:1px; background:var(--borda); }
-
-    /* ALERTAS */
-    .alert { display:none; padding:12px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; align-items:center; gap:8px; }
+    .divider { display:flex; align-items:center; gap:12px; margin:12px 0; color:var(--cinza); font-size:12px; }
+    .divider::before,.divider::after { content:""; flex:1; height:1px; background:var(--borda); }
+    .alert { display:none; padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:14px; align-items:center; gap:8px; }
     .alert.show { display:flex; }
     .alert-erro { background:#fef2f2; color:var(--erro); border:1px solid #fecaca; }
-    .alert-ok { background:#f0fdf4; color:var(--sucesso); border:1px solid #bbf7d0; }
-
-    /* LOADING OVERLAY */
-    .loading {
-      position:fixed; inset:0; background:rgba(26,46,31,0.85);
-      backdrop-filter:blur(4px); display:none;
-      align-items:center; justify-content:center; flex-direction:column; gap:16px; z-index:999;
-    }
+    .alert-ok   { background:#f0fdf4; color:var(--sucesso); border:1px solid #bbf7d0; }
+    .loading { position:fixed; inset:0; background:rgba(26,46,31,.85); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; flex-direction:column; gap:16px; z-index:999; }
     .loading.show { display:flex; }
-    .spinner {
-      width:42px; height:42px; border-radius:50%;
-      border:3px solid rgba(255,255,255,0.2); border-top-color:var(--vc);
-      animation:spin 0.8s linear infinite;
-    }
+    .spinner { width:42px; height:42px; border-radius:50%; border:3px solid rgba(255,255,255,.2); border-top-color:var(--vc); animation:spin .8s linear infinite; }
     .loading p { color:#fff; font-size:14px; font-weight:500; }
-
-    /* RODAPÉ */
-    .footer { text-align:center; margin-top:18px; font-size:12px; color:rgba(255,255,255,0.35); }
+    .footer { text-align:center; margin-top:16px; font-size:12px; color:rgba(255,255,255,.35); }
     .footer a { color:var(--vc); text-decoration:none; }
-    .footer a:hover { text-decoration:underline; }
-
-    /* TERMO CHECK */
-    .termo-check { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--cinza); margin-bottom:16px; cursor:pointer; }
+    .termo-check { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--cinza); margin-bottom:14px; cursor:pointer; }
     .termo-check input { accent-color:var(--verde); margin-top:2px; flex-shrink:0; width:15px; height:15px; }
     .termo-check a { color:var(--verde); }
 
-    .btn-publico { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #166534; border: 1.5px solid #86efac; margin-top:10px; font-weight:600; }
-    .btn-publico:hover { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-color: #4ade80; transform:translateY(-1px); box-shadow:0 6px 20px rgba(74,222,128,0.25); }
-    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes spin   { to{transform:rotate(360deg)} }
+    /* ══ KEYFRAMES ══ */
+    @keyframes fadeUp      { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes spin        { to{transform:rotate(360deg)} }
+    @keyframes cheerBounce { 0%{transform:translateY(0) scale(1)} 30%{transform:translateY(-16px) scale(1.09)} 55%{transform:translateY(-3px) scale(.97)} 75%{transform:translateY(-8px) scale(1.04)} 100%{transform:translateY(0) scale(1)} }
+    @keyframes potShake    { 0%,100%{transform:translateX(-50%) rotate(0)} 20%{transform:translateX(-50%) rotate(-4deg)} 45%{transform:translateX(-50%) rotate(5deg)} 65%{transform:translateX(-50%) rotate(-3deg)} 85%{transform:translateX(-50%) rotate(2deg)} }
+    .pot-svg.shaking { animation: potShake .55s ease; }
 
-    @media(max-width:480px){
-      .card{padding:24px 20px;}
-      .row2{grid-template-columns:1fr;}
+    @media(max-width:480px){ .card{padding:20px 18px 24px;} .row2{grid-template-columns:1fr;} }
+
+    /* ══ BRACINHOS ══ */
+    .arms-wrap {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
     }
+    .arm {
+      position: absolute;
+      top: 52%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      opacity: 0;
+      transform-origin: top center;
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .arm.left  { right: 100%; margin-right: 1px; align-items: flex-end; transform: rotate(20deg); }
+    .arm.right { left:  100%; margin-left:  1px; align-items: flex-start; transform: rotate(-20deg); }
+    /* braço visível */
+    .char.front  .arm,
+    .char.cheer  .arm { opacity: 1; }
+    .char.back   .arm { opacity: 0; }
+    .char.in-pot .arm { opacity: 0; }
+    .char.jumping .arm { opacity: 0; }
+
+    /* cada linha do braço */
+    .arm-seg {
+      height: 3px;
+      border-radius: 2px;
+    }
+    .arm-seg:nth-child(1) { width: 10px; }
+    .arm-seg:nth-child(2) { width: 8px; }
+    .arm-seg:nth-child(3) { width: 6px; }
+
+    /* mãozinha: 3 linhas curtas no final */
+    .hand {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
+      margin-top: 1px;
+    }
+    .hand-line {
+      height: 2px;
+      border-radius: 1px;
+    }
+    .arm.left  .hand { align-items: flex-end; }
+    .arm.right .hand { align-items: flex-start; }
+    .hand-line:nth-child(1) { width: 7px; }
+    .hand-line:nth-child(2) { width: 5px; }
+    .hand-line:nth-child(3) { width: 3px; }
+
+    /* animação de acenar */
+    @keyframes waveArm {
+      0%   { transform: rotate(-10deg); }
+      30%  { transform: rotate(-30deg); }
+      60%  { transform: rotate(-5deg); }
+      80%  { transform: rotate(-25deg); }
+      100% { transform: rotate(-10deg); }
+    }
+    @keyframes waveArmR {
+      0%   { transform: rotate(10deg); }
+      30%  { transform: rotate(30deg); }
+      60%  { transform: rotate(5deg); }
+      80%  { transform: rotate(25deg); }
+      100% { transform: rotate(10deg); }
+    }
+    .arm.left.waving  { animation: waveArm  0.7s ease; }
+    .arm.right.waving { animation: waveArmR 0.7s ease; }
+
+    /* braços para cima (cheer) */
+    .char.cheer .arm.left  { transform: rotate(-60deg) !important; }
+    .char.cheer .arm.right { transform: rotate(60deg) !important; }
+
+    /* cores dos braços por personagem */
+    .pineapple .arm-seg, .pineapple .hand-line { background: #c8920a; }
+    .strawberry .arm-seg, .strawberry .hand-line { background: #a01414; }
+    .broccoli .arm-seg, .broccoli .hand-line { background: #3a6a10; }
+    .carrot .arm-seg, .carrot .hand-line { background: #c05008; }
+    .orange .arm-seg, .orange .hand-line { background: #c06000; }
+    .tomato .arm-seg, .tomato .hand-line { background: #a00c0c; }
+
+    /* floaters também */
+    .floater .arm {
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .floater.front .arm { opacity: 1; }
+    .floater.back  .arm { opacity: 0; }
+
+    /* ══ PERNINHAS ══ */
+    .legs {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      margin-top: -1px;
+    }
+    .leg {
+      width: 6px;
+      height: 14px;
+      border-radius: 3px 3px 4px 4px;
+      position: relative;
+    }
+    /* sapatinho no pé */
+    .leg::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      width: 9px;
+      height: 5px;
+      border-radius: 50% 50% 4px 4px;
+    }
+    .leg:first-child::after { left: -2px; }
+    .leg:last-child::after  { right: -2px; }
+
+    /* cores das perninhas por fruta */
+    .pineapple .leg  { background: linear-gradient(to bottom,#c8920a,#a07008); }
+    .pineapple .leg::after { background: #7a5205; }
+    .strawberry .leg { background: linear-gradient(to bottom,#a01414,#7a0e0e); }
+    .strawberry .leg::after { background: #600a0a; }
+    .broccoli .leg   { background: linear-gradient(to bottom,#3a6a10,#2a5008); }
+    .broccoli .leg::after { background: #1a3808; }
+    .carrot .leg     { background: linear-gradient(to bottom,#c05008,#903806); }
+    .carrot .leg::after { background: #702808; }
+    .orange .leg     { background: linear-gradient(to bottom,#c06000,#9a4a00); }
+    .orange .leg::after { background: #783800; }
+    .tomato .leg     { background: linear-gradient(to bottom,#a00c0c,#78080808); }
+    .tomato .leg::after { background: #5a0606; }
+
+    /* ══ PERSONAGENS FLUTUANTES (fora do pote) ══ */
+    .floater {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      /* começa invisível, aparece depois da intro */
+      opacity: 0;
+      transform: scale(0.5) translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.4,0.64,1);
+      pointer-events: none;
+    }
+    .floater.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    /* animação de flutuar suave */
+    .floater.visible { animation: floatBob 3s ease-in-out infinite; }
+    .floater.visible:nth-child(2) { animation-delay: 0.4s; }
+    .floater.visible:nth-child(3) { animation-delay: 0.8s; }
+    .floater.visible:nth-child(4) { animation-delay: 1.2s; }
+
+    @keyframes floatBob {
+      0%,100% { transform: scale(1) translateY(0px); }
+      50%      { transform: scale(1) translateY(-5px); }
+    }
+
+    /* posições fixas dos 4 flutuantes */
+    /* 1 - atrás do "Bem-vindo" (topo esquerdo do card) */
+    #fl0 { top: -18px; left: 12px; }
+    /* 2 - perto do botão Entrar (meio direito) */
+    #fl1 { top: 178px; right: -14px; }
+    /* 3 - ao lado do botão Criar conta */
+    #fl2 { bottom: 108px; left: -14px; }
+    /* 4 - canto inferior direito */
+    #fl3 { bottom: 30px; right: -14px; }
+
+    /* o card precisa de position relative */
+    .card { position: relative; overflow: visible !important; }
+
+    /* flip dos flutuantes na senha */
+    .floater .head-inner {
+      transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+      transform: rotateY(0deg);
+      transform-style: preserve-3d;
+    }
+    .floater.back .head-inner  { transform: rotateY(180deg); }
+    .floater.front .head-inner { transform: rotateY(0deg); }
+    .floater .eyelid { height: 0; transition: height 0.3s ease; }
+    .floater.back .eyelid  { height: 100%; }
+    .floater .mouth { opacity: 1; }
+    .floater.back .mouth { opacity: 0; }
   </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading" id="loading">
   <div class="spinner"></div>
   <p id="loading-txt">Aguarde...</p>
 </div>
 
 <div class="wrap">
-  <!-- LOGO -->
   <div class="logo">
     <a href="index.html">🌿 Nutri <span>Amorim</span></a>
     <p>Plataforma de Nutrição Personalizada</p>
   </div>
 
-  <!-- CARD -->
+  <!-- ══ PALCO ══ -->
+  <div class="stage-wrap">
+    <div class="pot-scene">
+
+      <!-- PERSONAGENS — ficam NA FRENTE do pote (z-index 2) -->
+      <div class="characters" id="characters">
+
+        <!-- ABACAXI -->
+        <div class="char pineapple" id="ch0">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:26px">
+            <div class="crown"><span></span><span></span><span></span><span></span></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="blush l"></div><div class="blush r"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+        <!-- MORANGO -->
+        <div class="char strawberry" id="ch1">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+            <div class="leaf"><span></span><span></span><span></span></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="blush l"></div><div class="blush r"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+        <!-- BRÓCOLIS -->
+        <div class="char broccoli" id="ch2">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:20px">
+            <div class="bumps"><span></span><span></span><span></span></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+        <!-- CENOURA -->
+        <div class="char carrot" id="ch3">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:24px">
+            <div class="top"><span></span><span></span><span></span></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="stripes"><span></span><span></span><span></span></div>
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="blush l"></div><div class="blush r"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+        <!-- LARANJA -->
+        <div class="char orange" id="ch4">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+            <div class="stem"></div>
+            <div class="leaf-sm"></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="blush l"></div><div class="blush r"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+        <!-- TOMATE -->
+        <div class="char tomato" id="ch5">
+          <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+            <div class="calyx"><span></span><span></span><span></span></div>
+            <div class="head">
+              <div class="head-inner">
+                <div class="face-front">
+                  <div class="eyes">
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                    <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+                  </div>
+                  <div class="blush l"></div><div class="blush r"></div>
+                  <div class="mouth"></div>
+                </div>
+                <div class="face-back"></div>
+              </div>
+            </div>
+            <div class="arms-wrap">
+              <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+              <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+            </div>
+            <div class="body"></div>
+            <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+          </div>
+        </div>
+
+      </div><!-- /characters -->
+
+      <!-- POTE (atrás) -->
+      <svg class="pot-svg" id="potSvg" width="310" height="80" viewBox="0 0 310 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="30" y="0" width="250" height="16" rx="8" fill="#5c3d1e"/>
+        <rect x="34" y="2" width="242" height="10" rx="5" fill="#7a5230"/>
+        <path d="M40 16 L20 80 L290 80 L270 16 Z" fill="#6b4423"/>
+        <path d="M55 18 L38 72 L60 72 L72 18 Z" fill="rgba(255,255,255,0.055)"/>
+        <rect x="22" y="42" width="266" height="10" fill="#5a3518" opacity="0.55"/>
+        <rect x="24" y="44" width="262" height="6"  fill="#7a5230" opacity="0.35"/>
+        <path d="M30 20 Q10 30 14 50 Q16 60 30 58" stroke="#5c3d1e" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M280 20 Q300 30 296 50 Q294 60 280 58" stroke="#5c3d1e" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M30 20 Q12 30 16 48" stroke="#7a5230" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.65"/>
+        <path d="M280 20 Q298 30 294 48" stroke="#7a5230" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.65"/>
+      </svg>
+
+    </div><!-- /pot-scene -->
+    <div class="stage-hint" id="stage-hint"> </div>
+  </div><!-- /stage-wrap -->
+
+  <!-- ══ CARD / FORMULÁRIOS ══ -->
   <div class="card">
-    <!-- TABS -->
-    <div class="tabs">
-      <div class="tab active" id="tab-login" onclick="switchTab('login')">Entrar</div>
-      <div class="tab" id="tab-cadastro" onclick="switchTab('cadastro')">Criar Conta</div>
+
+    <!-- ══ FLUTUANTES ══ -->
+    <!-- fl0: atrás do "Bem-vindo" -->
+    <div class="floater front pineapple" id="fl0">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div class="crown"><span></span><span></span><span></span><span></span></div>
+        <div class="head" style="width:32px;height:32px;background:radial-gradient(circle at 38% 32%,#f5d84a,#d4a017);border-radius:50%;box-shadow:inset -2px -2px 4px rgba(150,90,0,.25);">
+          <div class="head-inner" style="transform-style:preserve-3d;">
+            <div class="face-front" style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;">
+              <div class="eyes" style="position:absolute;display:flex;gap:5px;top:34%;">
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#d4a017;transition:height .3s ease;"></div>
+                </div>
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#d4a017;transition:height .3s ease;"></div>
+                </div>
+              </div>
+              <div class="mouth" style="position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.3);border-left:1.5px solid rgba(0,0,0,.2);border-right:1.5px solid rgba(0,0,0,.2);border-radius:0 0 5px 5px;"></div>
+            </div>
+            <div class="face-back" style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;transform:rotateY(180deg);background:radial-gradient(circle at 60% 40%,#f5d84a,#d4a017);"></div>
+          </div>
+        </div>
+        <div style="width:18px;height:10px;background:linear-gradient(to bottom,#3a8a3a,#2a6a2a);border-radius:3px 3px 6px 6px;margin-top:-1px;"></div>
+        <div class="arms-wrap" style="position:relative;width:100%;">
+          <div class="arm left" style="top:auto;bottom:18px;"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+          <div class="arm right" style="top:auto;bottom:18px;"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        </div>
+        <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+      </div>
     </div>
 
-    <!-- ALERTAS -->
-    <div class="alert alert-erro" id="alerta-erro"><span>⚠️</span><span id="alerta-erro-msg">Erro</span></div>
-    <div class="alert alert-ok"   id="alerta-ok"><span>✅</span><span id="alerta-ok-msg">OK</span></div>
+    <!-- fl1: perto do botão Entrar (direita) -->
+    <div class="floater front strawberry" id="fl1">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div class="leaf" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);display:flex;gap:1px;align-items:flex-end;">
+          <span style="width:6px;height:8px;background:linear-gradient(to top,#1a7a1a,#2d9a2d);border-radius:50% 50% 10% 10%;transform:rotate(-22deg);display:block;"></span>
+          <span style="width:6px;height:8px;background:linear-gradient(to top,#1a7a1a,#2d9a2d);border-radius:50% 50% 10% 10%;display:block;"></span>
+          <span style="width:6px;height:8px;background:linear-gradient(to top,#1a7a1a,#2d9a2d);border-radius:50% 50% 10% 10%;transform:rotate(22deg);display:block;"></span>
+        </div>
+        <div class="head" style="width:30px;height:33px;background:radial-gradient(circle at 38% 32%,#ff5555,#c41a1a);border-radius:48% 48% 55% 55%;box-shadow:inset -2px -2px 4px rgba(120,0,0,.3);">
+          <div class="head-inner" style="transform-style:preserve-3d;">
+            <div class="face-front" style="position:absolute;inset:0;border-radius:inherit;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;">
+              <div class="eyes" style="position:absolute;display:flex;gap:5px;top:34%;">
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#c41a1a;transition:height .3s ease;"></div>
+                </div>
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#c41a1a;transition:height .3s ease;"></div>
+                </div>
+              </div>
+              <div class="mouth" style="position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.3);border-left:1.5px solid rgba(0,0,0,.2);border-right:1.5px solid rgba(0,0,0,.2);border-radius:0 0 5px 5px;"></div>
+            </div>
+            <div class="face-back" style="position:absolute;inset:0;border-radius:inherit;backface-visibility:hidden;transform:rotateY(180deg);background:radial-gradient(circle at 60% 40%,#ff5555,#c41a1a);"></div>
+          </div>
+        </div>
+        <div style="width:14px;height:7px;background:linear-gradient(to bottom,#9a1a1a,#7a1010);border-radius:3px 3px 6px 6px;margin-top:-1px;"></div>
+        <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+      </div>
+    </div>
 
-    <!-- ═══ FORM LOGIN ═══ -->
+    <!-- fl2: ao lado do botão Criar conta (esquerda) -->
+    <div class="floater front orange" id="fl2">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:3px;height:7px;background:linear-gradient(to bottom,#2a5a10,#3a7a1a);border-radius:2px;"></div>
+        <div class="head" style="width:32px;height:32px;background:radial-gradient(circle at 38% 32%,#ffaa20,#e07800);border-radius:50%;box-shadow:inset -2px -2px 4px rgba(160,80,0,.3);">
+          <div class="head-inner" style="transform-style:preserve-3d;">
+            <div class="face-front" style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;">
+              <div class="eyes" style="position:absolute;display:flex;gap:5px;top:34%;">
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#e07800;transition:height .3s ease;"></div>
+                </div>
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#e07800;transition:height .3s ease;"></div>
+                </div>
+              </div>
+              <div class="mouth" style="position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.3);border-left:1.5px solid rgba(0,0,0,.2);border-right:1.5px solid rgba(0,0,0,.2);border-radius:0 0 5px 5px;"></div>
+            </div>
+            <div class="face-back" style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;transform:rotateY(180deg);background:radial-gradient(circle at 60% 40%,#ffaa20,#e07800);"></div>
+          </div>
+        </div>
+        <div style="width:18px;height:5px;background:linear-gradient(to bottom,#c06800,#a05000);border-radius:3px;margin-top:-1px;"></div>
+        <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+      </div>
+    </div>
+
+    <!-- fl3: canto inferior direito -->
+    <div class="floater front tomato" id="fl3">
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center">
+        <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);display:flex;">
+          <span style="width:7px;height:7px;background:linear-gradient(135deg,#1a7a1a,#2d9a2d);border-radius:50% 0 50% 0;transform:rotate(45deg);display:block;"></span>
+          <span style="width:7px;height:7px;background:linear-gradient(135deg,#1a7a1a,#2d9a2d);border-radius:50% 0 50% 0;transform:rotate(20deg);margin-top:-1px;display:block;"></span>
+          <span style="width:7px;height:7px;background:linear-gradient(135deg,#1a7a1a,#2d9a2d);border-radius:50% 0 50% 0;transform:rotate(90deg);display:block;"></span>
+        </div>
+        <div class="head" style="width:32px;height:30px;background:radial-gradient(circle at 38% 32%,#ff4040,#c01010);border-radius:50%;box-shadow:inset -2px -2px 4px rgba(120,0,0,.3);">
+          <div class="head-inner" style="transform-style:preserve-3d;">
+            <div class="face-front" style="position:absolute;inset:0;border-radius:inherit;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;">
+              <div class="eyes" style="position:absolute;display:flex;gap:5px;top:34%;">
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#c01010;transition:height .3s ease;"></div>
+                </div>
+                <div class="eye-socket" style="width:7px;height:7px;background:#fff;border-radius:50%;position:relative;overflow:hidden;">
+                  <div class="pupil" data-eye style="width:4px;height:4px;background:#1a1a1a;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform .07s linear;"></div>
+                  <div class="eyelid" style="position:absolute;top:0;left:0;right:0;border-radius:50% 50% 0 0;background:#c01010;transition:height .3s ease;"></div>
+                </div>
+              </div>
+              <div class="mouth" style="position:absolute;bottom:14%;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.3);border-left:1.5px solid rgba(0,0,0,.2);border-right:1.5px solid rgba(0,0,0,.2);border-radius:0 0 5px 5px;"></div>
+            </div>
+            <div class="face-back" style="position:absolute;inset:0;border-radius:inherit;backface-visibility:hidden;transform:rotateY(180deg);background:radial-gradient(circle at 60% 40%,#ff4040,#c01010);"></div>
+          </div>
+        </div>
+        <div style="width:17px;height:5px;background:linear-gradient(to bottom,#a01010,#800a0a);border-radius:3px;margin-top:-1px;"></div>
+        <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" id="tab-login"    onclick="switchTab('login')">Entrar</div>
+      <div class="tab"        id="tab-cadastro" onclick="switchTab('cadastro')">Criar Conta</div>
+    </div>
+    <div class="alert alert-erro" id="alerta-erro"><span>⚠️</span><span id="alerta-erro-msg">Erro</span></div>
+    <div class="alert alert-ok"   id="alerta-ok" ><span>✅</span><span id="alerta-ok-msg">OK</span></div>
+
+    <!-- LOGIN -->
     <div class="form active" id="form-login">
       <div class="form-title">Bem-vindo de volta!</div>
       <div class="form-sub">Entre com seu e-mail e senha para continuar.</div>
-
       <div class="field">
         <label>E-mail</label>
         <div class="input-wrap">
           <span class="input-icon">✉️</span>
-          <input type="email" id="l-email" placeholder="seu@email.com">
+          <input type="email" id="l-email" placeholder="seu@email.com" onfocus="onFF('texto')" onblur="onFB()">
         </div>
       </div>
       <div class="field">
         <label>Senha</label>
         <div class="input-wrap">
           <span class="input-icon">🔒</span>
-          <input type="password" id="l-senha" placeholder="••••••••" class="com-olho">
-          <button type="button" class="btn-olho" onclick="alternarSenha('l-senha',this)" tabindex="-1" aria-label="Mostrar senha">
-            <svg id="olho-l-senha" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <input type="password" id="l-senha" placeholder="••••••••" class="com-olho" onfocus="onFF('senha')" onblur="onFB()">
+          <button type="button" class="btn-olho" onclick="togglePwd('l-senha',this)" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
       <div class="forgot"><a href="#" onclick="esqueceuSenha()">Esqueci minha senha</a></div>
-
       <button class="btn btn-verde" onclick="fazerLogin()">Entrar na minha conta</button>
       <div class="divider">ou</div>
       <button class="btn btn-outline" onclick="switchTab('cadastro')">Criar nova conta</button>
@@ -224,246 +902,408 @@
       <button class="btn btn-publico" onclick="acessarSemConta()">🌐 Acessar sem conta</button>
     </div>
 
-    <!-- ═══ FORM CADASTRO ═══ -->
+    <!-- CADASTRO -->
     <div class="form" id="form-cadastro">
       <div class="form-title">Criar Conta</div>
       <div class="form-sub">Gratuito — comece sua jornada nutricional agora.</div>
-
-      <!-- FOTO DE PERFIL -->
       <div class="avatar-wrap">
-        <div class="avatar-circle" id="avatar-circle" onclick="document.getElementById('foto-input').click()">
+        <div class="avatar-circle" onclick="document.getElementById('foto-input').click()">
           <span id="avatar-emoji">👤</span>
-          <img id="avatar-img" alt="Foto de perfil">
+          <img id="avatar-img" alt="">
           <div class="avatar-overlay">📷</div>
         </div>
-        <div class="avatar-hint">Toque para adicionar foto de perfil (opcional)</div>
+        <div class="avatar-hint">Toque para adicionar foto (opcional)</div>
         <input type="file" id="foto-input" accept="image/*" style="display:none" onchange="previewFoto(this)">
       </div>
-
       <div class="row2">
         <div class="field">
           <label>Nome <span style="color:#dc2626">*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input type="text" id="c-nome" placeholder="Seu nome">
+          <div class="input-wrap"><span class="input-icon">👤</span>
+            <input type="text" id="c-nome" placeholder="Seu nome" onfocus="onFF('texto')" onblur="onFB()">
           </div>
         </div>
         <div class="field">
           <label>Sobrenome</label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input type="text" id="c-sobrenome" placeholder="Sobrenome">
+          <div class="input-wrap"><span class="input-icon">👤</span>
+            <input type="text" id="c-sobrenome" placeholder="Sobrenome" onfocus="onFF('texto')" onblur="onFB()">
           </div>
         </div>
       </div>
-
       <div class="field">
         <label>E-mail <span style="color:#dc2626">*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon">✉️</span>
-          <input type="email" id="c-email" placeholder="seu@email.com">
+        <div class="input-wrap"><span class="input-icon">✉️</span>
+          <input type="email" id="c-email" placeholder="seu@email.com" onfocus="onFF('texto')" onblur="onFB()">
         </div>
       </div>
-
       <div class="row2">
         <div class="field">
           <label>Senha <span style="color:#dc2626">*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="c-senha" placeholder="Mínimo 6 caracteres" class="com-olho">
-            <button type="button" class="btn-olho" onclick="alternarSenha('c-senha',this)" tabindex="-1" aria-label="Mostrar senha">
+          <div class="input-wrap"><span class="input-icon">🔒</span>
+            <input type="password" id="c-senha" placeholder="Mín. 6 caracteres" class="com-olho" onfocus="onFF('senha')" onblur="onFB()">
+            <button type="button" class="btn-olho" onclick="togglePwd('c-senha',this)" tabindex="-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
         <div class="field">
-          <label>Confirmar senha <span style="color:#dc2626">*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="c-senha2" placeholder="Repita a senha" class="com-olho">
-            <button type="button" class="btn-olho" onclick="alternarSenha('c-senha2',this)" tabindex="-1" aria-label="Mostrar senha">
+          <label>Confirmar <span style="color:#dc2626">*</span></label>
+          <div class="input-wrap"><span class="input-icon">🔒</span>
+            <input type="password" id="c-senha2" placeholder="Repita" class="com-olho" onfocus="onFF('senha')" onblur="onFB()">
+            <button type="button" class="btn-olho" onclick="togglePwd('c-senha2',this)" tabindex="-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
         </div>
       </div>
-
       <div class="row2">
         <div class="field">
           <label>Telefone</label>
-          <div class="input-wrap">
-            <span class="input-icon">📱</span>
-            <input type="tel" id="c-tel" placeholder="(62) 99999-9999">
+          <div class="input-wrap"><span class="input-icon">📱</span>
+            <input type="tel" id="c-tel" placeholder="(62) 99999-9999" onfocus="onFF('texto')" onblur="onFB()">
           </div>
         </div>
         <div class="field">
           <label>Nascimento</label>
-          <div class="input-wrap">
-            <span class="input-icon">📅</span>
-            <input type="date" id="c-nasc" class="no-icon" style="padding-left:40px">
+          <div class="input-wrap"><span class="input-icon">📅</span>
+            <input type="date" id="c-nasc" class="no-icon" style="padding-left:40px" onfocus="onFF('texto')" onblur="onFB()">
           </div>
         </div>
       </div>
-
       <label class="termo-check">
         <input type="checkbox" id="c-termos">
         Li e aceito os <a href="termo.html" target="_blank">Termos de Uso</a> e a Política de Privacidade.
       </label>
-
       <button class="btn btn-neon" onclick="fazerCadastro()">🚀 Criar conta grátis</button>
       <div class="divider">ou</div>
       <button class="btn btn-outline" onclick="switchTab('login')">Já tenho conta — Entrar</button>
     </div>
-  </div>
+  </div><!-- /card -->
 
-  <div class="footer">
-    <a href="index.html">← Voltar para o início</a>
-  </div>
+  <div class="footer"><a href="index.html">← Voltar para o início</a></div>
 </div>
 
 <script>
-// ── MOSTRAR/OCULTAR SENHA ──
-function alternarSenha(inputId, btn) {
-  const input = document.getElementById(inputId);
-  const mostrar = input.type === 'password';
-  input.type = mostrar ? 'text' : 'password';
-  btn.innerHTML = mostrar
-    ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
-    : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-  btn.style.color = mostrar ? 'var(--verde)' : '';
+/* ════════════════════════════════════
+   SEQUÊNCIA DE ENTRADA + INTERAÇÕES
+════════════════════════════════════ */
+const chars   = Array.from(document.querySelectorAll('.char'));
+const floaters = Array.from(document.querySelectorAll('.floater'));
+const pupils  = Array.from(document.querySelectorAll('[data-eye]'));
+const hint   = document.getElementById('stage-hint');
+const potSvg = document.getElementById('potSvg');
+let mouseX = 0, mouseY = 0, mode = 'front';
+let introFinished = false;
+
+const HINTS = {
+  front: ['Olá! Que bom te ver! 👋','A turma te vê! 👀','Estamos de olho! 🍊','Clique num campo! 🍅'],
+  texto: ['Digite com carinho! 🍅','Oi oi! Bem-vindo(a)! 🍍','A turma nutritiva te saúda! 🍊','Olhando pra você! 👁️'],
+  senha: ['Prometemos não olhar! 🙈','Segredo seguro aqui! 🔐','Pode digitar, a gente não vê! 😜','Estamos de costas! 🤫']
+};
+
+/* ── Olhares de curiosidade entre personagens ── */
+/* Faz um personagem olhar para o vizinho por 1.5s */
+function charGlanceAt(fromChar, direction) {
+  if (!introFinished || mode !== 'front') return;
+  const pupils = Array.from(fromChar.querySelectorAll('[data-eye]'));
+  pupils.forEach(p => {
+    const ox = direction === 'right' ? 2 : -2;
+    p.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + 0.5px))`;
+  });
+  setTimeout(() => {
+    if (mode === 'front') movePupils();
+  }, 1600);
 }
 
-// ── UI helpers ──
+/* Cochicho: um personagem se inclina para o vizinho */
+function charWhisper(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx];
+  if (!c) return;
+  const dir = idx < chars.length - 1 ? 1 : -1;
+  const originalTransform = 'translateY(0) scale(1)';
+  c.style.transition = 'transform 0.4s ease';
+  c.style.transform = `translateY(0) scale(1) rotate(${dir * 8}deg)`;
+  setTimeout(() => { c.style.transform = originalTransform; }, 900);
+  charGlanceAt(c, dir > 0 ? 'right' : 'left');
+}
+
+/* Surpresa: personagem dá um soluço pra cima */
+function charSurprise(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx];
+  if (!c) return;
+  c.style.transition = 'transform 0.25s cubic-bezier(0.2,1.8,0.5,1)';
+  c.style.transform = 'translateY(-10px) scale(1.08)';
+  setTimeout(() => {
+    c.style.transition = 'transform 0.3s ease';
+    c.style.transform = 'translateY(0) scale(1)';
+  }, 280);
+}
+
+/* Acena: braço direito balança */
+function charWave(idx) {
+  if (!introFinished || mode !== 'front') return;
+  const c = chars[idx];
+  if (!c) return;
+  const arm = c.querySelector('.arm.right');
+  if (!arm) return;
+  arm.classList.remove('waving');
+  void arm.offsetWidth;
+  arm.classList.add('waving');
+  setTimeout(() => arm.classList.remove('waving'), 750);
+}
+
+/* Cutuca vizinho: inclina para o lado e acena */
+function charPoke(fromIdx, toIdx) {
+  if (!introFinished || mode !== 'front') return;
+  charWhisper(fromIdx);
+  setTimeout(() => charGlanceAt(chars[toIdx], fromIdx < toIdx ? 'left' : 'right'), 300);
+}
+
+/* Sequência de interações aleatórias */
+const interactions = [
+  () => charGlanceAt(chars[0], 'right'),
+  () => charGlanceAt(chars[1], 'left'),
+  () => charWhisper(2),
+  () => charSurprise(3),
+  () => charWave(4),
+  () => charGlanceAt(chars[5], 'left'),
+  () => charPoke(1, 2),
+  () => charPoke(3, 4),
+  () => charSurprise(0),
+  () => charWave(2),
+  () => { charGlanceAt(chars[2], 'right'); charGlanceAt(chars[3], 'left'); },
+  () => charWhisper(4),
+  () => charWave(0),
+  () => charSurprise(5),
+  () => charPoke(0, 1),
+];
+
+let interactionTimer = null;
+function scheduleInteraction() {
+  if (interactionTimer) clearTimeout(interactionTimer);
+  const delay = 2500 + Math.random() * 2500;
+  interactionTimer = setTimeout(() => {
+    if (introFinished && mode === 'front') {
+      const fn = interactions[Math.floor(Math.random() * interactions.length)];
+      fn();
+    }
+    scheduleInteraction();
+  }, delay);
+}
+
+function setHint(m) {
+  const arr = HINTS[m] || HINTS.back;
+  hint.style.opacity = '0';
+  setTimeout(() => { hint.textContent = arr[Math.floor(Math.random()*arr.length)]; hint.style.opacity='1'; }, 200);
+}
+
+function introSequence() {
+  /* Fase 1: surgem dentro do pote — só fruta, sem face (head-inner rotateY 180) */
+  setTimeout(() => chars.forEach(c => c.classList.add('in-pot')), 300);
+
+  /* Fase 2: pote treme ~3s depois */
+  setTimeout(() => {
+    potSvg.classList.add('shaking');
+    setTimeout(() => potSvg.classList.remove('shaking'), 600);
+  }, 2800);
+
+  /* Fase 3+4: pulam e pousam DE FRENTE com olhos abertos */
+  chars.forEach((c, i) => {
+    const t = 3100 + i * 170;
+    setTimeout(() => { c.classList.remove('in-pot'); c.classList.add('jumping'); }, t);
+    setTimeout(() => { c.classList.remove('jumping'); c.classList.add('front'); }, t + 400);
+  });
+
+  /* Ativa mouse tracking após todos pousarem */
+  const fim = 3100 + (chars.length - 1) * 170 + 600;
+  setTimeout(() => {
+    mode = 'front';
+    introFinished = true;
+    setHint('front');
+    startMouse();
+    scheduleInteraction();
+  }, fim);
+  /* floaters aparecem em cascata após a intro */
+  floaters.forEach((f, i) => {
+    setTimeout(() => f.classList.add('visible'), fim + 200 + i * 180);
+  });
+}
+
+function startMouse() {
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    if (mode === 'texto' || mode === 'front') movePupils();
+  });
+}
+
+function movePupils() {
+  pupils.forEach(p => {
+    const s  = p.parentElement;
+    const r  = s.getBoundingClientRect();
+    const dx = mouseX - (r.left + r.width/2);
+    const dy = mouseY - (r.top  + r.height/2);
+    const d  = Math.sqrt(dx*dx+dy*dy) || 1;
+    const mx = 2.2;
+    const nx = (dx/d)*Math.min(d*.08,mx);
+    const ny = (dy/d)*Math.min(d*.08,mx);
+    p.style.transform = `translate(calc(-50% + ${nx}px), calc(-50% + ${ny}px))`;
+  });
+}
+function resetPupils() { pupils.forEach(p => p.style.transform='translate(-50%,-50%)'); }
+
+/* ── reações aos campos ── */
+function onFF(type) { /* onfocus */
+  mode = type;
+  if (interactionTimer) clearTimeout(interactionTimer);
+  if (type === 'senha') {
+    /* SENHA → giram de COSTAS (head-inner rotateY 180deg) */
+    chars.forEach(c => { c.classList.remove('front'); c.classList.add('back'); });
+    floaters.forEach(f => { f.classList.remove('front'); f.classList.add('back'); });
+    resetPupils();
+  } else {
+    /* TEXTO → ficam de FRENTE (head-inner rotateY 0deg), olhos seguem mouse */
+    chars.forEach(c => { c.classList.remove('back'); c.classList.add('front'); });
+    floaters.forEach(f => { f.classList.remove('back'); f.classList.add('front'); });
+    movePupils();
+  }
+  setHint(type);
+}
+function onFB() { /* onblur */
+  setTimeout(() => {
+    const a = document.activeElement;
+    if (!a || a.tagName !== 'INPUT') {
+      mode = 'front';
+      chars.forEach(c => { c.classList.remove('back'); c.classList.add('front'); });
+      floaters.forEach(f => { f.classList.remove('back'); f.classList.add('front'); });
+      setHint('front');
+      if (introFinished) scheduleInteraction();
+    }
+  }, 120);
+}
+
+function cheerAll() {
+  chars.forEach((c,i) => {
+    setTimeout(() => {
+      c.classList.remove('back'); c.classList.add('front','cheer');
+      setTimeout(() => c.classList.remove('cheer'), 650);
+    }, i*90);
+  });
+}
+
+/* ════════════════════════════════════
+   FORM HELPERS
+════════════════════════════════════ */
+function togglePwd(id, btn) {
+  const inp  = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type   = show ? 'text' : 'password';
+  btn.innerHTML = show
+    ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  btn.style.color = show ? 'var(--verde)' : '';
+}
+
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.form').forEach(f=>f.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('form-'+tab).classList.add('active');
   esconderAlertas();
+  mode = 'front';
+  chars.forEach(c=>{ c.classList.remove('back'); c.classList.add('front'); });
+  setHint('front');
 }
-function mostrarErro(msg)  { document.getElementById('alerta-erro-msg').textContent=msg; document.getElementById('alerta-erro').classList.add('show'); document.getElementById('alerta-ok').classList.remove('show'); }
-function mostrarOk(msg)    { document.getElementById('alerta-ok-msg').textContent=msg; document.getElementById('alerta-ok').classList.add('show'); document.getElementById('alerta-erro').classList.remove('show'); }
+
+function err(m)  { document.getElementById('alerta-erro-msg').textContent=m; document.getElementById('alerta-erro').classList.add('show'); document.getElementById('alerta-ok').classList.remove('show'); }
+function ok(m)   { document.getElementById('alerta-ok-msg').textContent=m;   document.getElementById('alerta-ok').classList.add('show');  document.getElementById('alerta-erro').classList.remove('show'); }
 function esconderAlertas() { document.getElementById('alerta-erro').classList.remove('show'); document.getElementById('alerta-ok').classList.remove('show'); }
-function setLoading(show, txt='Aguarde...') { document.getElementById('loading-txt').textContent=txt; document.getElementById('loading').classList.toggle('show',show); }
+function setLoading(s,t='Aguarde...') { document.getElementById('loading-txt').textContent=t; document.getElementById('loading').classList.toggle('show',s); }
 
 function previewFoto(input) {
-  if (!input.files || !input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('avatar-img');
-    img.src = e.target.result; img.style.display = 'block';
-    document.getElementById('avatar-emoji').style.display = 'none';
-  };
-  reader.readAsDataURL(input.files[0]);
+  if (!input.files||!input.files[0]) return;
+  const r=new FileReader();
+  r.onload=e=>{ const i=document.getElementById('avatar-img'); i.src=e.target.result; i.style.display='block'; document.getElementById('avatar-emoji').style.display='none'; };
+  r.readAsDataURL(input.files[0]);
 }
 
-// ── LOGIN ──
+/* ════════════════════════════════════
+   AUTH
+════════════════════════════════════ */
 async function fazerLogin() {
   esconderAlertas();
-  const email = document.getElementById('l-email').value.trim();
-  const senha = document.getElementById('l-senha').value;
-  if (!email || !senha) return mostrarErro('Preencha e-mail e senha.');
-  setLoading(true, 'Entrando...');
+  const email=document.getElementById('l-email').value.trim();
+  const senha=document.getElementById('l-senha').value;
+  if (!email||!senha) return err('Preencha e-mail e senha.');
+  setLoading(true,'Entrando...');
   try {
-    const { error } = await window._sb.auth.signInWithPassword({ email, password: senha });
+    const {error}=await window._sb.auth.signInWithPassword({email,password:senha});
     if (error) throw error;
-    window.location.href = 'dashboard.html';
-  } catch(e) {
-    setLoading(false);
-    mostrarErro(e.message.includes('Invalid') ? 'E-mail ou senha incorretos.' : e.message);
-  }
+    cheerAll(); setTimeout(()=>window.location.href='dashboard.html',900);
+  } catch(e) { setLoading(false); err(e.message.includes('Invalid')?'E-mail ou senha incorretos.':e.message); }
 }
 
-// ── CADASTRO ──
 async function fazerCadastro() {
   esconderAlertas();
-  const nome    = document.getElementById('c-nome').value.trim();
-  const sobre   = document.getElementById('c-sobrenome').value.trim();
-  const email   = document.getElementById('c-email').value.trim();
-  const senha   = document.getElementById('c-senha').value;
-  const senha2  = document.getElementById('c-senha2').value;
-  const tel     = document.getElementById('c-tel').value.trim();
-  const nasc    = document.getElementById('c-nasc').value;
-  const termos  = document.getElementById('c-termos').checked;
-  const fotoFile = document.getElementById('foto-input').files[0];
-
-  if (!nome)           return mostrarErro('Digite seu nome.');
-  if (!email)          return mostrarErro('Digite seu e-mail.');
-  if (senha.length<6)  return mostrarErro('Senha deve ter mínimo 6 caracteres.');
-  if (senha !== senha2) return mostrarErro('As senhas não coincidem.');
-  if (!termos)         return mostrarErro('Aceite os termos de uso para continuar.');
-
-  setLoading(true, 'Criando sua conta...');
+  const nome=document.getElementById('c-nome').value.trim();
+  const sobre=document.getElementById('c-sobrenome').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const senha=document.getElementById('c-senha').value;
+  const senha2=document.getElementById('c-senha2').value;
+  const tel=document.getElementById('c-tel').value.trim();
+  const nasc=document.getElementById('c-nasc').value;
+  const termos=document.getElementById('c-termos').checked;
+  const fotoFile=document.getElementById('foto-input').files[0];
+  if (!nome)            return err('Digite seu nome.');
+  if (!email)           return err('Digite seu e-mail.');
+  if (senha.length<6)   return err('Senha deve ter mínimo 6 caracteres.');
+  if (senha!==senha2)   return err('As senhas não coincidem.');
+  if (!termos)          return err('Aceite os termos de uso para continuar.');
+  setLoading(true,'Criando sua conta...');
   try {
-    // 1. Criar usuário
-    const { data: authData, error: authErr } = await window._sb.auth.signUp({ email, password: senha, options:{ data:{ nome, sobrenome:sobre } } });
+    const {data:authData,error:authErr}=await window._sb.auth.signUp({email,password:senha,options:{data:{nome,sobrenome:sobre}}});
     if (authErr) throw authErr;
-
-    let avatarUrl = null;
-
-    // 2. Upload da foto se tiver
-    if (fotoFile && authData.user) {
-      setLoading(true, 'Enviando foto...');
-      const ext  = fotoFile.name.split('.').pop();
-      const path = authData.user.id + '/avatar.' + ext;
-      const { error: upErr } = await window._sb.storage.from('avatares').upload(path, fotoFile, { upsert:true });
-      if (!upErr) {
-        const { data: urlData } = window._sb.storage.from('avatares').getPublicUrl(path);
-        avatarUrl = urlData.publicUrl;
-      }
+    let avatarUrl=null;
+    if (fotoFile&&authData.user) {
+      setLoading(true,'Enviando foto...');
+      const ext=fotoFile.name.split('.').pop();
+      const path=authData.user.id+'/avatar.'+ext;
+      const {error:upErr}=await window._sb.storage.from('avatares').upload(path,fotoFile,{upsert:true});
+      if (!upErr) { const {data:u}=window._sb.storage.from('avatares').getPublicUrl(path); avatarUrl=u.publicUrl; }
     }
-
-    // 3. Salvar perfil
     if (authData.user) {
-      await window._sb.from('perfis').upsert({
-        user_id: authData.user.id, email, nome, sobrenome: sobre,
-        telefone: tel, nascimento: nasc||null,
-        avatar_url: avatarUrl, termo_aceito: true,
-        termo_aceito_em: new Date().toISOString()
-      });
+      await window._sb.from('perfis').upsert({user_id:authData.user.id,email,nome,sobrenome:sobre,telefone:tel,nascimento:nasc||null,avatar_url:avatarUrl,termo_aceito:true,termo_aceito_em:new Date().toISOString()});
     }
-
-    setLoading(false);
-    mostrarOk('Conta criada! Verifique seu e-mail para confirmar.');
-    setTimeout(() => window.location.href = 'termo.html', 2200);
-  } catch(e) {
-    setLoading(false);
-    mostrarErro(e.message.includes('already') ? 'Este e-mail já está cadastrado.' : e.message);
-  }
+    setLoading(false); cheerAll();
+    ok('Conta criada! Verifique seu e-mail para confirmar.');
+    setTimeout(()=>window.location.href='termo.html',2200);
+  } catch(e) { setLoading(false); err(e.message.includes('already')?'Este e-mail já está cadastrado.':e.message); }
 }
 
-// ── ESQUECEU SENHA ──
 async function esqueceuSenha() {
-  const email = document.getElementById('l-email').value.trim();
-  if (!email) return mostrarErro('Digite seu e-mail primeiro.');
-  try {
-    await window._sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin+'/login.html' });
-    mostrarOk('E-mail de recuperação enviado! Verifique sua caixa de entrada.');
-  } catch(e) { mostrarErro(e.message); }
+  const email=document.getElementById('l-email').value.trim();
+  if (!email) return err('Digite seu e-mail primeiro.');
+  try { await window._sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/login.html'}); ok('E-mail de recuperação enviado!'); }
+  catch(e) { err(e.message); }
 }
 
-// ── ENTER KEY ──
-document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const ativo = document.querySelector('.form.active');
-  if (ativo.id === 'form-login') fazerLogin(); else fazerCadastro();
+function acessarSemConta() { window.location.href='dashboard.html?publico=1'; }
+
+document.addEventListener('keydown',e=>{
+  if (e.key!=='Enter') return;
+  const a=document.querySelector('.form.active');
+  if (a.id==='form-login') fazerLogin(); else fazerCadastro();
 });
 
-// ── ACESSAR SEM CONTA ──
-function acessarSemConta() {
-  window.location.href = 'dashboard.html?publico=1';
-}
-
-// ── REDIRECIONAR SE JÁ LOGADO ──
-document.addEventListener('DOMContentLoaded', function() {
-  window._sb.auth.getSession().then(({ data }) => {
-    if (data.session) window.location.href = 'dashboard.html';
-  });
+document.addEventListener('DOMContentLoaded',()=>{
+  introSequence();
+  if (typeof window._sb!=='undefined') {
+    window._sb.auth.getSession().then(({data})=>{ if (data.session) window.location.href='dashboard.html'; });
+  }
 });
 
-// ── MODO VIA URL (?modo=cadastro) ──
-const params = new URLSearchParams(window.location.search);
-if (params.get('modo') === 'cadastro') switchTab('cadastro');
+const params=new URLSearchParams(window.location.search);
+if (params.get('modo')==='cadastro') switchTab('cadastro');
 </script>
 </body>
 </html>

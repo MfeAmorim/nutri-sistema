@@ -4,117 +4,515 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nutri Amorim — Sua Dieta Personalizada</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     :root {
-      --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d;
-      --creme: #f8f4ef; --creme2: #ede8df; --terra: #a67c52;
-      --escuro: #1a2e1f; --texto: #2c3e2d;
+      --verde:#2d6a4f; --vm:#40916c; --vc:#74c69d; --vp:#d8f3dc;
+      --escuro:#1a2e1f; --creme:#f8f4ef;
     }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(--texto); overflow-x: hidden; }
+    html, body { height:100%; }
+    body {
+      font-family:"DM Sans",sans-serif;
+      min-height:100vh;
+      background: linear-gradient(135deg, #1a2e1f 0%, #2d6a4f 55%, #40916c 100%);
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden; position:relative;
+    }
+    body::before {
+      content:"";
+      position:fixed; inset:0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(116,198,157,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(116,198,157,0.05) 0%, transparent 50%);
+      pointer-events:none;
+    }
 
-    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
-    .hero-left { background: var(--escuro); display: flex; flex-direction: column; justify-content: center; padding: 80px 60px; position: relative; z-index: 1; }
-    .hero-left::after { content: ''; position: absolute; top: 0; right: -60px; width: 120px; height: 100%; background: var(--escuro); clip-path: polygon(0 0, 50% 0, 100% 100%, 0 100%); z-index: 2; }
-    .logo-tag { font-size: 11px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--verde-neon); margin-bottom: 32px; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
-    .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(42px, 5vw, 72px); font-weight: 900; line-height: 1.05; color: #fff; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s; }
-    .hero-title span { color: var(--verde-neon); display: block; }
-    .hero-sub { font-size: 17px; font-weight: 300; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 380px; margin-bottom: 48px; opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s; }
-    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.7s ease forwards 0.8s; }
-    .btn-primary { background: var(--verde-neon); color: var(--escuro); border: none; padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; border-radius: 2px; cursor: pointer; text-decoration: none; transition: all 0.3s; display: inline-block; }
-    .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(116,198,157,0.3); }
-    .btn-secondary { background: transparent; color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.25); padding: 16px 36px; font-family: 'DM Sans', sans-serif; font-size: 15px; border-radius: 2px; cursor: pointer; text-decoration: none; transition: all 0.3s; display: inline-block; }
-    .btn-secondary:hover { border-color: var(--verde-neon); color: var(--verde-neon); }
-    .hero-right { background: linear-gradient(135deg, #1e4d35 0%, #2d6a4f 40%, #40916c 70%, #52b788 100%); display: flex; align-items: center; justify-content: center; padding: 80px 40px; position: relative; }
-    .hero-right::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, rgba(116,198,157,0.15) 0%, transparent 60%); }
-    .hero-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 48px 40px; text-align: center; max-width: 360px; color: #fff; opacity: 0; animation: fadeUp 0.8s ease forwards 1s; position: relative; z-index: 1; }
-    .hero-icon { font-size: 64px; margin-bottom: 20px; display: block; }
-    .hero-card h3 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
-    .hero-card p { font-size: 14px; opacity: 0.75; line-height: 1.6; margin-bottom: 24px; }
-    .features-mini { display: flex; flex-direction: column; gap: 12px; text-align: left; }
-    .feat-item { display: flex; align-items: center; gap: 12px; font-size: 13px; opacity: 0.85; }
-    .feat-dot { width: 8px; height: 8px; background: var(--verde-neon); border-radius: 50%; flex-shrink: 0; }
+    /* ══ STAGE DOS PERSONAGENS (fundo) ══ */
+    .stage { position:fixed; inset:0; pointer-events:none; z-index:1; }
 
-    .section { padding: 100px 60px; }
-    .section-label { font-size: 11px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--verde); margin-bottom: 16px; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: var(--escuro); margin-bottom: 16px; line-height: 1.15; }
-    .section-sub { font-size: 16px; color: #6b7c6d; max-width: 500px; line-height: 1.7; margin-bottom: 64px; }
-    .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--creme2); }
-    .resource-card { background: var(--creme); padding: 48px 40px; transition: all 0.3s; position: relative; overflow: hidden; }
-    .resource-card::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; background: var(--verde); transition: width 0.4s; }
-    .resource-card:hover::before { width: 100%; }
-    .resource-card:hover { background: #fff; }
-    .resource-num { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--creme2); line-height: 1; margin-bottom: 8px; }
-    .resource-icon { font-size: 32px; margin-bottom: 16px; display: block; }
-    .resource-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--escuro); margin-bottom: 12px; }
-    .resource-desc { font-size: 14px; color: #7a8a7c; line-height: 1.65; }
+    /* ══ CONTEÚDO CENTRAL ══ */
+    .hero {
+      position:relative; z-index:10;
+      text-align:center;
+      padding:48px 40px 52px;
+      max-width:520px;
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .logo-tag {
+      font-size:11px; font-weight:600; letter-spacing:4px;
+      text-transform:uppercase; color:var(--vc);
+      margin-bottom:20px; display:block;
+    }
+    .hero-title {
+      font-family:"Playfair Display",serif;
+      font-size:clamp(38px,6vw,64px); font-weight:900;
+      color:#fff; line-height:1.08; margin-bottom:18px;
+    }
+    .hero-title span { color:var(--vc); display:block; }
+    .hero-sub {
+      font-size:16px; font-weight:300;
+      color:rgba(255,255,255,0.6); line-height:1.7;
+      margin-bottom:44px; max-width:400px; margin-left:auto; margin-right:auto;
+    }
+    .hero-buttons { display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .btn {
+      width:100%; max-width:320px; padding:15px 32px; border-radius:10px;
+      font-family:"DM Sans",sans-serif; font-size:15px; font-weight:600;
+      cursor:pointer; text-decoration:none; display:inline-block;
+      text-align:center; transition:all .25s;
+    }
+    .btn-entrar { background:var(--vc); color:var(--escuro); border:none; }
+    .btn-entrar:hover { background:#fff; transform:translateY(-2px); box-shadow:0 8px 24px rgba(116,198,157,0.3); }
+    .btn-criar { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.3); }
+    .btn-criar:hover { border-color:var(--vc); color:var(--vc); }
+    .btn-publico {
+      background:transparent; color:rgba(255,255,255,0.45);
+      border:none; font-size:13px; font-weight:400; padding:8px; max-width:320px;
+    }
+    .btn-publico:hover { color:rgba(255,255,255,0.75); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
-    .cta-section { background: var(--escuro); padding: 100px 60px; text-align: center; }
-    .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 60px); font-weight: 900; color: #fff; margin-bottom: 16px; }
-    .cta-section h2 span { color: var(--verde-neon); }
-    .cta-section p { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 40px; }
-    footer { background: var(--escuro); border-top: 1px solid rgba(255,255,255,0.08); padding: 32px 60px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+    /* ══════════════ PERSONAGENS ══════════════ */
+    .char {
+      position:absolute;
+      display:flex; flex-direction:column; align-items:center;
+      transform:scale(0) translateY(40px); opacity:0; transition:none;
+    }
+    .char.visible {
+      opacity:1; transform:scale(1) translateY(0);
+      transition: transform 0.55s cubic-bezier(0.34,1.5,0.64,1), opacity 0.4s ease;
+    }
+    /* cabeça */
+    .head {
+      position:relative; display:flex; align-items:center; justify-content:center;
+      border-radius:50%; flex-shrink:0; perspective:400px; transform-style:preserve-3d;
+    }
+    .head-inner {
+      width:100%; height:100%; position:relative;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:inherit; transform-style:preserve-3d;
+      transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); transform:rotateY(0deg);
+    }
+    .face-front {
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      border-radius:50%; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    }
+    .face-back {
+      position:absolute; inset:0; border-radius:50%;
+      backface-visibility:hidden; -webkit-backface-visibility:hidden; transform:rotateY(180deg);
+    }
+    .eyes { position:absolute; display:flex; gap:6px; top:36%; }
+    .eye-socket {
+      width:9px; height:9px; background:#fff; border-radius:50%;
+      position:relative; overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .pupil {
+      width:5px; height:5px; background:#1a1a1a; border-radius:50%;
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+      transition:transform 0.07s linear;
+    }
+    .pupil::after {
+      content:''; width:2px; height:2px; background:rgba(255,255,255,0.85);
+      border-radius:50%; position:absolute; top:1px; left:1px;
+    }
+    .eyelid { position:absolute; top:0; left:0; right:0; height:0; transition:height 0.3s ease; border-radius:50% 50% 0 0; }
+    .mouth {
+      position:absolute; bottom:14%; left:50%; transform:translateX(-50%);
+      width:10px; height:5px;
+      border-bottom:2px solid rgba(0,0,0,0.3);
+      border-left:1.5px solid rgba(0,0,0,0.2); border-right:1.5px solid rgba(0,0,0,0.2);
+      border-radius:0 0 6px 6px; opacity:1;
+    }
+    .blush { position:absolute; width:8px; height:5px; border-radius:50%; opacity:0.35; top:55%; }
+    .blush.l { left:8%; } .blush.r { right:8%; }
+    .body { flex-shrink:0; border-radius:4px 4px 10px 10px; margin-top:-2px; }
+    .legs { display:flex; gap:5px; justify-content:center; margin-top:-1px; }
+    .leg { width:6px; height:14px; border-radius:3px 3px 4px 4px; position:relative; }
+    .leg::after { content:''; position:absolute; bottom:-3px; width:9px; height:5px; border-radius:50% 50% 4px 4px; }
+    .leg:first-child::after { left:-2px; } .leg:last-child::after { right:-2px; }
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-left::after { display: none; }
-      .hero-right { min-height: 40vh; }
-      .resources-grid { grid-template-columns: 1fr; }
-      .section, .cta-section { padding: 60px 24px; }
-      .hero-left { padding: 60px 28px; }
+    /* BRACINHOS */
+    .arms-wrap { position:absolute; top:0; left:0; right:0; bottom:0; pointer-events:none; }
+    .arm { position:absolute; top:52%; display:flex; flex-direction:column; gap:2px; opacity:1; transform-origin:top center; }
+    .arm.left  { right:100%; margin-right:1px; align-items:flex-end; transform:rotate(20deg); }
+    .arm.right { left:100%;  margin-left:1px;  align-items:flex-start; transform:rotate(-20deg); }
+    .arm-seg { height:3px; border-radius:2px; }
+    .arm-seg:nth-child(1){ width:10px; } .arm-seg:nth-child(2){ width:8px; } .arm-seg:nth-child(3){ width:6px; }
+    .hand { display:flex; flex-direction:column; gap:1.5px; margin-top:1px; }
+    .hand-line { height:2px; border-radius:1px; }
+    .arm.left .hand { align-items:flex-end; } .arm.right .hand { align-items:flex-start; }
+    .hand-line:nth-child(1){ width:7px; } .hand-line:nth-child(2){ width:5px; } .hand-line:nth-child(3){ width:3px; }
+    @keyframes waveArm  { 0%{transform:rotate(-10deg)} 30%{transform:rotate(-35deg)} 60%{transform:rotate(-5deg)} 80%{transform:rotate(-28deg)} 100%{transform:rotate(-10deg)} }
+    @keyframes waveArmR { 0%{transform:rotate(10deg)}  30%{transform:rotate(35deg)}  60%{transform:rotate(5deg)}  80%{transform:rotate(28deg)}  100%{transform:rotate(10deg)} }
+    .arm.left.waving  { animation:waveArm  0.75s ease; }
+    .arm.right.waving { animation:waveArmR 0.75s ease; }
+
+    /* ABACAXI */
+    .pineapple .head { width:52px; height:52px; background:radial-gradient(circle at 38% 32%,#f5d84a,#d4a017); box-shadow:inset -3px -3px 5px rgba(150,90,0,.25),0 2px 5px rgba(0,0,0,.25); }
+    .pineapple .head::after { content:''; position:absolute; inset:5px; background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(180,120,0,.15) 4px,rgba(180,120,0,.15) 5px),repeating-linear-gradient(-45deg,transparent,transparent 4px,rgba(180,120,0,.1) 4px,rgba(180,120,0,.1) 5px); border-radius:50%; pointer-events:none; }
+    .pineapple .eyelid { background:#d4a017; } .pineapple .blush { background:#d4a017; }
+    .pineapple .crown { position:absolute; top:-22px; left:50%; transform:translateX(-50%); display:flex; gap:3px; align-items:flex-end; }
+    .pineapple .crown span { background:linear-gradient(to bottom,#2d7a2d,#1a5a1a); border-radius:2px 2px 0 0; flex-shrink:0; }
+    .pineapple .crown span:nth-child(1){ width:5px; height:14px; transform:rotate(-18deg); }
+    .pineapple .crown span:nth-child(2){ width:6px; height:20px; }
+    .pineapple .crown span:nth-child(3){ width:5px; height:16px; transform:rotate(10deg); }
+    .pineapple .crown span:nth-child(4){ width:4px; height:11px; transform:rotate(22deg); }
+    .pineapple .body { width:30px; height:18px; background:linear-gradient(to bottom,#3a8a3a,#2a6a2a); }
+    .pineapple .leg  { background:linear-gradient(to bottom,#c8920a,#a07008); }
+    .pineapple .leg::after { background:#7a5205; }
+    .pineapple .arm-seg, .pineapple .hand-line { background:#c8920a; }
+
+    /* MORANGO */
+    .strawberry .head { width:48px; height:52px; background:radial-gradient(circle at 38% 32%,#ff5555,#c41a1a); border-radius:48% 48% 55% 55%; box-shadow:inset -3px -3px 5px rgba(120,0,0,.3),0 2px 5px rgba(0,0,0,.25); }
+    .strawberry .head::after { content:''; position:absolute; background:rgba(255,255,255,.25); width:7px; height:7px; border-radius:50%; top:16%; left:28%; filter:blur(1px); pointer-events:none; }
+    .strawberry .eyelid { background:#c41a1a; border-radius:50% 50% 0 0; } .strawberry .blush { background:#ff8080; top:57%; }
+    .strawberry .leaf { position:absolute; top:-14px; left:50%; transform:translateX(-50%); display:flex; gap:1px; align-items:flex-end; }
+    .strawberry .leaf span { width:9px; height:11px; background:linear-gradient(to top,#1a7a1a,#2d9a2d); border-radius:50% 50% 10% 10%; }
+    .strawberry .leaf span:nth-child(1){ transform:rotate(-22deg); height:9px; }
+    .strawberry .leaf span:nth-child(3){ transform:rotate(22deg); height:9px; }
+    .strawberry .body { width:22px; height:11px; background:linear-gradient(to bottom,#9a1a1a,#7a1010); }
+    .strawberry .leg { background:linear-gradient(to bottom,#a01414,#7a0e0e); } .strawberry .leg::after { background:#600a0a; }
+    .strawberry .arm-seg, .strawberry .hand-line { background:#a01414; }
+
+    /* BRÓCOLIS */
+    .broccoli .head { width:56px; height:50px; background:radial-gradient(circle at 40% 35%,#56c956,#2d8a2d); border-radius:55% 55% 40% 40%; box-shadow:inset -3px -3px 5px rgba(0,80,0,.3),0 2px 5px rgba(0,0,0,.25); }
+    .broccoli .bumps { position:absolute; top:-15px; left:50%; transform:translateX(-50%); display:flex; gap:1px; align-items:flex-end; }
+    .broccoli .bumps span { width:15px; height:15px; background:radial-gradient(circle at 38% 35%,#56c956,#1a7a1a); border-radius:50%; box-shadow:inset -2px -2px 4px rgba(0,60,0,.3); }
+    .broccoli .bumps span:nth-child(2){ width:17px; height:17px; margin-top:-4px; }
+    .broccoli .eyelid { background:#2d8a2d; border-radius:50% 50% 0 0; } .broccoli .eyes { gap:8px; }
+    .broccoli .body { width:14px; height:22px; background:linear-gradient(to bottom,#4a7a1a,#2a5010); border-radius:3px; }
+    .broccoli .leg { background:linear-gradient(to bottom,#3a6a10,#2a5008); } .broccoli .leg::after { background:#1a3808; }
+    .broccoli .arm-seg, .broccoli .hand-line { background:#3a6a10; }
+
+    /* CENOURA */
+    .carrot .head { width:44px; height:52px; background:radial-gradient(circle at 38% 32%,#ff9a30,#e06010); border-radius:50% 50% 48% 48%; box-shadow:inset -3px -3px 5px rgba(150,60,0,.3),0 2px 5px rgba(0,0,0,.25); }
+    .carrot .stripes { position:absolute; width:70%; left:15%; }
+    .carrot .stripes span { display:block; height:1.5px; background:rgba(140,50,0,.2); border-radius:2px; margin-bottom:5px; }
+    .carrot .top { position:absolute; top:-16px; left:50%; transform:translateX(-50%); display:flex; gap:2px; align-items:flex-end; }
+    .carrot .top span { background:linear-gradient(to top,#1a7a1a,#2d9a2d); border-radius:2px; }
+    .carrot .top span:nth-child(1){ width:4px; height:13px; transform:rotate(-18deg); }
+    .carrot .top span:nth-child(2){ width:5px; height:18px; }
+    .carrot .top span:nth-child(3){ width:4px; height:12px; transform:rotate(18deg); }
+    .carrot .eyelid { background:#e06010; border-radius:50% 50% 0 0; } .carrot .blush { background:#ff6010; top:57%; }
+    .carrot .body { width:17px; height:20px; background:linear-gradient(to bottom,#cc5010,#aa3a08); border-radius:3px 3px 10px 10px; }
+    .carrot .leg { background:linear-gradient(to bottom,#c05008,#903806); } .carrot .leg::after { background:#702808; }
+    .carrot .arm-seg, .carrot .hand-line { background:#c05008; }
+
+    /* LARANJA */
+    .orange .head { width:52px; height:52px; background:radial-gradient(circle at 38% 32%,#ffaa20,#e07800); box-shadow:inset -3px -3px 5px rgba(160,80,0,.3),0 2px 5px rgba(0,0,0,.25); }
+    .orange .head::after { content:''; position:absolute; inset:8px; border:1.5px solid rgba(255,160,0,.35); border-radius:50%; pointer-events:none; }
+    .orange .stem { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:4px; height:10px; background:linear-gradient(to bottom,#2a5a10,#3a7a1a); border-radius:2px; }
+    .orange .leaf-sm { position:absolute; top:-8px; left:calc(50% + 3px); width:12px; height:8px; background:linear-gradient(to bottom right,#2a7a1a,#1a5a10); border-radius:50%; transform:rotate(-30deg); }
+    .orange .eyelid { background:#e07800; } .orange .blush { background:#ffaa20; top:57%; }
+    .orange .body { width:30px; height:8px; background:linear-gradient(to bottom,#c06800,#a05000); border-radius:4px; }
+    .orange .leg { background:linear-gradient(to bottom,#c06000,#9a4a00); } .orange .leg::after { background:#783800; }
+    .orange .arm-seg, .orange .hand-line { background:#c06000; }
+
+    /* TOMATE */
+    .tomato .head { width:52px; height:50px; background:radial-gradient(circle at 38% 32%,#ff4040,#c01010); box-shadow:inset -3px -3px 5px rgba(120,0,0,.3),0 2px 5px rgba(0,0,0,.25); }
+    .tomato .head::after { content:''; position:absolute; background:rgba(255,255,255,.22); width:9px; height:9px; border-radius:50%; top:14%; left:26%; filter:blur(1px); pointer-events:none; }
+    .tomato .calyx { position:absolute; top:-12px; left:50%; transform:translateX(-50%); display:flex; }
+    .tomato .calyx span { width:9px; height:9px; background:linear-gradient(135deg,#1a7a1a,#2d9a2d); border-radius:50% 0 50% 0; transform:rotate(45deg); }
+    .tomato .calyx span:nth-child(2){ margin-top:-2px; transform:rotate(20deg); }
+    .tomato .calyx span:nth-child(3){ transform:rotate(90deg); }
+    .tomato .eyelid { background:#c01010; } .tomato .blush { background:#ff8080; top:57%; }
+    .tomato .body { width:28px; height:8px; background:linear-gradient(to bottom,#a01010,#800a0a); border-radius:4px; }
+    .tomato .leg { background:linear-gradient(to bottom,#a00c0c,#780808); } .tomato .leg::after { background:#5a0606; }
+    .tomato .arm-seg, .tomato .hand-line { background:#a00c0c; }
+
+    /* flutuação suave */
+    @keyframes floatBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+    .char.visible { animation:floatBob 3.6s ease-in-out infinite; }
+    .char.visible:nth-child(1) { animation-delay:0s; }
+    .char.visible:nth-child(2) { animation-delay:0.5s; }
+    .char.visible:nth-child(3) { animation-delay:1.1s; }
+    .char.visible:nth-child(4) { animation-delay:0.3s; }
+    .char.visible:nth-child(5) { animation-delay:0.8s; }
+    .char.visible:nth-child(6) { animation-delay:1.4s; }
+
+    @media(max-width:600px){
+      .hero { padding:40px 24px; }
+      /* em mobile, deixa só 3 personagens e menores */
+      .char { transform:scale(0.75) !important; }
+      #c1, #c2, #c4 { display:none; }
     }
   </style>
 </head>
 <body>
-<section class="hero">
-  <div class="hero-left">
-    <p class="logo-tag">🌿 Nutri Amorim</p>
-    <h1 class="hero-title">Bem-vindo ao<br><span>Nutri Amorim</span></h1>
-    <p class="hero-sub">Faça sua dieta personalizada e tire suas dúvidas com acompanhamento nutricional completo — do prontuário ao plano alimentar em um só lugar.</p>
-    <div class="hero-buttons">
-      <a href="login.html" class="btn-primary">Entrar</a>
-      <a href="cadastro.html" class="btn-secondary">Criar Conta</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-card">
-      <span class="hero-icon">🥗</span>
-      <h3>Nutrição Inteligente</h3>
-      <p>Acompanhamento completo baseado no seu perfil e objetivos alimentares.</p>
-      <div class="features-mini">
-        <div class="feat-item"><div class="feat-dot"></div> Ficha de Anamnese Completa</div>
-        <div class="feat-item"><div class="feat-dot"></div> Tabela Nutricional TACO/TBCA</div>
-        <div class="feat-item"><div class="feat-dot"></div> Recordatório 24 Horas</div>
-        <div class="feat-item"><div class="feat-dot"></div> Plano Alimentar Personalizado</div>
-        <div class="feat-item"><div class="feat-dot"></div> Exportação em Excel e PDF</div>
+
+<!-- PERSONAGENS NO FUNDO -->
+<div class="stage">
+
+  <!-- ABACAXI — canto inferior esquerdo -->
+  <div class="char pineapple" id="c0" style="bottom:9%; left:5%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:26px">
+      <div class="crown"><span></span><span></span><span></span><span></span></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="blush l"></div><div class="blush r"></div><div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#f5d84a,#d4a017);"></div>
+        </div>
       </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
     </div>
   </div>
-</section>
 
-<section class="section">
-  <p class="section-label">O que você encontra aqui</p>
-  <h2 class="section-title">Tudo que você precisa<br>para sua nutrição</h2>
-  <p class="section-sub">Do cadastro ao plano alimentar, acompanhe cada etapa da sua jornada nutricional com dados precisos.</p>
-  <div class="resources-grid">
-    <div class="resource-card"><div class="resource-num">01</div><span class="resource-icon">📋</span><h3 class="resource-title">Prontuário Médico</h3><p class="resource-desc">Preencha sua ficha de anamnese completa. Os dados geram automaticamente um documento PDF e planilha Excel.</p></div>
-    <div class="resource-card"><div class="resource-num">02</div><span class="resource-icon">🥦</span><h3 class="resource-title">Tabela Alimentar</h3><p class="resource-desc">Cadastre alimentos com informações nutricionais baseadas na tabela TACO/TBCA. Dados salvos na sua planilha.</p></div>
-    <div class="resource-card"><div class="resource-num">03</div><span class="resource-icon">⏱️</span><h3 class="resource-title">Recordatório 24h</h3><p class="resource-desc">Registre tudo que comeu no dia e veja em tempo real: proteínas, calorias, sódio e o quanto ainda falta.</p></div>
-    <div class="resource-card"><div class="resource-num">04</div><span class="resource-icon">🎯</span><h3 class="resource-title">Plano Alimentar</h3><p class="resource-desc">Receba um plano com as quantidades certas dos alimentos para déficit ou superávit calórico.</p></div>
-    <div class="resource-card"><div class="resource-num">05</div><span class="resource-icon">📄</span><h3 class="resource-title">Termo de Consentimento</h3><p class="resource-desc">Documento de consentimento assinado digitalmente, disponível para download em PDF.</p></div>
-    <div class="resource-card"><div class="resource-num">06</div><span class="resource-icon">📊</span><h3 class="resource-title">Exportação de Dados</h3><p class="resource-desc">Todos os seus dados exportados em Excel com abas organizadas: prontuário, alimentos e plano alimentar.</p></div>
+  <!-- MORANGO — canto superior esquerdo -->
+  <div class="char strawberry" id="c1" style="top:11%; left:9%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+      <div class="leaf"><span></span><span></span><span></span></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="blush l"></div><div class="blush r"></div><div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#ff5555,#c41a1a);border-radius:48% 48% 55% 55%;"></div>
+        </div>
+      </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+    </div>
   </div>
-</section>
 
-<section class="cta-section">
-  <h2>Pronto para começar<br><span>sua jornada?</span></h2>
-  <p>Crie sua conta gratuita e acesse todos os recursos.</p>
-  <a href="cadastro.html" class="btn-primary" style="font-size:16px;padding:18px 48px;">Criar Minha Conta</a>
-</section>
-<footer>© 2026 Nutri Amorim — Todos os direitos reservados</footer>
+  <!-- BRÓCOLIS — meio esquerdo -->
+  <div class="char broccoli" id="c2" style="top:42%; left:3%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:20px">
+      <div class="bumps"><span></span><span></span><span></span></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#56c956,#2d8a2d);border-radius:55% 55% 40% 40%;"></div>
+        </div>
+      </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+    </div>
+  </div>
+
+  <!-- CENOURA — canto superior direito -->
+  <div class="char carrot" id="c3" style="top:9%; right:8%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:24px">
+      <div class="top"><span></span><span></span><span></span></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="stripes"><span></span><span></span><span></span></div>
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="blush l"></div><div class="blush r"></div><div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#ff9a30,#e06010);border-radius:50% 50% 48% 48%;"></div>
+        </div>
+      </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+    </div>
+  </div>
+
+  <!-- LARANJA — meio direito -->
+  <div class="char orange" id="c4" style="top:43%; right:4%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+      <div class="stem"></div><div class="leaf-sm"></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="blush l"></div><div class="blush r"></div><div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#ffaa20,#e07800);"></div>
+        </div>
+      </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+    </div>
+  </div>
+
+  <!-- TOMATE — canto inferior direito -->
+  <div class="char tomato" id="c5" style="bottom:8%; right:6%;">
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin-top:22px">
+      <div class="calyx"><span></span><span></span><span></span></div>
+      <div class="head">
+        <div class="head-inner">
+          <div class="face-front">
+            <div class="eyes">
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+              <div class="eye-socket"><div class="pupil" data-eye></div><div class="eyelid"></div></div>
+            </div>
+            <div class="blush l"></div><div class="blush r"></div><div class="mouth"></div>
+          </div>
+          <div class="face-back" style="background:radial-gradient(circle at 60% 40%,#ff4040,#c01010);"></div>
+        </div>
+      </div>
+      <div class="arms-wrap">
+        <div class="arm left"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+        <div class="arm right"><div class="arm-seg"></div><div class="arm-seg"></div><div class="arm-seg"></div><div class="hand"><div class="hand-line"></div><div class="hand-line"></div><div class="hand-line"></div></div></div>
+      </div>
+      <div class="body"></div>
+      <div class="legs"><div class="leg"></div><div class="leg"></div></div>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<!-- CONTEÚDO CENTRAL -->
+<div class="hero">
+  <span class="logo-tag">🌿 Nutri Amorim</span>
+  <h1 class="hero-title">Bem-vindo ao<br><span>Nutri Amorim</span></h1>
+  <p class="hero-sub">Entre no site e explore pesquisas, estudos e conteúdos sobre nutrição com acompanhamento personalizado.</p>
+  <div class="hero-buttons">
+    <a href="login.html" class="btn btn-entrar">Entrar</a>
+    <a href="cadastro.html" class="btn btn-criar">Criar Conta</a>
+    <a href="dashboard.html?publico=1" class="btn btn-publico">🌐 Entrar sem conta</a>
+  </div>
+</div>
+
+<script>
+const chars  = Array.from(document.querySelectorAll('.char'));
+const pupils = Array.from(document.querySelectorAll('[data-eye]'));
+let mouseX = 0, mouseY = 0;
+
+/* Aparecem em cascata */
+chars.forEach((c, i) => setTimeout(() => c.classList.add('visible'), 300 + i * 160));
+
+/* Olhos seguem o mouse */
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY; movePupils();
+});
+function movePupils() {
+  pupils.forEach(p => {
+    const s = p.parentElement;
+    const r = s.getBoundingClientRect();
+    const dx = mouseX - (r.left + r.width/2);
+    const dy = mouseY - (r.top  + r.height/2);
+    const d  = Math.sqrt(dx*dx + dy*dy) || 1;
+    const mx = 2.2;
+    p.style.transform = `translate(calc(-50% + ${(dx/d)*Math.min(d*.08,mx)}px), calc(-50% + ${(dy/d)*Math.min(d*.08,mx)}px))`;
+  });
+}
+
+/* ── Interações ── */
+function lookAt(c, dir) {
+  Array.from(c.querySelectorAll('[data-eye]')).forEach(p => {
+    p.style.transform = `translate(calc(-50% + ${dir === 'right' ? 2.1 : -2.1}px), calc(-50% + 0.5px))`;
+  });
+  setTimeout(movePupils, 1900);
+}
+function wave(idx) {
+  const c = chars[idx]; if (!c) return;
+  const arm = c.querySelector('.arm.right');
+  if (!arm) return;
+  arm.classList.remove('waving'); void arm.offsetWidth; arm.classList.add('waving');
+  setTimeout(() => arm.classList.remove('waving'), 800);
+}
+function waveLeft(idx) {
+  const c = chars[idx]; if (!c) return;
+  const arm = c.querySelector('.arm.left');
+  if (!arm) return;
+  arm.classList.remove('waving'); void arm.offsetWidth; arm.classList.add('waving');
+  setTimeout(() => arm.classList.remove('waving'), 800);
+}
+function surprise(idx) {
+  const c = chars[idx]; if (!c) return;
+  c.style.animationPlayState = 'paused';
+  c.style.transition = 'transform 0.22s cubic-bezier(0.2,1.8,0.5,1)';
+  c.style.transform = 'scale(1.14) translateY(-14px)';
+  setTimeout(() => {
+    c.style.transition = 'transform 0.3s ease';
+    c.style.transform = 'scale(1) translateY(0)';
+    setTimeout(() => c.style.animationPlayState = 'running', 350);
+  }, 270);
+}
+function whisper(idx) {
+  const c = chars[idx]; if (!c) return;
+  const dir = idx < 3 ? 1 : -1;
+  c.style.animationPlayState = 'paused';
+  c.style.transition = 'transform 0.4s ease';
+  c.style.transform = `scale(1) translateY(0) rotate(${dir * 10}deg)`;
+  lookAt(c, dir > 0 ? 'right' : 'left');
+  setTimeout(() => {
+    c.style.transform = 'scale(1) translateY(0) rotate(0deg)';
+    setTimeout(() => c.style.animationPlayState = 'running', 420);
+  }, 920);
+}
+function glance(i, j) {
+  const a = chars[i], b = chars[j]; if (!a || !b) return;
+  const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+  lookAt(a, ra.left < rb.left ? 'right' : 'left');
+  lookAt(b, rb.left < ra.left ? 'right' : 'left');
+}
+
+const interactions = [
+  () => wave(0),
+  () => whisper(1),
+  () => surprise(2),
+  () => wave(3),
+  () => glance(0, 1),
+  () => glance(4, 5),
+  () => whisper(4),
+  () => surprise(5),
+  () => glance(1, 2),
+  () => wave(5),
+  () => surprise(0),
+  () => { wave(2); setTimeout(() => wave(3), 380); },
+  () => glance(0, 5),
+  () => whisper(3),
+  () => glance(2, 4),
+  () => waveLeft(0),
+  () => { surprise(1); setTimeout(() => lookAt(chars[0], 'right'), 300); },
+  () => waveLeft(5),
+];
+
+let idx = 0;
+function next() {
+  setTimeout(() => {
+    interactions[idx % interactions.length]();
+    idx++; next();
+  }, 2000 + Math.random() * 2200);
+}
+setTimeout(next, 300 + chars.length * 160 + 700);
+</script>
 </body>
 </html>
