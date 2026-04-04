@@ -415,7 +415,158 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
     </div>
   </div>
 
-  <!-- 2. CÉLULAS E METABOLISMO -->
+  <!-- 2. HERANÇA MENDELIANA E CRUZAMENTOS -->
+  <div class="card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <div class="card-icon verde">🧩</div>
+      <div class="card-titulo">
+        <h3>Herança Mendeliana e Cruzamentos</h3>
+        <p>Proporções genotípicas e fenotípicas — Aa×Aa, Aa×aa e aa×aa</p>
+      </div>
+      <div class="card-chevron">▾</div>
+    </div>
+    <div class="card-body">
+
+      <h4>Conceitos Essenciais</h4>
+      <p>Nas doenças autossômicas recessivas, <strong>"A"</strong> representa o alelo dominante (normal) e <strong>"a"</strong> o alelo recessivo (causador da doença). Apenas os indivíduos <strong>aa</strong> manifestam a doença. Indivíduos <strong>AA</strong> são normais homozigotos e <strong>Aa</strong> são portadores saudáveis.</p>
+      <table class="tabela">
+        <tr><th>Genótipo</th><th>Denominação</th><th>Fenótipo</th></tr>
+        <tr><td><strong>AA</strong></td><td>Homozigoto dominante</td><td>Normal (não portador)</td></tr>
+        <tr><td><strong>Aa</strong></td><td>Heterozigoto</td><td>Normal (portador)</td></tr>
+        <tr><td><strong>aa</strong></td><td>Homozigoto recessivo</td><td>Afetado (manifesta a doença)</td></tr>
+      </table>
+
+      <!-- CRUZAMENTO 1: Aa x Aa -->
+      <h4>1. Cruzamento Aa × Aa — Dois portadores</h4>
+      <p>Quando dois portadores saudáveis (Aa) têm filhos, cada filho pode herdar qualquer combinação dos alelos. É o cruzamento mais importante para o nutricionista, pois explica por que filhos afetados nascem de pais aparentemente normais.</p>
+
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin:14px 0">
+        <div style="flex-shrink:0">
+          <table style="border-collapse:collapse;font-size:13px;font-weight:700;text-align:center">
+            <tr>
+              <td style="padding:8px 14px;background:#f8fbf8;border:1px solid #d1e8d1;"></td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">A</td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">A</td>
+              <td style="padding:8px 14px;background:#f0fdf4;border:1px solid #d1e8d1;color:var(--verde)">AA</td>
+              <td style="padding:8px 14px;background:#f0fdf4;border:1px solid #d1e8d1;color:var(--texto)">Aa</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:#f0fdf4;border:1px solid #d1e8d1;color:var(--texto)">Aa</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+            </tr>
+          </table>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <p style="margin-bottom:6px">📊 <strong>Proporção genotípica:</strong></p>
+          <ul style="margin-bottom:12px">
+            <li>¼ AA (25%) — normal homozigoto</li>
+            <li>½ Aa (50%) — portador saudável</li>
+            <li>¼ aa (25%) — afetado</li>
+          </ul>
+          <p style="margin-bottom:6px">👤 <strong>Proporção fenotípica:</strong></p>
+          <ul>
+            <li>¾ normais (75%) — AA + Aa</li>
+            <li>¼ afetados (25%)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="destaque">
+        <p>💡 <strong>Regra prática:</strong> Se dois pais saudáveis têm um filho afetado, <em>ambos são obrigatoriamente portadores</em> (Aa). A chance de cada próximo filho ser afetado é <strong>25%</strong>, independentemente dos filhos anteriores.</p>
+      </div>
+
+      <!-- CRUZAMENTO 2: Aa x aa -->
+      <h4>2. Cruzamento Aa × aa — Portador com afetado</h4>
+      <p>Quando um portador saudável (Aa) tem filhos com uma pessoa afetada (aa), a chance de ter filhos afetados sobe para 50%.</p>
+
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin:14px 0">
+        <div style="flex-shrink:0">
+          <table style="border-collapse:collapse;font-size:13px;font-weight:700;text-align:center">
+            <tr>
+              <td style="padding:8px 14px;background:#f8fbf8;border:1px solid #d1e8d1;"></td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">A</td>
+              <td style="padding:8px 14px;background:#f0fdf4;border:1px solid #d1e8d1;color:var(--texto)">Aa</td>
+              <td style="padding:8px 14px;background:#f0fdf4;border:1px solid #d1e8d1;color:var(--texto)">Aa</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+            </tr>
+          </table>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <p style="margin-bottom:6px">📊 <strong>Proporção genotípica:</strong></p>
+          <ul style="margin-bottom:12px">
+            <li>½ Aa (50%) — portador saudável</li>
+            <li>½ aa (50%) — afetado</li>
+          </ul>
+          <p style="margin-bottom:6px">👤 <strong>Proporção fenotípica:</strong></p>
+          <ul>
+            <li>½ normais (50%) — todos portadores Aa</li>
+            <li>½ afetados (50%)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CRUZAMENTO 3: aa x aa -->
+      <h4>3. Cruzamento aa × aa — Dois afetados</h4>
+      <p>Quando dois indivíduos afetados (aa) têm filhos, <strong>todos os filhos serão afetados</strong>. Não existe possibilidade de filho normal, pois ambos os pais só possuem o alelo recessivo.</p>
+
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin:14px 0">
+        <div style="flex-shrink:0">
+          <table style="border-collapse:collapse;font-size:13px;font-weight:700;text-align:center">
+            <tr>
+              <td style="padding:8px 14px;background:#f8fbf8;border:1px solid #d1e8d1;"></td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 14px;background:var(--escuro);color:#fff;border:1px solid #d1e8d1;">a</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+              <td style="padding:8px 14px;background:#fee2e2;border:1px solid #d1e8d1;color:var(--vermelho)">aa</td>
+            </tr>
+          </table>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <p style="margin-bottom:6px">📊 <strong>Proporção genotípica:</strong></p>
+          <ul style="margin-bottom:12px">
+            <li>100% aa — todos afetados</li>
+          </ul>
+          <p style="margin-bottom:6px">👤 <strong>Proporção fenotípica:</strong></p>
+          <ul>
+            <li>100% afetados</li>
+          </ul>
+        </div>
+      </div>
+      <div class="alerta">
+        <p>⚠️ <strong>Atenção:</strong> Quando dois pais afetados têm filhos, <em>todos</em> herdarão a condição. Exemplo clínico: dois pais com PKU → 100% dos filhos com PKU.</p>
+      </div>
+
+      <h4>Resumo Comparativo dos Três Cruzamentos</h4>
+      <table class="tabela">
+        <tr><th>Cruzamento</th><th>Proporção genotípica</th><th>% Afetados</th><th>% Normais</th></tr>
+        <tr><td><strong>Aa × Aa</strong></td><td>¼ AA : ½ Aa : ¼ aa</td><td style="color:var(--vermelho);font-weight:700">25%</td><td>75%</td></tr>
+        <tr><td><strong>Aa × aa</strong></td><td>½ Aa : ½ aa</td><td style="color:var(--vermelho);font-weight:700">50%</td><td>50%</td></tr>
+        <tr><td><strong>aa × aa</strong></td><td>100% aa</td><td style="color:var(--vermelho);font-weight:700">100%</td><td>0%</td></tr>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- 3. CÉLULAS E METABOLISMO -->
   <div class="card">
     <div class="card-header" onclick="toggleCard(this)">
       <div class="card-icon azul">🔬</div>
