@@ -355,6 +355,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--creme); color: var(
   <div class="tab-btn" onclick="showPanel('provas')">📝 Provas</div>
   <div class="tab-btn" onclick="showPanel('mapa-ativ')">🗺️ MAPA</div>
   <div class="tab-btn" onclick="showPanel('laboratorio')">🧪 Laboratório Mendel</div>
+  <div class="tab-btn" onclick="showPanel('heredograma-interativo')">🎮 Treinar Heredograma</div>
 </div>
 
 <!-- ══════════ PANEL RESUMO ══════════ -->
@@ -3383,6 +3384,362 @@ function verificarQuestao(btn) {
   // Disable all options
   todas.forEach(li => { li.style.pointerEvents = 'none'; li.style.cursor = 'default'; });
 }
+</script>
+
+<!-- ══════════ PANEL HEREDOGRAMA INTERATIVO ══════════ -->
+<div id="panel-heredograma-interativo" class="panel">
+
+  <div class="hero">
+    <div class="hero-icon">🎮</div>
+    <div>
+      <div class="hero-tag">Simulador Interativo · Herança Autossômica Recessiva</div>
+      <h1>Treinar Heredograma</h1>
+      <p>Aprenda identificando genótipos, montando o Quadro de Punnett e respondendo questões clínicas.</p>
+    </div>
+  </div>
+
+  <style>
+  .hi-tabs { display:flex; gap:8px; margin-bottom:1.5rem; flex-wrap:wrap; }
+  .hi-tab { padding:7px 18px; border-radius:8px; border:1px solid #d1e8d8; background:#fff; color:#5a6a5c; font-size:13px; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
+  .hi-tab.active { background:#1a2e1f; color:#fff; border-color:#1a2e1f; font-weight:500; }
+  .hi-section { display:none; }
+  .hi-section.active { display:block; }
+  .hi-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:1.5rem; align-items:center; }
+  .hi-leg { display:flex; align-items:center; gap:7px; font-size:13px; color:#5a6a5c; }
+  .hi-sq { width:20px;height:20px;border-radius:3px; }
+  .hi-ci { width:20px;height:20px;border-radius:50%; }
+  .hi-regras { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:1.5rem; }
+  .hi-regra { background:#f0fdf4; border:1px solid #c8e6c9; border-radius:10px; padding:.75rem 1rem; font-size:13px; color:#2c3e2d; line-height:1.6; }
+  .hi-regra b { color:#1a2e1f; font-weight:600; display:block; margin-bottom:3px; }
+  .hi-punnet-wrap { margin:0 auto 1.5rem; max-width:360px; }
+  .hi-ptable { width:100%; border-collapse:collapse; }
+  .hi-ptable td,.hi-ptable th { width:90px;height:64px;text-align:center;font-size:15px;font-weight:600;border:1.5px solid #c8e6c9; }
+  .hi-ptable .phdr { background:#1a2e1f;color:rgba(255,255,255,0.85);font-size:18px;font-weight:500;height:48px; }
+  .hi-ptable .blank { background:#f8fbf8; }
+  .hi-cinput { width:56px;height:38px;border:1.5px solid #c8e6c9;border-radius:6px;text-align:center;font-size:14px;font-weight:600;background:#fff;color:#1a2e1f;font-family:'DM Sans',sans-serif; }
+  .hi-cinput.ok { border-color:#2d6a4f;background:#f0fdf4;color:#1a4030; }
+  .hi-cinput.err { border-color:#dc2626;background:#fef2f2;color:#7f1d1d; }
+  .hi-btn { padding:8px 22px;border-radius:6px;border:1px solid #c8e6c9;background:#f0fdf4;color:#1a2e1f;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s; }
+  .hi-btn:hover { background:#2d6a4f;color:#fff;border-color:#2d6a4f; }
+  .hi-fb { margin-top:12px;font-size:13px;padding:10px 14px;border-radius:8px;line-height:1.6;display:none; }
+  .hi-fb.ok { background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;display:block; }
+  .hi-fb.err { background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d;display:block; }
+  .hi-case-title { font-size:15px;font-weight:600;color:#1a2e1f;margin-bottom:6px; }
+  .hi-case-desc { font-size:13px;color:#5a6a5c;line-height:1.7;margin-bottom:1rem; }
+  .hi-palette { display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px; }
+  .hi-chip { padding:7px 16px;border-radius:8px;border:1.5px solid #c8e6c9;background:#f0fdf4;color:#1a2e1f;font-size:14px;font-weight:600;cursor:pointer;user-select:none;transition:all .15s;font-family:'DM Sans',sans-serif; }
+  .hi-chip.sel { border-color:#2d6a4f;background:#2d6a4f;color:#fff; }
+  .hi-slots { display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-bottom:1rem; }
+  .hi-slot-wrap { display:flex;flex-direction:column;align-items:center;gap:4px; }
+  .hi-slot { min-height:48px;width:100%;border:1.5px dashed #c8e6c9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#5a6a5c;background:#fff;cursor:pointer;transition:all .15s; }
+  .hi-slot:hover { border-color:#2d6a4f;background:#f0fdf4; }
+  .hi-slot.fAA { background:#f0fdf4;color:#14532d;border:1.5px solid #2d6a4f;border-style:solid; }
+  .hi-slot.fAa { background:#fff5e6;color:#7c2d12;border:1.5px solid #d97706;border-style:solid; }
+  .hi-slot.faa { background:#fef2f2;color:#7f1d1d;border:1.5px solid #dc2626;border-style:solid; }
+  .hi-slot.fAa2 { background:#fff5e6;color:#7c2d12;border:1.5px solid #d97706;border-style:solid; }
+  .hi-slot-lbl { font-size:11px;color:#7a8a7c;text-align:center; }
+  .hi-next { margin-top:1rem;padding:8px 22px;border-radius:6px;border:1px solid #c8e6c9;background:#f0fdf4;color:#1a2e1f;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;display:none; }
+  .hi-next:hover { background:#2d6a4f;color:#fff; }
+  .hi-prog { display:flex;align-items:center;gap:12px;margin-bottom:1.5rem; }
+  .hi-prog-track { flex:1;height:6px;background:#e8efe8;border-radius:99px;overflow:hidden; }
+  .hi-prog-fill { height:100%;background:#2d6a4f;border-radius:99px;transition:width .4s; }
+  .hi-qcard { background:#fff;border:1px solid #e0ebe0;border-radius:14px;padding:1.25rem;margin-bottom:1rem; }
+  .hi-qq { font-size:14px;font-weight:600;color:#1a2e1f;margin-bottom:12px;line-height:1.6; }
+  .hi-opts { display:flex;flex-direction:column;gap:8px; }
+  .hi-opt { text-align:left;padding:10px 14px;border-radius:8px;border:1px solid #e0ebe0;background:#fff;color:#2c3e2d;font-size:13px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.5; }
+  .hi-opt:hover:not(:disabled) { background:#f0fdf4;border-color:#2d6a4f; }
+  .hi-opt.correct { background:#f0fdf4;border-color:#2d6a4f;color:#14532d;font-weight:600; }
+  .hi-opt.wrong { background:#fef2f2;border-color:#dc2626;color:#7f1d1d; }
+  svg.hi-hsvg { width:100%;max-width:520px;display:block;margin:0 auto 1.5rem; }
+  </style>
+
+  <div class="hi-tabs">
+    <button class="hi-tab active" onclick="hiShow('teoria',this)">Entender</button>
+    <button class="hi-tab" onclick="hiShow('punnet',this)">Quadro de Punnett</button>
+    <button class="hi-tab" onclick="hiShow('hered',this)">Heredograma</button>
+    <button class="hi-tab" onclick="hiShow('quiz',this)">Quiz</button>
+  </div>
+
+  <!-- TEORIA -->
+  <div id="hi-teoria" class="hi-section active">
+    <div class="hi-legend">
+      <div class="hi-leg"><div class="hi-sq" style="background:#1a2e1f;border:2px solid #1a2e1f"></div> homem afetado (aa)</div>
+      <div class="hi-leg"><div class="hi-sq" style="background:#fff;border:2px solid #888"></div> homem normal</div>
+      <div class="hi-leg"><div class="hi-sq" style="background:linear-gradient(135deg,#888 50%,#fff 50%);border:2px solid #888"></div> homem portador (Aa)</div>
+      <div class="hi-leg"><div class="hi-ci" style="background:#1a2e1f;border:2px solid #1a2e1f"></div> mulher afetada (aa)</div>
+      <div class="hi-leg"><div class="hi-ci" style="background:#fff;border:2px solid #888"></div> mulher normal</div>
+      <div class="hi-leg"><div class="hi-ci" style="background:linear-gradient(135deg,#888 50%,#fff 50%);border:2px solid #888"></div> mulher portadora (Aa)</div>
+    </div>
+    <svg class="hi-hsvg" viewBox="0 0 520 290">
+      <line x1="100" y1="50" x2="160" y2="50" stroke="#888" stroke-width="1.5"/>
+      <line x1="130" y1="50" x2="130" y2="100" stroke="#888" stroke-width="1.5"/>
+      <line x1="70" y1="100" x2="190" y2="100" stroke="#888" stroke-width="1.5"/>
+      <line x1="80" y1="100" x2="80" y2="130" stroke="#888" stroke-width="1.5"/>
+      <line x1="130" y1="100" x2="130" y2="130" stroke="#888" stroke-width="1.5"/>
+      <line x1="180" y1="100" x2="180" y2="130" stroke="#888" stroke-width="1.5"/>
+      <rect x="70" y="28" width="30" height="30" rx="3" fill="white" stroke="#888" stroke-width="2"/>
+      <text x="85" y="49" text-anchor="middle" font-size="9" fill="#5a6a5c">AA</text>
+      <circle cx="175" cy="43" r="15" fill="white" stroke="#888" stroke-width="2"/>
+      <path d="M160,43 Q167.5,28 175,28 Q182.5,28 190,43 Q182.5,58 175,58 Q167.5,58 160,43z" fill="#888" opacity="0.45"/>
+      <text x="175" y="49" text-anchor="middle" font-size="9" fill="#555">Aa</text>
+      <text x="85" y="22" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">I-1</text>
+      <text x="175" y="22" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">I-2</text>
+      <rect x="65" y="130" width="30" height="30" rx="3" fill="white" stroke="#888" stroke-width="2"/>
+      <text x="80" y="151" text-anchor="middle" font-size="9" fill="#5a6a5c">AA</text>
+      <rect x="115" y="130" width="30" height="30" rx="3" fill="#1a2e1f" stroke="#1a2e1f" stroke-width="2"/>
+      <text x="130" y="151" text-anchor="middle" font-size="9" fill="white">aa</text>
+      <circle cx="180" cy="145" r="15" fill="white" stroke="#888" stroke-width="2"/>
+      <path d="M165,145 Q172.5,130 180,130 Q187.5,130 195,145 Q187.5,160 180,160 Q172.5,160 165,145z" fill="#888" opacity="0.45"/>
+      <text x="180" y="151" text-anchor="middle" font-size="9" fill="#555">Aa</text>
+      <text x="80" y="125" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">II-1</text>
+      <text x="130" y="125" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">II-2</text>
+      <text x="180" y="125" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">II-3</text>
+      <line x1="145" y1="145" x2="165" y2="145" stroke="#888" stroke-width="1.5"/>
+      <line x1="155" y1="145" x2="155" y2="195" stroke="#888" stroke-width="1.5"/>
+      <line x1="120" y1="195" x2="190" y2="195" stroke="#888" stroke-width="1.5"/>
+      <line x1="130" y1="195" x2="130" y2="220" stroke="#888" stroke-width="1.5"/>
+      <line x1="155" y1="195" x2="155" y2="220" stroke="#888" stroke-width="1.5"/>
+      <line x1="180" y1="195" x2="180" y2="220" stroke="#888" stroke-width="1.5"/>
+      <rect x="115" y="220" width="30" height="30" rx="3" fill="#1a2e1f" stroke="#1a2e1f" stroke-width="2"/>
+      <text x="130" y="241" text-anchor="middle" font-size="9" fill="white">aa</text>
+      <rect x="140" y="220" width="30" height="30" rx="3" fill="white" stroke="#888" stroke-width="2"/>
+      <path d="M140,220 L155,220 L140,250z" fill="#888" opacity="0.45"/>
+      <text x="155" y="241" text-anchor="middle" font-size="9" fill="#5a6a5c">Aa</text>
+      <circle cx="180" cy="235" r="15" fill="white" stroke="#888" stroke-width="2"/>
+      <text x="180" y="241" text-anchor="middle" font-size="9" fill="#5a6a5c">AA</text>
+      <text x="130" y="215" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">III-1</text>
+      <text x="155" y="215" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">III-2</text>
+      <text x="180" y="215" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">III-3</text>
+      <text x="330" y="28" font-size="13" font-weight="600" fill="#1a2e1f">Regras da herança</text>
+      <text x="330" y="46" font-size="12" fill="#5a6a5c">autossômica recessiva</text>
+      <rect x="320" y="64" width="14" height="14" rx="2" fill="#1a2e1f" stroke="#1a2e1f" stroke-width="1.5"/>
+      <text x="340" y="76" font-size="12" fill="#1a2e1f">afetado = aa (dois alelos "a")</text>
+      <rect x="320" y="89" width="14" height="14" rx="2" fill="white" stroke="#888" stroke-width="1.5"/>
+      <path d="M320,89 L327,89 L320,103z" fill="#888" opacity="0.55"/>
+      <text x="340" y="101" font-size="12" fill="#1a2e1f">portador = Aa (não manifesta)</text>
+      <rect x="320" y="114" width="14" height="14" rx="2" fill="white" stroke="#888" stroke-width="1.5"/>
+      <text x="340" y="126" font-size="12" fill="#1a2e1f">normal = AA</text>
+      <text x="320" y="154" font-size="12" fill="#5a6a5c" font-style="italic">Pai afetado (aa) sempre doa</text>
+      <text x="320" y="170" font-size="12" fill="#5a6a5c" font-style="italic">o alelo "a" para os filhos</text>
+      <text x="320" y="196" font-size="12" fill="#5a6a5c" font-style="italic">Pais normais com filho afetado</text>
+      <text x="320" y="212" font-size="12" fill="#5a6a5c" font-style="italic">→ ambos são portadores (Aa)</text>
+    </svg>
+    <div class="hi-regras">
+      <div class="hi-regra"><b>Portador × Portador (Aa × Aa)</b>25% AA · 50% Aa · 25% aa — 1 em 4 filhos afetado</div>
+      <div class="hi-regra"><b>Normal × Afetado (AA × aa)</b>100% Aa — nenhum filho afetado, todos portadores</div>
+      <div class="hi-regra"><b>Portador × Afetado (Aa × aa)</b>50% Aa · 50% aa — metade dos filhos afetados</div>
+    </div>
+  </div>
+
+  <!-- PUNNETT -->
+  <div id="hi-punnet" class="hi-section">
+    <div class="hi-case-title">Construa o Quadro de Punnett</div>
+    <div class="hi-case-desc" id="hi-pdesc"></div>
+    <div class="hi-punnet-wrap"><table class="hi-ptable" id="hi-ptable"></table></div>
+    <div style="text-align:center">
+      <button class="hi-btn" onclick="hiCheckP()">Verificar</button>
+      <button class="hi-btn" id="hi-pnext" style="display:none;margin-left:8px" onclick="hiNextP()">Próximo</button>
+    </div>
+    <div class="hi-fb" id="hi-pfb"></div>
+  </div>
+
+  <!-- HEREDOGRAMA INTERATIVO -->
+  <div id="hi-hered" class="hi-section">
+    <div class="hi-case-title" id="hi-htitle"></div>
+    <div class="hi-case-desc" id="hi-hdesc"></div>
+    <svg class="hi-hsvg" id="hi-hsvg" viewBox="0 0 400 260"></svg>
+    <div id="hi-hslots"></div>
+    <div style="text-align:center">
+      <button class="hi-btn" onclick="hiCheckH()">Verificar</button>
+    </div>
+    <div class="hi-fb" id="hi-hfb"></div>
+    <button class="hi-next" id="hi-hnext" onclick="hiNextH()">Próximo caso</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="hi-quiz" class="hi-section">
+    <div class="hi-prog">
+      <span style="font-size:13px;color:#5a6a5c;white-space:nowrap">Pontuação</span>
+      <div class="hi-prog-track"><div class="hi-prog-fill" id="hi-pfill" style="width:0%"></div></div>
+      <span style="font-size:13px;font-weight:600;color:#1a2e1f;min-width:40px;text-align:right" id="hi-pnum">0 / 0</span>
+    </div>
+    <div id="hi-qcontainer"></div>
+  </div>
+
+</div><!-- fim panel -->
+
+<script>
+(function(){
+
+function hiShow(id, btn) {
+  document.querySelectorAll('.hi-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.hi-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('hi-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+window.hiShow = hiShow;
+
+const pCases = [
+  { pai:'Aa', mae:'Aa', al:[['A','a'],['A','a']], res:['AA','Aa','Aa','aa'], desc:'Casal de portadores (Aa × Aa). Digite os 4 genótipos — use AA, Aa ou aa.' },
+  { pai:'AA', mae:'aa', al:[['A','A'],['a','a']], res:['Aa','Aa','Aa','Aa'], desc:'Pai normal (AA) × Mãe afetada (aa). Como serão todos os filhos?' },
+  { pai:'Aa', mae:'aa', al:[['A','a'],['a','a']], res:['Aa','aa','Aa','aa'], desc:'Portador (Aa) × Afetado (aa). Preencha o Quadro de Punnett.' }
+];
+let pIdx = 0;
+
+function buildP(c) {
+  const [[p1,p2],[m1,m2]] = c.al;
+  document.getElementById('hi-pdesc').textContent = c.desc;
+  document.getElementById('hi-ptable').innerHTML = `
+    <tr><td class="phdr blank"></td><td class="phdr">${m1}</td><td class="phdr">${m2}</td></tr>
+    <tr><td class="phdr">${p1}</td><td><input class="hi-cinput" id="hp0" maxlength="2" placeholder="?"></td><td><input class="hi-cinput" id="hp1" maxlength="2" placeholder="?"></td></tr>
+    <tr><td class="phdr">${p2}</td><td><input class="hi-cinput" id="hp2" maxlength="2" placeholder="?"></td><td><input class="hi-cinput" id="hp3" maxlength="2" placeholder="?"></td></tr>`;
+  document.getElementById('hi-pfb').className = 'hi-fb';
+  document.getElementById('hi-pnext').style.display = 'none';
+}
+buildP(pCases[0]);
+
+function hiCheckP() {
+  const c = pCases[pIdx]; let ok = true;
+  for (let i=0;i<4;i++) {
+    const el = document.getElementById('hp'+i);
+    const v = el.value.trim();
+    const n = v.length===2 ? v[0].toUpperCase()+v[1].toLowerCase() : v;
+    el.className = n===c.res[i] ? 'hi-cinput ok' : 'hi-cinput err';
+    if (n!==c.res[i]) ok=false;
+  }
+  const fb = document.getElementById('hi-pfb');
+  if (ok) {
+    const cnts={};c.res.forEach(x=>cnts[x]=(cnts[x]||0)+1);
+    const parts=Object.entries(cnts).map(([k,v])=>v+'/4 '+k).join(' · ');
+    fb.className='hi-fb ok'; fb.textContent='Correto! Resultado: '+parts;
+    document.getElementById('hi-pnext').style.display = pIdx<pCases.length-1 ? 'inline-block' : 'none';
+  } else {
+    fb.className='hi-fb err'; fb.textContent='Revise as células em vermelho. Cada célula = alelo do pai (linha) + alelo da mãe (coluna).';
+  }
+}
+window.hiCheckP = hiCheckP;
+
+function hiNextP() { pIdx=(pIdx+1)%pCases.length; buildP(pCases[pIdx]); }
+window.hiNextP = hiNextP;
+
+const hCases = [
+  { title:'Caso 1 — pais portadores', desc:'I-1 e I-2 são saudáveis mas têm filha afetada (II-2). Identifique o genótipo de cada indivíduo.',
+    nodes:[{id:'I1',x:80,y:50,t:'sq',f:'white',lbl:'I-1'},{id:'I2',x:200,y:50,t:'ci',f:'white',lbl:'I-2'},{id:'II1',x:80,y:170,t:'sq',f:'white',lbl:'II-1'},{id:'II2',x:160,y:170,t:'ci',f:'#1a2e1f',lbl:'II-2'},{id:'II3',x:240,y:170,t:'sq',f:'white',lbl:'II-3'}],
+    lines:[[140,50,200,50],[140,50,140,120],[80,120,240,120],[80,120,80,160],[160,120,160,160],[240,120,240,160]],
+    slots:['I-1','I-2','II-1','II-2','II-3'], ans:['Aa','Aa','AA ou Aa','aa','AA ou Aa'] },
+  { title:'Caso 2 — avô afetado', desc:'Avô paterno I-1 é afetado (aa). Avó I-2 é normal. O filho II-1 é saudável. Qual o genótipo obrigatório de II-1?',
+    nodes:[{id:'I1',x:80,y:50,t:'sq',f:'#1a2e1f',lbl:'I-1'},{id:'I2',x:200,y:50,t:'ci',f:'white',lbl:'I-2'},{id:'II1',x:140,y:170,t:'sq',f:'white',lbl:'II-1'}],
+    lines:[[80,50,200,50],[140,50,140,160]],
+    slots:['I-1','I-2','II-1'], ans:['aa','AA ou Aa','Aa'] },
+  { title:'Caso 3 — três filhos diferentes', desc:'II-2 e II-3 são portadores. Tiveram 3 filhos: um afetado, um portador, um normal. Identifique a geração III.',
+    nodes:[{id:'II2',x:100,y:50,t:'sq',f:'white',half:true,lbl:'II-2'},{id:'II3',x:220,y:50,t:'ci',f:'white',half:true,lbl:'II-3'},{id:'III1',x:80,y:170,t:'sq',f:'#1a2e1f',lbl:'III-1'},{id:'III2',x:160,y:170,t:'sq',f:'white',half:true,lbl:'III-2'},{id:'III3',x:240,y:170,t:'ci',f:'white',lbl:'III-3'}],
+    lines:[[100,50,220,50],[160,50,160,120],[80,120,240,120],[80,120,80,160],[160,120,160,160],[240,120,240,160]],
+    slots:['III-1','III-2','III-3'], ans:['aa','Aa','AA'] }
+];
+let hIdx=0, selChip=null;
+
+function buildH(c) {
+  document.getElementById('hi-htitle').textContent = c.title;
+  document.getElementById('hi-hdesc').textContent = c.desc;
+  const svg = document.getElementById('hi-hsvg'); let h='';
+  c.lines.forEach(([x1,y1,x2,y2])=>{ h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#aaa" stroke-width="1.5"/>`; });
+  c.nodes.forEach(n=>{
+    if(n.t==='sq'){
+      h+=`<rect x="${n.x-18}" y="${n.y-18}" width="36" height="36" rx="3" fill="${n.f}" stroke="#888" stroke-width="2"/>`;
+      if(n.half) h+=`<path d="M${n.x-18},${n.y-18} L${n.x},${n.y-18} L${n.x-18},${n.y+18}z" fill="#888" opacity="0.45"/>`;
+    } else {
+      h+=`<circle cx="${n.x}" cy="${n.y}" r="18" fill="${n.f}" stroke="#888" stroke-width="2"/>`;
+      if(n.half) h+=`<path d="M${n.x},${n.y-18} A18,18,0,0,0,${n.x},${n.y+18}z" fill="#888" opacity="0.45"/>`;
+    }
+    h+=`<text x="${n.x}" y="${n.y-24}" text-anchor="middle" font-size="11" fill="#5a6a5c" font-weight="600">${n.lbl}</text>`;
+    if(n.f==='#1a2e1f') h+=`<text x="${n.x}" y="${n.y+5}" text-anchor="middle" font-size="9" fill="white">aa</text>`;
+    if(n.half) h+=`<text x="${n.x}" y="${n.y+5}" text-anchor="middle" font-size="9" fill="#5a6a5c">Aa</text>`;
+  });
+  svg.innerHTML=h;
+  let sh='<div class="hi-palette">';
+  ['AA','Aa','aa','AA ou Aa'].forEach(o=>{
+    sh+=`<span class="hi-chip" onclick="hiChipClick('${o}',this)">${o}</span>`;
+  });
+  sh+='</div><div class="hi-slots">';
+  c.slots.forEach((s,i)=>{
+    sh+=`<div class="hi-slot-wrap"><div class="hi-slot" id="hslot${i}" onclick="hiSlotClick(${i})"><span id="hsval${i}">?</span></div><span class="hi-slot-lbl">${s}</span></div>`;
+  });
+  sh+='</div>';
+  document.getElementById('hi-hslots').innerHTML=sh;
+  document.getElementById('hi-hfb').className='hi-fb';
+  document.getElementById('hi-hnext').style.display='none';
+  selChip=null;
+}
+buildH(hCases[0]);
+
+function hiChipClick(val, el) {
+  selChip = selChip===val ? null : val;
+  document.querySelectorAll('.hi-chip').forEach(c=>c.classList.remove('sel'));
+  if(selChip) el.classList.add('sel');
+}
+window.hiChipClick = hiChipClick;
+
+function hiSlotClick(i) {
+  if(!selChip) return;
+  const slot=document.getElementById('hslot'+i);
+  document.getElementById('hsval'+i).textContent=selChip;
+  slot.className='hi-slot f'+(selChip==='AA ou Aa'?'Aa2':selChip);
+}
+window.hiSlotClick = hiSlotClick;
+
+function hiCheckH() {
+  const c=hCases[hIdx]; let ok=true;
+  c.slots.forEach((s,i)=>{
+    const v=document.getElementById('hsval'+i).textContent;
+    const slot=document.getElementById('hslot'+i);
+    if(v==='?'){ok=false;slot.style.borderColor='#dc2626';return;}
+    const opts=c.ans[i].split(' ou ');
+    if(opts.includes(v)){slot.style.borderColor='#2d6a4f';slot.style.background='#f0fdf4';}
+    else{ok=false;slot.style.borderColor='#dc2626';slot.style.background='#fef2f2';}
+  });
+  const fb=document.getElementById('hi-hfb');
+  if(ok){fb.className='hi-fb ok';fb.textContent='Perfeito! Todos os genótipos identificados corretamente.';document.getElementById('hi-hnext').style.display=hIdx<hCases.length-1?'block':'none';}
+  else{fb.className='hi-fb err';fb.textContent='Revise os marcados em vermelho. Dica: pai afetado (aa) sempre passa "a". Pais normais com filho afetado → ambos são Aa.';}
+}
+window.hiCheckH = hiCheckH;
+
+function hiNextH(){hIdx=(hIdx+1)%hCases.length;buildH(hCases[hIdx]);}
+window.hiNextH = hiNextH;
+
+const qData=[
+  {q:'Casal Aa × Aa. Qual a chance de filho afetado?',opts:['0%','25%','50%','75%'],ans:1,exp:'Aa × Aa → 25% AA, 50% Aa, 25% aa. Um em cada 4 filhos manifesta a doença.'},
+  {q:'João tem PKU (doença autossômica recessiva). Seus pais são saudáveis. Qual o genótipo dos pais?',opts:['AA × AA','AA × Aa','Aa × Aa','aa × Aa'],ans:2,exp:'Para filho ser aa, ambos os pais precisam ter ao menos um alelo "a". Pais saudáveis com filho aa = ambos Aa.'},
+  {q:'O avô materno tem albinismo (aa). A mãe é saudável. Qual o genótipo mínimo garantido da mãe?',opts:['AA','Aa — portadora','aa','Não é possível saber'],ans:1,exp:'O avô (aa) necessariamente passou "a" para a mãe. Como ela é saudável, é Aa — portadora garantida.'},
+  {q:'Portadores Aa × Aa. Dos filhos fenotipicamente normais, qual fração é portadora?',opts:['1/4','1/2','2/3','3/4'],ans:2,exp:'De Aa × Aa: 25% AA, 50% Aa, 25% aa. Entre os 75% normais, 50/75 = 2/3 são portadores.'},
+  {q:'Qual afirmação é FALSA sobre herança autossômica recessiva?',opts:['Pode saltar gerações','Pais portadores podem ter filhos afetados','O gene está no cromossomo X','Homens e mulheres são igualmente afetados'],ans:2,exp:'Autossômica = gene nos autossomos (1–22), não nos sexuais. Se fosse no X, seria herança ligada ao sexo.'},
+  {q:'Pai afetado (aa) × Mãe normal homozigota (AA). Como serão os filhos?',opts:['50% afetados','100% afetados','100% portadores (Aa)','25% afetados'],ans:2,exp:'AA × aa → todos os filhos recebem A de um lado e a do outro = 100% Aa. Nenhum afetado, todos portadores.'},
+  {q:'Pais saudáveis têm filha afetada (aa). O que concluímos obrigatoriamente?',opts:['O pai é portador apenas','A mãe é portadora apenas','Ambos os pais são portadores (Aa)','Caso geneticamente impossível'],ans:2,exp:'Para filha ser aa, precisa de "a" de cada pai. Se pais são saudáveis e têm filha afetada, ambos são Aa.'}
+];
+let qScore=0;
+
+function buildQuiz(){
+  const c=document.getElementById('hi-qcontainer'); c.innerHTML='';
+  qData.forEach((q,qi)=>{
+    let opts='';
+    q.opts.forEach((o,oi)=>{ opts+=`<button class="hi-opt" onclick="hiAns(${qi},${oi},this)">${o}</button>`; });
+    c.innerHTML+=`<div class="hi-qcard"><div class="hi-qq">${qi+1}. ${q.q}</div><div class="hi-opts" id="hqopts${qi}">${opts}</div><div class="hi-fb" id="hqfb${qi}"></div></div>`;
+  });
+}
+
+function hiAns(qi,oi,btn){
+  const q=qData[qi];
+  document.querySelectorAll(`#hqopts${qi} .hi-opt`).forEach(b=>b.disabled=true);
+  const fb=document.getElementById('hqfb'+qi);
+  if(oi===q.ans){btn.classList.add('correct');fb.className='hi-fb ok';fb.textContent=q.exp;qScore++;}
+  else{btn.classList.add('wrong');document.querySelectorAll(`#hqopts${qi} .hi-opt`)[q.ans].classList.add('correct');fb.className='hi-fb err';fb.textContent='Incorreto. '+q.exp;}
+  document.getElementById('hi-pfill').style.width=Math.round(qScore/qData.length*100)+'%';
+  document.getElementById('hi-pnum').textContent=qScore+' / '+qData.length;
+}
+window.hiAns = hiAns;
+
+buildQuiz();
+
+})();
 </script>
 
 </body>
