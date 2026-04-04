@@ -24,9 +24,24 @@
     body.tema-escuro .home-footer { background: linear-gradient(135deg, #0f1a12, #1a2e1f); border-top-color: #2a4030; }
     body.tema-escuro .home-footer-brand p, body.tema-escuro .home-footer-col-title, body.tema-escuro .home-footer-link, body.tema-escuro .home-footer-cert, body.tema-escuro .home-footer-copy, body.tema-escuro .home-footer-v-label { color: rgba(255,255,255,0.5); }
     body.tema-escuro .home-footer-brand-name { color: var(--verde-neon); }
-    @media (max-width: 640px) {
+    @media (max-width: 900px) {
       .ext-proj-grid { grid-template-columns: 1fr !important; }
       .ext-proj-col-left { border-right: none !important; border-bottom: 1px solid #e8efe8; }
+    }
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .content { padding: 20px 16px; }
+      .topbar { padding: 14px 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr !important; }
+      .foguete-estagios { grid-template-columns: 1fr !important; }
+      .foguete-materiais-grid { grid-template-columns: 1fr !important; }
+      .foguete-reacao-grid { grid-template-columns: 1fr !important; }
+      .foguete-plataforma-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr !important; }
+      .foguete-plataforma-grid { grid-template-columns: 1fr !important; }
     }
     body.tema-escuro .post-card-home { background: var(--bg-card); border-color: var(--border-card); }
     body.tema-escuro .rec-form-card { background: linear-gradient(135deg,#1a2e1f,#1f3326); border-color: #2d4a35; }
@@ -2900,13 +2915,508 @@
     <div class="tab-content" id="tab-projetos-extensao">
       <div class="content">
 
-        <!-- Cabeçalho da aba -->
-        <div style="margin-bottom:32px">
+        <!-- Cabeçalho -->
+        <div style="margin-bottom:28px">
           <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--escuro);margin-bottom:6px">🎓 Projetos de Extensão</h2>
           <p style="font-size:14px;color:#7a8a7c">Atividades extensionistas UniCesumar — registros, evidências e documentação.</p>
         </div>
 
-        <!-- ══ COZINHA INTEGRE — RECEITAS FUNCIONAIS ══ -->
+        <!-- NAV sub-abas -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px" id="ext-subnav">
+          <button class="ext-sub-btn active" onclick="showExtSub('ext-ciencias',this)"
+            data-bg="linear-gradient(135deg,#0c1f3f,#1a3a6b)" data-color="#63b3ed"
+            style="flex:1;min-width:150px;display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid #1a3a6b;border-radius:14px;cursor:pointer;background:linear-gradient(135deg,#0c1f3f,#1a3a6b);color:#63b3ed;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;transition:all .2s;text-align:left">
+            <span style="font-size:24px;flex-shrink:0">🚀</span>
+            <div><div style="font-size:13px;font-weight:700">Ciências & Tecnologia</div><div style="font-size:10px;opacity:.75;font-weight:400">Foguete PET · Brinquedos Educativos</div></div>
+          </button>
+          <button class="ext-sub-btn" onclick="showExtSub('ext-alimentacao',this)"
+            data-bg="linear-gradient(135deg,#14532d,#166534)" data-color="#86efac"
+            style="flex:1;min-width:150px;display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid #e8efe8;border-radius:14px;cursor:pointer;background:#f8fdf8;color:#5a6a5c;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;text-align:left">
+            <span style="font-size:24px;flex-shrink:0">🍽️</span>
+            <div><div style="font-size:13px;font-weight:700">Projetos Alimentação</div><div style="font-size:10px;opacity:.75;font-weight:400">Cozinha Integre · Cozinha Sustentável</div></div>
+          </button>
+          <button class="ext-sub-btn" onclick="showExtSub('ext-protagonista',this)"
+            data-bg="linear-gradient(135deg,#1a2e1f,#2d6a4f)" data-color="#74c69d"
+            style="flex:1;min-width:150px;display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid #e8efe8;border-radius:14px;cursor:pointer;background:#f8fdf8;color:#5a6a5c;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;text-align:left">
+            <span style="font-size:24px;flex-shrink:0">🌿</span>
+            <div><div style="font-size:13px;font-weight:700">Estudante Protagonista</div><div style="font-size:10px;opacity:.75;font-weight:400">Pt. 1 · Pt. 2 · Sustentabilidade</div></div>
+          </button>
+          <button class="ext-sub-btn" onclick="showExtSub('ext-solidaria',this)"
+            data-bg="linear-gradient(135deg,#1a2e1f,#2d6a4f)" data-color="#74c69d"
+            style="flex:1;min-width:150px;display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid #e8efe8;border-radius:14px;cursor:pointer;background:#f8fdf8;color:#5a6a5c;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;text-align:left">
+            <span style="font-size:24px;flex-shrink:0">🤝</span>
+            <div><div style="font-size:13px;font-weight:700">Alimentação Solidária</div><div style="font-size:10px;opacity:.75;font-weight:400">Doação · IEC Goiânia</div></div>
+          </button>
+        </div>
+
+        <!-- ══ SUB-ABA 1: CIÊNCIAS & TECNOLOGIA ══ -->
+        <div id="ext-ciencias" class="ext-sub-panel" style="display:block">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Ciencias_Tecnologia()" style="display:inline-flex;align-items:center;gap:8px;background:#1a3a6b;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Ciencias_Tecnologia() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIgL0Y0IDUgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtQm9sZCAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjIgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago0IDAgb2JqCjw8Ci9CYXNlRm9udCAvWmFwZkRpbmdiYXRzIC9OYW1lIC9GMyAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0Jhc2VGb250IC9Db3VyaWVyLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0Y0IC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNiAwIG9iago8PAovQ29udGVudHMgMTIgMCBSIC9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdIC9QYXJlbnQgMTEgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvbnRlbnRzIDEzIDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDExIDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9Db250ZW50cyAxNCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCAxMSAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKOSAwIG9iago8PAovUGFnZU1vZGUgL1VzZU5vbmUgL1BhZ2VzIDExIDAgUiAvVHlwZSAvQ2F0YWxvZwo+PgplbmRvYmoKMTAgMCBvYmoKPDwKL0F1dGhvciAoTnV0cmkgQW1vcmltIC0gVW5pQ2VzdW1hcikgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDQwNDAwMjE1NiswMCcwMCcpIC9DcmVhdG9yIChcKHVuc3BlY2lmaWVkXCkpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDQwNDAwMjE1NiswMCcwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0IChcKHVuc3BlY2lmaWVkXCkpIC9UaXRsZSAoQ2lcMzUybmNpYXMgJiBUZWNub2xvZ2lhKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjExIDAgb2JqCjw8Ci9Db3VudCAzIC9LaWRzIFsgNiAwIFIgNyAwIFIgOCAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjEyIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDI4MzUKPj4Kc3RyZWFtCkdhdUhNPkJBTGgoNFEiXTMlcVUsUC1NR0tDMGdENzw8TnRqPCs5W1oxRz9EXjY/XFVES2E7V3FvQlovOkRAJFZzX19vWmxBSUQpY2tCdUliRzpxXWpAZWYnSUoiLjEjUippWjVFb01bX1wmO1JtVjpjWSdjOyZoWTM2XyZgJEhfN1kuaD5daW4jTydhIWdFU0UzSiRANTtQQSxhWTw1XzxANyM5bFdlPjlJU2o0XVExInJROydILkZKPCw5OVo/QHUrSGorU108J10/W04haFgnYm9yYTNwT0s6P2M8NytycTUkXzROcExJUlgsLCp1IUZdLD0nZFpybzVSWE0qZWdLTD5bLS4lTjlhKlhjKjxJa2c8JkFPdVFPTnNbODdAWmd0cUE3RD5cMSJdUy9yX29UU146QGYlKi9gPGpwKkxycFUpWVZsTkhINU4lODhjOjJqR0hRXmYmV0VwZTs4XDpIJSJnVWRabG1qTmhfKTZcI0k4L1xBQVRLUSlOQk1oWzc9ZE9FQDo/KmB1TUtNOC8sVi8rMT4oKyIzVU09M1hHLVAxTy5KPDs8OG9zbSpGbTYnYFtPTi43J0pRZW1uZS11RkdBLlgkbW5DPXA4IitecFcxaiZbM19JMzczLkdDZkJGIkohV2IxPSxBViJmSmk8S0RPQisna3JdMSclckdoUGVkRXRYKzk0aWdDYCdhQUc4W3NoIigvYmVLXiJDcF1WVkp1UD0+RkZkL3FFLEtyMms0cFUjODw/TUtUKzlmXEk5TT9haj5ZKTlwLiYyY19XImllLSpfXVojUj86cVxiUzdKKTJHKCNlTUYnYF4/TyU3Z1MhUFxAVDFdXyNvbSlNZzM4ZDVCTl1fREpkZE1abEFTUSRAZ0JiU1FTYG1paTJETjkyKXFOPiwoNC5gZEM3TyxIZEdwRTlSYixXNEFPamY5KVlnbFwvKEZLVU51IzolblZqYiRicChUaCdAZnMpc1NLSjdvdFpBLWwuJF1WW1ldUU9yQ2FPWlthRF0kUTdUS2xAYF0jX1trLXAsUHFTO1JIMDBnWVFvJGJcSFFuN3JnN3JgPGImO2E2KzsnTCI5MkcnRiZlRk0ucEJRL2ZrNSRtMT1WUSMmUiZra2ctXztTR1xaZU1bKCQyOmMxWV1WR2w6Ji9CTmtCZzc2NWU5K3Q2XilYbFtKWmp1SihRXjI9NSZrdDJORilDYzg0ODU7aVlrKzVHTm1GbmFaUVlrS2wrQjZLb0tXJzZFXT0uQSJlOC0kbCJoc2k1OUdsXzQnPkNgcm1kMmhqRClraTdnR3VzOSt0LlZINEBGKEYrKipWV0lHdUEuMms4TT4+dSgybClbK11JWWRAbDFSL3BXXlItSWAvaS9XQ0crJVRQPF4mXV9CJlx1XTFBLWZiJTVYalRwUiZMTkJSI2hnUTlCcFZWOEdsK11VRyNtWDczP15FUlMxVidgT3FHSWlQZXItO2M2RzVSaWY1XTphV0dWV2lDP20zWHJ0Zj9RYiYkSmssNGdQOTEuP0wtSCU4KjQvKWBJNDAxVm4rJCIrLy1NYHItXGdoSmo7bDpfNjdwKFckTWhCaSZHYzhXczBCWSpBZnFLKyUpUkEhLjVBUmksVUBucT9JVmxLZDRqRVlZLHIoWExHJjJxRV5zUj5sdCpgcCNmcD4xOHNMb0lrKlpHUkM0VTJiPnRDdVRxUThvMjE0JWREbG51K10nPEZYVkhXM0RNWDh1ISpVQl9fL05ZZ0NWPS9ZJEdES2liYU5PODRTc3VoWklCPGM1aU0oIyVjXSZfWz4mTi9ANWBqTHJbXiRlW08xT3E+WyJYQFdiIj88YWwhUTg1am9obFUqN05ULi9nb10qX3FGaCw5WFRUNUhGcTtoVz9CaUlVIkhnMFlWRTE4JkI+Ni5hYXJlKylWVlcoOSVuMD5pXElHJiMmaHE6by5EWVJlW2pKMSdsQSEmL2FrUygpSnFTUVBjV0hFLVNBSkJTInBVXFUnWFZyXGYnK09kJHVJYClQc0xTOVZ0ZXRacU1zciJVP2BDUydqOkZLJ25oRW9mR1MpN1VvQ0sxbWZLPFAja2lJL1F1Ml82RjBKWmhRZmFTKEBeZFdqTkdlJD5jWFtGKjshYTk4KjpeUElxJ2dsPD9CUG5kWWRbT0pXYC9lK3BeMnA8QztYUSxAJTVGLF1kWTNbMktoOmtSRz4lOU5SSCtFRSZhN2dnWEpnamA2UjgvbVAzUTItYSJxUlQ1ZXAxMU5wLkE+Tl8zSEhxUU0/OVVrZ2NJVjU4Sz48TFtTSEIvV25taDNzNUluP0hjJWBSajhLU3FDXi80O0AsIWNJUSpdRCMjNWc6JXVEV21hQlY4cWM5TFxlLCNDXjlNUz1zWztNbztKW2BnVzRJYDg+NTpaLlRjNCMwKkBHSXEhKHJfKmQ5OScvQWFGQWMkZ1lFOi8xTlhVYEZUZWRJX011IidqL15rVDJKaiZCbjlkcy1ZSylfNlA4bHBcL0FpMmVkKHAkcy8qSVpBb0RLITtqKF4pREQ9dFA8PS5lSXFWPmJwUmokMmopPFJXLWVPK0U+KWBKVUApdEQybFYiaGVAdDlXZjlrPkxZNlA4dHJKRzdSQF4jLFVkTVIqLU00YUcnOSFNZGomYUNMcV9gLCgpaDwsQTtxW0QoTDMmV1sjUS9SazhRUTc5JlxcUFJtbCxjU2UrT28vSU5LZEQhbE4/cFlobTFATT5xLFVdQDBncyFVK2FSOSxsWSVxQFxXLCEoNjwicGY2bWtRSkIuP2daNGFmVFxZQVZLLFpBITRuOkNlM1pIMSlzUjFgNERnJjA8dD1bZzUyQCRyTEkkZCFbLklNSEJzIkkkMC1QcGxmaidwMmxoaVVHJ2s6Py0qUnRsOT5pKmpeUFAjTVsqYFhHUDQhSzdHWCEucGROVyRhNkUqSzw5W2E8XCMpUDs7YzYyUTJmNFs9ITw6RzZZb2Y9VWJlVl5kUFFjNSQ4QmB1cWg1Mj1hSUJuWig7LSkkbl1WQiVxVWtiUSZyZF9AIU5uNjBhTEFlUG5dWGpcLVkuZm8jXGhyIyZDb2QuLlwyYGc2JEkoIlAyRGIkZy0+WVNLb2IjT0RKLVdcRl0sQTgtN0RidWRuKCVhI0FjbC5qKHUzZUBxWGpERXAjY19NalxLP2U/XDIsR2hIYjUiNjBJMjpZbiZzJlBSVDpJWmFpQjJULEw9bShaJ11rMlZcb2NDQmVjI1REJlRUWk4jczFkZGlfR05BZ3FhbE10W0BzKEgkZUtDUW9nMzE/T1opaVRMZjFKTzNzVUIsOTArMydNTnJuL0dIKjQtZUpkTjB1XV1kSVVONil1VyFobzlMUE0xc2czQT1IUCo6IVRsNz9VaSo/ZmBDJEw1PldEKURgJjlmb0w/PSwtRVNtWW07I0cwWXJEXzA0KkYlMGphJTA9aDJfUlQmZ209N3A0KzQ/RE5wT3VTREpcLU4lWmteVG9LXiM/VWlMST9fOnRbbUVeTk47MUNGMWxXVHAmNSlnalY1L0VQPjwzViM6bDE5QEZcMT5XaCRxXUROM1lmdGomKG1ESUZfaD8pSWJqWUhtW1VuOmxcbEopRmFXdFkqZGtAXWZ1PCpKaCxOZVBMVD9PIj8hLl48TF9fNWkrNVQkSCQ+TDFWKmUmTTg0ZUtpblBCLyFPRjVVVzJiWmQvXzBPRmw8aFtRZ2BfMC0qMkFwZTZRSUI2KT8waSxSP2hKP2dyVHJeOU5wJUc4M0QsNmtpakY5LSduOXR+PmVuZHN0cmVhbQplbmRvYmoKMTMgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMjIwNQo+PgpzdHJlYW0KR2F0bTw9YDwoUiY6WEFXUi5kNG1nLigzSmw2b0lDKWVYI3RMbF44WidGIjJhWC80RFRGRFJiPGo3WFkyXWdJcG4yUU9uTylDJzcjXE5VSVgxRVQmOmkiKXNpTkRiOWMkVEwvQTVUKS1ASlwkakxNZyRqXiouOWtnTSFHXWRKalVDaipyXWJgPyM1TlYyImo7ciJKLytMS1loMDNuM0JnKjBeXllEJ1xyXzVLTU0lQltIZUE0X0UlYDpmYS5BPz10bWc3XVRAZ10hZ05SLW42cUhybmJYayQ8RnFIPCFnXyglaU1PW1xXYS0qTSJuU1hfYi91I1NIMlwtZCsoPV03b3ItYW9kIitPKHFgOWBmIVtlRShyPzBDIl1dPVpVOyhQQjghPlswLW5nKiwyWktLbUk+c1o9LVNCckwwaSdPY1lcS0cvalxFYVxVSHNyNXNcPltcJTM1Vk5BcFY6Yk5PKG1qVTYwZ1YsYHF0YXM7IU4hQExuSTRhWHBWX2I1dXRUW1ErSyM9V1FLQWtbT1REWFhYa1BwXExjO1lAOTshXkxnY1YzN0BdZW8+dFRsZENJOF8uOmRFWWVqOipIKURXND1rbF5AXiYyOkMtJitoam1KSTFVdWxLJk1WV0JlP2I+VFRkOzJfJSNsUmM/cCwqPV02Wjc4cz5baWUjRFUoLkheQVRya1BFaUkkJTRgOkFhLD1BTm9AcHBEV2Y4JV9nKWE5Q0xlQyU2VjMsP1klWTI0ODtSSGhTLS0uYm40TW9RWFRyUkdjKENMOzk0KGoydEkyLDhFKnA7UVxUQDVpREspbVhHT3JdNkJzUWRGWkpWZUc6cj8rUWNzKjhiKzB1cCopOW1HalApLj1MRTdOK2FHUCtramFZb2shIzFMWTUlJisqOlotKEBUN2FXI0FSRklMUGYvOG9uOiVBb2k6TDV1WiNPTVNEclJeNUVLQWdQbmxSMjlZPyNXVzd1PnJaUiE3MmJRWTBhOVxlaiRpZUtNbj5mUG1USmguInVsZi1BQyhdSWtxcDtlQSRYPElwLyprLy9XIU8yWzg6TzZZdThIbzZXL3FLTmUwLT0zOkMtTmIpJis0YkZ1b1Q7SS5YT0spNGZyRCJGNyc5TnA4RCM5Q1loWTYrOGRFaixAKlxqZ0ZqSydGPzMuLT1EYiVpZUw3WWcuVHNlLkpmNkZlUFolXkhlLldCMnVAJ2RFZGQhJCE9OjZSKmAtTThXJWgvRDBicU1pRWJBKmFQRlQsL2lGO2IrdEtJcldSQz5FR25EQGZpWDtSLUMlbTVsaEpWYTNoUFZwPzlTLFEiU08sIkRlZW8/Y1EqdFhSUiplN0B1XUA2Qi40LCRkQlVGLl8yTkswQlIzUXBsPkk7Vk03PW4vRFhedUBRQSZKJ0wkPShLYUlscTE0ZFwicnRmTEtDPlwrOkM9bU1LM2U6N0JRcVRHPWUobGcpcDUtNj0hWVxtQDdKdEs5LDUyPS1jXjNjL15aNDQ0N28iVFkxcisqZDcrPVNNZHU7JnJGIVApXWZsRkZLUClmYjZuND5cR1tAZ2ZJRVxcPk5PMSEsZEtyLT1fT14+ST9LW1Vhclo1Ik4jbCYwTjZNTkVKXzdDWy8mRjkiWl0pYzg6UyZUZi8uIT0jYFtpIXA9LkRYVi5sbXFOJFlnISktYiUuMGNeIl9ZXj1YZDZHUzdmR3BWZHBuQl0mbVc3ZU8jOkI/RjVdQ0FTcjozMVxHZnVgOG4zZXNGb0NObjc6OiFLUl5PM25dVUxLYkJAalZaMU8pITpHSSs9ci1pV0lRSV5RWyxFN1s4YE5nQ0FjVms4YE4qc1gpS2AhX1VDWVtuLj1tR2E5M0lAYzg5JjAyRlo+UzltU2NsJlpvXDdcX21FVkVmISZiZ0NpLDkobj0tUFIhRmlvcVhMZUJibjNJZCI0YU9AaEQ1bmU9KGclV2NHYkxEcEVpWVliclQ+KGE7YU4vRyxeJzBXQjQmNlYncmhvS2dmWE9VUz4lXmA4JFZPMVFMY2xaZVs8dElxQ3AwKG8lUDRAMDdlTzomdCYsRj1tJ3AiPGAoNl5VOFBxLDM3QVFlLjEhaWR0Y0w0VlJnNjtzPFU0SkpmVzBLc0AuYWdpaFxAdVw2JilnJUZzWVU/KUdlIWgybEBYKSN1SXQyRC9VaTMwYz5aOF5RPzJKMHM6UkRxJFI5N0tlY04qa3JKVFk0QXEialxJMGYwLF9DJydrXik9a0szazhNP2c8VF1gSWkzXGlsYlAxO0omTyRsMnJuOmQ1cXVkZ2g0ZzInbGR1XGZdazteWSJtc0NxUEU7MDkoUypJYmdaOktSbk1OR0paW2osajVHQD5DXlZcMExRYUhiMSFdUkdJT2FlTD8lcFhEJydqTFpKTFk4JlxfRlgybW8qLWVLKzdlWWVQVVhpLEBbUTN1WCg/bDNdVVIoTmRIUl44I2JrVUtscXI9bEZtI1NuXllXcitqXz5hNEYibXUpWzZDOGVAKHRxQ1xEZmlYM2h1MT0wZ1s0b1RJXzRbKj8oRzxHN0wqKjVSMTA/PVtnaDAkSGNhT2FYU3A0RlIqYDQjTVFxa3E5bXQnJzNOJytWJSorXGlYMEJNIjs4OTM8WzRXcEszbz9ROFQ+LiFPay43NTJCPUdAVlpQZCJRaDlFKypJdDllTS8mMXRxSlBOUjJMQ2IoQjhGOllJci0pSzdXZy5WbyRAOzhHbVw1S28qZTQsRVM2YyIyRy5MZ0hiPyQjLWhFKTtMLktMYllaVik7cGNMY006amBvLldxNVUxYlhKXj5lKSgwUmk8W2dIKHBWJFpjQStkMy9HaiEmI0o8JnIqVUheXSduRmtpcGs4QzZHNihALU8ibGJWXTAqRT03SUNRTTlfTFVpR01CIl49SjdhY0dYIU9OSWtRQ3AwVVEuZ1tkRCcxdStEX34+ZW5kc3RyZWFtCmVuZG9iagoxNCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAyMjAyCj4+CnN0cmVhbQpHYXRtPGdOKSUuJnEwTFVGQTo7JUJpPj0zSi03T3NWRlhEJ1pcZSklYjAzbmdwQXEhclJqak5JbkRcIUFsZldkN09nOktGWmEmbk4iOUovVlRfaWhwUy9oSXRwQVpCY0hHLSclMms3Q05lTGJkJUgqaGxmbmBvMXInQlhPaiw5cFomRTlaQzRcb0UiPjtJRlBXM0BzZk46LDd1KyJPXFs+UjNQc0Q6b1deUWA8aDRXKFRVYVRKdGM5SjJZQSFYUi5uVGtURD1WKjMvKl8xUzFwVTk6OiQhTV0kT0hAWC0uQFIrNCtTNTUzXmVKN1Q5NV1lalhgQUhFUiZrWFprLnQ3NSonYiZtQF45bysxTT0xMVg1Ym5VI1F0bCZAMl5PZWYiT0onXmU4S3VxUEVXWzxtM2pATF4rTSssLGxLSDpUXypYY1RgXz1hMjVBS1o9MlIic2NVLVJNIiUiLnRxc3FTTFA3JUZ0X1dbZT4uUCghYDY1TCwqU0lJQi0jSzByMThsakprcmdRMFkwcVsrMVM8VjVpdDg3WzlHUVlrK19FO2p1bUg5XzdcbyNqRk5oNC1eOVUkNj9DVG5lKzRaXTxrRHE6Oj5SOU4iI1NNYVcqNlshdChqSVVrIzQzTnAzMWYpVl8ya2xWJURCVW8jRDFbdCldQ1krLlRxMGNoTEYqNlE+OUprNkZhJVc1a1A+VkpCYWBBaVYpRVBUODJmLltRIWJQY0FvLEZoVXBtTHNDUDxfa0FJWyJlPUUqJU5TVmBRJiRtXCJwVnFYZ0pKa2UqZXJnMztIXG5SZmVdZ2NJTkFCYlQ5WS5gJWVsWyVgXU9KNlZNbFJLZz9MbzooLG5xJC9CNU43LWxbSjVTb0w6JWFcb2JuUWRLUnA2OUJORVNiOTNRI1FUPmgmRlt0VS02MDBsWGdoYTAkWi0sVD9WKGlHLiUsP0RMUjpBJkhUU1ozXW1CMjBqXDBrO25XJTxSJzRlYV09P11aSWlBRDFxV2hPSzBEXz1ONExwQidhLl9MJEpwXEcwNjNTN1csdEpgJEQ/PSZwT1JAWCwoajYxPk9vck4mTVFvZyVzL0A9JU9tQDtNUHEwZTpFa2QoX0hbSTFOby9bIjRELWliSis8SHJIO1wiLW8nT1ItQj8vUjU7VE5iaGtTMyNOK0UuZzEzWFdPZkdNSDk0b1VDV2FjbXAiSFEnQ0k6Y2VrNWFDPGs7JFZwZ1NPSTZoWkxLYVFxaE1oREMoQGokRSJEWFpAT0JRKSxGUl05Wi5YPjAoTHIwMilDTTIwPltxWF9COiFKJ2NraXE6TyphRl1wYCE1c09GSS1TV2g7J3E7WF45Wj5baXI+Iz5yK2FIKm4pNXBoMzhdMT5nbTBSanVvOG9DOVFsbTVXRlBSYlBhYEQrYFlxclBQWEVbbldkWCFcLXFuITAxbVVYMytGcV9zRWFUUCloIjthQWVdW2FBLm9VPEtkQG03Sm1WZUJtTytKTDxFXFVDZHVbLSpGW24oT0I5YXFiKGpMTCIhMjFAWy02PzxqJldcLjI5ZEVBJWczcC0/KHFxNDtJUV5pa25RbF5GKWtFWm1PK104QGk4RyQkNig1aCM/Qy46OHRgPyhnNFJPMWM7bFImaj0tNzJTJWwvXjowRzk5PTphKDRTL2VAayxuYkhRV08lTVJLT2RlJ2JCYWJHKjBaViVtW05XUkVFc1pWLVJqQF5MNC9Zc3UrT2o4PnVBZ1YzOi48THI4SFZCQFhGUGVrTS9BQzE+ajw+V2NFWkYjTT8jVE4sJmpDPksybk9WZC0nWydKTGRRM0paI0xtaCU7XFdgNGFpQ1FmMiQxSSJSNlkwZS5FTHBvQnMiZDsoWCxzSydxYV1pWktkUD1tImJiLWNQQSklQzQ4MVhWV0Y9YUFOaj5EUWdrW2E3NiZbWkFIbjM/OSslakJgZC1kJWYpKS8nJjpMNCE0aHRhTik3WmshZFRuRTorJjlFOTNlaD07RmJHJT5kJztSOW0lclAwUCciRT1SQ146JWc/MlVCKXItWXI3cy9iPS5jIzlaXD5yV0Q8SFxrI0gzSVVPN2xIN0NxLi1MK2VJYCZIN0RYMXVxKV9zaTdXR2dvMkUuXUxRXks+cVZbOlpqVFghIjMwKCc8YEIkP3M4UGJoQj5CNEs2PkkoVy9dVV88VS85VWYxcCVkcVNYVzJDVEkrUDtkaUQlUTA1KGVVKHVKOU1JIlhCIk8mODo6RlQrYFdvdUoocnVrNmEkYCVUMTZkOGVbaDhlIVZMOXBlaURlODVXKEkxRGJaWDguV2gjNipcVUcyOTQpZS9WIVprSlNJJmtobUc5QFdtSU0sIiFJXUJGPmY9L0MpPCgqJnJGVGJTVUteKWJOPCxJXGIxIz9hQ3UtKnJvL0wuTVFZY3FJWjs5RzoiVSM+SC45RW5bTlQiYE9fOTRvai5eTGBaQG1VVEklI2ZIPyg2OC1KPUBiblNvO0wlc24zOFBqO1Z0VllYKGc3PG5QcyRSYjc0aGJjZ0VBakozQz1IIlRWcEtcaT4yb2spaTRSUnVcU3JlI2FLTFRHZCRhbVxDcmBcZjZPaUBlP19yOW1oKkRFY0poL2I/NCdWQFkyZDdIcFI7OzBBaT1DbXBKWjxqRXBucz5PWjApMFxdJVg6SUJdLz50c1psJzFfUVA/LVdEKzJROlBIcW9UMVpzK1VHYlJedVg7Iy8hX3RvbTFdVW5FOHNucypFakVtTWI2b1ZgYU06N2EwXCxgNGwzLExcQixWPTtYTE5SYz09M2M6XCcvcFIyW0ZEWkhqKFs5XFwqUlBBSV1tSDkvUUwxXkhPJUc3XGAjKFVLMnEtXnRsVEc5ZTxKVjg0KFM6NTFJJXJxRyI1Y25scywoVWkjck5dcUZZWHBuJklnPCZdbTQ3T3NVUWBGbUkkM0Q/fj5lbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCAxNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDEyMiAwMDAwMCBuIAowMDAwMDAwMjI5IDAwMDAwIG4gCjAwMDAwMDAzNDEgMDAwMDAgbiAKMDAwMDAwMDQyNCAwMDAwMCBuIAowMDAwMDAwNTM0IDAwMDAwIG4gCjAwMDAwMDA3MzkgMDAwMDAgbiAKMDAwMDAwMDk0NCAwMDAwMCBuIAowMDAwMDAxMTQ5IDAwMDAwIG4gCjAwMDAwMDEyMTggMDAwMDAgbiAKMDAwMDAwMTUyMiAwMDAwMCBuIAowMDAwMDAxNTk0IDAwMDAwIG4gCjAwMDAwMDQ1MjEgMDAwMDAgbiAKMDAwMDAwNjgxOCAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzw0NTJhMzYwMzEwNTA2ZjdkZjVmODM4NjBmOGIwNzNjOD48NDUyYTM2MDMxMDUwNmY3ZGY1ZjgzODYwZjhiMDczYzg+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDEwIDAgUgovUm9vdCA5IDAgUgovU2l6ZSAxNQo+PgpzdGFydHhyZWYKOTExMgolJUVPRgo=";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Ciencias_Tecnologia.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+                  <!-- ══ FOGUETE DE GARRAFA PET — 2 ESTÁGIOS ══ -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+
+          <!-- Header do card -->
+          <div style="background:linear-gradient(135deg,#0c1f3f,#1a3a6b,#0f4c8a);padding:20px 28px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-20px;top:-20px;width:140px;height:140px;background:radial-gradient(circle,rgba(99,179,237,0.15),transparent 70%);pointer-events:none"></div>
+            <div style="position:absolute;right:60px;bottom:-10px;font-size:72px;opacity:0.08;pointer-events:none;user-select:none;line-height:1">🚀</div>
+            <div style="width:46px;height:46px;background:rgba(99,179,237,0.2);border:1.5px solid rgba(99,179,237,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🚀</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:10px;font-weight:700;color:#63b3ed;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Ciência & Tecnologia · Materiais Recicláveis</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Foguete de Garrafa PET — 2 Estágios</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px">Propulsão por pressão + reação química • Materiais 100% recicláveis</div>
+            </div>
+            <span style="background:rgba(99,179,237,0.2);color:#63b3ed;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(99,179,237,0.4);flex-shrink:0">Em desenvolvimento</span>
+          </div>
+
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px">
+
+            <!-- Introdução -->
+            <p style="font-size:13px;color:#5a6a5c;line-height:1.8;margin:0">
+              Este projeto de extensão tem como objetivo construir um <strong style="color:#1a2e1f">foguete de 2 estágios</strong> feito inteiramente com materiais recicláveis, demonstrando conceitos de física (pressão, empuxo, reação química) de forma prática e acessível. O foguete combina dois mecanismos de propulsão distintos, simulando foguetes reais de múltiplos estágios como os da NASA e SpaceX.
+            </p>
+
+            <!-- Os 2 estágios -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🔩 Arquitetura dos 2 Estágios</div>
+              <div class="foguete-estagios" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+                <!-- Estágio 1 -->
+                <div style="border:2px solid #bfdbfe;border-radius:14px;overflow:hidden">
+                  <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                    <div style="background:rgba(255,255,255,0.2);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:14px;flex-shrink:0">1</div>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">1º Estágio — Base</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Garrafa PET 2 litros • Pressão + Água</div>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px">
+                    <div style="background:#eff6ff;border-radius:8px;padding:10px 12px;border-left:3px solid #3b82f6">
+                      <div style="font-size:11px;font-weight:700;color:#1d4ed8;margin-bottom:4px">💧 PROPELENTE</div>
+                      <p style="font-size:12px;color:#374151;line-height:1.5;margin:0">Água (400–600 ml) comprimida por ar injetado via bico de bicicleta. A pressão interna empurra a água para baixo gerando empuxo de reação — 3ª Lei de Newton.</p>
+                    </div>
+                    <div style="background:#f0f9ff;border-radius:8px;padding:10px 12px;border-left:3px solid #0ea5e9">
+                      <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:4px">🔧 SISTEMA DE PRESSÃO</div>
+                      <p style="font-size:12px;color:#374151;line-height:1.5;margin:0">Bico de bicicleta (válvula Schrader) acoplado com abraçadeira ao rolha/tampão da garrafa. Pressão alvo: <strong>60–80 PSI</strong>. Bomba manual de bicicleta.</p>
+                    </div>
+                    <div style="background:#fefce8;border-radius:8px;padding:10px 12px;border-left:3px solid #eab308">
+                      <div style="font-size:11px;font-weight:700;color:#854d0e;margin-bottom:4px">⚡ COMO FUNCIONA</div>
+                      <p style="font-size:12px;color:#374151;line-height:1.5;margin:0">A garrafa PET 2L fica invertida na plataforma de lançamento. Ao soltar a trava, a pressão expele a água com força e o foguete sobe. Ao atingir altura máxima, acopla o 2º estágio.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Estágio 2 -->
+                <div style="border:2px solid #fde68a;border-radius:14px;overflow:hidden">
+                  <div style="background:linear-gradient(135deg,#b45309,#f59e0b);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                    <div style="background:rgba(255,255,255,0.2);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:14px;flex-shrink:0">2</div>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">2º Estágio — Ponta</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Garrafa PET 1 litro • Reação Química</div>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px">
+                    <div style="background:#fff7ed;border-radius:8px;padding:10px 12px;border-left:3px solid #f97316">
+                      <div style="font-size:11px;font-weight:700;color:#c2410c;margin-bottom:4px">⚗️ REAGENTES</div>
+                      <p style="font-size:12px;color:#374151;line-height:1.5;margin:0"><strong>Bicarbonato de sódio</strong> (NaHCO₃) + <strong>Vinagre</strong> (CH₃COOH). A reação produz CO₂ instantaneamente, gerando pressão interna que propele o 2º estágio.</p>
+                    </div>
+                    <div style="background:#fef9c3;border-radius:8px;padding:10px 12px;border-left:3px solid #eab308">
+                      <div style="font-size:11px;font-weight:700;color:#713f12;margin-bottom:4px">🧪 REAÇÃO QUÍMICA</div>
+                      <div style="font-size:12px;color:#374151;line-height:1.5;font-family:monospace;background:#fff8dc;border-radius:6px;padding:6px 8px;margin-top:4px">NaHCO₃ + CH₃COOH → CH₃COONa + H₂O + CO₂↑</div>
+                      <p style="font-size:11px;color:#78716c;margin-top:6px;margin-bottom:0">Bicarbonato + Ácido Acético → Acetato de Sódio + Água + <strong>Dióxido de Carbono</strong></p>
+                    </div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:10px 12px;border-left:3px solid #22c55e">
+                      <div style="font-size:11px;font-weight:700;color:#15803d;margin-bottom:4px">🔗 ACOPLAMENTO</div>
+                      <p style="font-size:12px;color:#374151;line-height:1.5;margin:0">A garrafa 1L é encaixada invertida sobre a boca da garrafa 2L com fita veda-rosca e conector PVC. Um pino plástico (trava) separa os reagentes até o momento certo.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Diagrama visual do foguete -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🎨 Diagrama do Foguete</div>
+              <div style="background:linear-gradient(180deg,#0c1f3f 0%,#1a3a6b 100%);border-radius:16px;padding:28px 24px;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap">
+                <!-- Foguete SVG visual -->
+                <svg viewBox="0 0 120 300" width="120" height="300" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+                  <!-- CHAMAS da base -->
+                  <ellipse cx="60" cy="295" rx="18" ry="8" fill="#ff6b00" opacity="0.7"/>
+                  <polygon points="45,285 60,260 75,285" fill="#fbbf24"/>
+                  <polygon points="50,285 60,265 70,285" fill="#f97316"/>
+                  <polygon points="52,288 60,268 68,288" fill="#fde68a"/>
+                  <!-- Plataforma -->
+                  <rect x="30" y="270" width="60" height="6" rx="2" fill="#94a3b8"/>
+                  <rect x="25" y="276" width="70" height="4" rx="2" fill="#64748b"/>
+                  <!-- ESTÁGIO 1 — corpo principal (garrafa 2L) -->
+                  <rect x="35" y="160" width="50" height="110" rx="6" fill="#3b82f6" opacity="0.9"/>
+                  <rect x="38" y="163" width="44" height="104" rx="5" fill="#60a5fa" opacity="0.3"/>
+                  <!-- Rótulo Est. 1 -->
+                  <text x="60" y="200" text-anchor="middle" font-size="8" fill="#fff" font-weight="bold">1º ESTÁGIO</text>
+                  <text x="60" y="212" text-anchor="middle" font-size="6.5" fill="rgba(255,255,255,0.7)">PET 2L</text>
+                  <!-- Água dentro -->
+                  <rect x="38" y="220" width="44" height="50" rx="4" fill="#93c5fd" opacity="0.6"/>
+                  <text x="60" y="248" text-anchor="middle" font-size="6" fill="#1d4ed8" font-weight="bold">ÁGUA</text>
+                  <!-- Bico de bicicleta -->
+                  <rect x="55" y="265" width="10" height="5" rx="2" fill="#94a3b8"/>
+                  <rect x="57" y="262" width="6" height="4" rx="1" fill="#64748b"/>
+                  <text x="60" y="259" text-anchor="middle" font-size="5.5" fill="#e2e8f0">bico bike</text>
+                  <!-- Cano de acoplamento entre estágios -->
+                  <rect x="52" y="148" width="16" height="14" rx="3" fill="#475569"/>
+                  <text x="60" y="158" text-anchor="middle" font-size="5" fill="#e2e8f0">conector</text>
+                  <!-- ESTÁGIO 2 — ponta (garrafa 1L) -->
+                  <rect x="40" y="70" width="40" height="80" rx="5" fill="#f59e0b" opacity="0.9"/>
+                  <rect x="43" y="73" width="34" height="74" rx="4" fill="#fde68a" opacity="0.3"/>
+                  <!-- Rótulo Est. 2 -->
+                  <text x="60" y="105" text-anchor="middle" font-size="8" fill="#1c1917" font-weight="bold">2º ESTÁGIO</text>
+                  <text x="60" y="117" text-anchor="middle" font-size="6.5" fill="rgba(28,25,23,0.7)">PET 1L</text>
+                  <!-- Reagentes dentro -->
+                  <rect x="43" y="120" width="34" height="27" rx="3" fill="#fef3c7" opacity="0.8"/>
+                  <text x="60" y="130" text-anchor="middle" font-size="5.5" fill="#92400e" font-weight="bold">VINAGRE</text>
+                  <text x="60" y="140" text-anchor="middle" font-size="5" fill="#78350f">+ BICARBONATO</text>
+                  <!-- Cone/ogiva -->
+                  <polygon points="60,10 40,70 80,70" fill="#ef4444" opacity="0.9"/>
+                  <polygon points="60,10 45,70 75,70" fill="#fca5a5" opacity="0.3"/>
+                  <text x="60" y="50" text-anchor="middle" font-size="6" fill="#fff" font-weight="bold">OGIVA</text>
+                  <!-- Aletas -->
+                  <polygon points="35,250 20,270 35,265" fill="#2563eb" opacity="0.8"/>
+                  <polygon points="85,250 100,270 85,265" fill="#2563eb" opacity="0.8"/>
+                  <!-- Escala/legenda lateral -->
+                  <line x1="108" y1="70" x2="108" y2="150" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+                  <line x1="108" y1="160" x2="108" y2="270" stroke="#60a5fa" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+
+                <!-- Legenda ao lado -->
+                <div style="display:flex;flex-direction:column;gap:12px;min-width:180px">
+                  <div style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);border-radius:10px;padding:12px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                      <div style="width:12px;height:12px;background:#3b82f6;border-radius:2px;flex-shrink:0"></div>
+                      <span style="font-size:12px;font-weight:700;color:#93c5fd">1º Estágio</span>
+                    </div>
+                    <p style="font-size:11px;color:rgba(255,255,255,0.65);margin:0;line-height:1.5">PET 2L • Água + Ar comprimido (bico de bike) • 60–80 PSI</p>
+                  </div>
+                  <div style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:10px;padding:12px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                      <div style="width:12px;height:12px;background:#f59e0b;border-radius:2px;flex-shrink:0"></div>
+                      <span style="font-size:12px;font-weight:700;color:#fde68a">2º Estágio</span>
+                    </div>
+                    <p style="font-size:11px;color:rgba(255,255,255,0.65);margin:0;line-height:1.5">PET 1L • Bicarbonato + Vinagre • CO₂ como propelente</p>
+                  </div>
+                  <div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:12px">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                      <div style="width:12px;height:12px;background:#ef4444;border-radius:2px;flex-shrink:0"></div>
+                      <span style="font-size:12px;font-weight:700;color:#fca5a5">Ogiva / Nariz</span>
+                    </div>
+                    <p style="font-size:11px;color:rgba(255,255,255,0.65);margin:0;line-height:1.5">Papelão reforçado com fita crepe • Reduz resistência do ar</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reações químicas explicadas -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🧬 Ciência por Trás do Projeto</div>
+              <div class="foguete-reacao-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:14px;padding:16px">
+                  <div style="font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:8px">🌊 1º Estágio — Física</div>
+                  <p style="font-size:12px;color:#374151;line-height:1.65;margin:0">O ar comprimido (≈70 PSI) empurra a água para baixo com força. A água acelerada para baixo gera, por <strong>ação e reação (3ª Lei de Newton)</strong>, uma força para cima que propele o foguete. Quanto mais água e pressão, maior o impulso inicial.</p>
+                </div>
+                <div style="background:linear-gradient(135deg,#fff7ed,#fed7aa);border:1.5px solid #fdba74;border-radius:14px;padding:16px">
+                  <div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:8px">⚗️ 2º Estágio — Química</div>
+                  <p style="font-size:12px;color:#374151;line-height:1.65;margin:0">O ácido acético do vinagre reage com o bicarbonato de sódio em uma <strong>reação ácido-base exotérmica</strong>, liberando CO₂ rapidamente. O gás expande e pressuriza a garrafa, expelindo os líquidos e gerando o segundo impulso.</p>
+                </div>
+                <div style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:14px;padding:16px">
+                  <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:8px">🔗 Acoplamento dos Estágios</div>
+                  <p style="font-size:12px;color:#374151;line-height:1.65;margin:0">Os dois estágios são unidos por um conector PVC e fita veda-rosca. Um pino ou fita adesiva mantém a separação dos reagentes do 2º estágio. Ao desacelerar, a inércia libera a trava e inicia a reação química.</p>
+                </div>
+                <div style="background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1.5px solid #d8b4fe;border-radius:14px;padding:16px">
+                  <div style="font-size:12px;font-weight:700;color:#7c3aed;margin-bottom:8px">🎓 Conceitos Abordados</div>
+                  <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#374151;display:flex;gap:6px"><span style="color:#7c3aed">▸</span> 3ª Lei de Newton (ação e reação)</li>
+                    <li style="font-size:12px;color:#374151;display:flex;gap:6px"><span style="color:#7c3aed">▸</span> Pressão dos fluidos (Lei de Pascal)</li>
+                    <li style="font-size:12px;color:#374151;display:flex;gap:6px"><span style="color:#7c3aed">▸</span> Reação ácido-base e produção de CO₂</li>
+                    <li style="font-size:12px;color:#374151;display:flex;gap:6px"><span style="color:#7c3aed">▸</span> Impulso, empuxo e trajetória balística</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de materiais -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🛒 Lista Completa de Materiais</div>
+              <div class="foguete-materiais-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+                <!-- Foguete -->
+                <div style="border:1.5px solid #bfdbfe;border-radius:14px;overflow:hidden">
+                  <div style="background:linear-gradient(135deg,#1d4ed8,#3b82f6);padding:10px 16px">
+                    <div style="font-size:11px;font-weight:700;color:#fff">🚀 Estrutura do Foguete</div>
+                  </div>
+                  <div style="padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f1f5f9">
+                      <span style="font-size:12px;color:#374151">Garrafa PET 2 litros</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f1f5f9">
+                      <span style="font-size:12px;color:#374151">Garrafa PET 1 litro</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f1f5f9">
+                      <span style="font-size:12px;color:#374151">Papelão (aletas + ogiva)</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">~40×40cm</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f1f5f9">
+                      <span style="font-size:12px;color:#374151">Fita adesiva / Fita veda-rosca</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">1 rolo</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #f1f5f9">
+                      <span style="font-size:12px;color:#374151">Conector PVC ou rolha</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                      <span style="font-size:12px;color:#374151">Tinta ou adesivos (decoração)</span>
+                      <span style="font-size:11px;font-weight:700;color:#1d4ed8;background:#eff6ff;padding:2px 8px;border-radius:20px">opcional</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Propulsão -->
+                <div style="border:1.5px solid #fde68a;border-radius:14px;overflow:hidden">
+                  <div style="background:linear-gradient(135deg,#b45309,#f59e0b);padding:10px 16px">
+                    <div style="font-size:11px;font-weight:700;color:#fff">⚙️ Sistema de Propulsão</div>
+                  </div>
+                  <div style="padding:14px 16px;background:#fff;display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #fefce8">
+                      <span style="font-size:12px;color:#374151">Bico de válvula de bicicleta</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #fefce8">
+                      <span style="font-size:12px;color:#374151">Cano curto (5–10 cm) PVC</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #fefce8">
+                      <span style="font-size:12px;color:#374151">Abraçadeira plástica</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">2 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #fefce8">
+                      <span style="font-size:12px;color:#374151">Bomba de bicicleta c/ manômetro</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">1 un.</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:6px;border-bottom:1px solid #fefce8">
+                      <span style="font-size:12px;color:#374151">Bicarbonato de sódio</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">~3 colheres</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                      <span style="font-size:12px;color:#374151">Vinagre branco</span>
+                      <span style="font-size:11px;font-weight:700;color:#b45309;background:#fef9c3;padding:2px 8px;border-radius:20px">~150 ml</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Plataforma de lançamento -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#1a3a6b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">🏗️ Plataforma de Lançamento</div>
+              <div class="foguete-plataforma-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">🪵</div>
+                  <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:4px">Base</div>
+                  <p style="font-size:11px;color:#64748b;margin:0;line-height:1.5">Pedaço de madeira (tábua) ou caixa de papelão reforçado como suporte da base.</p>
+                </div>
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">📐</div>
+                  <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:4px">Suporte/Trilho</div>
+                  <p style="font-size:11px;color:#64748b;margin:0;line-height:1.5">Cabo de vassoura ou cano de PVC vertical preso à base. Guia a garrafa durante o lançamento.</p>
+                </div>
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">🔒</div>
+                  <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:4px">Trava de Segurança</div>
+                  <p style="font-size:11px;color:#64748b;margin:0;line-height:1.5">Pino ou arame que prende a garrafa. Puxado por corda longa (2m+) para lançamento seguro à distância.</p>
+                </div>
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">🔩</div>
+                  <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:4px">Fixação</div>
+                  <p style="font-size:11px;color:#64748b;margin:0;line-height:1.5">Abraçadeiras e parafusos para fixar o trilho e o bico de válvula. Cola quente para reforço.</p>
+                </div>
+                <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">📏</div>
+                  <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:4px">Dimensões</div>
+                  <p style="font-size:11px;color:#64748b;margin:0;line-height:1.5">Base: ≈ 40×40 cm. Trilho: 60–80 cm. Peso total montado: menos de 1 kg.</p>
+                </div>
+                <div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:14px;text-align:center">
+                  <div style="font-size:24px;margin-bottom:8px">⚠️</div>
+                  <div style="font-size:12px;font-weight:700;color:#c2410c;margin-bottom:4px">Segurança</div>
+                  <p style="font-size:11px;color:#9a3412;margin:0;line-height:1.5">Nunca exceda 100 PSI. Lance em campo aberto. Use óculos de proteção. Mantenha distância mínima de 3m.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Referência -->
+            <div style="background:#eff6ff;border-radius:14px;padding:16px 20px;border:1.5px solid #bfdbfe;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+              <div style="font-size:32px;flex-shrink:0">📺</div>
+              <div style="flex:1;min-width:200px">
+                <div style="font-size:12px;font-weight:700;color:#1d4ed8;margin-bottom:4px">REFERÊNCIA DO PROJETO</div>
+                <div style="font-size:14px;font-weight:600;color:#1e293b;margin-bottom:6px">Manual do Mundo — "FOGUETE de GARRAFA INSANO: 2 estágios!"</div>
+                <p style="font-size:12px;color:#5a6a5c;margin:0 0 8px">Inspirado no canal Manual do Mundo (20,2M inscritos), referência brasileira em ciência experimental e projetos DIY para todas as idades.</p>
+                <a href="https://www.youtube.com/watch?v=W9AO7g2Cgdc" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:#ff0000;color:#fff;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+              </div>
+            </div>
+
+            <!-- Evidências -->
+            <div style="background:linear-gradient(135deg,#f0f7ff,#e8f0ff);border:2px dashed #93c5fd;border-radius:14px;padding:28px;text-align:center">
+              <div style="font-size:32px;margin-bottom:10px">📸</div>
+              <p style="font-size:14px;font-weight:600;color:#1d4ed8;margin-bottom:6px">Espaço reservado para evidências e fotos</p>
+              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: fotos da construção, vídeo do lançamento, resultado e reflexão sobre o projeto.</p>
+            </div>
+
+          </div>
+        </div>
+
+        </div>
+
+        <!-- ── SUB-ABA: COZINHA INTEGRE ── -->
+
+          <!-- Separador -->
+          <div style="display:flex;align-items:center;gap:16px;margin:8px 0 28px">
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,transparent,#e8efe8)"></div>
+            <span style="font-size:12px;color:#7a8a7c;font-weight:600;background:#f8fdf8;border:1.5px solid #e8efe8;border-radius:20px;padding:4px 14px">♻️ Projeto Relacionado</span>
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,#e8efe8,transparent)"></div>
+          </div>
+
+                  <!-- ── PROJETO 2: Economia Circular e Brinquedos ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto Social · ODS 4 e ODS 12</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Economia Circular e Criatividade — Brinquedos Educativos</div>
+              <div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap">
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">📅 Início: 22/04/2024</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">✅ Adesão: 23/12/2025</span>
+              </div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
+          </div>
+
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+
+            <!-- Objetivo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🎯 Objetivo</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">Promover habilidades em economia circular, criatividade e responsabilidade social por meio da construção e doação de brinquedos educativos feitos com materiais reutilizados — estimulando sustentabilidade, empatia e cidadania.</p>
+            </div>
+
+            <!-- ODS -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:22px">📖</span>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:.5px">ODS 4</div>
+                  <div style="font-size:12px;color:#1e40af">Educação de Qualidade</div>
+                </div>
+              </div>
+              <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:22px">🔄</span>
+                <div>
+                  <div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px">ODS 12</div>
+                  <div style="font-size:12px;color:#78350f">Consumo Responsável</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Etapas -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Reunião de Materiais</strong> — Papel, papelão, embalagens, palitos, retalhos, sementes, tampas, rolos de papelão e latas.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Esboço e Planejamento</strong> — Desenhar o brinquedo, listar materiais e definir passo a passo considerando funcionalidade e segurança.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Produção do Brinquedo</strong> — Construção adaptando o plano conforme necessário, exercitando criatividade e resolução de problemas.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Vídeo de até 3 min</strong> — Mostrar o brinquedo, explicar o processo, materiais reutilizados e refletir sobre a experiência.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">5</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Doação</strong> — Entregar os brinquedos a escolas, creches, hospitais ou ONGs e documentar com foto da entrega.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vídeo explicativo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo Explicativo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/vzwFKL0dgu0" title="Economia Circular — Brinquedos Educativos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+            </div>
+
+            <!-- Área para conteúdo editável -->
+            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:28px;text-align:center">
+              <div style="font-size:32px;margin-bottom:10px">📝</div>
+              <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para suas evidências</p>
+              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: fotos do brinquedo, vídeo produzido, foto da doação e comprovantes.</p>
+            </div>
+
+          </div>
+        </div>
+
+        </div>
+
+        <!-- ── SUB-ABA: ALIMENTAÇÃO SOLIDÁRIA ── -->
+        </div>
+
+        <!-- ══ SUB-ABA 2: PROJETOS ALIMENTAÇÃO ══ -->
+        <div id="ext-alimentacao" class="ext-sub-panel" style="display:none">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Projetos_Alimentacao()" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a4f;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Projetos_Alimentacao() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyAxMSAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCAxMCAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKNiAwIG9iago8PAovQ29udGVudHMgMTIgMCBSIC9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdIC9QYXJlbnQgMTAgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvbnRlbnRzIDEzIDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDEwIDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgMTAgMCBSIC9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9BdXRob3IgKE51dHJpIEFtb3JpbSAtIFVuaUNlc3VtYXIpIC9DcmVhdGlvbkRhdGUgKEQ6MjAyNjA0MDQwMDIzMDArMDAnMDAnKSAvQ3JlYXRvciAoXCh1bnNwZWNpZmllZFwpKSAvS2V5d29yZHMgKCkgL01vZERhdGUgKEQ6MjAyNjA0MDQwMDIzMDArMDAnMDAnKSAvUHJvZHVjZXIgKFJlcG9ydExhYiBQREYgTGlicmFyeSAtIFwob3BlbnNvdXJjZVwpKSAKICAvU3ViamVjdCAoXCh1bnNwZWNpZmllZFwpKSAvVGl0bGUgKFByb2pldG9zIEFsaW1lbnRhY2FvKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjEwIDAgb2JqCjw8Ci9Db3VudCAzIC9LaWRzIFsgNSAwIFIgNiAwIFIgNyAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjExIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDIxMDQKPj4Kc3RyZWFtCkdiIi8nYkJEVnUmRGQ0NkInSDBJJFwvP2QvMC5gMVByPXBRLyI8LEgrOj1qMU9Ga1lHUCo8KjxKOGEsKC9HSWVyKFxVY01eajQ4PjZXLCclOXJsJDskTGhYO15WLUkvKTljL0k0aWAzTj9TSihEcixeam82RFtKb1RuOWU7aUk9Pi0wLVE2SzJMJzljTSdJRSdrRTduWGknKSxGJkVgZnQxKEM5Yy1SXVxEblQ6VVpKWkxdZDlvVEBpOUguS09uK2AmOyQzS3IoK3ArLjBFO0ZQZk8qIl4qLllDT0AmKVxvblQ2NFJNV0Y+XzxkJHNyc2xhYy1vUiIna2RYJSZpVjc5RSIsbmFHYzVJLSp0VmlqXFA6RWNYMzlpYCdoJydybXMsN3NeW3IhS1FlRCs/WD5oOWNRXEchN3U4dGpUMDkkaS05TSVgO2pxPmRfSCsuJzBgYjc7LzluKG5CMDthJllbXW8/LDhzQGwlUkY0ZFhXZVRQSCNmOlByMlhcTkQ5b1tZNEQ4JlcsLFRBbGByKEkoc1onRGBHJ2FzJipKLFczZ0UpbTtAcDo9bmspQEA3S0ZPYm8pWGNFXWE0ZEVnRE90Xmk9KkMuZGxkcTxKKUZeUyU4N3UoPVguYlUwXSxAQixyU19lMEZZPVFcM0Y9QWNKUj1LZnVqMElrIyREYnI/TjY2SWtcQEZyRmBLXCEjK1R0cCE1KW0oZmd0V1hUS2c+LE1vTDo5SkRrSGVrVkw1cD5VNF8oWTVSaDNwRTNoXSlSOlpqSVcxQlAmO1FsbkBcZ21uaDpqXVNUOyFcTTBJIj5oQnRBUk0vbyooZXUrcDI8LlciaVtIakMvPDxmIildNSRuUT5MJV1Uci4qWWFTKnNnSjNvO29FX19eYmNTU1AsQ2ttISlmQlwwU0tWT15ZPSQwX19IL1BbRj5sV1hSOFNgcXBvUGVURys8XCwjaC1ZUCspJGw6Y2ZPQGosRyNGK2xOWD4lLmFNTy1gNUI4RVI5N2JrRkhSWigyb0lRRXFzNGg6TE4qJSUkRG5cbzxMTE87ISROQDQ+aENPI2FIRVxzMWpTa2xMdDFqb211bCxDXXJJKFwibWYnYSxyJzBxMnFzLidEKSUjK2UnbE9KLGouVDRuWlk1UHJsJD5Xb1oyLic9Uz5ZajdNckRVNHA6I0NybmRsVSVVZWE6STFoNC4mVFIlLCk7bXQ/Z0lRIUokUz5PO15rSklsTUgyYFI/cENuYFtQZCt0WHBiWiJZQCJST2dfSi1IL2JRInNVY0tpdERxbjBjXFlOWFBiXWBCSzJJNEk8b1pBZFhPJVJjQC07R25DdHVGLUZAbjwkdUlGLjhbLiVgK2lrRCNYIWpIWlBLSy5EREZWaTdMZDNVcmJPLj4+OyF1OyhvYT51V1ZUKHEoJ3QkLzwiUE1KNWFlPzBXRXMlNFthcVdVQkdndGouYW91P1ZbTDJjWCNTJigza3MnTl1YInRNUkhTN2NiLCc5QWE5JVFkPDw1MihHLUNuSjc6Iy1lb2I1L0htXDhRbUhQZUxLcCJMN1kvZlhGMkNXQDheLCMhNXBbRF1zJlhfdV9XPydPXWVYKHRYXDdZcSdlZl89aiJsWnAsKDJPI0krNnUoO3Q5bC1fbzdqRi8jNV5zJnNdJ0trcFM2aURMKENmXio3VXRnNGBcdF1qb1dcQ0kpY0xzUS1FaDhlMGkydGMyWEBBJTtPLUZGVlVBZzNJIzdRcyctUStkJTQsbm09OlEkcFUtWDswSylDYTVvYS8oP0w6Q103US8jOCRPT2NFQi8qcHNbJUJbTV41KkMlMEpdUVFSO0hZa1xpKCJiO0BXZD9ISlwvcmAvRC8iIz8jKl9UKUwsMWBBcHRfLioyZS5CNmNhWyRqIkxdYkU9aTBAVTVnMCZSUys8bDdwKmdtKnBgVT1hSmdWNEdIOUxoLlUvOWJSNDE1dCwwOFhlcVJcJjoraT9ccD45X19fSjwncVwlSDExNy0jJmQmQVlRSjk4SCcqSzU5Q2YwKiNBalsoLHNcYDtzX3EtOiMuTVJETk0hREE4bEwsQTwuamtaR1M5SiRVXGtSbSw0byI1UURnQGkyWVR1ZkduX2NXbmgmZU5qKVBJbzZITmtdQUtfb3F0OkxqWHEzWiJVbE0jYElOJFdKVS1DaGozRjs8TCxDR1trSE1UKV9BLzk+RFdYJlxtIisrUlRpbzRZaGxEYnMkQzNvYDYiKEghZVo6RlRBVWNNQ2RtUz4iLWFlITU/R25BUSFuW0JAZ1dlYlhhSTMnWVY/SyIpYi4qZ1IqQFE8TDcldFlfJU81ZltXLSk0VF9Xb2lpS0ojKT4wcV9iSjdMI28jYCxVTF9WUUNGPUhMVGBiZUtoPls9a1hoLnRFSDdHJy1sI3RUOGZIbytvbyUuTlFzUFU0bCVzJ3BCLF1xbk5OSj1YcXNzSCg7YTFtJF1pV1ROa0hWISgtZUY0M1sjOSdgSD0rX3VoUSVSPl9LJydsWkJUa2QsMlBOcCpaRCM7OjI3IXItPHJjZEpETktmVSUxZHNXMmptblBySTgwNTQ1NFNsNUctXVdibycsal4kOitoP3NXUSNtakpPJVsydV1FPWhTMFcuJGhsT01Lb01BUi9SRCM5aiRIa2hIc1E2Ym11UU0mNV4xQTYiV0hrVFZZT3JUSlcyZEkmQGIqPldnLVdvLyxRRjQiLVRQYkRpcTcjQEo5cDhkV1lrUG1zNmkpWGI8aGEpU3NaPlBvcF9YOVV1RmFjaXFoLGkzPT1PckpBXHVPYE0/YUtfQXAmfj5lbmRzdHJlYW0KZW5kb2JqCjEyIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDE0MjIKPj4Kc3RyZWFtCkdiIi9mOWlMKzImO0taT01FXD1NNCxQPVdbV05rXkwuV3A7WVdLQzhkRl9uPkFRcDszOExoSyg+SUhaU0pha0c5Wj46IiIkN05HMnAkNVpFa3IrNSRJcVxqQFk1bDpEX0tTNEBURkAsRjVXUmYtciMlW0w6RUU3Ok5Nb04hJj1RJW1BR0Rjb09bc0hXUDhZNzgxKlRrUUZzLiN0V0NUOU4nIVhFKWkmJzYlNGkna18jQTxjYChzKFA5L2RgWmgwYiVTWzY1JUJjS2FkP19QYmtVY2k6UWN0U0VtJlFQXzNiO1VpPlNiU1NnIm4pRiIpTGxGT05kSCMyQlJuZF50KF9pRl8lMUBJYnNqSmE1bTBIcWZcXlotXi5nVj9zKy5VQk01PTQ6SDNqPEJhKSY9R3EjYGFLakIzKDJMJGAxMDRwVWBvcWxFMUB0WiEhVDhXOW47XmFAR1xSOlEpNnRBPXE9I1M7QS4kPGFFalshZzhWckBsPDdEa2YmWHVzZVNxXWIkaCUpOl08XVFvNmEyJSw+JWNjcFpIY0ZlUEFOOic2YWd0UEFPTCxCZ05AZUBldHVLYC0+VGI8M00sRy4zJGoxOD5OVjNzKkxTXCEtLHJQZGRcSlJXNmQwNWZKN2sqVyk5LVs0U24oTVpMSVYxJzRMOSpwNGhHXXNyLzV0YGhuTFMwWEBzOyE7QWRHXyZfbTJLOyczQWQnJlwtNU1ucTpmRGlBT2YwYj5NIm82NTFwSmU+cyNibCI+WV1CQUU5OWlKUktwIkhMWyFpTU9DSydiZylFLFRzR29rTSZXOTROUyEzMykzMjhYTUJjLWZeUFZHTV1rTTt0QzhQO1RzczVwcU1vWGI1aF4nSGAsVi4sYzEkaSxnO21JTU49Y1tXSycudDYiXm46b1ZFOSNVLmAhW2BMLERDR1UySV1sTUFhO2RbNlBlMlB0ZE8oZ1xHXyxtcWZhRFQpXiQrIlFCKFo/WDA1OmovaTAoMzAhVzxkOFlDRmtQamBpSiQ6XEBBVis1KW9TWic3SkFgMUVhPi1oMkInaG9EWTBMPWNvTlJrWTAhSGpuMSZxKWhgSkw/OEgtXV5KL0lmIT9sWFsvNWkocEItaldnPD5SQCVsYVRfZSZZU2g5RWRCNFlINFNEXWM8ZDZUITltIXVTI3JvM0pCSl5rKy0zYkhMIyVaSyxKPjpOLUc1U1xvNFxKMSY4b05VRzdYXEAtUWpsUT4yKWdiVT1EVVVKaEFSVCpSKztmcUk7V00vO0JLXitVVjwyZnM2SVIkcl8/XCJtMSFMQSU6TT1bUzo4dFEvZHMpPUVYSy8vPFE9RHRwVyhXRGtfUDpdUXNSYi4xXFwjYjs3LkZ1TyUpNGNnPWVKIXJSYk5AZGJuXGJOM2ZeP29IM0ozRjRfdG1XcFE8K0lKSSkvXWZxMUlZPF9oWEg+KUBOVU09QEEoL0csPGhDKiUlZ0xDVDsvKVZJRTY4YmwzNGNAMDBJLkRaI2VrWm9QOlU6RUpqJC1LSEcrMm9SMnRhdDYkXVY6VVFOQCdjSHRQdGs5Iz4zIjlNLCJUOmNzUSRWNzwyaDBaPVhQO2k1cVtFVEFFVS4yVWEiVG4+SVYjLkZDOF1gW2VDX3JIa1xzK0pHXS9OMlpSNmBbQEpLZHVgZDFkOjg8MDkrPENlZ3NMQztkcF1xaVx0OnIxLF89bmBtLS5ZcSxuIlckLCY+RUBvcDM9TkJYQTFIajAjMWdNMkZFRVMwSlVuQmUwKlUhaktNLE0vZV1mXTsxbllFbEBhX1ZgLl49SzkhOTpgLlUiPSpFRTQiNGQoOjE4KSgyTW4uRF9eY2BrMm0uMm1LaUBMdT1fSmg7TDU3OmhcR2Vxb11uMlFvR1hgM2hLMGJtXjx+PmVuZHN0cmVhbQplbmRvYmoKMTMgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMTgzNwo+PgpzdHJlYW0KR2F0bTtnTikiPSY6TzpTb1pMOHEuNUtLMEZQL1UzOFg+U0NOWmtDKFBbPVYzTGc2KnRRJVlAVFlNVURXJkBbMEtwa0Q7Zmw5PFxeNSxVaWNfL0VOVFNdKFQ8Jz1gPGBKTU5UREotbUsuRVkmLGplTlssZzNdKGUpJkYpPj5ALy5qQkY5PigjPHNkYU0iVjEnLmdtPFI7YmBhWU04ZllpViMtIT9yZ0ZJQidoZTY7Sz9rPSJhbj43Wjo/RFxHU2tuNXBfITxqUz40aWQ7KScjWEMvLGphYzMqTkttR1ItVlJVQzddUWNAJzY0JzFZNTRsYCEmKTxALkZfaVwhOUkxKD5mPCdMcT1hIVw7VU9rXSYvQkRxOT5RT0tzPUJuMixlQHEsUzhCMUhtIiIrR2VTXVM/MC9vVSxfLTleOyFIKE8hQ1dTQGBybyIjV1RPPHBePD5tMlo6PSprPV5fMXM3T1RSUXFwSS1aSWFHJ18pYzVrVWAkdToxYi8yXTVkWkspQlEkbzhDUS1SUWAlRyxrRDY4cGY6KG1lO15sLmYkOidAUURCaSZiYTpqRl5Xak0jdVBGazsqbW8qX29MTStyUXRtKClPQz1cXGM3WiRTMy87TzNUSWlOaTckPSo9dENcXjVsdVVMUG1vcDo+cDhYKlU0PVJfalpJYUtBbjJsTjc0cGFnL0t1PmFESyRyPiNyJyhFODtJXSlbdWMzX1lEPCFkTjs1cT9pMFNiKGwhMWBJQFRyTTBeT2dtMl1ALzQlc3JyVllXRVw/KlNETTFGN2lbK19KNihcY1hoMW1bSy1nYyZZJzZFQUAvWlY8ITxqOmZNV2M+ZypIMkw0Mik1YTEqUl85azhpO20tWXFfUUxKMUo8KCNsI3JdUiVaZm5ZYHFKZ01GV2JJNFU+T05Xcic3JGVvTytxbTtFcTVoW0FNM0VEYD1KKWJjNGJbSWc1VXFbIi9aR0xVKlh1I2B0JjFeUDhoYlxKbkx0RiEobmBYbGc+UEwqb0o8ZStSaFNePkhsLXJyRkJoOTkoME9POzxrai1XXlk1MGxPQTZyKTxnUltgO084L1UyQVJFOyEhVl90RzpwMXMqPlMuSDFsQ05rbFYyW1xPTiU9YUI/JEVfMDN1YmV0YEYxXlhPS0Fzc2VKbS5fWFVTT2MpcVxHdSU6Iy87UGsrRDcySCRsWytycXNQUU5tYSVCT2E7WzI/RT5HYiknMV5CaUhLdV5cM0pKZU84XGhnME80Mz8lOlhWKjskaDs0YXUxRS5RdD9YPEFKKmA8YHRdPlxqdFlgJSwzMVxadUhzbComNDQhcyhFXDROV1FkLyJkRlM7Yi1ZMGhgNSdTQjFFRGVZNG5FVFpIcmkiLkI9U2NPKEVJWWZWSCUvKS8xVWYsZWxjRms7SkU5aTgyYHAmZk44UTspVUdoSEs1bzwvTWJdQVQmZiMiNGEtZjVZMUJbVjgxVTJMOTc0Lj85OVArIkpKVkFycFdzZ2dxXHJjMzleXipzVUdsM05GTWFpbCNZSF8qU2gsYEhMVW5hMk1rRVwnbTBLOUV1TTY0PiUrZ0RxbUo7TT5iJW4iYzxRLCMsbi8xSUZxR1E2LjByRmZQJilqMWJjJDc1b15tW2xeIzpeZXRETXJObT9vMHB0YGg+VS1cQGV0RGNmWkMmaGltaEQoUz5PYE1YW1h1cWJlbDRVRlpIYEpFYUU9J1d0Vy9wJDpfcSJtIWw5WVVVKFY8YjM1YilpPWthXkhZdWI8MUpxZ0k1VVUwN1dYX15GWTEkP0U8RVU7RFloIVJ1TWY+KyMvVjpTTW1ScnFKKGU7Z3FPVyYqKCdzMlRbOjFcZFVZZkVASiJFb2hdKkMoO3BvZVMuXVckRG51Y1okJSc/WnFuNWQnSUA7XmA+ZD9XVF5rV2tuQC9LbFZCUGsrZGY3NkgsMkxHYy46M0A+KicsNEQsOSRpVW9UblgjUl4wJF1sVDZjVzVMRG5Xa3BlLDlrNyFBLjwiSVpQOyNFOGRMY11PJ19yI3U3QVRHJyFvRm9YPzt1cVwwUkMuaE1GcXIsX29BL11ZZmpKZjJCMDkuXS5uLGkqLSJzQUhGJ3EuYU5fYC0rPyg3T0sldDBZIkJpbCZIXEVUb01dMEsxNzJGXFNbMz8iRD5gPVtiI0tYW2tLQChQKDdlI24scVVoRjFVIT5kWVk/IzpgUVApQ0Y+ZVhLLDs5c204N2BqU21HYkklUUBVayooNEMqJShhLFlhVCduOCw3QVptX2o4WTRlL0U8c24objAsQnFNX0VlaUpPS19jW2VMS2lpL2xacmRjKWprL106XVUyajs2IXBnbkRRcjtDcShCW1psLThyb051RSJeOjBHU1RIRUlWW2ttWGghUiZkIjVPYWwmZCI3YilCUEBMWWJpXVtHPC5rR29eJG9DKEdESkx1SVZgIj04YGt+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDE0CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NTEgMDAwMDAgbiAKMDAwMDAwMDg1NiAwMDAwMCBuIAowMDAwMDAxMDYxIDAwMDAwIG4gCjAwMDAwMDExMzAgMDAwMDAgbiAKMDAwMDAwMTQyOSAwMDAwMCBuIAowMDAwMDAxNTAxIDAwMDAwIG4gCjAwMDAwMDM2OTcgMDAwMDAgbiAKMDAwMDAwNTIxMSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzxkN2Y2YzJiZGEyZTYzY2NkOWFkZDJjN2E0MWU2YmQyMT48ZDdmNmMyYmRhMmU2M2NjZDlhZGQyYzdhNDFlNmJkMjE+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDkgMCBSCi9Sb290IDggMCBSCi9TaXplIDE0Cj4+CnN0YXJ0eHJlZgo3MTQwCiUlRU9GCg==";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Projetos_Alimentacao.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+                  <!-- ══ COZINHA INTEGRE — RECEITAS FUNCIONAIS ══ -->
         <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
           <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
             <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🍽️</div>
@@ -3066,7 +3576,19 @@
             </div><!-- fim grid receitas -->
           </div>
         </div><!-- fim card cozinha integre -->
-        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+
+        </div>
+
+        <!-- ── SUB-ABA: COZINHA SUSTENTÁVEL ── -->
+
+          <!-- Separador -->
+          <div style="display:flex;align-items:center;gap:16px;margin:8px 0 28px">
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,transparent,#e8efe8)"></div>
+            <span style="font-size:12px;color:#7a8a7c;font-weight:600;background:#f8fdf8;border:1.5px solid #e8efe8;border-radius:20px;padding:4px 14px">🥦 Projeto Relacionado</span>
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,#e8efe8,transparent)"></div>
+          </div>
+
+                  <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
           <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
             <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🥦</div>
             <div style="flex:1">
@@ -3363,93 +3885,261 @@
           </div>
         </div>
 
-        <!-- ── PROJETO 2: Economia Circular e Brinquedos ── -->
+        </div>
+
+        <!-- ── SUB-ABA: BRINQUEDOS ── -->
+        </div>
+
+        <!-- ══ SUB-ABA 3: ESTUDANTE PROTAGONISTA ══ -->
+        <div id="ext-protagonista" class="ext-sub-panel" style="display:none">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Estudante_Protagonista()" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a4f;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Estudante_Protagonista() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOSAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA4IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyAxMCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA4IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago2IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgOCAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0F1dGhvciAoTnV0cmkgQW1vcmltIC0gVW5pQ2VzdW1hcikgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDQwNDAwMjM1MyswMCcwMCcpIC9DcmVhdG9yIChcKHVuc3BlY2lmaWVkXCkpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDQwNDAwMjM1MyswMCcwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0IChcKHVuc3BlY2lmaWVkXCkpIC9UaXRsZSAoRXN0dWRhbnRlIFByb3RhZ29uaXN0YSkgL1RyYXBwZWQgL0ZhbHNlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9Db3VudCAyIC9LaWRzIFsgNCAwIFIgNSAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjkgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMjI0Ngo+PgpzdHJlYW0KR2IhI1w+QkFRLyduNW5cXmYpVzpNJUtfNTg3TEhyYTRYMWI5c1YzTkI2R1VUWVFRSyNPRyQ1KGhLNDZxXkI3ZGZnOkFTMTQxMytwODAkWEVeW20jPiQyaHM4SXBPbyhISCc6KVB0V1ljSFhKVmswcTgtNGg5N01OSCw0J1xgMlI5MFE5KiwjYFpubkkmW1FlLzs7cEtgI2JFPyFBRDFfIjtPb0tuXFBRLnQ9UkZiWSVpPGs0XlE4cFQnSmkjVypwUFdAW2Q5IiQjdT9MOFAlQGBrN0AoNV5hXjRtS2prJFk8UWFVTHU8MEZQSltLIzVpY1BEUHNIdTMwPj1UO0dccW5jcjBvXDVLUSkvMWZmSCovRkRSYEEkczteRkBzXTNhLWlGZ1FSNFFiTFYzZW8nbHU5cyE7NWohR0BQKDoydTIldGlPMCsycUpVU2EsJ10qXmAlVnIsYUolOSNOR1cnV2l0bT4+cVxXWzBIYVctJytjb0I+Ti9rPlx0OktmbGNVUmdaRVFdM1xpZiNrUF91b0YqOlJbM1xTKixTKycuSTIhUFZpN21iYSphJSpiYy8nSSMpMVZdUyJMNS1EbClqXWNGQ0JfMzBqVzRIITdmYihkK1VzPF9iPWs7bmlEWkdNOUhPWycoMWcwLzpwbTZoNkRIbFA4MFBKZUJ1K0Q+QGsjJFs4ZEc3ZihhdEdpK08lOCEjTGc2UmkpNF9OK0VwXF1HWFg1JWBPMVEvWEVXWCdhPTI9VkRFWVY8bkUvKzVEIWpzQmhWLVE0PDh0KnAlODFTXENxQFhmYStRWUM9Q1MhckNBLkFzYDNHOy9Fb1dLYzEjdXAkcWZWMzNaOVMoX0kxTjhRUGo5Xl5cVlBbQEZtR0tFVjBQKVdCWVNVW1tgPnE3VmxBJlVnK2JiODNVMG9SMUpVaT5iIWBSLzInPF09XU0jTGFXNnVCUG9QPz9IUFUqal4pVz9dRWlxUFYvTCJyQU1IUGshY180VUVXZy9yJXVLTC9PWlNXJipmRFopUVQpWFYyQmQ/dU5QRFRQRjs0R2hMJk9GMVFtNGQqJ0g0T1tiPUooTkN0aC8oMmorTGpfUHJKaF5JLCchaD5Vbi1RWS1bTiZkbCk/aGtwLGFicThqb2tJOnJzPDlIaGhHYWMmNl9ZbkBRWTBeRVY/SkomSk5zQ286WTYkYmU9PFkxR1BOLDlgYi1GQilYJ2NgVitCR0MpI25vUGNLbW9UMU5sVUQ/QXRtJTY+aDpEOVAhLEFxWyZtcEw3ZmspVT90bHUoWGRqUklZKWo5cG1ZM0hqX1dRLGdmYkRyKDU3RE1vYEdSVnRpb2ckOVs7YmhxcGEiWzFXQSNXRT5CUzddXDNtOCcpXG0jTTBJYiJYREhXYUwkNj1rTDs9LUZecmBERytJNTI/OURQIl5ES0VKPVdlRz5SXycrUEg+IW5vcFNqUEs6bHFnKGM8YS1CbyF1Y051LWhzQTxKUV9ab2hbZWJKM0JHRTFOa11WXDtOWUdpVC5nKUY6NFgqc2hja1siYDRdYW5qQFolMl5OL2ZcPy0hTEJpSjotPjBYPW9obDxmciJSO0xRc2VUOi5IWyQ0U1lGNFc8SiFoOyMqcWxTaFVDcDdsP2htO3BGbltRIUMzU1guYUYvWl5HcSRpPnFHW3M3RUAyMTNzQCM8Pj0iMC5wNGRVXmteYUM5b15lInNXLkUzOT0+LmJPKE40M1pZJkUzJz9bWzAyaEssZXIxc3I8PC1LbkwxM18nKkpDU1hJdGRjRW4mVlNZWHAlRSluL29HI2BbYG5yIzdAN0M1alwmLygsUTUyI3JqVWs3SDBnSTlxImNUOWhhNF9HYU9NbCxZblNCNmhRWFg9VWRfNlxAJztRJCEjJU9xZVcuaCpxWVxQQD9eK29BKWpkVmU2Q09BRHI/OEBGXWlxKl1QWz1JdGBrdDMnTzUyLTlWPTFEZlw6O2hAXVZDKjBqNHJ0aGIoQVRfKDJqYnV0UShHKkUzUlBWQl9LUF5iUm1fSlMyWTtzI088WVg2WCJsa2ZHWCkoRUdCcy9ZZVNkQ2UnYmZTU0NONiFoaiFWZVglX09HWWFZW1JJRWViNHVcVGQ5MTUvczJFR3Irb0AqQVsjTic/aitvUkVeKHFYM1xMJy5vN21HV1s0SjwrV3BnIlhwUHQ7XGohcjhIb25PQkRzTU9dSF0tNlRXLVliNVEjO2AxbzxGaV9PUy9oQ0BYVmtTSWBpTjtOTnAyTlxsNEtdI3JlJEBjaidPQGxaVVBBaDVlLWRyTyxfUmZCVlBWOkc+ZjVGN21IPGMuZWBCUytrUCdZM28nM01yWF9cNlBOaVVaaUdsVU1vVlZWIV0ycic3YTVidSYvYmsnRlFmLlhdNlhbMkJEMTthKTxxYmtzJ21JajJuanQwODo5UzsmRmI2XGJXXlBjVTxBRkA0OSdcW1opS2NIMUs/MWpBdFBYOC1vJ0NeQTFHR15LXjhWM01pKUpyOWA/XSROLVw2MHJqJHJJUjFicD8jRy0zamkqI15YVCRvXVsxZTFsMWFFNyFtbEA2YGxVbWVzInBsQENwVTgwJE0yIys3VFc5U041ZldeU1VWdS9lQi5aXClqQGdATlAsbFojRV9bb1ItalYkTlhAdGcyN2ApWzRQZ1BUPCY6KzFqS2MnXyRFUExlRyYrYEdfYSQ8dTFQbTRrMTpDJz4vVjlwYTd0a2ZlJEFvZUlBM0RdPTQkM0Z0Ky80SyY2QlFuXkUlX3UkO1hiaj5ZTjl0LC84IjVzLWBbZidbQUVjYzNDcy5qWFYha1hSPTRdYkAqKW5SaFZvXWdLYUBAJSpOI2FFOmpwUVoxSkJcWExKJWthYXAmQWwnZkkoal1mNTY4KD1rZUNZQC4mMGNDTV82SVdNbG87R2dTYmFvYmVLLSUhJk1yO2paPjorYiVhbEAnaHE/NFMvNkg+VVcicnBjJGVQWmxPc0JSYFAySC8oYmBdfj5lbmRzdHJlYW0KZW5kb2JqCjEwIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDE2NDYKPj4Kc3RyZWFtCkdhdG07Z0pbJmsmOk5ebF0ma0cnYjZnaExJIUgsRzppK0FiOUcyVSZSTVRDalhKamNcSSonViNmNUY8aic6WFp1LzpmOGA9YFg5JDxxa2hcIixhaztyQ28ldGRmbDgzMUxNMTxwVjsxOV9yOz4nKEohQUQjUl5gIUEzYk1oSmdeV1lkNVtqYSdbKjZrP09nUjxVKipoZEBSNTVlIVlDO2VtS0ZSOyJucysiY21cblFDJDEoOGxvYTMhWFRzNnQ9dGgtQzYtTmdDJmFrRTIkPVQoNWtVK25vV2lTIVpeYyo8ZkUqXGg5PD5lPUI5UmcobTA7XElSKChbWUVmVUItdDcrUCIpSm1CYjwmQipgbyonMExSPExxOkY7ViQ0QVFSOjxxLSRzZixsakY0QTgwI3UxbnRCOXNCcVg1VTRlR090NklFZUtIcCRoKnJlL1RPUSdmVD9pLSc9dEAxQSc0Qk89OjlBJlJzXyZOUXAvV2ZYMVw9XVpyNlB0a2tlLzkkckcwNkw5LihoXV9tPW4/MG5eMSE8YzUlbUBSNk1dIUtbOVchJSFxM2hvJ29TYzQuR3VlXjpyR2JAJG5LRzlYYSNIPElfU3BQQTJVVzgwL0ZcdGxiak1YRCRuUy41NU46OSY4bFdqJHA8KmIudVhuUzwjUDMjS1IsIzluYzIlb1MsOjdVPEREbzJhbmtxL2sncnBTVk0uNTdcZltxMktaWG06JG1dcmZOUyE0RFQtbUdhbi0xPVsuYSNVc1RYM25ZRj5qKTxGdWMvL18oWHNWOjZFMEwkSG1QQWpDPW9hLSIzcEEnIUxaTD90MVQ5aD8lNGpSUkc9dUsjRCtsbFUyWjQlMj9CST5sLGQlOks0JTEyb0l1I0pSXU9gRSpoJVovLS5KVDxpSmkxXWhNMVRkLi0rYl5wIlhEJCZoc1stODQ9V1kzb2lrcFpsMyFkS10oOyIoP2lzWz5AQWclbTlHMltXb10rLGthUFciRWB0XzdHSGY+cGQlVEojaHRyZiRLYithQ3E7SzMiOGZIPkdpQ2FLITViXU9GNUFYLGk4QCwsWjIwNz49SGJlOD5FM0ExYT5eS11iOyxpUFVMRHRWUnNYOSdkJEFVbmxuJyswInR1Jm9dSSh0clxqUmFFaklLV0E8MlJoImZIdGwyZlY7KGpRK1lPXGpJTWslVE89WT44JWJZYlVVZE0+ZV1xYFNJSjIqTk5UaiomLT1ZXClsP2g2LzE3YiZeMCRoTz1ZTGVzLHE3dTwjJEQybnRTZVNvQ0lNcSoxJjYmTisiJUhlRUFXblI0Xk5QWFJMTkE8W0lxb1ojJF5vaE1saVg/NldiUF4+W29cKk5yRSkmPTA7MzNjQF1hYGRIVE5zSTo6ODpUSlBDNzkzYjYvPlIpXkU2cjM3OTlwSThaK2FkKWtXMStpNFdIb2VldUNNUTZfImskIzotL2BhLEJvUXE9OCQ4WyM5LWo8Ml9KISduPkRCVERFXDNAMmlwJUA4QS06R1llME1HbTs7SFNhLlBnYXAwJjs8LmpBS1JNJUNhMUxfLm1AP1xYTEVIJS0sPWdtM1NwNGNhby8+aW8oMCghNjk/QUlHPj4pMyg9bk81LjM/LUZhWTpoSCZCZ0EiNzBnO1VQQSx0K1A6byEndF8zW1dhMSJgY2dMQmtEQlI0IVhxJDoyRkF0SSNBPEs1VzVHYj5sL01ONE1fTVg5JmQvUE4kN2FDV1VYZnAlLCc6V3FFMTdIOjhpOzwybz4hImpUT0FUcFI2ZTlERzZRdSw5Sz0oIm5vLklQVFlzbTknMmJjKTdcbjg+JyE9LzBySXRecFFNKmhIcExzMHA9VFJfR3QnVEpxQFJtKlI8OzdXNVxuMm1fLD4tZD5UXTo4UigqYVk8M2AnXCtfcDJbVFkuOXRRYl5YMzI/RiNuUD5cKiYmYnA3Ij5sa1xdN1hnVkBGaUQ7X0dLXm9tKkJpMllJPGJcUFg5NGAodDpWZTlZR2NiNVpYWT47aSFuYTlsX0dzJGxQbC4rITRuRVpWNVRwa2wvJDJoKyRnbFg4Z1xWWExlR2NHPnRyRTxlTC5dVUQoNkc7Z0xdTis5UldRcEoiOVhPXGA6TWpXamw8cnFiMkspRmAjamY+ZDJlN29CYEJxSzE2UFgiO19QWVdPPXIhbFc0VD5PLSo7cCtET1M5Ln4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgMTEKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMDIgMDAwMDAgbiAKMDAwMDAwMDIwOSAwMDAwMCBuIAowMDAwMDAwMzIxIDAwMDAwIG4gCjAwMDAwMDA1MjQgMDAwMDAgbiAKMDAwMDAwMDcyOCAwMDAwMCBuIAowMDAwMDAwNzk2IDAwMDAwIG4gCjAwMDAwMDEwOTcgMDAwMDAgbiAKMDAwMDAwMTE2MiAwMDAwMCBuIAowMDAwMDAzNDk5IDAwMDAwIG4gCnRyYWlsZXIKPDwKL0lEIApbPDAyZTZiNzYxNGE0NzZiZjYyNGE1OWQ4MjYyMGRhOTFmPjwwMmU2Yjc2MTRhNDc2YmY2MjRhNTlkODI2MjBkYTkxZj5dCiUgUmVwb3J0TGFiIGdlbmVyYXRlZCBQREYgZG9jdW1lbnQgLS0gZGlnZXN0IChvcGVuc291cmNlKQoKL0luZm8gNyAwIFIKL1Jvb3QgNiAwIFIKL1NpemUgMTEKPj4Kc3RhcnR4cmVmCjUyMzcKJSVFT0YK";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Estudante_Protagonista.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+
+          <!-- Header unificado do projeto -->
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);border-radius:20px 20px 0 0;padding:20px 28px;display:flex;align-items:center;gap:14px;margin-bottom:0">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável como Fator de Boa Saúde</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px">UniCesumar · 3 vídeos produzidos</div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">3 partes</span>
+          </div>
+
+          <!-- Mini-nav interna das partes -->
+          <div style="background:#fff;border:1.5px solid #e8efe8;border-top:none;border-radius:0 0 0 0;padding:14px 28px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+            <button onclick="showProtPart('prot-pt1',this)" id="btn-prot-pt1"
+              style="padding:7px 16px;border:1.5px solid #2d6a4f;border-radius:20px;background:#2d6a4f;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s">
+              🌱 Parte 1 — Alimentação & Saúde
+            </button>
+            <button onclick="showProtPart('prot-pt2',this)" id="btn-prot-pt2"
+              style="padding:7px 16px;border:1.5px solid #e8efe8;border-radius:20px;background:#f8fdf8;color:#7a8a7c;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s">
+              🌿 Parte 2 — Alimentação & Câncer
+            </button>
+            <button onclick="showProtPart('prot-pt3',this)" id="btn-prot-pt3"
+              style="padding:7px 16px;border:1.5px solid #e8efe8;border-radius:20px;background:#f8fdf8;color:#7a8a7c;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s">
+              🌍 Parte 3 — Sustentabilidade
+            </button>
+          </div>
+
+          <!-- Parte 1 -->
+          <div id="prot-pt1" class="prot-part" style="background:#fff;border:1.5px solid #e8efe8;border-top:none;border-radius:0 0 20px 20px;padding:24px 28px;margin-bottom:28px">
+                    <!-- ── PROJETO: Estudante Protagonista Pt. 1 ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 1</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável como Fator de Boa Saúde</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 22:50 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/rrYRt23xnHY" title="Vídeo do Projeto" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/rrYRt23xnHY" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com exposição solar em ambientes naturais — ilhas e praias.
+              </p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Banhos de sol em ambientes naturais como fator complementar</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
+                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        </div>
+          </div>
+
+          <!-- Parte 2 (hidden by default) -->
+          <div id="prot-pt2" class="prot-part" style="display:none;background:#fff;border:1.5px solid #e8efe8;border-top:none;border-radius:0 0 20px 20px;padding:24px 28px;margin-bottom:28px">
+                    <!-- ── PROJETO: Estudante Protagonista Pt. 2 ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 2</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável ajuda curar e prevenir o câncer</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 20:50 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <iframe src="https://www.youtube.com/embed/vFju2ZBTEr4" title="Alimentação Saudável ajuda curar e prevenir o câncer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/vFju2ZBTEr4" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Atividade de extensão aluno protagonista — produção de conteúdo digital · <strong style="color:#1a2e1f">UniCesumar</strong>.<br>
+                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com hábitos saudáveis como a exposição solar em ambientes naturais — ilhas e praias.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#alimentacaosaudavel</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#cancer</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Exposição solar em ambientes naturais como fator complementar</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
+                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+        <!-- ── SUB-ABA: PROTAGONISTA PT.1 ── -->
+          </div>
+
+          <!-- Parte 3 (hidden by default) -->
+          <div id="prot-pt3" class="prot-part" style="display:none;background:#fff;border:1.5px solid #e8efe8;border-top:none;border-radius:0 0 20px 20px;padding:24px 28px;margin-bottom:28px">
+                    <!-- ── PROJETO: Estudante Protagonista Pt. 3 — Sustentabilidade ── -->
         <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
           <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
             <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
             <div style="flex:1">
-              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto Social · ODS 4 e ODS 12</div>
-              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Economia Circular e Criatividade — Brinquedos Educativos</div>
-              <div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap">
-                <span style="font-size:11px;color:rgba(255,255,255,0.55)">📅 Início: 22/04/2024</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.55)">✅ Adesão: 23/12/2025</span>
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Atividade de Extensão · Faça Você Também</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Incentivo à Sustentabilidade e Responsabilidade Social</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 · Goiânia, GO</span>
               </div>
             </div>
-            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
           </div>
-
           <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
-
-            <!-- Objetivo -->
             <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🎯 Objetivo</div>
-              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">Promover habilidades em economia circular, criatividade e responsabilidade social por meio da construção e doação de brinquedos educativos feitos com materiais reutilizados — estimulando sustentabilidade, empatia e cidadania.</p>
-            </div>
-
-            <!-- ODS -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-              <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:22px">📖</span>
-                <div>
-                  <div style="font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:.5px">ODS 4</div>
-                  <div style="font-size:12px;color:#1e40af">Educação de Qualidade</div>
-                </div>
-              </div>
-              <div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
-                <span style="font-size:22px">🔄</span>
-                <div>
-                  <div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px">ODS 12</div>
-                  <div style="font-size:12px;color:#78350f">Consumo Responsável</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Etapas -->
-            <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
-              <div style="display:flex;flex-direction:column;gap:10px">
-                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
-                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Reunião de Materiais</strong> — Papel, papelão, embalagens, palitos, retalhos, sementes, tampas, rolos de papelão e latas.</p>
-                </div>
-                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
-                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Esboço e Planejamento</strong> — Desenhar o brinquedo, listar materiais e definir passo a passo considerando funcionalidade e segurança.</p>
-                </div>
-                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
-                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Produção do Brinquedo</strong> — Construção adaptando o plano conforme necessário, exercitando criatividade e resolução de problemas.</p>
-                </div>
-                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
-                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Vídeo de até 3 min</strong> — Mostrar o brinquedo, explicar o processo, materiais reutilizados e refletir sobre a experiência.</p>
-                </div>
-                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
-                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">5</span>
-                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Doação</strong> — Entregar os brinquedos a escolas, creches, hospitais ou ONGs e documentar com foto da entrega.</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Vídeo explicativo -->
-            <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo Explicativo do Projeto</div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
               <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-                <iframe src="https://www.youtube.com/embed/vzwFKL0dgu0" title="Economia Circular — Brinquedos Educativos" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+                <iframe src="https://www.youtube.com/embed/oZW1g-V7_tk" title="Incentivo à Sustentabilidade e Responsabilidade Social" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
+              </div>
+              <a href="https://youtu.be/oZW1g-V7_tk" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
+                Atividade de extensão <strong style="color:#1a2e1f">Faça Você Também</strong> — UniCesumar.<br>
+                Este vídeo aborda a importância da <strong style="color:#1a2e1f">reciclagem</strong> e traz dicas práticas para reduzir o uso de copos descartáveis no dia a dia, incentivando hábitos mais conscientes e sustentáveis. A ação foi realizada na <strong style="color:#1a2e1f">SEDUC — Secretaria Estadual de Educação de Goiás</strong>, levando o tema da responsabilidade socioambiental para dentro do ambiente educacional.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#sustentabilidade</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#reciclagem</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#responsabilidadesocial</span>
               </div>
             </div>
-
-            <!-- Área para conteúdo editável -->
-            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:28px;text-align:center">
-              <div style="font-size:32px;margin-bottom:10px">📝</div>
-              <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para suas evidências</p>
-              <p style="font-size:13px;color:#7a8a7c">Adicione aqui: fotos do brinquedo, vídeo produzido, foto da doação e comprovantes.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">♻️ Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Redução do uso de copos descartáveis</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Práticas de reciclagem no cotidiano</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Consciência socioambiental no ambiente educacional</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📍 Local da Ação</div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:10px 12px;line-height:1.6">
+                  🏫 <strong style="color:#1a2e1f">SEDUC</strong><br>
+                  <span style="color:#7a8a7c">Secretaria Estadual de Educação de Goiás</span><br>
+                  <span style="color:#7a8a7c">Goiânia, GO</span>
+                </div>
+              </div>
             </div>
-
           </div>
         </div>
 
-        <!-- ── PROJETO: Alimentação Solidária ── -->
+        </div>
+
+        <!-- ── SUB-ABA: PROTAGONISTA PT.2 ── -->
+          </div>
+
+        </div>
+
+        <!-- ══ SUB-ABA 4: ALIMENTAÇÃO SOLIDÁRIA ══ -->
+        <div id="ext-solidaria" class="ext-sub-panel" style="display:none">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Alimentacao_Solidaria()" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a4f;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Alimentacao_Solidaria() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA3IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNyAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0F1dGhvciAoTnV0cmkgQW1vcmltIC0gVW5pQ2VzdW1hcikgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDQwNDAwMjQzNSswMCcwMCcpIC9DcmVhdG9yIChcKHVuc3BlY2lmaWVkXCkpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDQwNDAwMjQzNSswMCcwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0IChcKHVuc3BlY2lmaWVkXCkpIC9UaXRsZSAoQWxpbWVudGFjYW8gU29saWRhcmlhKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA0IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAyNDM0Cj4+CnN0cmVhbQpHYXRtPWZsR2gqJ1JmXldpNmZbIS8tLCshTjMmaT8sZG5yPlJFajwxSjE5MjwuWnQ5NTNMdFZJJWZpY2QnLmBjRWBrb0BIaEtvX1w3T1dfUXJdYS1hR3JJK2NdazwiPDE0TFJuWW9HUCE4QjE4LW1xM0UyL0cnZGE9P3U4OGotKTpOJFZCbDFRSmw3OlVmUUReaCRtWUpxbFdGb0FsM0dtUy5sOVRJIVona3BxXmpNSnMwI0heZEdMNjlYRUZpZjxgLE9MUHVAPHBNJlFMR3RRQk4xLSV0TDxAUz5yY1RSb1UoQVlHOGIva2hOaisiKlQubjBHbGJlSzs5Z0tMK2YsWiVaMmJNLSJVR2csMDtxYTJbVztQbSNkTS0vaExRN3E+ZCdONFNBPit0ISkwSGFFWzsqVCJqMVRtSzw0ODNVNFU8TjtkZzNxL1xGclRDXSpRRUpmPUFJZG9bSkpDP2w8Q0RMRyMoNDtaWVZeQiIpWz1ZVV8mSFNMZktfPFU2O2NYTCpuPCtmO2twNSxZSVlwVklsXWBoQ3FMJiVOOEdYNWwiNnNYYSQicytLWT1dQkIyRE5PTjIuU0krUGYzJV8oRz5gczFDO2ZVR01zUDoxRjgmTHBxblZhPWxsJ3E2bnFGckNLY1QuXlxFZl1AKFkyTGk+ZS8zTWhqcCVvNmM0akQ5Jzk0ZzwlZEZnUzxcYWZhVyw9ZD9pcD5ARlBgWnBPWz9oMEBCTWFFTHM8YFpNMGFaKidncF9ITEdiTFgibk8/SzJfIiVWQypDaUQ1RmtQNFBqXzIvPGFiWFFuV0I+XygkMSJKQUlMU3RUaTRkcClqJ0dYTUJxbU4+K09kV2tTUjNraXNqQUtNZD5gXUlUWGc6QzJdOkpWQkcvLjgsN1RYPnFGaWIwXHEjYjJGXVgxI1trSDdJSG5hbzFTZWdeR2FCRV5dIzlOW0oyUks3OFpISklvMmhdNUI6KEFbOyJiWGZGY15pVHBgQVRpS1FkNFc1Rycvck48J2M5KzRoVichNGgsSTB1NyhTX1c3aXMrTmBuMGZxJ10ibChjLFtxKzFuQCVzLGJrK3EkY1o3WEsmPypqb0M7Sl5TKm1GLFVbZF49O2AjTTohVGo9RFNgZGZkMkBRMl8tRyhaSExTTl0jckFdTFIpMjA0UEpXRVNBMCJaclI2TzdNS1ojJmpfakg9RihNVjxePGZXc1VoQCpebl9mNVo3KjAocy4vQlElVS1SKWgydSs8W0FVKXRLOG1LSVdcWV1XQiVNUDRqb0g0YD5LTkBucF81MlJhV240QilxakokSC5POj0zcCY8TUcpXGY9OWQkMjZJWDUsKWNBIWsxP21jImBSPCcoLTQoP0FLX1laOyc/TW5FZHA3ak83KG5xYic5N2dMJHIqcjZFPmIuPSNqKyNqJkNhMlMmZVBzZT1TOjZmcjhkZ1FqRmRTcT5AZzNmNWAoc0dNMGQ1MSxkRkUjc3QyRTcxM1YiSlsmLTZART9MdT1LIzMzYXEjXzNQXDlOLCxvOnU0aF9jJCNubmZIZT0+Z19ja3QsU2pqX0NgJVRnPVRbQDVwdS4pZ2JlNCNYVj5RWF5LWDBUUHNLPTBQVkJNWGExP2wyJSsoYV1gakE9IWNzXzhNbUIjczFjRl06bW5VQytdbHRGbjYkcCdNXXNFKlciQ09zNHFSNkstXUUsK0xnXlEpSD8mYEtsa3NWNXE8UmAyQSJyKHBDSkQzYFMiSUdscnBYN0NXcE43LVNnQD8tYV08M3ArVS1UVypwXF1lPVNNWEY/JHJoUXM4NiFcSWUsa2ZJY1lHUjZGK04yL0VxaUcrK0VhJW9pZVJZTlM+L11NJ2VrXidZMURERSguaEQ4Nl8jUEJFTG1mKWBJaSRTSkBvXGgsclJyZTonTj9vRDdwNWJDZ1wkPWMsNUFlLD8vbHU6bGkhUW45cFJgWTYidFI5LXFOUzZ0RU8sLlJbPCRqb3JDdTBgbj8hJF4paWslZCI5KkFrR0YqK2A9UUJbSSQ/I2tGc05kNkJZYXI4VzZrKForTTFcRXNxcC4sYUhRVlUuRFpSN3RIZDozXXEhMC9fJ15BQzc0JWhvSDlMX1hEayFiT3NfXSFsWW1vdVRsWzU1VCYlJktOXylWY2Y8YjlgSV0mRCsyT11aR1BBLzpXTDU8LllVOiZ1QS1GNiM7U0AtUiFGUlltdDUnYW4pJWw+KzQ6NCM1MUcrJVJBJzpcZG9BcHQlK1lmWnFfMm9tPjFkZTolLl9KW0NYWi8oTztlNmc/cm1FUkZVRjc3JTpmQ1ZiVSVSaldyPCs7Qzw2SmsxPj4xLk4oPEAyKDkhYV90QS1lVyZcb2hMNUwybCIiSSwtdDMmRTY4QUxHRUJmO25iNGVtSWgmO2dIQUxWL1VgXUJFamU5TSUhX0U6XUVlMzUqakMzO2lRSyltIkgrX1EqWmkobVZhNXJfb0oyUShvJ2hZXy4nZnNvUCJNVnJHSyZkMDJSYiVXSCdcPyxkYW1xR25SQz4iaW87TjlTVS1STjpnXTMwNz1qJConbUBsV1dULjptZWU7L0wlbVYsM1dePz1WOWBqIV5IPXAvZFsnblBQQG9MNkhPZHIwKjElSXM7PGFBIy1xJ1dFX15dMkYsUGReQXUtMlQ2KzUtVyRNKz5jLSFQYzUtN19CVW1iUFw9cFZjQGY3TSNdPkAhKDNZJih0SDxUb3E4ZkY2YC1Mb1BBZyk4OSQyTDNuZ0ZNImNIN2VhQFgmPlgjXl08WTIsZ1AnYmdoKEdlWGtdV1lyZEk+RWE5JWhRJCVhbyQsZy8iSzNhJWsvOy1fRzpPZDlPQlUpLDI8Pmo2VXFPTk5TOmxFcCE5Xk8kM1EjNz9QTyo+YlYmSGBZYEBrPC4jNic7RypeLzk2VzFTP1RvaV4kb0tdXSxFMWNfVkZcM088ZVlvVF1Ra1kuN0cyZ29bcU1vbldTdEQwO0NGJEhVSjQ3R2JZQ20jaENJbUlgJj5yYT07ak5VaCoqTnJXLm0mPWswIlJKJjlZSDFYNDlRMExFY2s7QCtARTZlXk0pO2xkUlYtVW4sbEtgWFNZZ0tfXW88NVU5MSExbkNnWSwpU0UlW2JJXk5oLTJoSnJrUGY7JjVCZEdfcCM6MnBbXzEuOiFlWDQhMmNtNSxbZGU6ZnJZIjRpJU1BVkQmc0ZOPylTLTNVLWIwRTVMXy0rZC5WXFhRLCxecio/OStuNT5wW1YyI34+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA5IDAwMDAwIG4gCjAwMDAwMDAzMjEgMDAwMDAgbiAKMDAwMDAwMDUyNCAwMDAwMCBuIAowMDAwMDAwNTkyIDAwMDAwIG4gCjAwMDAwMDA4OTIgMDAwMDAgbiAKMDAwMDAwMDk1MSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzxlNDlkMWY0MTBhMDU5Y2Y4NDJmZDYzZTg1MTEyN2FkNz48ZTQ5ZDFmNDEwYTA1OWNmODQyZmQ2M2U4NTExMjdhZDc+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDYgMCBSCi9Sb290IDUgMCBSCi9TaXplIDkKPj4Kc3RhcnR4cmVmCjM0NzYKJSVFT0YK";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Alimentacao_Solidaria.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+                  <!-- ── PROJETO: Alimentação Solidária ── -->
         <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
           <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
             <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤝</div>
@@ -3553,165 +4243,17 @@
           </div>
         </div>
 
-        <!-- ── PROJETO: Estudante Protagonista Pt. 3 — Sustentabilidade ── -->
-        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
-          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
-            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
-            <div style="flex:1">
-              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Atividade de Extensão · Faça Você Também</div>
-              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Incentivo à Sustentabilidade e Responsabilidade Social</div>
-              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
-                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 · Goiânia, GO</span>
-              </div>
-            </div>
-          </div>
-          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
-            <div>
-              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
-              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-                <iframe src="https://www.youtube.com/embed/oZW1g-V7_tk" title="Incentivo à Sustentabilidade e Responsabilidade Social" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
-              </div>
-              <a href="https://youtu.be/oZW1g-V7_tk" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
-              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
-                Atividade de extensão <strong style="color:#1a2e1f">Faça Você Também</strong> — UniCesumar.<br>
-                Este vídeo aborda a importância da <strong style="color:#1a2e1f">reciclagem</strong> e traz dicas práticas para reduzir o uso de copos descartáveis no dia a dia, incentivando hábitos mais conscientes e sustentáveis. A ação foi realizada na <strong style="color:#1a2e1f">SEDUC — Secretaria Estadual de Educação de Goiás</strong>, levando o tema da responsabilidade socioambiental para dentro do ambiente educacional.
-              </p>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#sustentabilidade</span>
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#reciclagem</span>
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#responsabilidadesocial</span>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
-                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">♻️ Pontos-chave</div>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Redução do uso de copos descartáveis</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Práticas de reciclagem no cotidiano</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Consciência socioambiental no ambiente educacional</li>
-                </ul>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📍 Local da Ação</div>
-                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:10px 12px;line-height:1.6">
-                  🏫 <strong style="color:#1a2e1f">SEDUC</strong><br>
-                  <span style="color:#7a8a7c">Secretaria Estadual de Educação de Goiás</span><br>
-                  <span style="color:#7a8a7c">Goiânia, GO</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- ── PROJETO: Estudante Protagonista Pt. 2 ── -->
-        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
-          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
-            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
-            <div style="flex:1">
-              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 2</div>
-              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável ajuda curar e prevenir o câncer</div>
-              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
-                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 20:50 · Goiânia, GO</span>
-              </div>
-            </div>
-          </div>
-          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
-            <div>
-              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
-              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-                <iframe src="https://www.youtube.com/embed/vFju2ZBTEr4" title="Alimentação Saudável ajuda curar e prevenir o câncer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
-              </div>
-              <a href="https://youtu.be/vFju2ZBTEr4" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
-              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
-                Atividade de extensão aluno protagonista — produção de conteúdo digital · <strong style="color:#1a2e1f">UniCesumar</strong>.<br>
-                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com hábitos saudáveis como a exposição solar em ambientes naturais — ilhas e praias.
-              </p>
-              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#alimentacaosaudavel</span>
-                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#cancer</span>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
-                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Exposição solar em ambientes naturais como fator complementar</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
-                </ul>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
-                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── PROJETO: Estudante Protagonista Pt. 1 ── -->
-        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
-          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
-            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🌿</div>
-            <div style="flex:1">
-              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Estudante Protagonista · Pt. 1</div>
-              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Saudável como Fator de Boa Saúde</div>
-              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
-                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
-                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 às 22:50 · Goiânia, GO</span>
-              </div>
-            </div>
-          </div>
-          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
-            <div>
-              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
-              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
-                <iframe src="https://www.youtube.com/embed/rrYRt23xnHY" title="Vídeo do Projeto" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe>
-              </div>
-              <a href="https://youtu.be/rrYRt23xnHY" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;background:#ff0000;color:#fff;text-decoration:none;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;margin-top:10px;transition:background .2s" onmouseover="this.style.background='#cc0000'" onmouseout="this.style.background='#ff0000'">▶ Assistir no YouTube</a>
-            </div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
-              <p style="font-size:13px;color:#5a6a5c;line-height:1.75">
-                Estudo sobre como a <strong style="color:#1a2e1f">alimentação vegana</strong> pode atuar na prevenção e tratamento do câncer de mama, combinada com exposição solar em ambientes naturais — ilhas e praias.
-              </p>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
-                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
-                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Dieta vegana e redução do risco de cânceres</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Banhos de sol em ambientes naturais como fator complementar</li>
-                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Frutas como aliadas na medicina preventiva</li>
-                </ul>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📚 Referências</div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  <a href="https://nutritotal.com.br/pro/material/dieta-vegana-pode-estar-associada-a-reducao-no-risco-de-canceres/" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Nutritotal — Dieta vegana e risco de cânceres</span></a>
-                  <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:8px 10px;display:flex;align-items:center;gap:6px">📖 <span><em>As Frutas na Medicina Doméstica</em> — Prof. Alfons Balbach</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- ── SUB-ABA: SUSTENTABILIDADE (Protagonista Pt.3) ── -->
         </div>
 
       </div>
     </div>
 
     <!-- ═══ ABA ADMIN ═══ -->
+
+
     <div class="tab-content" id="tab-admin">
       <div class="content">
         <div class="admin-wrap">
@@ -5927,6 +6469,40 @@ document.getElementById('pdf-modal').addEventListener('click', function(e) {
 </div>
 
 <script>
+
+// ── SUB-ABAS PROJETOS DE EXTENSÃO ──
+function showExtSub(id, btn) {
+  document.querySelectorAll('.ext-sub-panel').forEach(p => p.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.querySelectorAll('.ext-sub-btn').forEach(b => {
+    b.style.background = '#f8fdf8';
+    b.style.color = '#5a6a5c';
+    b.style.borderColor = '#e8efe8';
+    b.classList.remove('active');
+  });
+  const bg = btn.dataset.bg || 'linear-gradient(135deg,#1a2e1f,#2d6a4f)';
+  const color = btn.dataset.color || '#74c69d';
+  btn.style.background = bg;
+  btn.style.color = color;
+  btn.style.borderColor = 'transparent';
+  btn.classList.add('active');
+}
+
+// ── PARTES INTERNAS DO PROTAGONISTA ──
+function showProtPart(id, btn) {
+  document.querySelectorAll('.prot-part').forEach(p => p.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  ['btn-prot-pt1','btn-prot-pt2','btn-prot-pt3'].forEach(bid => {
+    const b = document.getElementById(bid);
+    if (!b) return;
+    b.style.background = '#f8fdf8';
+    b.style.color = '#7a8a7c';
+    b.style.borderColor = '#e8efe8';
+  });
+  btn.style.background = '#2d6a4f';
+  btn.style.color = '#fff';
+  btn.style.borderColor = '#2d6a4f';
+}
 
 // ── NUTRIÇÃO TOGGLE ──
 function toggleNutricao() {
