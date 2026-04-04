@@ -6,7 +6,7 @@
   <title>Página Inicial — Nutri Amorim</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
+  <script src="supabase-config.js" onerror="console.warn('supabase-config.js não encontrado. Verifique se o arquivo está no mesmo diretório.')"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
@@ -26,7 +26,7 @@
     body.tema-escuro .home-footer-brand-name { color: var(--verde-neon); }
     @media (max-width: 900px) {
       .ext-proj-grid { grid-template-columns: 1fr !important; }
-      .ext-proj-col-left { border-right: none !important; border-bottom: 1px solid #e8efe8; }
+      .ext-proj-col-left { border-right: none !important; border-bottom: 1px solid var(--border-card); }
     }
     @media (max-width: 768px) {
       body { grid-template-columns: 1fr; }
@@ -51,7 +51,6 @@
     .nav-section-toggle { display:flex; align-items:center; justify-content:space-between; padding: 8px 24px 4px; cursor:pointer; user-select:none; transition: background 0.15s; border-radius: 4px; margin: 8px 8px 0; }
     .nav-section-toggle:hover { background: rgba(255,255,255,0.05); }
     body.admin-mode .main { padding-top: 48px; }
-    body { background: var(--bg-page); }
 
     /* SIDEBAR */
     .sidebar { background: var(--escuro); display: flex; flex-direction: column; padding: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
@@ -78,7 +77,7 @@
     .main { overflow-y: auto; min-width: 0; background: var(--bg-page); transition: background 0.3s; }
     .topbar { background: #fff; border-bottom: 1px solid #e8efe8; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
     .page-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--escuro); }
-    .topbar-actions { display: flex; gap: 12px; align-items: center; }
+    .topbar-actions { display: flex; gap: 12px; align-items: center; position: relative; }
     .pl-filtro-btn { background:#f1f5f1;color:#555;border:1.5px solid #e8efe8;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s; }
     .pl-aba-btn { background:#f1f5f1;color:#555;border:1.5px solid #e8efe8;padding:8px 14px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border-bottom:none; }
     .pl-aba-btn.ativa { background:#fff;color:#1a2e1f;border-color:#2d6a4f;border-bottom:2px solid #fff;font-weight:700; }
@@ -563,19 +562,6 @@
       <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Nutrição</span>
       <span id="nutricao-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
-    <script>
-    document.getElementById('nutricao-toggle').addEventListener('click', function() {
-      var m = document.getElementById('nutricao-menu');
-      var a = document.getElementById('nutricao-arrow');
-      if (m.style.display === 'none' || m.style.display === '') {
-        m.style.display = 'block';
-        a.style.transform = 'rotate(0deg)';
-      } else {
-        m.style.display = 'none';
-        a.style.transform = 'rotate(-90deg)';
-      }
-    });
-    </script>
     <div id="nutricao-menu" style="display:none">
     <div class="nav-item" onclick="showTab('termo')"><span class="nav-icon">📄</span> Termo de Consentimento</div>
     <div class="nav-item" onclick="showTab('prontuario')"><span class="nav-icon">📋</span> Prontuário Médico</div>
@@ -591,19 +577,6 @@
       <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Atendimento</span>
       <span id="atendimento-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
-    <script>
-    document.getElementById('atendimento-toggle').addEventListener('click', function() {
-      var m = document.getElementById('atendimento-menu');
-      var a = document.getElementById('atendimento-arrow');
-      if (m.style.display === 'none' || m.style.display === '') {
-        m.style.display = 'block';
-        a.style.transform = 'rotate(0deg)';
-      } else {
-        m.style.display = 'none';
-        a.style.transform = 'rotate(-90deg)';
-      }
-    });
-    </script>
     <div id="atendimento-menu" style="display:none">
     <div class="nav-item" onclick="showTab('chatbot')"><span class="nav-icon">🤖</span> Assistente IA</div>
     <div class="nav-item" onclick="window.open('https://wa.me/5562998540552','_blank')"><span class="nav-icon">💬</span> WhatsApp</div>
@@ -615,19 +588,6 @@
       <span style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.75)">Estudos</span>
       <span id="estudos-arrow" style="color:rgba(255,255,255,0.75);font-size:13px;transition:transform 0.25s;display:inline-block;transform:rotate(-90deg)">▼</span>
     </div>
-    <script>
-    document.getElementById('estudos-toggle').addEventListener('click', function() {
-      var m = document.getElementById('estudos-menu');
-      var a = document.getElementById('estudos-arrow');
-      if (m.style.display === 'none' || m.style.display === '') {
-        m.style.display = 'block';
-        a.style.transform = 'rotate(0deg)';
-      } else {
-        m.style.display = 'none';
-        a.style.transform = 'rotate(-90deg)';
-      }
-    });
-    </script>
     <div id="estudos-menu" style="display:none">
     <div class="nav-item" onclick="showTab('conhecimento')"><span class="nav-icon">📚</span> Conhecimento na Prática</div>
     <div class="nav-item" onclick="window.open('central-estudos.html','_blank')"><span class="nav-icon">🧠</span> Central de Estudos</div>
@@ -1430,7 +1390,7 @@
           </div>
           <div class="perfil-info">
             <h3 id="p-nome-full">—</h3>
-            <div id="p-admin-badge" style="display:none;margin:6px 0 2px;display:none"><span style="background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px">🛡️ Administrador</span></div>
+            <div id="p-admin-badge" style="display:none;margin:6px 0 2px"><span style="background:linear-gradient(135deg,#b45309,#d97706);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:1px">🛡️ Administrador</span></div>
             <p id="p-email-full">—</p>
             <p style="font-size:12px;color:#7a8a7c;margin-top:6px">Clique na foto ou no botão para alterar</p>
           </div>
@@ -2636,6 +2596,11 @@ async function init() {
       ['sb-admin-badge','p-admin-badge'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'block'; });
       const navAdmin = document.getElementById('nav-admin');
       if (navAdmin) navAdmin.style.display = 'flex';
+      // Abrir menu Atendimento automaticamente para o admin ver o item
+      const atendimentoMenu = document.getElementById('atendimento-menu');
+      const atendimentoArrow = document.getElementById('atendimento-arrow');
+      if (atendimentoMenu) atendimentoMenu.style.display = 'block';
+      if (atendimentoArrow) atendimentoArrow.style.transform = 'rotate(0deg)';
       const cam = document.getElementById('sobre-foto-cam');
       if (cam) cam.style.display = 'flex';
     }
@@ -4742,6 +4707,29 @@ document.getElementById('pdf-modal').addEventListener('click', function(e) {
 </div>
 
 <script>
+
+// ── TOGGLES DE NAVEGAÇÃO (movidos para cá para evitar <script> dentro de <nav>) ──
+document.addEventListener('DOMContentLoaded', function() {
+  function setupNavToggle(toggleId, menuId, arrowId) {
+    var toggle = document.getElementById(toggleId);
+    if (!toggle) return;
+    toggle.addEventListener('click', function() {
+      var m = document.getElementById(menuId);
+      var a = document.getElementById(arrowId);
+      if (!m || !a) return;
+      if (m.style.display === 'none' || m.style.display === '') {
+        m.style.display = 'block';
+        a.style.transform = 'rotate(0deg)';
+      } else {
+        m.style.display = 'none';
+        a.style.transform = 'rotate(-90deg)';
+      }
+    });
+  }
+  setupNavToggle('nutricao-toggle',    'nutricao-menu',    'nutricao-arrow');
+  setupNavToggle('atendimento-toggle', 'atendimento-menu', 'atendimento-arrow');
+  setupNavToggle('estudos-toggle',     'estudos-menu',     'estudos-arrow');
+});
 
 // ── SUB-ABAS PROJETOS DE EXTENSÃO ──
 function showExtSub(id, btn) {
