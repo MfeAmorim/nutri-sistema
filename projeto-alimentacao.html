@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projetos de Alimentação — Nutri Amorim</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --verde: #2d6a4f; --verde-claro: #52b788; --verde-neon: #74c69d; --creme: #f8f4ef; --creme2: #ede8df; --escuro: #1a2e1f; --texto: #2c3e2d; --bg-page: #f8f4ef; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg-page); color: var(--texto); min-height: 100vh; }
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    .topbar { background: var(--escuro); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .topbar-brand { font-family: 'Playfair Display', serif; color: #fff; font-size: 18px; font-weight: 700; text-decoration: none; }
+    .topbar-brand span { color: var(--verde-neon); }
+    .topbar-back { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .topbar-back:hover { color: var(--verde-neon); }
+    .page-header { margin: 36px 0 32px; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--escuro); margin-bottom: 8px; }
+    .page-header p { font-size: 14px; color: #7a8a7c; }
+    .tabs-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .tab-btn { display: flex; align-items: center; gap: 10px; padding: 14px 20px; border: 2px solid #e8efe8; border-radius: 14px; cursor: pointer; background: #fff; color: #5a6a5c; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; transition: all .2s; flex: 1; min-width: 160px; text-align: left; }
+    .tab-btn.active { border-color: var(--verde); background: var(--verde); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    @media (max-width: 768px) {
+      .page-wrap { padding: 24px 16px; }
+      .tabs-nav { gap: 6px; }
+      .tab-btn { min-width: 140px; padding: 12px 14px; }
+      .foguete-estagios { grid-template-columns: 1fr !important; }
+      .foguete-materiais-grid { grid-template-columns: 1fr !important; }
+      .foguete-reacao-grid { grid-template-columns: 1fr !important; }
+      .foguete-plataforma-grid { grid-template-columns: 1fr 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      .foguete-plataforma-grid { grid-template-columns: 1fr !important; }
+    }
+    .ext-sub-panel { display: none; }
+    .ext-sub-panel.active-panel { display: block; }
+  </style>
+
+</head>
+<body>
+
+<div class="topbar">
+  <a href="dashboard.html" class="topbar-brand">Nutri <span>Amorim</span></a>
+  <a href="dashboard.html" class="topbar-back">← Voltar ao Dashboard</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>🍽️ Projetos de Alimentação</h1>
+    <p>Atividades extensionistas UniCesumar — Cozinha Integre, Cozinha Sustentável e Alimentação Solidária</p>
+  </div>
+
+  <!-- NAV -->
+  <div class="tabs-nav">
+    <button id="btn-alimentacao" class="tab-btn active" onclick="showTab('alimentacao')">
+      <span style="font-size:22px">🥗</span>
+      <div><div style="font-weight:700">Projetos Alimentação</div><div style="font-size:11px;opacity:.75">Cozinha Integre · Cozinha Sustentável</div></div>
+    </button>
+    <button id="btn-solidaria" class="tab-btn" onclick="showTab('solidaria')">
+      <span style="font-size:22px">🤝</span>
+      <div><div style="font-weight:700">Alimentação Solidária</div><div style="font-size:11px;opacity:.75">Doação · IEC Goiânia</div></div>
+    </button>
+  </div>
+
+  <!-- PAINEL: Projetos Alimentação -->
+  <div id="panel-alimentacao" class="tab-panel active">
+            <div id="ext-alimentacao" class="ext-sub-panel" style="display:none">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Projetos_Alimentacao()" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a4f;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Projetos_Alimentacao() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUiAvRjMgNCAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YxIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKMyAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYS1Cb2xkIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMiAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0Jhc2VGb250IC9IZWx2ZXRpY2EtT2JsaXF1ZSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjMgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iago1IDAgb2JqCjw8Ci9Db250ZW50cyAxMSAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCAxMCAwIFIgL1Jlc291cmNlcyA8PAovRm9udCAxIDAgUiAvUHJvY1NldCBbIC9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUkgXQo+PiAvUm90YXRlIDAgL1RyYW5zIDw8Cgo+PiAKICAvVHlwZSAvUGFnZQo+PgplbmRvYmoKNiAwIG9iago8PAovQ29udGVudHMgMTIgMCBSIC9NZWRpYUJveCBbIDAgMCA1OTUuMjc1NiA4NDEuODg5OCBdIC9QYXJlbnQgMTAgMCBSIC9SZXNvdXJjZXMgPDwKL0ZvbnQgMSAwIFIgL1Byb2NTZXQgWyAvUERGIC9UZXh0IC9JbWFnZUIgL0ltYWdlQyAvSW1hZ2VJIF0KPj4gL1JvdGF0ZSAwIC9UcmFucyA8PAoKPj4gCiAgL1R5cGUgL1BhZ2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvbnRlbnRzIDEzIDAgUiAvTWVkaWFCb3ggWyAwIDAgNTk1LjI3NTYgODQxLjg4OTggXSAvUGFyZW50IDEwIDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago4IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgMTAgMCBSIC9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iago5IDAgb2JqCjw8Ci9BdXRob3IgKE51dHJpIEFtb3JpbSAtIFVuaUNlc3VtYXIpIC9DcmVhdGlvbkRhdGUgKEQ6MjAyNjA0MDQwMDIzMDArMDAnMDAnKSAvQ3JlYXRvciAoXCh1bnNwZWNpZmllZFwpKSAvS2V5d29yZHMgKCkgL01vZERhdGUgKEQ6MjAyNjA0MDQwMDIzMDArMDAnMDAnKSAvUHJvZHVjZXIgKFJlcG9ydExhYiBQREYgTGlicmFyeSAtIFwob3BlbnNvdXJjZVwpKSAKICAvU3ViamVjdCAoXCh1bnNwZWNpZmllZFwpKSAvVGl0bGUgKFByb2pldG9zIEFsaW1lbnRhY2FvKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjEwIDAgb2JqCjw8Ci9Db3VudCAzIC9LaWRzIFsgNSAwIFIgNiAwIFIgNyAwIFIgXSAvVHlwZSAvUGFnZXMKPj4KZW5kb2JqCjExIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDIxMDQKPj4Kc3RyZWFtCkdiIi8nYkJEVnUmRGQ0NkInSDBJJFwvP2QvMC5gMVByPXBRLyI8LEgrOj1qMU9Ga1lHUCo8KjxKOGEsKC9HSWVyKFxVY01eajQ4PjZXLCclOXJsJDskTGhYO15WLUkvKTljL0k0aWAzTj9TSihEcixeam82RFtKb1RuOWU7aUk9Pi0wLVE2SzJMJzljTSdJRSdrRTduWGknKSxGJkVgZnQxKEM5Yy1SXVxEblQ6VVpKWkxdZDlvVEBpOUguS09uK2AmOyQzS3IoK3ArLjBFO0ZQZk8qIl4qLllDT0AmKVxvblQ2NFJNV0Y+XzxkJHNyc2xhYy1vUiIna2RYJSZpVjc5RSIsbmFHYzVJLSp0VmlqXFA6RWNYMzlpYCdoJydybXMsN3NeW3IhS1FlRCs/WD5oOWNRXEchN3U4dGpUMDkkaS05TSVgO2pxPmRfSCsuJzBgYjc7LzluKG5CMDthJllbXW8/LDhzQGwlUkY0ZFhXZVRQSCNmOlByMlhcTkQ5b1tZNEQ4JlcsLFRBbGByKEkoc1onRGBHJ2FzJipKLFczZ0UpbTtAcDo9bmspQEA3S0ZPYm8pWGNFXWE0ZEVnRE90Xmk9KkMuZGxkcTxKKUZeUyU4N3UoPVguYlUwXSxAQixyU19lMEZZPVFcM0Y9QWNKUj1LZnVqMElrIyREYnI/TjY2SWtcQEZyRmBLXCEjK1R0cCE1KW0oZmd0V1hUS2c+LE1vTDo5SkRrSGVrVkw1cD5VNF8oWTVSaDNwRTNoXSlSOlpqSVcxQlAmO1FsbkBcZ21uaDpqXVNUOyFcTTBJIj5oQnRBUk0vbyooZXUrcDI8LlciaVtIakMvPDxmIildNSRuUT5MJV1Uci4qWWFTKnNnSjNvO29FX19eYmNTU1AsQ2ttISlmQlwwU0tWT15ZPSQwX19IL1BbRj5sV1hSOFNgcXBvUGVURys8XCwjaC1ZUCspJGw6Y2ZPQGosRyNGK2xOWD4lLmFNTy1gNUI4RVI5N2JrRkhSWigyb0lRRXFzNGg6TE4qJSUkRG5cbzxMTE87ISROQDQ+aENPI2FIRVxzMWpTa2xMdDFqb211bCxDXXJJKFwibWYnYSxyJzBxMnFzLidEKSUjK2UnbE9KLGouVDRuWlk1UHJsJD5Xb1oyLic9Uz5ZajdNckRVNHA6I0NybmRsVSVVZWE6STFoNC4mVFIlLCk7bXQ/Z0lRIUokUz5PO15rSklsTUgyYFI/cENuYFtQZCt0WHBiWiJZQCJST2dfSi1IL2JRInNVY0tpdERxbjBjXFlOWFBiXWBCSzJJNEk8b1pBZFhPJVJjQC07R25DdHVGLUZAbjwkdUlGLjhbLiVgK2lrRCNYIWpIWlBLSy5EREZWaTdMZDNVcmJPLj4+OyF1OyhvYT51V1ZUKHEoJ3QkLzwiUE1KNWFlPzBXRXMlNFthcVdVQkdndGouYW91P1ZbTDJjWCNTJigza3MnTl1YInRNUkhTN2NiLCc5QWE5JVFkPDw1MihHLUNuSjc6Iy1lb2I1L0htXDhRbUhQZUxLcCJMN1kvZlhGMkNXQDheLCMhNXBbRF1zJlhfdV9XPydPXWVYKHRYXDdZcSdlZl89aiJsWnAsKDJPI0krNnUoO3Q5bC1fbzdqRi8jNV5zJnNdJ0trcFM2aURMKENmXio3VXRnNGBcdF1qb1dcQ0kpY0xzUS1FaDhlMGkydGMyWEBBJTtPLUZGVlVBZzNJIzdRcyctUStkJTQsbm09OlEkcFUtWDswSylDYTVvYS8oP0w6Q103US8jOCRPT2NFQi8qcHNbJUJbTV41KkMlMEpdUVFSO0hZa1xpKCJiO0BXZD9ISlwvcmAvRC8iIz8jKl9UKUwsMWBBcHRfLioyZS5CNmNhWyRqIkxdYkU9aTBAVTVnMCZSUys8bDdwKmdtKnBgVT1hSmdWNEdIOUxoLlUvOWJSNDE1dCwwOFhlcVJcJjoraT9ccD45X19fSjwncVwlSDExNy0jJmQmQVlRSjk4SCcqSzU5Q2YwKiNBalsoLHNcYDtzX3EtOiMuTVJETk0hREE4bEwsQTwuamtaR1M5SiRVXGtSbSw0byI1UURnQGkyWVR1ZkduX2NXbmgmZU5qKVBJbzZITmtdQUtfb3F0OkxqWHEzWiJVbE0jYElOJFdKVS1DaGozRjs8TCxDR1trSE1UKV9BLzk+RFdYJlxtIisrUlRpbzRZaGxEYnMkQzNvYDYiKEghZVo6RlRBVWNNQ2RtUz4iLWFlITU/R25BUSFuW0JAZ1dlYlhhSTMnWVY/SyIpYi4qZ1IqQFE8TDcldFlfJU81ZltXLSk0VF9Xb2lpS0ojKT4wcV9iSjdMI28jYCxVTF9WUUNGPUhMVGBiZUtoPls9a1hoLnRFSDdHJy1sI3RUOGZIbytvbyUuTlFzUFU0bCVzJ3BCLF1xbk5OSj1YcXNzSCg7YTFtJF1pV1ROa0hWISgtZUY0M1sjOSdgSD0rX3VoUSVSPl9LJydsWkJUa2QsMlBOcCpaRCM7OjI3IXItPHJjZEpETktmVSUxZHNXMmptblBySTgwNTQ1NFNsNUctXVdibycsal4kOitoP3NXUSNtakpPJVsydV1FPWhTMFcuJGhsT01Lb01BUi9SRCM5aiRIa2hIc1E2Ym11UU0mNV4xQTYiV0hrVFZZT3JUSlcyZEkmQGIqPldnLVdvLyxRRjQiLVRQYkRpcTcjQEo5cDhkV1lrUG1zNmkpWGI8aGEpU3NaPlBvcF9YOVV1RmFjaXFoLGkzPT1PckpBXHVPYE0/YUtfQXAmfj5lbmRzdHJlYW0KZW5kb2JqCjEyIDAgb2JqCjw8Ci9GaWx0ZXIgWyAvQVNDSUk4NURlY29kZSAvRmxhdGVEZWNvZGUgXSAvTGVuZ3RoIDE0MjIKPj4Kc3RyZWFtCkdiIi9mOWlMKzImO0taT01FXD1NNCxQPVdbV05rXkwuV3A7WVdLQzhkRl9uPkFRcDszOExoSyg+SUhaU0pha0c5Wj46IiIkN05HMnAkNVpFa3IrNSRJcVxqQFk1bDpEX0tTNEBURkAsRjVXUmYtciMlW0w6RUU3Ok5Nb04hJj1RJW1BR0Rjb09bc0hXUDhZNzgxKlRrUUZzLiN0V0NUOU4nIVhFKWkmJzYlNGkna18jQTxjYChzKFA5L2RgWmgwYiVTWzY1JUJjS2FkP19QYmtVY2k6UWN0U0VtJlFQXzNiO1VpPlNiU1NnIm4pRiIpTGxGT05kSCMyQlJuZF50KF9pRl8lMUBJYnNqSmE1bTBIcWZcXlotXi5nVj9zKy5VQk01PTQ6SDNqPEJhKSY9R3EjYGFLakIzKDJMJGAxMDRwVWBvcWxFMUB0WiEhVDhXOW47XmFAR1xSOlEpNnRBPXE9I1M7QS4kPGFFalshZzhWckBsPDdEa2YmWHVzZVNxXWIkaCUpOl08XVFvNmEyJSw+JWNjcFpIY0ZlUEFOOic2YWd0UEFPTCxCZ05AZUBldHVLYC0+VGI8M00sRy4zJGoxOD5OVjNzKkxTXCEtLHJQZGRcSlJXNmQwNWZKN2sqVyk5LVs0U24oTVpMSVYxJzRMOSpwNGhHXXNyLzV0YGhuTFMwWEBzOyE7QWRHXyZfbTJLOyczQWQnJlwtNU1ucTpmRGlBT2YwYj5NIm82NTFwSmU+cyNibCI+WV1CQUU5OWlKUktwIkhMWyFpTU9DSydiZylFLFRzR29rTSZXOTROUyEzMykzMjhYTUJjLWZeUFZHTV1rTTt0QzhQO1RzczVwcU1vWGI1aF4nSGAsVi4sYzEkaSxnO21JTU49Y1tXSycudDYiXm46b1ZFOSNVLmAhW2BMLERDR1UySV1sTUFhO2RbNlBlMlB0ZE8oZ1xHXyxtcWZhRFQpXiQrIlFCKFo/WDA1OmovaTAoMzAhVzxkOFlDRmtQamBpSiQ6XEBBVis1KW9TWic3SkFgMUVhPi1oMkInaG9EWTBMPWNvTlJrWTAhSGpuMSZxKWhgSkw/OEgtXV5KL0lmIT9sWFsvNWkocEItaldnPD5SQCVsYVRfZSZZU2g5RWRCNFlINFNEXWM8ZDZUITltIXVTI3JvM0pCSl5rKy0zYkhMIyVaSyxKPjpOLUc1U1xvNFxKMSY4b05VRzdYXEAtUWpsUT4yKWdiVT1EVVVKaEFSVCpSKztmcUk7V00vO0JLXitVVjwyZnM2SVIkcl8/XCJtMSFMQSU6TT1bUzo4dFEvZHMpPUVYSy8vPFE9RHRwVyhXRGtfUDpdUXNSYi4xXFwjYjs3LkZ1TyUpNGNnPWVKIXJSYk5AZGJuXGJOM2ZeP29IM0ozRjRfdG1XcFE8K0lKSSkvXWZxMUlZPF9oWEg+KUBOVU09QEEoL0csPGhDKiUlZ0xDVDsvKVZJRTY4YmwzNGNAMDBJLkRaI2VrWm9QOlU6RUpqJC1LSEcrMm9SMnRhdDYkXVY6VVFOQCdjSHRQdGs5Iz4zIjlNLCJUOmNzUSRWNzwyaDBaPVhQO2k1cVtFVEFFVS4yVWEiVG4+SVYjLkZDOF1gW2VDX3JIa1xzK0pHXS9OMlpSNmBbQEpLZHVgZDFkOjg8MDkrPENlZ3NMQztkcF1xaVx0OnIxLF89bmBtLS5ZcSxuIlckLCY+RUBvcDM9TkJYQTFIajAjMWdNMkZFRVMwSlVuQmUwKlUhaktNLE0vZV1mXTsxbllFbEBhX1ZgLl49SzkhOTpgLlUiPSpFRTQiNGQoOjE4KSgyTW4uRF9eY2BrMm0uMm1LaUBMdT1fSmg7TDU3OmhcR2Vxb11uMlFvR1hgM2hLMGJtXjx+PmVuZHN0cmVhbQplbmRvYmoKMTMgMCBvYmoKPDwKL0ZpbHRlciBbIC9BU0NJSTg1RGVjb2RlIC9GbGF0ZURlY29kZSBdIC9MZW5ndGggMTgzNwo+PgpzdHJlYW0KR2F0bTtnTikiPSY6TzpTb1pMOHEuNUtLMEZQL1UzOFg+U0NOWmtDKFBbPVYzTGc2KnRRJVlAVFlNVURXJkBbMEtwa0Q7Zmw5PFxeNSxVaWNfL0VOVFNdKFQ8Jz1gPGBKTU5UREotbUsuRVkmLGplTlssZzNdKGUpJkYpPj5ALy5qQkY5PigjPHNkYU0iVjEnLmdtPFI7YmBhWU04ZllpViMtIT9yZ0ZJQidoZTY7Sz9rPSJhbj43Wjo/RFxHU2tuNXBfITxqUz40aWQ7KScjWEMvLGphYzMqTkttR1ItVlJVQzddUWNAJzY0JzFZNTRsYCEmKTxALkZfaVwhOUkxKD5mPCdMcT1hIVw7VU9rXSYvQkRxOT5RT0tzPUJuMixlQHEsUzhCMUhtIiIrR2VTXVM/MC9vVSxfLTleOyFIKE8hQ1dTQGBybyIjV1RPPHBePD5tMlo6PSprPV5fMXM3T1RSUXFwSS1aSWFHJ18pYzVrVWAkdToxYi8yXTVkWkspQlEkbzhDUS1SUWAlRyxrRDY4cGY6KG1lO15sLmYkOidAUURCaSZiYTpqRl5Xak0jdVBGazsqbW8qX29MTStyUXRtKClPQz1cXGM3WiRTMy87TzNUSWlOaTckPSo9dENcXjVsdVVMUG1vcDo+cDhYKlU0PVJfalpJYUtBbjJsTjc0cGFnL0t1PmFESyRyPiNyJyhFODtJXSlbdWMzX1lEPCFkTjs1cT9pMFNiKGwhMWBJQFRyTTBeT2dtMl1ALzQlc3JyVllXRVw/KlNETTFGN2lbK19KNihcY1hoMW1bSy1nYyZZJzZFQUAvWlY8ITxqOmZNV2M+ZypIMkw0Mik1YTEqUl85azhpO20tWXFfUUxKMUo8KCNsI3JdUiVaZm5ZYHFKZ01GV2JJNFU+T05Xcic3JGVvTytxbTtFcTVoW0FNM0VEYD1KKWJjNGJbSWc1VXFbIi9aR0xVKlh1I2B0JjFeUDhoYlxKbkx0RiEobmBYbGc+UEwqb0o8ZStSaFNePkhsLXJyRkJoOTkoME9POzxrai1XXlk1MGxPQTZyKTxnUltgO084L1UyQVJFOyEhVl90RzpwMXMqPlMuSDFsQ05rbFYyW1xPTiU9YUI/JEVfMDN1YmV0YEYxXlhPS0Fzc2VKbS5fWFVTT2MpcVxHdSU6Iy87UGsrRDcySCRsWytycXNQUU5tYSVCT2E7WzI/RT5HYiknMV5CaUhLdV5cM0pKZU84XGhnME80Mz8lOlhWKjskaDs0YXUxRS5RdD9YPEFKKmA8YHRdPlxqdFlgJSwzMVxadUhzbComNDQhcyhFXDROV1FkLyJkRlM7Yi1ZMGhgNSdTQjFFRGVZNG5FVFpIcmkiLkI9U2NPKEVJWWZWSCUvKS8xVWYsZWxjRms7SkU5aTgyYHAmZk44UTspVUdoSEs1bzwvTWJdQVQmZiMiNGEtZjVZMUJbVjgxVTJMOTc0Lj85OVArIkpKVkFycFdzZ2dxXHJjMzleXipzVUdsM05GTWFpbCNZSF8qU2gsYEhMVW5hMk1rRVwnbTBLOUV1TTY0PiUrZ0RxbUo7TT5iJW4iYzxRLCMsbi8xSUZxR1E2LjByRmZQJilqMWJjJDc1b15tW2xeIzpeZXRETXJObT9vMHB0YGg+VS1cQGV0RGNmWkMmaGltaEQoUz5PYE1YW1h1cWJlbDRVRlpIYEpFYUU9J1d0Vy9wJDpfcSJtIWw5WVVVKFY8YjM1YilpPWthXkhZdWI8MUpxZ0k1VVUwN1dYX15GWTEkP0U8RVU7RFloIVJ1TWY+KyMvVjpTTW1ScnFKKGU7Z3FPVyYqKCdzMlRbOjFcZFVZZkVASiJFb2hdKkMoO3BvZVMuXVckRG51Y1okJSc/WnFuNWQnSUA7XmA+ZD9XVF5rV2tuQC9LbFZCUGsrZGY3NkgsMkxHYy46M0A+KicsNEQsOSRpVW9UblgjUl4wJF1sVDZjVzVMRG5Xa3BlLDlrNyFBLjwiSVpQOyNFOGRMY11PJ19yI3U3QVRHJyFvRm9YPzt1cVwwUkMuaE1GcXIsX29BL11ZZmpKZjJCMDkuXS5uLGkqLSJzQUhGJ3EuYU5fYC0rPyg3T0sldDBZIkJpbCZIXEVUb01dMEsxNzJGXFNbMz8iRD5gPVtiI0tYW2tLQChQKDdlI24scVVoRjFVIT5kWVk/IzpgUVApQ0Y+ZVhLLDs5c204N2BqU21HYkklUUBVayooNEMqJShhLFlhVCduOCw3QVptX2o4WTRlL0U8c24objAsQnFNX0VlaUpPS19jW2VMS2lpL2xacmRjKWprL106XVUyajs2IXBnbkRRcjtDcShCW1psLThyb051RSJeOjBHU1RIRUlWW2ttWGghUiZkIjVPYWwmZCI3YilCUEBMWWJpXVtHPC5rR29eJG9DKEdESkx1SVZgIj04YGt+PmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDE0CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTEyIDAwMDAwIG4gCjAwMDAwMDAyMTkgMDAwMDAgbiAKMDAwMDAwMDMzMSAwMDAwMCBuIAowMDAwMDAwNDQ2IDAwMDAwIG4gCjAwMDAwMDA2NTEgMDAwMDAgbiAKMDAwMDAwMDg1NiAwMDAwMCBuIAowMDAwMDAxMDYxIDAwMDAwIG4gCjAwMDAwMDExMzAgMDAwMDAgbiAKMDAwMDAwMTQyOSAwMDAwMCBuIAowMDAwMDAxNTAxIDAwMDAwIG4gCjAwMDAwMDM2OTcgMDAwMDAgbiAKMDAwMDAwNTIxMSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzxkN2Y2YzJiZGEyZTYzY2NkOWFkZDJjN2E0MWU2YmQyMT48ZDdmNmMyYmRhMmU2M2NjZDlhZGQyYzdhNDFlNmJkMjE+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDkgMCBSCi9Sb290IDggMCBSCi9TaXplIDE0Cj4+CnN0YXJ0eHJlZgo3MTQwCiUlRU9GCg==";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Projetos_Alimentacao.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+                  <!-- ══ COZINHA INTEGRE — RECEITAS FUNCIONAIS ══ -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🍽️</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Cozinha Integre</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Receitas Funcionais com Iogurte</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px">Alimentos que previnem, curam e nutrem — da base à receita</div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">5 receitas</span>
+          </div>
+
+          <div style="padding:24px 28px">
+            <p style="font-size:13px;color:#5a6a5c;line-height:1.8;margin-bottom:24px">
+              O iogurte natural ou grego é a base de todas as receitas abaixo — rico em proteínas e probióticos, ele melhora a absorção de todos os nutrientes listados. Cada preparação atua como um <strong style="color:#1a2e1f">remédio natural</strong> focado em um benefício específico.
+            </p>
+
+            <!-- Grid de receitas -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+
+              <!-- Sobremesa iogurte kiwi -->
+              <div style="border:1.5px solid #a5f3fc;border-radius:14px;overflow:hidden">
+                <div style="background:linear-gradient(135deg,#0e7490,#0891b2);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:22px">🍃</span>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#fff">Sobremesa — parfait</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.75)">Probióticos · vitamina C · ômega-3</div>
+                  </div>
+                </div>
+                <div style="padding:14px 16px;background:#fff">
+                  <div style="font-size:11px;font-weight:700;color:#0e7490;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ingredientes</div>
+                  <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#0e7490;font-weight:700;font-size:13px">·</span>Iogurte natural ou grego</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#0e7490;font-weight:700;font-size:13px">·</span>Kiwi (fatiado)</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#0e7490;font-weight:700;font-size:13px">·</span>Amêndoas (trituradas ou inteiras)</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#0e7490;font-weight:700;font-size:13px">·</span>Chia</li>
+                  </ul>
+                  <div style="background:#ecfeff;border-radius:8px;padding:8px 10px;margin-top:10px">
+                    <div style="font-size:11px;color:#5a6a5c;line-height:1.5">Sobremesa rica em probióticos, vitamina C, fibras solúveis e ômega-3 vegetal.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tireoide e memória -->
+              <div style="border:1.5px solid #fde68a;border-radius:14px;overflow:hidden">
+                <div style="background:linear-gradient(135deg,#92400e,#d97706);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:22px">🧠</span>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#fff">Tireoide e memória</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.75)">Magnésio · selênio · humor</div>
+                  </div>
+                </div>
+                <div style="padding:14px 16px;background:#fff">
+                  <div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ingredientes</div>
+                  <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#d97706;font-weight:700;font-size:13px">·</span>Iogurte natural ou grego</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#d97706;font-weight:700;font-size:13px">·</span>Maçã (em cubos ou ralada)</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#d97706;font-weight:700;font-size:13px">·</span>Canela em pó</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#d97706;font-weight:700;font-size:13px">·</span>Farinha de aveia</li>
+                  </ul>
+                  <div style="background:#fffbeb;border-radius:8px;padding:8px 10px;margin-top:10px">
+                    <div style="font-size:11px;color:#5a6a5c;line-height:1.5">Magnésio e selênio naturais regulam o humor, a memória e o funcionamento da tireoide.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Inibidor de apetite -->
+              <div style="border:1.5px solid #fecdd3;border-radius:14px;overflow:hidden">
+                <div style="background:linear-gradient(135deg,#881337,#e11d48);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:22px">🔥</span>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#fff">Inibidor de apetite</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.75)">Pectina · beta-glucana · glicose</div>
+                  </div>
+                </div>
+                <div style="padding:14px 16px;background:#fff">
+                  <div style="font-size:11px;font-weight:700;color:#881337;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ingredientes</div>
+                  <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Iogurte natural ou grego</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Gengibre (fresco ou em pó)</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Cúrcuma</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Pimenta-preta (ativa a curcumina)</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Canela em pó</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#e11d48;font-weight:700;font-size:13px">·</span>Mel (1 col. de chá)</li>
+                  </ul>
+                  <div style="background:#fff1f2;border-radius:8px;padding:8px 10px;margin-top:10px">
+                    <div style="font-size:11px;color:#5a6a5c;line-height:1.5">Pectina, beta-glucana e cinamaldeído reduzem glicose e eliminam o desejo por doce.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Remédio para dormir -->
+              <div style="border:1.5px solid #e9d5ff;border-radius:14px;overflow:hidden">
+                <div style="background:linear-gradient(135deg,#4c1d95,#7c3aed);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:22px">😴</span>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#fff">Remédio para dormir</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.75)">Triptofano · serotonina · intestino</div>
+                  </div>
+                </div>
+                <div style="padding:14px 16px;background:#fff">
+                  <div style="font-size:11px;font-weight:700;color:#4c1d95;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ingredientes</div>
+                  <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#7c3aed;font-weight:700;font-size:13px">·</span>Iogurte natural ou grego</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#7c3aed;font-weight:700;font-size:13px">·</span>Semente de abóbora ou farinha de abóbora</li>
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#7c3aed;font-weight:700;font-size:13px">·</span>1 castanha-do-pará</li>
+                  </ul>
+                  <div style="background:#f5f3ff;border-radius:8px;padding:8px 10px;margin-top:10px">
+                    <div style="font-size:11px;color:#5a6a5c;line-height:1.5">Triptofano e serotonina ativam o intestino e induzem o sono naturalmente.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Anti-inflamatório / dores -->
+              <div style="border:1.5px solid #bfdbfe;border-radius:14px;overflow:hidden">
+                <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:12px 16px;display:flex;align-items:center;gap:10px">
+                  <span style="font-size:22px">🛡️</span>
+                  <div>
+                    <div style="font-size:12px;font-weight:700;color:#fff">Dores e imunidade</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.75)">Anti-inflamatório · desincha · imunidade</div>
+                  </div>
+                </div>
+                <div style="padding:14px 16px;background:#fff">
+                  <div style="font-size:11px;font-weight:700;color:#1e3a8a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ingredientes</div>
+                  <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px">
+                    <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:center;gap:7px"><span style="color:#2563eb;font-weight:700;font-size:13px">·</span>Iogurte natural ou grego (base)</li>
+                    <li style="font-size:12px;color:#5a6a5c;font-size:11px;padding-left:16px;line-height:1.4">Combinar com qualquer das receitas acima para potencializar a absorção graças às proteínas e probióticos presentes no iogurte.</li>
+                  </ul>
+                  <div style="background:#eff6ff;border-radius:8px;padding:8px 10px;margin-top:10px">
+                    <div style="font-size:11px;color:#5a6a5c;line-height:1.5">O iogurte ajuda nas dores no corpo, dores de cabeça, aumenta a imunidade e reduz o inchaço.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- fim grid receitas -->
+          </div>
+        </div><!-- fim card cozinha integre -->
+
+        </div>
+
+        <!-- ── SUB-ABA: COZINHA SUSTENTÁVEL ── -->
+
+          <!-- Separador -->
+          <div style="display:flex;align-items:center;gap:16px;margin:8px 0 28px">
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,transparent,#e8efe8)"></div>
+            <span style="font-size:12px;color:#7a8a7c;font-weight:600;background:#f8fdf8;border:1.5px solid #e8efe8;border-radius:20px;padding:4px 14px">🥦 Projeto Relacionado</span>
+            <div style="flex:1;height:1.5px;background:linear-gradient(90deg,#e8efe8,transparent)"></div>
+          </div>
+
+                  <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🥦</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Ensino Extensionista · ODS 2 — Fome Zero</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Cozinha Sustentável — Partes Não Convencionais dos Alimentos</div>
+              <div style="margin-top:8px;display:flex;gap:16px;flex-wrap:wrap">
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">📅 Início: 28/07/2025</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">✅ Adesão: 23/12/2025</span>
+              </div>
+            </div>
+            <span style="background:rgba(116,198,157,0.25);color:var(--verde-neon);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;border:1px solid rgba(116,198,157,0.4)">Em andamento</span>
+          </div>
+
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:24px">
+
+            <!-- Sobre o Projeto -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.85">
+                O Brasil desperdiça cerca de <strong style="color:#1a2e1f">41 mil toneladas de alimentos por dia</strong>, e grande parte desse desperdício ocorre dentro das próprias casas — cascas de frutas jogadas fora, talos de couve descartados, folhas de cenoura ignoradas, sementes de abóbora que vão direto ao lixo. Essas partes, chamadas de <strong style="color:#1a2e1f">partes não convencionais dos alimentos (PNAs)</strong>, são ricas em fibras, vitaminas, minerais e antioxidantes, e podem ser transformadas em refeições nutritivas, saborosas e econômicas.<br><br>
+                Como parte da <strong style="color:#1a2e1f">Atividade Extensionista UniCesumar — ODS 2: Fome Zero</strong>, este projeto tem como missão identificar, estudar e divulgar o aproveitamento integral dos alimentos para a comunidade, promovendo educação alimentar, redução do desperdício e sustentabilidade na mesa do brasileiro.
+              </p>
+            </div>
+
+            <!-- ODS -->
+            <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #bbf7d0;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:16px">
+              <div style="font-size:36px;flex-shrink:0">🌱</div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ODS 2 — Fome Zero e Agricultura Sustentável</div>
+                <p style="font-size:13px;color:#1a2e1f;line-height:1.6;margin:0">Garantir o acesso de todos a alimentos seguros, nutritivos e suficientes durante todo o ano — reduzindo o desperdício e valorizando o que já existe na própria natureza do alimento.</p>
+              </div>
+            </div>
+
+            <!-- Dado de impacto -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">41 mil</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">toneladas de alimentos desperdiçados por dia no Brasil</div>
+              </div>
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">30%</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">do alimento comprado vai ao lixo antes de ser consumido</div>
+              </div>
+              <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(45,106,79,0.06)">
+                <div style="font-family:'Playfair Display',serif;font-size:28px;color:#2d6a4f;font-weight:700">+40%</div>
+                <div style="font-size:11px;color:#7a8a7c;margin-top:4px;line-height:1.4">dos nutrientes do alimento estão nas partes que jogamos fora</div>
+              </div>
+            </div>
+
+            <!-- Cards visuais por parte do alimento -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px">🥦 Partes Não Convencionais — O que aproveitar e como usar</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+
+                <!-- Cascas -->
+                <div style="background:#fff;border:1.5px solid #bbf7d0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#15803d,#22c55e);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🍋</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Cascas</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Frutas e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80" alt="Casca de banana" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Banana</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1604495772376-9657f0035efb?w=400&q=80" alt="Casca de maracujá" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Maracujá</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&q=80" alt="Casca de melancia" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Melancia</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=400&q=80" alt="Casca de batata-doce" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Batata-doce</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de banana:</strong> rica em potássio e magnésio. Pode virar biomassa (purê), farinha ou ser refogada com alho e azeite.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de maracujá:</strong> altíssima em pectina e fibras. Ideal para fazer doce, farinha hipoglicemiante ou geleia.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de melancia:</strong> fonte de citrulina. Pode ser refogada, virar conserva ou entrar em sucos detox.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#15803d">Casca de batata-doce:</strong> rica em antocianinas e fibras. Fica crocante ao forno com temperos como alho, cúrcuma e azeite.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Lave bem as cascas com solução de água + vinagre (1 colher por litro) antes de usar. Prefira produtos orgânicos ou sem agrotóxicos.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Talos -->
+                <div style="background:#fff;border:1.5px solid #86efac;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#166534,#16a34a);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🥦</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Talos</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Verduras e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&q=80" alt="Talo de brócolis" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Brócolis</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&q=80" alt="Talo de couve" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Couve</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1595855759920-86582396756a?w=400&q=80" alt="Talo de beterraba" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Beterraba</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative;background:#d4ede0;display:flex;align-items:center;justify-content:center">
+                      <img src="https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&q=80" alt="Talo de acelga" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.innerHTML='<span style=\'font-size:32px\'>🥬</span>'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Acelga</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de couve:</strong> tão nutritivo quanto a folha — rico em cálcio e ferro. Refogue finamente picado com azeite e alho ou use em refogados.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de brócolis:</strong> parte mais fibrosa e saborosa. Descasque e use em sopas, purês, refogados ou chips assados.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de acelga e espinafre:</strong> ricos em água e minerais. Ideais para sucos verdes, refogados rápidos e recheios.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#166534">Talo de beterraba:</strong> fonte de betalaínas e ferro. Pode ser salteado com manteiga, usado em saladas ou em sucos.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Talos mais duros (brócolis, couve-flor) ficam melhores cozidos ou assados. Talos mais finos (espinafre, acelga) podem ser usados crus em saladas.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Folhas -->
+                <div style="background:#fff;border:1.5px solid #a7f3d0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#065f46,#059669);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🥕</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Folhas</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Raízes e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#e8efe8">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&q=80" alt="Folha de cenoura" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Cenoura</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?w=400&q=80" alt="Folha de beterraba" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Beterraba</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?w=400&q=80" alt="Folha de rabanete" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Rabanete</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1568625365131-079e026a927d?w=400&q=80" alt="Folha de couve-flor" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#d4ede0';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Couve-flor</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de cenoura:</strong> rica em vitamina C e potássio — tem até mais cálcio que o leite por grama. Faça pesto, refogue com azeite ou use em omeletes.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de beterraba:</strong> fonte de ferro, magnésio e vitamina K. Refogue como refogado verde ou use em sopas.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de rabanete:</strong> levemente picante, rica em vitamina C. Excelente em saladas, refogados ou como substituta da rúcula.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#065f46">Folha de couve-flor:</strong> suave e nutritiva. Pode ser assada como chips, refogada ou usada em caldos e sopas.</div>
+                    <div style="background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#065f46;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Folhas de raízes (cenoura, beterraba) têm sabor levemente amargo — branquear rapidamente em água fervente por 1 min suaviza o amargor antes de refogar.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sementes e Bagaços -->
+                <div style="background:#fff;border:1.5px solid #fde68a;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(45,106,79,0.07)">
+                  <div style="background:linear-gradient(135deg,#78350f,#d97706);padding:14px 16px;display:flex;align-items:center;gap:10px">
+                    <span style="font-size:26px">🎃</span>
+                    <div>
+                      <div style="font-size:13px;font-weight:700;color:#fff">Sementes & Bagaços</div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.75)">Frutas e legumes</div>
+                    </div>
+                  </div>
+                  <!-- Mini galeria de imagens -->
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#fde68a44">
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1508302133-66c3756ece74?w=400&q=80" alt="Semente de abóbora" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Abóbora</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1582979512210-99b6a53386f9?w=400&q=80" alt="Bagaço de laranja" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Laranja</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1571575309572-94f13a5e1ec5?w=400&q=80" alt="Semente de melão" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Melão</span>
+                    </div>
+                    <div style="aspect-ratio:4/3;overflow:hidden;position:relative">
+                      <img src="https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?w=400&q=80" alt="Bagaço de caju" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.style.background='#fef3c7';this.style.display='none'">
+                      <span style="position:absolute;bottom:4px;left:6px;font-size:10px;color:#fff;background:rgba(0,0,0,0.5);padding:2px 6px;border-radius:8px">Caju</span>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Semente de abóbora:</strong> riquíssima em zinco, magnésio e ômega-3. Torrada com sal e temperos vira um snack poderoso.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Bagaço de laranja/limão:</strong> concentrado de pectina e flavonoides. Pode virar farinhas, bolos, geleias e aromatizantes naturais.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Semente de melão e melancia:</strong> fonte de ácido linoleico e proteína. Pode ser torrada, moída e adicionada a granolas ou iogurtes.</div>
+                    <div style="font-size:12px;color:#5a6a5c;line-height:1.6"><strong style="color:#78350f">Bagaço de caju:</strong> fonte de vitamina C e fibras. Ideal para sucos, bolos, brigadeiro de caju e até carne de caju desfiada.</div>
+                    <div style="background:#fefce8;border-radius:8px;padding:8px 10px;margin-top:4px">
+                      <div style="font-size:10px;font-weight:700;color:#78350f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💡 Dica de ouro</div>
+                      <div style="font-size:11px;color:#1a2e1f">Sementes úmidas devem ser lavadas e secas ao sol ou em forno baixo (150°C) antes de tostar. Isso evita mofo e realça o sabor.</div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Etapas do projeto -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📋 Etapas da Atividade</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Pesquisa</strong> — Identificar as principais partes não convencionais jogadas fora e levantar suas propriedades nutricionais, formas seguras de preparo e benefícios à saúde.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Guia Visual</strong> — Criar um guia ilustrado com cards por parte do alimento (casca, talo, folha, semente), incluindo receitas práticas e dicas de higienização, usando Canva ou editor similar.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Ação Comunitária</strong> — Levar o guia e as informações para a comunidade em escolas, feiras, supermercados, UBSs ou centros comunitários, educando sobre aproveitamento integral.</p>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;background:#f8fdf8;border-radius:10px;padding:12px 14px;border:1px solid #e8efe8">
+                  <span style="background:#2d6a4f;color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span>
+                  <p style="font-size:13px;color:#5a6a5c;line-height:1.6;margin:0"><strong style="color:#1a2e1f">Evidências</strong> — Registrar fotos da ação, coletar assinatura do responsável na ficha de frequência e submeter o Formulário de Comprovação no portal UniCesumar.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Referências -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📚 Referências</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <a href="https://www.embrapa.br/busca-de-noticias/-/noticia/1584616/aproveitamento-integral-de-alimentos" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>Embrapa — Aproveitamento Integral de Alimentos</span></a>
+                <a href="https://www.cfn.org.br" target="_blank" rel="noopener" style="font-size:12px;color:#2d6a4f;text-decoration:none;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='#e8f5ee'" onmouseout="this.style.background='#f8fdf8'">🔗 <span>CFN — Conselho Federal de Nutricionistas</span></a>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px">📖 <span>PHILIPPI, Sonia T. <em>Nutrição e Técnica Dietética</em> — Manole, 3ª ed.</span></div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #74c69d;border-radius:0 8px 8px 0;padding:9px 12px;display:flex;align-items:center;gap:6px">📖 <span>TACO — Tabela Brasileira de Composição de Alimentos, UNICAMP, 4ª ed.</span></div>
+              </div>
+            </div>
+
+            <!-- Espaço para vídeo -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;border-radius:14px;padding:32px;text-align:center">
+                <div style="font-size:36px;margin-bottom:10px">🎬</div>
+                <p style="font-size:14px;font-weight:600;color:#2d6a4f;margin-bottom:6px">Espaço reservado para o vídeo</p>
+                <p style="font-size:13px;color:#7a8a7c">Quando produzir, adicione aqui o link do YouTube ou o arquivo de vídeo.</p>
+              </div>
+            </div>
+
+            <!-- Espaço para fotos -->
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📸 Galeria da Ação Comunitária</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 1</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 2</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 3</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 4</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 5</span>
+                </div>
+                <div style="border-radius:12px;aspect-ratio:4/3;background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:2px dashed #74c69d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px">
+                  <span style="font-size:24px">📷</span>
+                  <span style="font-size:11px;color:#7a8a7c;text-align:center">Foto 6</span>
+                </div>
+              </div>
+              <p style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px">Adicione as fotos da ação comunitária após realizá-la</p>
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- ── SUB-ABA: BRINQUEDOS ── -->
+
+        <!-- ══ SUB-ABA 3: ESTUDANTE PROTAGONISTA ══ -->
+
+  </div>
+
+  <!-- PAINEL: Alimentação Solidária -->
+  <div id="panel-solidaria" class="tab-panel">
+            <div id="ext-solidaria" class="ext-sub-panel" style="display:none">
+
+          <!-- Botao de Download PDF -->
+          <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
+            <button onclick="downloadPDF_Relatorio_Alimentacao_Solidaria()" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a4f;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+              <span style="font-size:16px">📄</span> Baixar Relatório em PDF
+            </button>
+          </div>
+          <script>
+          function downloadPDF_Relatorio_Alimentacao_Solidaria() {
+            const b64 = "JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSIC9GMiAzIDAgUgo+PgplbmRvYmoKMiAwIG9iago8PAovQmFzZUZvbnQgL0hlbHZldGljYSAvRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZyAvTmFtZSAvRjEgL1N1YnR5cGUgL1R5cGUxIC9UeXBlIC9Gb250Cj4+CmVuZG9iagozIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQgL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcgL05hbWUgL0YyIC9TdWJ0eXBlIC9UeXBlMSAvVHlwZSAvRm9udAo+PgplbmRvYmoKNCAwIG9iago8PAovQ29udGVudHMgOCAwIFIgL01lZGlhQm94IFsgMCAwIDU5NS4yNzU2IDg0MS44ODk4IF0gL1BhcmVudCA3IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNyAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0F1dGhvciAoTnV0cmkgQW1vcmltIC0gVW5pQ2VzdW1hcikgL0NyZWF0aW9uRGF0ZSAoRDoyMDI2MDQwNDAwMjQzNSswMCcwMCcpIC9DcmVhdG9yIChcKHVuc3BlY2lmaWVkXCkpIC9LZXl3b3JkcyAoKSAvTW9kRGF0ZSAoRDoyMDI2MDQwNDAwMjQzNSswMCcwMCcpIC9Qcm9kdWNlciAoUmVwb3J0TGFiIFBERiBMaWJyYXJ5IC0gXChvcGVuc291cmNlXCkpIAogIC9TdWJqZWN0IChcKHVuc3BlY2lmaWVkXCkpIC9UaXRsZSAoQWxpbWVudGFjYW8gU29saWRhcmlhKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjcgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyA0IDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKOCAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAyNDM0Cj4+CnN0cmVhbQpHYXRtPWZsR2gqJ1JmXldpNmZbIS8tLCshTjMmaT8sZG5yPlJFajwxSjE5MjwuWnQ5NTNMdFZJJWZpY2QnLmBjRWBrb0BIaEtvX1w3T1dfUXJdYS1hR3JJK2NdazwiPDE0TFJuWW9HUCE4QjE4LW1xM0UyL0cnZGE9P3U4OGotKTpOJFZCbDFRSmw3OlVmUUReaCRtWUpxbFdGb0FsM0dtUy5sOVRJIVona3BxXmpNSnMwI0heZEdMNjlYRUZpZjxgLE9MUHVAPHBNJlFMR3RRQk4xLSV0TDxAUz5yY1RSb1UoQVlHOGIva2hOaisiKlQubjBHbGJlSzs5Z0tMK2YsWiVaMmJNLSJVR2csMDtxYTJbVztQbSNkTS0vaExRN3E+ZCdONFNBPit0ISkwSGFFWzsqVCJqMVRtSzw0ODNVNFU8TjtkZzNxL1xGclRDXSpRRUpmPUFJZG9bSkpDP2w8Q0RMRyMoNDtaWVZeQiIpWz1ZVV8mSFNMZktfPFU2O2NYTCpuPCtmO2twNSxZSVlwVklsXWBoQ3FMJiVOOEdYNWwiNnNYYSQicytLWT1dQkIyRE5PTjIuU0krUGYzJV8oRz5gczFDO2ZVR01zUDoxRjgmTHBxblZhPWxsJ3E2bnFGckNLY1QuXlxFZl1AKFkyTGk+ZS8zTWhqcCVvNmM0akQ5Jzk0ZzwlZEZnUzxcYWZhVyw9ZD9pcD5ARlBgWnBPWz9oMEBCTWFFTHM8YFpNMGFaKidncF9ITEdiTFgibk8/SzJfIiVWQypDaUQ1RmtQNFBqXzIvPGFiWFFuV0I+XygkMSJKQUlMU3RUaTRkcClqJ0dYTUJxbU4+K09kV2tTUjNraXNqQUtNZD5gXUlUWGc6QzJdOkpWQkcvLjgsN1RYPnFGaWIwXHEjYjJGXVgxI1trSDdJSG5hbzFTZWdeR2FCRV5dIzlOW0oyUks3OFpISklvMmhdNUI6KEFbOyJiWGZGY15pVHBgQVRpS1FkNFc1Rycvck48J2M5KzRoVichNGgsSTB1NyhTX1c3aXMrTmBuMGZxJ10ibChjLFtxKzFuQCVzLGJrK3EkY1o3WEsmPypqb0M7Sl5TKm1GLFVbZF49O2AjTTohVGo9RFNgZGZkMkBRMl8tRyhaSExTTl0jckFdTFIpMjA0UEpXRVNBMCJaclI2TzdNS1ojJmpfakg9RihNVjxePGZXc1VoQCpebl9mNVo3KjAocy4vQlElVS1SKWgydSs8W0FVKXRLOG1LSVdcWV1XQiVNUDRqb0g0YD5LTkBucF81MlJhV240QilxakokSC5POj0zcCY8TUcpXGY9OWQkMjZJWDUsKWNBIWsxP21jImBSPCcoLTQoP0FLX1laOyc/TW5FZHA3ak83KG5xYic5N2dMJHIqcjZFPmIuPSNqKyNqJkNhMlMmZVBzZT1TOjZmcjhkZ1FqRmRTcT5AZzNmNWAoc0dNMGQ1MSxkRkUjc3QyRTcxM1YiSlsmLTZART9MdT1LIzMzYXEjXzNQXDlOLCxvOnU0aF9jJCNubmZIZT0+Z19ja3QsU2pqX0NgJVRnPVRbQDVwdS4pZ2JlNCNYVj5RWF5LWDBUUHNLPTBQVkJNWGExP2wyJSsoYV1gakE9IWNzXzhNbUIjczFjRl06bW5VQytdbHRGbjYkcCdNXXNFKlciQ09zNHFSNkstXUUsK0xnXlEpSD8mYEtsa3NWNXE8UmAyQSJyKHBDSkQzYFMiSUdscnBYN0NXcE43LVNnQD8tYV08M3ArVS1UVypwXF1lPVNNWEY/JHJoUXM4NiFcSWUsa2ZJY1lHUjZGK04yL0VxaUcrK0VhJW9pZVJZTlM+L11NJ2VrXidZMURERSguaEQ4Nl8jUEJFTG1mKWBJaSRTSkBvXGgsclJyZTonTj9vRDdwNWJDZ1wkPWMsNUFlLD8vbHU6bGkhUW45cFJgWTYidFI5LXFOUzZ0RU8sLlJbPCRqb3JDdTBgbj8hJF4paWslZCI5KkFrR0YqK2A9UUJbSSQ/I2tGc05kNkJZYXI4VzZrKForTTFcRXNxcC4sYUhRVlUuRFpSN3RIZDozXXEhMC9fJ15BQzc0JWhvSDlMX1hEayFiT3NfXSFsWW1vdVRsWzU1VCYlJktOXylWY2Y8YjlgSV0mRCsyT11aR1BBLzpXTDU8LllVOiZ1QS1GNiM7U0AtUiFGUlltdDUnYW4pJWw+KzQ6NCM1MUcrJVJBJzpcZG9BcHQlK1lmWnFfMm9tPjFkZTolLl9KW0NYWi8oTztlNmc/cm1FUkZVRjc3JTpmQ1ZiVSVSaldyPCs7Qzw2SmsxPj4xLk4oPEAyKDkhYV90QS1lVyZcb2hMNUwybCIiSSwtdDMmRTY4QUxHRUJmO25iNGVtSWgmO2dIQUxWL1VgXUJFamU5TSUhX0U6XUVlMzUqakMzO2lRSyltIkgrX1EqWmkobVZhNXJfb0oyUShvJ2hZXy4nZnNvUCJNVnJHSyZkMDJSYiVXSCdcPyxkYW1xR25SQz4iaW87TjlTVS1STjpnXTMwNz1qJConbUBsV1dULjptZWU7L0wlbVYsM1dePz1WOWBqIV5IPXAvZFsnblBQQG9MNkhPZHIwKjElSXM7PGFBIy1xJ1dFX15dMkYsUGReQXUtMlQ2KzUtVyRNKz5jLSFQYzUtN19CVW1iUFw9cFZjQGY3TSNdPkAhKDNZJih0SDxUb3E4ZkY2YC1Mb1BBZyk4OSQyTDNuZ0ZNImNIN2VhQFgmPlgjXl08WTIsZ1AnYmdoKEdlWGtdV1lyZEk+RWE5JWhRJCVhbyQsZy8iSzNhJWsvOy1fRzpPZDlPQlUpLDI8Pmo2VXFPTk5TOmxFcCE5Xk8kM1EjNz9QTyo+YlYmSGBZYEBrPC4jNic7RypeLzk2VzFTP1RvaV4kb0tdXSxFMWNfVkZcM088ZVlvVF1Ra1kuN0cyZ29bcU1vbldTdEQwO0NGJEhVSjQ3R2JZQ20jaENJbUlgJj5yYT07ak5VaCoqTnJXLm0mPWswIlJKJjlZSDFYNDlRMExFY2s7QCtARTZlXk0pO2xkUlYtVW4sbEtgWFNZZ0tfXW88NVU5MSExbkNnWSwpU0UlW2JJXk5oLTJoSnJrUGY7JjVCZEdfcCM6MnBbXzEuOiFlWDQhMmNtNSxbZGU6ZnJZIjRpJU1BVkQmc0ZOPylTLTNVLWIwRTVMXy0rZC5WXFhRLCxecio/OStuNT5wW1YyI34+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDEwMiAwMDAwMCBuIAowMDAwMDAwMjA5IDAwMDAwIG4gCjAwMDAwMDAzMjEgMDAwMDAgbiAKMDAwMDAwMDUyNCAwMDAwMCBuIAowMDAwMDAwNTkyIDAwMDAwIG4gCjAwMDAwMDA4OTIgMDAwMDAgbiAKMDAwMDAwMDk1MSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9JRCAKWzxlNDlkMWY0MTBhMDU5Y2Y4NDJmZDYzZTg1MTEyN2FkNz48ZTQ5ZDFmNDEwYTA1OWNmODQyZmQ2M2U4NTExMjdhZDc+XQolIFJlcG9ydExhYiBnZW5lcmF0ZWQgUERGIGRvY3VtZW50IC0tIGRpZ2VzdCAob3BlbnNvdXJjZSkKCi9JbmZvIDYgMCBSCi9Sb290IDUgMCBSCi9TaXplIDkKPj4Kc3RhcnR4cmVmCjM0NzYKJSVFT0YK";
+            const byteChars = atob(b64);
+            const byteArr = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+            const blob = new Blob([byteArr], {type:'application/pdf'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'Relatorio_Alimentacao_Solidaria.pdf'; a.click();
+            URL.revokeObjectURL(url);
+          }
+          </script>
+                  <!-- ── PROJETO: Alimentação Solidária ── -->
+        <div style="background:#fff;border:1.5px solid #e8efe8;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(45,106,79,0.08);margin-bottom:28px">
+          <div style="background:linear-gradient(135deg,#1a2e1f,#2d6a4f);padding:20px 28px;display:flex;align-items:center;gap:14px">
+            <div style="width:46px;height:46px;background:rgba(116,198,157,0.2);border:1.5px solid rgba(116,198,157,0.4);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🤝</div>
+            <div style="flex:1">
+              <div style="font-size:10px;font-weight:700;color:var(--verde-neon);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Projeto de Extensão · Atividade de Extensão UniCesumar</div>
+              <div style="font-family:'Playfair Display',serif;color:#fff;font-size:18px;line-height:1.3">Alimentação Solidária — Doação de Alimentos para Instituições Sociais</div>
+              <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                <span style="font-size:11px;color:rgba(255,255,255,0.5)">🕐</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.55)">Postado em 29 de março de 2026 · Goiânia, GO</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">📹 Vídeo do Projeto</div>
+              <div style="border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0f1a12;border:1.5px solid #e8efe8;box-shadow:0 2px 12px rgba(0,0,0,0.1)">
+                <!-- ✏️ OPÇÃO A: cole aqui o link do YouTube (embed) -->
+              <!-- <iframe src="https://www.youtube.com/embed/SEU_ID_AQUI" frameborder="0" allowfullscreen style="width:100%;height:100%;display:block;position:absolute;inset:0"></iframe> -->
+              <!-- ✏️ OPÇÃO B: suba o .mp4 para a mesma pasta do dashboard.html -->
+              <video id="video-solidaria-2" controls style="width:100%;height:100%;display:block;object-fit:cover"
+                onerror="this.style.display='none';document.getElementById('video-fallback-2').style.display='flex'">
+                <source src="projeto_de_extensão_alimentação_solidaria.mp4" type="video/mp4">
+              </video>
+              <div id="video-fallback-2" style="display:none;position:absolute;inset:0;background:#0f1a12;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+                <span style="font-size:48px">🎬</span>
+                <p style="color:#74c69d;font-size:13px;font-weight:600;text-align:center;margin:0">Vídeo não encontrado</p>
+                <p style="color:rgba(255,255,255,0.4);font-size:11px;text-align:center;margin:0;max-width:220px">
+                  Coloque o arquivo <strong style="color:rgba(255,255,255,0.6)">projeto_de_extensão_alimentação_solidaria.mp4</strong><br>na mesma pasta do dashboard.html,<br>ou substitua por um link do YouTube
+                </p>
+              </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Sobre o Projeto</div>
+              <p style="font-size:13px;color:#5a6a5c;line-height:1.85">
+                Como parte da <strong style="color:#1a2e1f">Atividade de Extensão UniCesumar</strong>, realizamos uma ação solidária de coleta e doação de alimentos em parceria com a <strong style="color:#1a2e1f">Irradiação Espírita Cristã (IEC)</strong> — instituição fundada em 20 de janeiro de 1951, em Goiânia, que há mais de 70 anos transforma vidas por meio de obras sociais, educação e assistência espiritual, atendendo milhares de famílias em situação de vulnerabilidade na região.<br><br>
+                A ação integrou a <strong style="color:#1a2e1f">Campanha de Fraternidade Auta de Souza (CFAS)</strong>. Mensalmente, a IEC atende cerca de <strong style="color:#1a2e1f">150 famílias cadastradas</strong> com cestas básicas, verduras, sopas e outros gêneros alimentícios, além de manter creches, escolas, abrigo de idosos e grupos de apoio comunitário.
+              </p>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px">
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#unicesumar</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#alimentacaosolidaria</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#irradiacaoespirista</span>
+                <span style="font-size:11px;color:#2d6a4f;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:20px;padding:3px 10px">#doacaodealimentos</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px">
+                <div style="font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">🌱 Pontos-chave</div>
+                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:7px">
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Coleta e entrega de alimentos a famílias em vulnerabilidade</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Parceria com a Campanha de Fraternidade Auta de Souza</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Distribuição de panfletos e sensibilização comunitária</li>
+                  <li style="font-size:12px;color:#1a2e1f;display:flex;align-items:flex-start;gap:6px"><span style="color:#16a34a;font-weight:700;flex-shrink:0">✓</span> Inspirar o ciclo do bem e o protagonismo estudantil</li>
+                </ul>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📍 Local da Ação</div>
+                <div style="font-size:12px;color:#5a6a5c;background:#f8fdf8;border:1px solid #e8efe8;border-left:3px solid #52b788;border-radius:0 8px 8px 0;padding:10px 12px;line-height:1.6">
+                  🏛️ <strong style="color:#1a2e1f">Irradiação Espírita Cristã</strong><br>
+                  <span style="color:#7a8a7c">Dispensário André Luiz</span><br>
+                  <span style="color:#7a8a7c">Rua 201, Nº 232 — Setor Leste Vila Nova</span><br>
+                  <span style="color:#7a8a7c">Goiânia — GO · <a href="https://www.iecv.org" target="_blank" style="color:#2d6a4f">www.iecv.org</a></span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px">📸 Galeria da Ação</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="dia_do_panfleto.jpg" alt="Dia do panfleto" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🗓️</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia do panfleto</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="entrega_dos_panfletos.jpg" alt="Entrega dos panfletos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">📬</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Entrega dos panfletos</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="COLETA_DOS_ALIMENTOS.jpg" alt="Coleta dos alimentos" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🛒</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Coleta dos alimentos</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Total_de_alimento_arrecadados.jpg" alt="Total arrecadado" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">📦</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Total arrecadado</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="DIA_DA_ENTREGA.jpg" alt="Dia da entrega" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🤝</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Dia da entrega</span></div></div>
+                <div style="border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#f0fdf4;border:1.5px solid #e8efe8"><img src="Imagem_do_WhatsApp_de_2025-06-15_às_08_48_50_1ec90d78.jpg" alt="Ação solidária" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:4px;background:#f0fdf4"><span style="font-size:28px">🌿</span><span style="font-size:10px;color:#7a8a7c;text-align:center;padding:0 8px">Ação solidária</span></div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px">
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🗓️ Dia do panfleto</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">📬 Entrega dos panfletos</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🛒 Coleta dos alimentos</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">📦 Total arrecadado</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🤝 Dia da entrega</p>
+                <p style="font-size:10px;color:#7a8a7c;text-align:center;margin:0">🌿 Ação solidária</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:4px">
+              <div style="background:linear-gradient(135deg,#f0fdf4,#e8f5e9);border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:24px">📄</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#1a2e1f">Template do Projeto</div>
+                  <div style="font-size:11px;color:#7a8a7c">Alimentação Solidária — UniCesumar</div>
+                </div>
+              </div>
+              <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px">
+                <span style="font-size:24px">✅</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#1a2e1f">Termo de Uso de Imagem</div>
+                  <div style="font-size:11px;color:#7a8a7c">Assinado · Goiânia, 29/07/2025</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ── SUB-ABA: SUSTENTABILIDADE (Protagonista Pt.3) ── -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- ═══ ABA ADMIN ═══ -->
+
+  </div>
+
+</div>
+
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.getElementById('btn-' + id).classList.add('active');
+  }
+
+  function showExtSub(id, btn) {
+    document.querySelectorAll('.ext-sub-panel').forEach(p => {
+      p.style.display = 'none';
+      p.classList.remove('active-panel');
+    });
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'block'; el.classList.add('active-panel'); }
+    document.querySelectorAll('.ext-sub-btn').forEach(b => {
+      b.style.background = '#fff';
+      b.style.color = '#5a6a5c';
+      b.style.borderColor = '#e8efe8';
+      b.classList.remove('active');
+    });
+    if (btn) {
+      const bg = btn.dataset.bg || 'linear-gradient(135deg,#1a2e1f,#2d6a4f)';
+      const color = btn.dataset.color || '#74c69d';
+      btn.style.background = bg;
+      btn.style.color = color;
+      btn.style.borderColor = 'transparent';
+      btn.classList.add('active');
+    }
+  }
+
+  function showProtPart(id, btn) {
+    document.querySelectorAll('.prot-part').forEach(p => p.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    ['btn-prot-pt1','btn-prot-pt2','btn-prot-pt3'].forEach(bid => {
+      const b = document.getElementById(bid);
+      if (!b) return;
+      b.style.background = '#f8fdf8'; b.style.color = '#7a8a7c'; b.style.borderColor = '#e8efe8';
+    });
+    btn.style.background = '#2d6a4f'; btn.style.color = '#fff'; btn.style.borderColor = '#2d6a4f';
+  }
+
+  // Inicializar primeira sub-aba visível
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstPanel = document.querySelector('.ext-sub-panel');
+    if (firstPanel) { firstPanel.style.display = 'block'; firstPanel.classList.add('active-panel'); }
+    const firstBtn = document.querySelector('.ext-sub-btn');
+    if (firstBtn) {
+      const bg = firstBtn.dataset.bg || 'linear-gradient(135deg,#1a2e1f,#2d6a4f)';
+      const color = firstBtn.dataset.color || '#74c69d';
+      firstBtn.style.background = bg;
+      firstBtn.style.color = color;
+      firstBtn.style.borderColor = 'transparent';
+    }
+
+    // Data automática
+    const els = document.querySelectorAll('.data-auto');
+    els.forEach(el => {
+      const now = new Date().toLocaleString('pt-BR', {
+        timeZone: 'America/Sao_Paulo', day: '2-digit', month: 'long',
+        year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      el.textContent = 'Postado em ' + now + ' · Goiânia, GO';
+    });
+  });
+</script>
+
+</body>
+</html>
